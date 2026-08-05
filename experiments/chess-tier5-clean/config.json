@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "experiment_id": "chess-tier5-clean-requalification",
+  "display_round_offset": 19,
+  "display_round_rule": "official display round = internal clean round + 19",
+  "workspace_dir": "workspace",
+  "initial_champion": {
+    "artifact_path": "..\\..\\imports\\v3-lite-r20\\final-output.json",
+    "benchmark_receipt_path": "..\\..\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+    "loop_structure_path": "..\\..\\imports\\v3-lite-r20\\loop-structure.json",
+    "label": "last-uncontaminated-pre-r8-bootstrap"
+  },
+  "lineage_policy": "fresh lineage: pre-R8 baseline versus fixed R20 challenger under valid-pair protocol v4",
+  "proposal_policy_path": "..\\..\\resources\\policies\\sol-xhigh-structural-proposer-1800s.json",
+  "execution_policy_path": "..\\..\\resources\\policies\\luna-high-slot1-chessbench100-v1.json",
+  "benchmark_case_dir": "..\\..\\resources\\benchmarks\\chessbench100-tier5",
+  "benchmark_result_dir": "workspace\\benchmark-results",
+  "goal": "Evolve a general-purpose agent harness and loop system, lightly specialized for building stronger legal UCI chess engines on the existing ChessBench.",
+  "forbidden_structural_hypotheses": [
+    "Changing the model or reasoning effort",
+    "Changing the benchmark, evaluator, Elo calculation, or promotion rule",
+    "Treating engine hyperparameter tuning as the loop-structure change",
+    "Hard-coding benchmark positions, openings, answers, or evaluator details",
+    "Using replicated candidates, agents, samples, or near-identical calls followed by best-of-N selection anywhere in a candidate loop; inherited multiplicity must be removed rather than extended"
+  ],
+  "search_cycle": {
+    "local_round_limit": 2,
+    "emergent_failure_limit": 2,
+    "legacy_local_rounds_completed": 2
+  },
+  "proposal_validation_max_attempts": 2,
+  "invalid_pair_max_attempts": 3,
+  "matched_evaluation": {
+    "pair_count": 3,
+    "anchor_policy": "current champion + frozen lineage baseline + recent promotion alternate; freeze per round and refresh promotion-derived slots only after promotion",
+    "common_anchor_within_pair": true,
+    "diverse_anchor_panel": true,
+    "irreversible_rejection_early_stop": true,
+    "pair_rule": "candidate_elo_strictly_exceeds_incumbent_elo",
+    "batch_rule": "wins_gt_losses_and_candidate_median_gt_incumbent_median_and_zero_invalid_candidate_arms",
+    "representative_rule": "median_ranked_candidate_artifact"
+  },
+  "token_accounting": {
+    "enabled": true,
+    "separate_proposal_and_execution": true,
+    "include_invalid_retries": true,
+    "total_rule": "input_tokens + output_tokens",
+    "effective_rule": "input_tokens - cached_input_tokens + output_tokens",
+    "reasoning_is_output_subset": true,
+    "affects_promotion": false
+  },
+  "direct_control": {
+    "role": "external_same_model_calibration_only",
+    "affects_evolutionary_champion": false
+  },
+  "capsule_limits": {
+    "recent_outcomes": 3,
+    "hypothesis_frontier": 4,
+    "conditional_lessons": 6,
+    "field_characters": 400,
+    "total_characters": 16000
+  }
+}
