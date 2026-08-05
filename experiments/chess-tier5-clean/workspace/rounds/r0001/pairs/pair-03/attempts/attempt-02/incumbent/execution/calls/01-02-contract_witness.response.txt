@@ -1,0 +1,27 @@
+{
+  "scope": "Anchor-only static audit; no provisional engine or external benchmark data available.",
+  "obligations": [
+    "Use only Python standard-library imports and emit exactly one flushed bestmove per go.",
+    "Apply valid startpos/FEN moves exactly, preserving side, castling, en-passant, halfmove, and fullmove state.",
+    "Generate only legal moves: own king remains safe; reject king captures, pinned moves, illegal en-passant, and attacked castling transit squares.",
+    "Support promotions to n/b/r/q and correct castling, rook-capture rights, and en-passant transitions.",
+    "Guarantee a legal deterministic fallback before every movetime deadline, including very short budgets and search exceptions.",
+    "Keep UCI output protocol-clean across repeated position, ucinewgame, go, and quit commands."
+  ],
+  "anchor_risks": [
+    "Deadline starts only after initial legal generation; movetime <=4 returns without setting a deadline.",
+    "Time is checked only every 32 nodes, and the broad exception fallback performs another unbounded legal-generation pass.",
+    "No explicit opposing-king capture exclusion exists.",
+    "TT/search state can persist across position changes; deterministic tie-breaking must be regression-tested."
+  ],
+  "verification": {
+    "uci": "uci/isready/ucinewgame/position/go/quit; exactly one bestmove line per go.",
+    "perft": "Start position: d1=20, d2=400, d3=8902, d4=197281; include castling, en-passant, promotion, and check fixtures.",
+    "legality": "Every emitted move must belong to the generated legal set and leave the mover's king unattacked.",
+    "timing": "Test 1, 2, 4, 5, 10, and normal budgets with process-level deadlines.",
+    "determinism": "Repeat identical transcripts and verify stable legal moves and protocol output.",
+    "preservation": "Regression-test replay, castling rights, en-passant expiry, promotion notation, counters, checkmate, and stalemate."
+  },
+  "execution_status": "Python execution was unavailable under the local command policy; no files were modified.",
+  "memory_upload": "Not attempted because the declared task explicitly prohibits network access."
+}

@@ -1,0 +1,24 @@
+{
+  "status": "conditional_failure",
+  "witnesses": [
+    {
+      "id": "terminal-go-0000",
+      "region": "Engine.think",
+      "evidence": "if not moves:return '0000'",
+      "impact": "For checkmate or stalemate, bestmove 0000 is emitted; 0000 is not a legal chess move under the literal task contract.",
+      "reproduction": "python -c \"import json,subprocess,sys; s=json.load(open(r'execution\\\\calls\\\\01-01-draft_engine.response.txt'))['files']['engine.py']; print(subprocess.run([sys.executable,'-c',s],input='position fen 7k/6Q1/6K1/8/8/8/8/8 b - - 0 1\\\\ngo movetime 20\\\\nquit\\\\n',text=True,capture_output=True).stdout)\""
+    }
+  ],
+  "differential": {
+    "status": "no divergence detected; supplied draft source matches the supplied anchor source",
+    "changed_regions": []
+  },
+  "required_preservation_checks": [
+    "UCI handshake: uci, isready, ucinewgame",
+    "Start-position perft: 20, 400, 8902",
+    "Kiwipete perft: 48, 2039, 97862",
+    "Deterministic legal bestmove for repeated identical positions",
+    "movetime deadline compliance at 1, 5, and 100 ms"
+  ],
+  "execution_status": "Runtime execution was blocked by the read-only command policy; the reproduction commands remain runnable in an unrestricted harness."
+}

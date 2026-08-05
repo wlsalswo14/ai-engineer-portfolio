@@ -1,0 +1,30 @@
+Evidence packet:
+
+- Status: one static search/evaluation regression found; no runtime-certified rollback.
+- Runtime: UCI/perft execution was unavailable because the provisional source exists only in the response artifact and process launches are blocked by the read-only sandbox.
+
+Witness `W1`:
+
+```text
+FEN: 8/8/8/8/8/8/4K3/7k w - - 0 1
+```
+
+The provisional engine’s phase-0 king term evaluates this as `-56`; the champion evaluates it as `+80`. The changed delta is:
+
+```python
+# provisional
+if phase > 12: score += sg*(center*8)
+else: score -= sg*(center*7)
+
+# champion
+if phase > 2600: score += sg*(-center*3)
+else: score += sg*(center*10)
+```
+
+Exact proposed A-B-A intervention:
+
+- A: provisional branch → `-56`
+- B: restore only the champion branch → `+80` (witness closes)
+- A′: restore provisional branch → `-56` (witness reopens)
+
+This is source-level evidence only, not certified for integration. No exact rollback may be emitted without runtime replay. Recommended integrator action: fall back to the exact champion engine and preserve UCI, legality, perft, determinism, and deadline obligations as unverified.

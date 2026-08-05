@@ -1,0 +1,20 @@
+{
+  "certificate": "NO_FAILURE_FOUND_WITHIN_AVAILABLE_EVIDENCE",
+  "witnesses": [],
+  "changed_regions": [],
+  "differential": "Draft source matches supplied anchor/champion implementation; no draft-specific edit identified.",
+  "execution": "Blocked: no engine.py is materialized and Python/external-process execution is denied by the sandbox.",
+  "preservation_checks": [
+    "UCI handshake",
+    "startpos perft 20, 400, 8902",
+    "legal FEN moves including castling, promotion, en-passant, and pins",
+    "deterministic repeated bestmove",
+    "movetime deadlines"
+  ],
+  "reproduction_commands": [
+    "python -m py_compile .\\engine.py",
+    "@(\"uci\",\"isready\",\"ucinewgame\",\"position startpos\",\"go movetime 50\",\"quit\") | python .\\engine.py",
+    "python -c \"import engine; f=lambda p,d: 1 if d==0 else sum(f(engine.make(p,m),d-1) for m in engine.legal(p)); p=engine.Position.start(); print([f(p,d) for d in (1,2,3)])\""
+  ],
+  "memory_upload": "Failed: network commands were blocked by the managed execution policy."
+}

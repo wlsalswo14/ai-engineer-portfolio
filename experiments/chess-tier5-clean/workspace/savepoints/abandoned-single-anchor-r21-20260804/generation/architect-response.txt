@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "The champion's final-context compression tests surviving repairs through singleton ablations. That can miss epistatic repair clusters whose members are harmful or redundant together but appear necessary when reverted one at a time because the remaining members depend on or compensate for them.",
+    "evidence_refs": [
+      "STATE_CAPSULE.current_champion.structure_summary: terminal compression exactly ablates each surviving patch",
+      "STATE_CAPSULE.hypothesis_frontier[0]: final-context causal compression produced 3W/0L with a +66.358 median delta",
+      "STATE_CAPSULE.recent_outcomes[0].weaknesses: removing an older patch can alter the context on which later patches rely"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Granularity of the counterfactual intervention used during terminal causal compression",
+      "before": "Each surviving repair is ablated individually in the final assembled context.",
+      "after": "Terminal compression can atomically ablate a bounded dependency-closed set of causally coupled repairs, with singleton ablation retained as the size-one case.",
+      "why_causal": "Repair interactions are not necessarily decomposable into independent effects. Jointly reverting a dependency closure can restore coherent pre-cluster behavior even when every isolated reversion leaves an inconsistent mixture and therefore fails."
+    },
+    "expected_effect": "The producer should remove compensating, superseded, or mutually entangled repair clusters that singleton compression must retain, yielding a smaller and more coherent final engine while preserving the champion's executable obligations, exact rollback discipline, and legality.",
+    "falsifier": "In the complete three-pair matched batch, reject the hypothesis if any candidate arm is invalid, candidate wins are not greater than candidate losses, or candidate median Elo is not strictly greater than incumbent median Elo.",
+    "behavioral_novelty": "The loop can atomically roll back a causally coupled repair cluster and recover a passing engine even when reverting any member of that cluster alone fails; the champion's singleton-only intervention cannot expose or perform that transition.",
+    "strengths": [
+      "Extends the already-supported final-context causal test to repair epistasis without introducing additional candidate samples.",
+      "Can eliminate whole compensating edit chains, reducing interaction-prone code and stale assumptions.",
+      "Uses one evolving engine trajectory, executable replay, exact rollback, and one final emitted engine."
+    ],
+    "risks": [
+      "A bounded closure policy may omit the repair combination that actually needs joint removal.",
+      "An inaccurate dependency relation can create oversized interventions that are repeatedly rejected and consume the execution budget.",
+      "The preserved regression obligations may still fail to represent strength that a jointly removed cluster provides outside the tested evidence."
+    ]
+  },
+  "structure": {
+    "name": "Dependency-Closure Terminal Compressor",
+    "organization": "solo",
+    "information_flow": "One self-contained producer preserves the champion's raw evidence, ordered transactional A-B-A-B repair admission, and reversible delta ledger on a single engine trajectory. At terminal compression it derives bounded repair-dependency closures from concrete source dependencies, certificate relationships, and shared failure obligations; it atomically reverts each precommitted closure, replays the union of affected motivating failures and regression obligations, commits only passing removals, and otherwise restores the exact prior state before emitting one complete engine.",
+    "stages": [
+      {
+        "id": "produce",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "dependency_closure_producer",
+            "role": "dependency-aware transactional engine producer",
+            "objective": "Starting from champion_engine, execute the champion's existing raw-evidence and ordered A-B-A-B repair workflow unchanged, recording accepted edits as reversible deltas. Precommit a finite deterministic closure order and intervention budget. During terminal final-context compression, replace singleton-only reasoning with atomic testing of dependency-closed repair sets, treating a singleton as a size-one closure. For each intervention, revert the whole closure, replay the union of its motivating failures and all precommitted regression obligations, permanently remove the closure only if those failures remain closed and no obligation worsens, and otherwise restore it exactly. Recompute only dependency closures affected by a committed removal. Maintain one source trajectory, create no replicated candidates or best-of-N selection, and emit one complete legal UCI engine.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "dependency_closure_producer"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  }
+}

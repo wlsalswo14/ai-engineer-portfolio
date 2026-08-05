@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "Compatibility normalization of the selected legacy R20 champion.",
+    "evidence_refs": [
+      "champion legacy selected architecture and stored structure summary"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "execution-schema normalization",
+      "before": "legacy factorized R20 program schema",
+      "after": "equivalent provisional-engine plus independent-witness first-join schema",
+      "why_causal": "The matched runner needs an executable plan without changing the recorded behavior."
+    },
+    "expected_effect": "Reproduce the recorded champion information flow from a common anchor.",
+    "falsifier": "The normalized plan cannot emit a complete legal engine.",
+    "behavioral_novelty": "No new behavior; this is a compatibility representation of the champion.",
+    "strengths": [
+      "preserves the two independent upstream perspectives"
+    ],
+    "risks": [
+      "legacy supervisor-only inputs are represented by the bounded current task contract"
+    ]
+  },
+  "structure": {
+    "name": "legacy_r20_parallel_draft_contract_join",
+    "organization": "collaboration",
+    "information_flow": "The authoritative inputs simultaneously enter a provisional engine branch and an independent contract-analysis branch. Neither branch sees the other. The final engine call is their first join and consumes the provisional source, its verification artifact, and the independent clause witness.",
+    "stages": [
+      {
+        "id": "independent_parallel_work",
+        "mode": "parallel",
+        "calls": [
+          {
+            "id": "provisional_engine",
+            "role": "independent provisional engine developer",
+            "objective": "Starting from the anchor, produce a complete stronger legal UCI engine. Develop and check the implementation without seeing the parallel witness.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics"
+            ],
+            "output_type": "engine"
+          },
+          {
+            "id": "contract_witness",
+            "role": "independent contract and regression analyst",
+            "objective": "Without seeing the provisional engine, derive compact task-general correctness, preservation, legality, timing, and verification obligations for the final developer.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "first_join",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "final_engine",
+            "role": "evidence-conditioned final engine developer",
+            "objective": "Produce one complete legal UCI engine. Preserve the provisional engine when it passes the independent obligations; otherwise make only coherent evidence-backed repairs and check the final result.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "provisional_engine",
+              "contract_witness"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "final_engine"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  },
+  "structure_id": "loop_f1d8e944c729c224"
+}

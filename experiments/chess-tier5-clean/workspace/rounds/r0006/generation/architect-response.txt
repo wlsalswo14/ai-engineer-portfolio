@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "Round 5 supports independent post-construction falsification, but the champion's verifier examines the provisional engine before a final integrator that may modify and immediately emit it. The independent certificate therefore does not cover the emitted bytes whenever integration performs a repair or rollback.",
+    "evidence_refs": [
+      "STATE_CAPSULE.current_champion.structure_summary",
+      "STATE_CAPSULE.recent_outcomes[round=5]: 2W/0L/1T, median delta +59.28, zero invalid candidate arms",
+      "STATE_CAPSULE.conditional_lessons[round=5]"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Placement of independent terminal certification relative to the last permitted engine mutation",
+      "before": "Independent verification precedes a mutating final integrator, so integration changes can reach emission without inspection by a non-authoring call.",
+      "after": "The existing producer-verifier-integrator trajectory is followed by a distinct closure audit of the actual integrated engine; the final engine-producing call is a non-mutating gate that emits the integrated artifact only when that audit passes and otherwise emits the exact champion anchor engine.",
+      "why_causal": "Moving the independent evidence boundary after all candidate mutations makes the certificate apply to the artifact actually emitted. The closure audit is not another sample: it uniquely replays earlier witnesses against a later artifact and checks the realized integration delta, which did not exist during initial verification."
+    },
+    "expected_effect": "Candidate arms should retain the champion's productive independent-falsification behavior while preventing unchecked integration mistakes from becoming invalid or severely weakened final engines. Successful integrations remain intact; failed closure audits deterministically fall back to the valid anchor instead of initiating another unverified repair.",
+    "falsifier": "The hypothesis is falsified by any invalid candidate arm, or, after three valid matched pairs, if candidate wins are not greater than candidate losses or candidate median Elo is not strictly greater than incumbent median Elo.",
+    "behavioral_novelty": "A repair that satisfies the initial verifier can no longer reach emission solely on the integrator's judgment: a later non-authoring call must demonstrate on the realized integrated engine that the original counterexamples are closed, preserved obligations still pass, and the integration stayed within its authorized delta. No mutation is allowed after that decision.",
+    "strengths": [
+      "Closes the champion's post-verification mutation gap while preserving its supported producer, falsifier, and bounded-integration transformations.",
+      "Uses executable evidence against the final candidate artifact rather than relying on an earlier artifact's certificate.",
+      "Provides a deterministic valid fallback without generating or ranking replicated candidates."
+    ],
+    "risks": [
+      "A noisy or overly strict closure audit can discard a genuinely stronger integrated engine and reduce the arm to the unchanged anchor.",
+      "The bounded replay obligations may pass while missing playing-strength regressions outside the preserved evidence.",
+      "The added handoff may lose implementation context and incorrectly classify an authorized integration delta as out of scope."
+    ],
+    "dominant_assumption": "",
+    "inversion": ""
+  },
+  "structure": {
+    "name": "post_mutation_certificate_gate",
+    "organization": "collaboration",
+    "information_flow": "One provisional constructor follows the champion trajectory. The existing independent falsifier produces executable evidence, and the existing bounded integrator applies that evidence once. A distinct closure auditor then evaluates the later integrated artifact, after which a non-mutating final gate emits either the certified integrated engine or the exact champion anchor.",
+    "stages": [
+      {
+        "id": "construct",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "provisional_constructor",
+            "role": "provisional engine constructor",
+            "objective": "Starting from champion_engine, execute the champion's provisional construction behavior as one continuous trajectory and emit one complete legal UCI engine; do not create alternatives for selection.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      },
+      {
+        "id": "discover_failures",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "initial_artifact_falsifier",
+            "role": "independent artifact falsifier",
+            "objective": "Inspect the realized provisional engine without modifying it and produce one bounded packet of executable counterexamples, preservation obligations, and implicated deltas, or a no-failure certificate.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_constructor"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "integrate",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "bounded_integrator",
+            "role": "bounded repair integrator",
+            "objective": "Preserve the provisional engine byte-for-byte when no certified failure exists; otherwise resolve only verifier-certified failures through the smallest implicated repair or exact-delta rollback, then emit one complete engine without unrelated optimization.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_constructor",
+              "initial_artifact_falsifier"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      },
+      {
+        "id": "close_certificate",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "integration_closure_auditor",
+            "role": "post-mutation closure auditor",
+            "objective": "Without editing or proposing another engine, compare the integrated engine with the provisional artifact, replay the initial executable witnesses and preservation obligations, check legal UCI validity, and certify only if the realized integration delta is authorized and all required replays pass.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_constructor",
+              "initial_artifact_falsifier",
+              "bounded_integrator"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "emit",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "certified_engine_gate",
+            "role": "non-mutating engine emission gate",
+            "objective": "Emit the bounded_integrator engine byte-for-byte only when the closure auditor certifies it; otherwise emit champion_engine byte-for-byte. Perform no repair, optimization, synthesis, or selection among sampled alternatives, and output a complete engine.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "candidate_hypothesis",
+              "loop_structure",
+              "bounded_integrator",
+              "integration_closure_auditor"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "certified_engine_gate"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  }
+}

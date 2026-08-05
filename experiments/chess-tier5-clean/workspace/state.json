@@ -1,0 +1,185 @@
+{
+  "schema_version": 2,
+  "round_index": 9,
+  "champion": {
+    "package_id": "package_164862893ef916a4",
+    "promoted_round": 7,
+    "label": "round-7-Causally Attributed Exact-Rollback Integrator",
+    "loop_structure": {
+      "structure_id": "loop_2c6ee2e0a1ec021b",
+      "organization": "collaboration",
+      "changed_factor": "Allocation of terminal failure-to-delta causal attribution",
+      "summary": "One producer creates a single provisional engine. A non-authoring verifier compares it with the anchor, reproduces failures, and uses reversible delta rollbacks solely as causal interventions to emit either a no-failure certificate or exact rollback certificates. The final integrator emits the provisional engine unchanged when certified clean; otherwise it applies only certified rollbacks, replays their bounded obligations, and falls back to the exact champion engine if a prescribed rollback cannot be applied or replayed safely.",
+      "call_count": 3,
+      "spec_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0007\\loop-structure.json",
+      "source_spec_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0007\\generation\\normalized-plan.json",
+      "execution_plan_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0007\\loop-structure.json"
+    },
+    "engine": {
+      "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0007\\final-output.json",
+      "source_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0007\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+      "artifact_sha256": "6da1f6a9fa15ef547f61ecee566ca80fc5a00121f2170361124a74baf0af11cd",
+      "engine_source_sha256": "730b29adc4699eed2d0c10ebbd70dc3613a498987ba7578bb32681c9886d8942"
+    },
+    "metrics": {
+      "elo": -105.297,
+      "score_rate": 0.35,
+      "wins": 5,
+      "draws": 60,
+      "losses": 35,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0007\\benchmark-result-receipt.json",
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-730b29adc4699eed.json"
+    }
+  },
+  "stagnation_count": 2,
+  "proposal_mode": "counter_hypothesis",
+  "recent_outcomes": [
+    {
+      "round": 7,
+      "structure_id": "loop_2c6ee2e0a1ec021b",
+      "organization": "collaboration",
+      "changed_factor": "Allocation of terminal failure-to-delta causal attribution",
+      "hypothesis": "Candidate arms should preserve the champion's productive provisional engines more often because unrelated improvements are no longer exposed to broad or speculative integration edits. Regressions with an identified cause should be removed by exact rollback, reducing invalid engines and severe losses without the improvement-suppressing extra gate tested in round 6.",
+      "behavioral_novelty": "A non-authoring verifier can now demonstrate that removing a particular realized source delta closes a concrete failure and that restoring it reopens the failure, then pass the exact certified rollback to the emitter. The loop can therefore remove a causally implicated change while preserving all unrelated provisional improvements, rather than asking the emitting call to guess the cause or synthesize another unchecked repair.",
+      "evidence_scope": "matched_three_pair_batch",
+      "completed_pair_count": 3,
+      "candidate_wins": 1,
+      "candidate_losses": 0,
+      "ties": 2,
+      "candidate_median_elo": -105.297,
+      "incumbent_median_elo": -120.412,
+      "anchor_elo": -105.297,
+      "median_delta": 15.115000000000009,
+      "representative_candidate_elo": -105.297,
+      "promoted": true,
+      "failure_kind": null,
+      "strengths": "Directly targets an explicit weakness of the promoted round-5 structure while retaining its supported independent post-artifact falsification.; Uses executable reversible interventions for causal localization rather than adding samples, candidate replicas, or best-of-N selection.; Constrains the final mutation to information proved by an earlier distinct transformation, preserving unrelated producer work.; Avoids the unsupported round-6 strategy of adding a separate terminal rejection gate.",
+      "weaknesses": "Interacting source changes may make singleton rollback attribution ambiguous or falsely implicate a delta that is beneficial in combination.; Exact rollback can remove both the defective behavior and useful behavior contained in the same inseparable delta.; A bounded witness and regression packet can miss playing-strength regressions outside the exercised evidence.; Conservative fallback to the champion when a reproduced failure cannot receive a valid rollback certificate can increase ties and erase provisional gains."
+    },
+    {
+      "round": 8,
+      "structure_id": "loop_3947e6cf0fe9be09",
+      "organization": "collaboration",
+      "changed_factor": "Recovery policy when executable causal interventions show that the provisional implementation has no safe exact-rollback path",
+      "hypothesis": "On ordinary verifier outcomes, the candidate retains the champion's supported preserve-or-exact-rollback behavior. When a regression and useful behavior are inseparable within the provisional delta lineage, the candidate can recover the useful intent through a different implementation instead of keeping the regression or deleting the whole capability, increasing the chance of valid strength gains.",
+      "behavioral_novelty": "Given an executable failure for which every implicated exact rollback either leaves the failure open or destroys the provisional engine's demonstrated useful behavior, the loop can abandon the entire implicated implementation and emit a newly synthesized, anchor-rooted implementation that closes the failure while restoring that behavior through a different source path.",
+      "proposal_mode": "emergent_exploration",
+      "emergent_capability_family": "causal-dead-end strategy substitution",
+      "emergent_capability": "The candidate can deterministically discard an unrecoverable provisional strategy and synthesize one alternative implementation from the anchor, constrained by both the reproduced failure and an executable witness of the intended useful behavior.",
+      "evidence_scope": "matched_three_pair_batch",
+      "completed_pair_count": 2,
+      "candidate_wins": 1,
+      "candidate_losses": 0,
+      "ties": 0,
+      "candidate_median_elo": null,
+      "incumbent_median_elo": null,
+      "anchor_elo": -105.297,
+      "median_delta": null,
+      "representative_candidate_elo": null,
+      "promoted": false,
+      "failure_kind": "matched_batch_did_not_satisfy_promotion",
+      "strengths": "Preserves the promoted producer, independent causal verifier, and exact-rollback path for separable regressions.; Directly addresses the champion's documented inability to retain useful behavior when it is inseparable from a defective delta.; Uses executable failure and intended-behavior witnesses to trigger one alternative construction, without replicated candidates or best-of-N selection.; Avoids repeating the unsupported round-6 terminal-gate family.",
+      "weaknesses": "The intended-behavior witness may be too narrow, allowing an alternative implementation that passes the witness but loses unmeasured playing strength.; A mistaken causal-dead-end determination may discard a provisional implementation that a better exact attribution could have preserved.; The final alternative construction is not independently inspected after mutation and may introduce a new legal-UCI or strength regression.; Resetting to the anchor may consume context on reconstructing behavior and yield an overly conservative engine."
+    },
+    {
+      "round": 9,
+      "structure_id": "loop_d499d2cf40eb1b2e",
+      "organization": "collaboration",
+      "changed_factor": "Commitment policy for a causally mixed implementation delta",
+      "hypothesis": "Candidate engines should retain more of the provisional engine's demonstrated strength while closing localized regressions, without the broad rewrite and invalidity risk observed under anchor-rooted strategy substitution. Ordinary cases continue through the promoted exact-rollback path.",
+      "behavioral_novelty": "The emitted engine can select provisional behavior in an execution context where that behavior has an executable benefit witness and select champion behavior in a different context where the same provisional delta has an executable failure witness.",
+      "proposal_mode": "emergent_exploration",
+      "emergent_capability_family": "evidence-conditioned semantic arbitration",
+      "emergent_capability": "The candidate can convert one causally mixed delta into a deterministic runtime branch that invokes provisional semantics on the verified beneficial side of a discriminator and champion semantics on the verified failure side.",
+      "evidence_scope": "matched_three_pair_batch",
+      "completed_pair_count": 2,
+      "candidate_wins": 0,
+      "candidate_losses": 2,
+      "ties": 0,
+      "candidate_median_elo": null,
+      "incumbent_median_elo": null,
+      "anchor_elo": -105.297,
+      "median_delta": null,
+      "representative_candidate_elo": null,
+      "promoted": false,
+      "failure_kind": "matched_batch_did_not_satisfy_promotion",
+      "strengths": "Preserves the promoted producer, independent causal verifier, and exact-rollback behavior for ordinary failures.; Retains demonstrated useful behavior that a global exact rollback would necessarily discard.; Avoids regenerating an alternative engine implementation after a causal dead end.; Activates the new path only after executable evidence establishes both sides of a causal context split.",
+      "weaknesses": "A discriminator inferred from bounded traces may separate the witnesses but generalize poorly to unseen positions.; Maintaining two semantic paths can add branching overhead or introduce synchronization and state-consistency defects.; Interacting deltas may make the apparent context split unstable after integration.; A narrow benefit witness could justify conditional complexity without corresponding playing-strength value."
+    }
+  ],
+  "hypothesis_frontier": [
+    {
+      "round": 6,
+      "factor": "Placement of independent terminal certification relative to the last permitted engine mutation",
+      "before": "Independent verification precedes a mutating final integrator, so integration changes can reach emission without inspection by a non-authoring call.",
+      "after": "The existing producer-verifier-integrator trajectory is followed by a distinct closure audit of the actual integrated engine; the final engine-producing call is a non-mutating gate that emits the integrated artifact only when that audit passes and otherwise emits the exact champion anchor engine.",
+      "status": "not_supported_in_tested_conditions",
+      "evidence": "matched batch 0W/1L/2T, median delta 0.0, candidate invalid count 0"
+    },
+    {
+      "round": 7,
+      "factor": "Allocation of terminal failure-to-delta causal attribution",
+      "before": "The independent verifier supplies executable counterexamples or a no-failure certificate; the engine-producing integrator must itself infer which champion-to-provisional change caused a reported failure while deciding how to repair or roll it back.",
+      "after": "The independent verifier must causally attribute every reported failure to an exact champion-to-provisional delta using reversible rollback interventions and emit an executable rollback certificate; the integrator may only preserve the provisional engine or apply those certified exact rollbacks.",
+      "status": "supported",
+      "evidence": "matched batch 1W/0L/2T, median delta 15.115000000000009, candidate invalid count 0"
+    },
+    {
+      "round": 8,
+      "factor": "Recovery policy when executable causal interventions show that the provisional implementation has no safe exact-rollback path",
+      "before": "The final integrator remains inside the provisional engine's change lineage: it may preserve that engine or apply verifier-certified exact rollbacks.",
+      "after": "A causal-dead-end witness triggers a lineage reset: the final integrator discards the implicated provisional implementation, returns to the champion anchor, and constructs one alternative implementation of the same intended behavior under the verifier's executable constraints.",
+      "status": "not_supported_in_tested_conditions",
+      "evidence": "matched batch 1W/0L/0T, median delta None, candidate invalid count 1"
+    },
+    {
+      "round": 9,
+      "factor": "Commitment policy for a causally mixed implementation delta",
+      "before": "The final integrator must commit globally to the provisional delta or remove it globally through a verifier-certified exact rollback.",
+      "after": "When paired executable traces prove that the same exact delta is beneficial in one runtime context and causal for failure in another, the integrator may retain both champion and provisional semantics and dispatch between them using one verifier-derived, general runtime discriminator; all other outcomes retain the champion's preserve-or-exact-rollback policy.",
+      "status": "not_supported_in_tested_conditions",
+      "evidence": "matched batch 0W/2L/0T, median delta None, candidate invalid count 0"
+    }
+  ],
+  "conditional_lessons": [
+    "Under the round-4 matched conditions, changing Separation of evidence diagnosis from engine production from One solo call diagnoses anchor weaknesses, chooses obligations, performs repairs, evaluates its own causal interventions, and emits the engine. to A distinct non-producing forensic call first converts the anchor engine and metrics into a bounded, immutable diagnostic audit packet; a later engine-producing call consumes that packet and otherwise executes the champion's ordered repair, exact-delta rollback, and terminal singleton-compression process. did not promote: 0W/2L/0T, candidate median None, incumbent median None. This is batch-level conditional evidence, not proof that every artifact from the structure fails.",
+    "Under the round-5 matched conditions, changing Organization of terminal causal certification from A solo producer constructs the engine and certifies its own realized artifact before emission. to A sequential collaboration preserves the champion producer as a provisional constructor, assigns terminal falsification of that realized artifact to one distinct verifier, and uses one bounded integrator to resolve only verifier-certified failures before emitting the sole final engine. won 2-0 with median Elo delta 59.28 and promoted.",
+    "Under the round-6 matched conditions, changing Placement of independent terminal certification relative to the last permitted engine mutation from Independent verification precedes a mutating final integrator, so integration changes can reach emission without inspection by a non-authoring call. to The existing producer-verifier-integrator trajectory is followed by a distinct closure audit of the actual integrated engine; the final engine-producing call is a non-mutating gate that emits the integrated artifact only when that audit passes and otherwise emits the exact champion anchor engine. did not promote: 0W/1L/2T, candidate median -105.297, incumbent median -105.297. This is batch-level conditional evidence, not proof that every artifact from the structure fails.",
+    "Under the round-7 matched conditions, changing Allocation of terminal failure-to-delta causal attribution from The independent verifier supplies executable counterexamples or a no-failure certificate; the engine-producing integrator must itself infer which champion-to-provisional change caused a reported failure while deciding how to repair or roll it back. to The independent verifier must causally attribute every reported failure to an exact champion-to-provisional delta using reversible rollback interventions and emit an executable rollback certificate; the integrator may only preserve the provisional engine or apply those certified exact rollbacks. won 1-0 with median Elo delta 15.115000000000009 and promoted.",
+    "Under the round-8 matched conditions, changing Recovery policy when executable causal interventions show that the provisional implementation has no safe exact-rollback path from The final integrator remains inside the provisional engine's change lineage: it may preserve that engine or apply verifier-certified exact rollbacks. to A causal-dead-end witness triggers a lineage reset: the final integrator discards the implicated provisional implementation, returns to the champion anchor, and constructs one alternative implementation of the same intended behavior under the verifier's executable constraints. did not promote: 1W/0L/0T, candidate median None, incumbent median None. This is batch-level conditional evidence, not proof that every artifact from the structure fails.",
+    "Under the round-9 matched conditions, changing Commitment policy for a causally mixed implementation delta from The final integrator must commit globally to the provisional delta or remove it globally through a verifier-certified exact rollback. to When paired executable traces prove that the same exact delta is beneficial in one runtime context and causal for failure in another, the integrator may retain both champion and provisional semantics and dispatch between them using one verifier-derived, general runtime discriminator; all other outcomes retain the champion's preserve-or-exact-rollback policy. did not promote: 0W/2L/0T, candidate median None, incumbent median None. This is batch-level conditional evidence, not proof that every artifact from the structure fails."
+  ],
+  "evaluation_protocol": {
+    "id": "matched-three-diverse-anchor-relative-v5",
+    "pair_count": 3,
+    "common_anchor_within_pair": true,
+    "diverse_anchor_panel": true,
+    "anchor_roles": [
+      "current_champion",
+      "frozen_lineage_baseline",
+      "recent_promotion_alternate"
+    ],
+    "anchor_refresh_rule": "freeze the panel per round; refresh current and alternate only after promotion",
+    "pair_rule": "candidate Elo point estimate versus incumbent Elo point estimate",
+    "batch_rule": "complete three valid pairs; candidate wins > losses; candidate median Elo > incumbent median Elo; zero invalid arms on either side",
+    "representative_rule": "median-ranked candidate artifact, tie-broken by pair index",
+    "irreversible_rejection_early_stop": true,
+    "token_accounting": "separate Sol proposal and Luna internal-loop usage; include invalid retries"
+  },
+  "migration": {
+    "from_schema_version": 1,
+    "savepoint_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\savepoints\\before-matched-three-pair-v2-20260803T211320.json",
+    "legacy_rounds_preserved_through": 0
+  },
+  "anchor_protocol_migration": {
+    "from": "matched-three-valid-pair-relative-v4",
+    "to": "matched-three-diverse-anchor-relative-v5",
+    "savepoint_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\savepoints\\before-diverse-anchor-v5-20260804T204927.json"
+  },
+  "local_refinement_count": 2,
+  "emergent_failure_count": 2,
+  "search_cycle_migration": {
+    "local_refinement_count_seed": 2,
+    "savepoint_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\savepoints\\before-search-cycle-v2-20260805T120355.json"
+  }
+}

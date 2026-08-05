@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "reason": "adopt a precommitted three-anchor panel and token accounting",
+  "state": {
+    "schema_version": 2,
+    "round_index": 1,
+    "champion": {
+      "package_id": "package_e7705cfa9eb969f5",
+      "promoted_round": 1,
+      "label": "round-1-Solo Provisional Repair Stack with Terminal Causal Compression",
+      "loop_structure": {
+        "structure_id": "loop_d9b6fe59cd5b067b",
+        "organization": "solo",
+        "changed_factor": "Lifetime of a repair's causal acceptance certificate",
+        "summary": "One self-contained producer starts from the champion engine, preserves raw audit evidence, follows the champion's ordered transactional A-B-A-B repair process, records every accepted edit as an exactly reversible delta, and then causally compresses that provisional stack in the assembled final context before emitting one complete engine.",
+        "call_count": 1,
+        "spec_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0001\\loop-structure.json",
+        "source_spec_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0001\\generation\\normalized-plan.json",
+        "execution_plan_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0001\\loop-structure.json"
+      },
+      "engine": {
+        "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0001\\final-output.json",
+        "source_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0001\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+        "artifact_sha256": "6eee7efbac5a4b6023e56fec9b6439137a7990e4cde428dc6521f15b31ea3a8a",
+        "engine_source_sha256": "dd97a2fcb0808c5d389824482b6bb53e4240368d4ebcac2944d367cb238f58e6"
+      },
+      "metrics": {
+        "elo": -148.002,
+        "score_rate": 0.295,
+        "wins": 4,
+        "draws": 51,
+        "losses": 45,
+        "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0001\\benchmark-result-receipt.json",
+        "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-dd97a2fcb0808c5d.json"
+      }
+    },
+    "stagnation_count": 0,
+    "proposal_mode": "general",
+    "recent_outcomes": [
+      {
+        "round": 1,
+        "structure_id": "loop_d9b6fe59cd5b067b",
+        "organization": "solo",
+        "changed_factor": "Lifetime of a repair's causal acceptance certificate",
+        "hypothesis": "The loop should preserve the champion's successful raw-evidence solo reasoning and A-B-A-B admission gate while emitting a smaller, less interaction-prone repair stack. Removing superseded or final-context-harmful edits should reduce accumulated overfitting and improve paired consistency and median strength without increasing invalid engines.",
+        "behavioral_novelty": "An edit that was genuinely necessary and causally validated when introduced can now be removed before emission when a later edit has taken over its function or made it counterproductive. The champion cannot revoke such a stale acceptance certificate based on an exact intervention in the final assembled engine.",
+        "evidence_scope": "matched_three_pair_batch",
+        "completed_pair_count": 3,
+        "candidate_wins": 3,
+        "candidate_losses": 0,
+        "ties": 0,
+        "candidate_median_elo": -148.002,
+        "incumbent_median_elo": -214.36,
+        "anchor_elo": -94.211,
+        "median_delta": 66.358,
+        "representative_candidate_elo": -148.002,
+        "promoted": true,
+        "failure_kind": null,
+        "strengths": "Extends executable causal attribution from edit admission to final repair-stack membership.; Preserves the promoted solo organization, raw evidence, exact rollback, and one continuous engine trajectory.; Can eliminate redundant logic, duplicated work, and adverse interactions introduced by individually valid repairs.; Uses counterfactual source ablations rather than replicated model calls, candidate sampling, or best-of-N selection.; Can emit the unchanged champion when no complete valid repair stack survives.",
+        "weaknesses": "A bounded regression suite may classify a repair as redundant even though it provides strength outside the observed obligations.; Final-context ablation and replay consume execution budget and may reduce the number of initial repairs attempted.; Nondeterministic search behavior can make a necessary patch appear dispensable.; Removing an older patch can alter the context in which another retained patch was assessed, requiring bounded invalidation and replay.; Code simplification may improve robustness without producing enough Elo gain to satisfy paired promotion."
+      }
+    ],
+    "hypothesis_frontier": [
+      {
+        "round": 1,
+        "factor": "Lifetime of a repair's causal acceptance certificate",
+        "before": "A repair that passes its insertion-time A-B-A-B intervention and regression replay remains accepted through final emission.",
+        "after": "Insertion-time acceptance is provisional: after the ordered repair trajectory, the same producer performs terminal final-context causal compression, exactly ablating each surviving patch and permanently deleting it when its motivating failures remain closed and no precommitted regression obligation worsens.",
+        "status": "supported",
+        "evidence": "matched batch 3W/0L/0T, median delta 66.358, candidate invalid count 0"
+      }
+    ],
+    "conditional_lessons": [
+      "Under the round-1 matched conditions, changing Lifetime of a repair's causal acceptance certificate from A repair that passes its insertion-time A-B-A-B intervention and regression replay remains accepted through final emission. to Insertion-time acceptance is provisional: after the ordered repair trajectory, the same producer performs terminal final-context causal compression, exactly ablating each surviving patch and permanently deleting it when its motivating failures remain closed and no precommitted regression obligation worsens. won 3-0 with median Elo delta 66.358 and promoted."
+    ],
+    "evaluation_protocol": {
+      "id": "matched-three-valid-pair-relative-v4",
+      "pair_count": 3,
+      "common_anchor": true,
+      "pair_rule": "candidate Elo point estimate versus incumbent Elo point estimate",
+      "batch_rule": "complete three valid pairs; candidate wins > losses; candidate median Elo > incumbent median Elo; zero invalid arms on either side",
+      "representative_rule": "median-ranked candidate artifact, tie-broken by pair index",
+      "irreversible_rejection_early_stop": true
+    },
+    "migration": {
+      "from_schema_version": 1,
+      "savepoint_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\savepoints\\before-matched-three-pair-v2-20260803T211320.json",
+      "legacy_rounds_preserved_through": 0
+    }
+  },
+  "state_sha256": "9ac27a8b8b2d086626aa8b79e14c8875738ccc0e8e04c34adb66cac01917928a"
+}

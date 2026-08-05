@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "The promoted round-7 loop improved paired results by assigning rollback attribution to the independent verifier, but its singleton attribution can miss conjunctive regressions and can discard useful behavior when a defective change is inseparable from a cooperating delta.",
+    "evidence_refs": [
+      "STATE_CAPSULE round-7 recent outcome: 1W/0L/2T, median delta +15.115, zero invalid candidate arms",
+      "STATE_CAPSULE round-7 weakness: interacting source changes may make singleton rollback attribution ambiguous or falsely implicate a delta beneficial in combination",
+      "STATE_CAPSULE round-7 weakness: exact rollback can remove useful behavior contained in the same inseparable delta"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Granularity of the verifier's causal rollback intervention",
+      "before": "Each reported failure is attributed to one exact champion-to-provisional delta through singleton rollback intervention.",
+      "after": "The verifier attributes a failure to the smallest provenance-closed interacting delta set when no singleton passes the existing remove-to-close, restore-to-reopen, and preservation tests.",
+      "why_causal": "Holding the producer, independent verification placement, bidirectional causal test, and rollback-only integrator fixed isolates intervention granularity. A provenance-closed set can expose conjunctive causes that no member reveals alone while keeping unrelated provisional improvements outside the rollback."
+    },
+    "expected_effect": "Candidate arms should preserve the champion's protection against speculative integration while correcting regressions caused by interacting edits. Fewer failures should be left unattributed, and unrelated strength-producing deltas should survive joint rollback.",
+    "falsifier": "Falsify the hypothesis if the matched three-pair batch has any invalid candidate arm, candidate wins do not exceed candidate losses, or candidate median Elo does not strictly exceed incumbent median Elo.",
+    "behavioral_novelty": "When reverting delta A alone and delta B alone does not close a reproduced failure but reverting the dependency-closed set {A,B} closes it and restoring that set reopens it, the verifier can certify their joint rollback while preserving an unrelated delta C.",
+    "strengths": [
+      "Directly addresses the explicit interaction ambiguity remaining after the supported round-7 change.",
+      "Retains independent post-artifact falsification and executable reversible causal evidence.",
+      "Preserves unrelated provisional improvements by restricting rollback to a certified provenance-closed set.",
+      "Uses no replicated engines, agents, samples, or best-of-N selection."
+    ],
+    "risks": [
+      "Searching interacting sets may consume verifier attention and still miss a large or incorrectly modeled dependency.",
+      "A provenance-closed group can be causally valid yet coarse enough to remove beneficial synergistic behavior.",
+      "A narrow executable witness may certify a rollback that does not improve broader playing strength.",
+      "Ambiguous overlapping groups may force the verifier to withhold a certificate and leave the provisional engine unchanged."
+    ]
+  },
+  "structure": {
+    "name": "Minimal Provenance-Closed Rollback",
+    "organization": "collaboration",
+    "information_flow": "One producer creates a single provisional engine. A non-authoring verifier reproduces concrete regressions and applies the champion's bidirectional rollback test first to singleton deltas, then, only when needed, to bounded dependency-connected provenance-closed sets; it emits either a no-failure certificate or the smallest unambiguous exact rollback set. The final integrator preserves the provisional engine or applies only that certified set.",
+    "stages": [
+      {
+        "id": "construct",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "provisional_producer",
+            "role": "provisional engine producer",
+            "objective": "Starting from the champion anchor, diagnose bounded weaknesses and produce one complete stronger legal UCI engine. Keep changes explicit and separable enough for subsequent counterfactual rollback analysis.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      },
+      {
+        "id": "attribute",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "interaction_verifier",
+            "role": "independent causal interaction verifier",
+            "objective": "Compare the realized provisional engine with the champion and reproduce concrete legality, protocol, regression, or preserved-obligation failures. Retain the existing remove-to-close and restore-to-reopen standard. Test singleton realized deltas first; only if none explains a failure, test bounded dependency-connected provenance-closed delta sets. Emit a no-failure certificate or the smallest unambiguous exact rollback set whose removal closes the failure, restoration reopens it, and preserved obligations continue to pass. Do not author repairs or rank alternative engines.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_producer.engine"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "emit",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "certified_integrator",
+            "role": "rollback-constrained final engine integrator",
+            "objective": "Produce the complete final engine. If the verifier issued a no-failure certificate, preserve the provisional engine without substantive change. Otherwise apply only the verifier-certified exact provenance-closed rollback set. Make no speculative repair, expansion, or unrelated source edit.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_producer.engine",
+              "interaction_verifier.analysis"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "certified_integrator"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  }
+}

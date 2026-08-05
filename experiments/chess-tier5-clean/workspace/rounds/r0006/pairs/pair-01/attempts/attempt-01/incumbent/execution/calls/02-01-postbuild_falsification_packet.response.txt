@@ -1,0 +1,22 @@
+{
+  "certificate": "No draft-specific regression found; draft body matches champion/anchor.",
+  "changed_regions": [],
+  "witnesses": [
+    {
+      "id": "king-capture-from-invalid-state",
+      "status": "inherited",
+      "region": "pseudo/legal",
+      "fen": "4k3/8/8/8/8/8/8/K3Q3 w - - 0 1",
+      "reproduction": "e1e8 appears in legal(...)",
+      "impact": "A syntactically valid FEN can yield an illegal king-capture move."
+    }
+  ],
+  "execution": "Live interpreter/UCI execution was blocked by the sandbox; no engine.py was materialized.",
+  "preservation_checks": [
+    "python -m py_compile engine.py",
+    "uci/isready/position startpos/go movetime 10/quit",
+    "perft(startpos, 1..3) == 20, 400, 8902",
+    "repeat identical UCI probes and compare bestmove output",
+    "compare anchor and draft source strings with ordinal equality"
+  ]
+}

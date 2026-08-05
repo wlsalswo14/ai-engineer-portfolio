@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "emergent_exploration",
+  "hypothesis": {
+    "observed_bottleneck": "The promoted round-7 loop can causally identify and exactly roll back a defective delta, but a global rollback also removes useful behavior when the same inseparable delta helps in some execution contexts and harms in others. Round 8's attempt to escape that tradeoff through anchor-rooted strategy substitution introduced an invalid candidate arm.",
+    "evidence_refs": [
+      "STATE_CAPSULE.hypothesis_frontier round 7: exact rollback attribution promoted with 1W/0L/2T, median delta +15.115, and zero invalid candidates",
+      "STATE_CAPSULE.recent_outcomes round 7 weakness: exact rollback can remove both defective behavior and useful behavior contained in the same inseparable delta",
+      "STATE_CAPSULE.recent_outcomes round 8: causal-dead-end strategy substitution did not promote and produced one invalid candidate arm"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Commitment policy for a causally mixed implementation delta",
+      "before": "The final integrator must commit globally to the provisional delta or remove it globally through a verifier-certified exact rollback.",
+      "after": "When paired executable traces prove that the same exact delta is beneficial in one runtime context and causal for failure in another, the integrator may retain both champion and provisional semantics and dispatch between them using one verifier-derived, general runtime discriminator; all other outcomes retain the champion's preserve-or-exact-rollback policy.",
+      "why_causal": "This changes the reachable engine state from one globally selected implementation to a context-dependent hybrid. It can preserve mutually incompatible useful and safe behaviors that neither global preservation nor global rollback can express."
+    },
+    "expected_effect": "Candidate engines should retain more of the provisional engine's demonstrated strength while closing localized regressions, without the broad rewrite and invalidity risk observed under anchor-rooted strategy substitution. Ordinary cases continue through the promoted exact-rollback path.",
+    "falsifier": "The hypothesis is falsified immediately by any invalid candidate arm, or after three valid matched pairs if candidate wins do not exceed candidate losses or candidate median Elo does not exceed incumbent median Elo. A completed batch in which the conditional path passes its paired novelty probe but still fails either superiority condition is decisive evidence against the proposed commitment policy.",
+    "behavioral_novelty": "The emitted engine can select provisional behavior in an execution context where that behavior has an executable benefit witness and select champion behavior in a different context where the same provisional delta has an executable failure witness.",
+    "emergent_capability": {
+      "capability_family": "evidence-conditioned semantic arbitration",
+      "champion_limitation": "The champion can preserve or remove an implicated delta only as a global source decision; it cannot keep both semantics live and choose between them as engine state changes.",
+      "emergent_capability": "The candidate can convert one causally mixed delta into a deterministic runtime branch that invokes provisional semantics on the verified beneficial side of a discriminator and champion semantics on the verified failure side.",
+      "trigger": "The verifier reproduces both an attributable failure and an attributable benefit for the same exact delta, demonstrates that rollback closes the failure but destroys the benefit, and derives a general engine-state or search-event discriminator that separates the two traces without matching literal benchmark positions or openings.",
+      "state_transition": {
+        "before": "One provisional delta is globally active and has conflicting executable effects, while static preservation and static rollback each violate one verified obligation.",
+        "after": "Both semantic paths remain available behind a deterministic discriminator, with each verified trace routed to the path satisfying its obligation."
+      },
+      "observable_effect": "On the same paired evidence, the final engine follows the provisional path and preserves its witnessed behavior in the beneficial context, but follows the champion path and closes the reproduced failure in the harmful context. The champion loop must choose one behavior for both contexts.",
+      "novelty_probe": "Execute the verifier's benefit trace and failure trace against the champion, provisional, and final engines. Require the final engine to reproduce the provisional engine's verified move, score, or search-event signature on the benefit trace, reproduce the champion-safe signature or otherwise close the attributed failure on the failure trace, and pass a discriminator-boundary trace. Reject conditionalization if these three assertions are not executable and deterministic.",
+      "not_local_refinement": "This is not a finer static rollback, added certificate, later audit, larger packet, or new reviewer. The implicated code is not merely removed at a smaller granularity: both competing semantics remain executable, and runtime evidence causes a new state-dependent transition between them during play."
+    },
+    "strengths": [
+      "Preserves the promoted producer, independent causal verifier, and exact-rollback behavior for ordinary failures.",
+      "Retains demonstrated useful behavior that a global exact rollback would necessarily discard.",
+      "Avoids regenerating an alternative engine implementation after a causal dead end.",
+      "Activates the new path only after executable evidence establishes both sides of a causal context split."
+    ],
+    "risks": [
+      "A discriminator inferred from bounded traces may separate the witnesses but generalize poorly to unseen positions.",
+      "Maintaining two semantic paths can add branching overhead or introduce synchronization and state-consistency defects.",
+      "Interacting deltas may make the apparent context split unstable after integration.",
+      "A narrow benefit witness could justify conditional complexity without corresponding playing-strength value."
+    ]
+  },
+  "structure": {
+    "name": "Causally Conditioned Dual-Semantics Integrator",
+    "organization": "collaboration",
+    "information_flow": "One producer emits a single provisional engine. One non-authoring verifier preserves exact rollback attribution while testing whether at most one implicated delta has reproducible, context-split effects. The final integrator preserves the provisional engine, applies certified exact rollbacks, or conditionally keeps both semantics only when the executable split evidence and discriminator probe pass.",
+    "stages": [
+      {
+        "id": "construct",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "provisional_constructor",
+            "role": "engine producer",
+            "objective": "Starting from the champion anchor, construct one complete legal UCI provisional engine with a coherent general-purpose improvement. Preserve supported behavior and record executable evidence of the intended useful effect; do not create alternative candidates or perform best-of-N selection.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      },
+      {
+        "id": "verify_context_split",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "causal_context_verifier",
+            "role": "non-authoring causal verifier",
+            "objective": "Compare the provisional engine with the champion, reproduce concrete failures, and use reversible exact-delta rollback interventions for causal attribution. Preserve ordinary no-failure and safe-rollback outcomes. For at most one delta whose rollback closes a failure but destroys an executable benefit, test whether a minimal general runtime state or search-event predicate separates the benefit and failure traces. Emit the paired traces, rollback result, predicate, boundary probe, and integration constraints only if deterministic replay supports every assertion. Never use literal benchmark-position or opening identity as the predicate.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_constructor"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "integrate",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "conditional_integrator",
+            "role": "bounded engine integrator",
+            "objective": "Emit one complete legal UCI engine. Preserve the provisional engine when no certified failure exists and apply only certified exact rollbacks for ordinary failures. If and only if the verifier proves a causally mixed delta and supplies a deterministic general discriminator, retain champion and provisional semantics for that delta behind one runtime dispatch and execute the benefit, failure, and boundary novelty probes. If conditionalization cannot compile, remain protocol-legal, or pass every probe, apply the certified failure-closing rollback instead. Do not synthesize another candidate implementation or select among alternatives.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_constructor",
+              "causal_context_verifier"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "conditional_integrator"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  },
+  "structure_id": "loop_d499d2cf40eb1b2e"
+}

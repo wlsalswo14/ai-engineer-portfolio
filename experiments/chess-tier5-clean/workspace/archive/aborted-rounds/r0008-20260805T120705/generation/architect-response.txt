@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "Round 7's independently attributed exact rollbacks were supported but produced a tie-heavy 1W/0L/2T batch. The verifier certifies only harmful deltas, so the final integrator receives no independent evidence identifying deltas whose removal would restore an anchor weakness or erase a demonstrated improvement.",
+    "evidence_refs": [
+      "STATE_CAPSULE recent_outcomes round 7: 1W/0L/2T, median delta +15.115, zero invalid candidate arms",
+      "STATE_CAPSULE round-7 weakness: exact rollback can remove both defective behavior and useful behavior contained in the same delta"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Polarity of independently certified delta evidence",
+      "before": "The verifier emits negative evidence only: a no-failure certificate or exact rollback certificates for deltas causally implicated in reproduced failures.",
+      "after": "The verifier emits a bidirectional causal ledger: the existing exact rollback certificates plus exact retention certificates for deltas whose reversible removal demonstrably reopens a champion weakness that the provisional engine closes.",
+      "why_causal": "Rollback decisions currently preserve information about demonstrated harm but discard information about demonstrated benefit. Adding independently executable retention certificates changes which causally sufficient rollback is permitted when several deltas can close a failure, allowing the integrator to remove harm while preserving verified improvements."
+    },
+    "expected_effect": "Candidate arms should retain more of the provisional engine's demonstrated gains without relaxing legality or regression obligations. When multiple exact deltas can causally close a reproduced failure, the integrator will prefer a certified rollback that does not erase independently reproduced beneficial behavior, increasing decisive wins and median Elo while retaining the champion's bounded rollback safety.",
+    "falsifier": "Falsify the hypothesis if any candidate arm is invalid, or, after three completed matched pairs from the frozen anchor panel, candidate wins do not exceed candidate losses or candidate median Elo is not strictly greater than incumbent median Elo.",
+    "behavioral_novelty": "A non-authoring verifier can now prove both that removing a delta closes a regression and that removing another delta reopens a champion weakness. The final emitter can therefore distinguish equally failure-closing rollback choices by preserved causal benefit instead of treating every non-culprit improvement as evidentially invisible.",
+    "strengths": [
+      "Directly addresses the supported round-7 mechanism's stated risk of discarding useful behavior during exact rollback.",
+      "Preserves the champion's single provisional engine, independent post-artifact verification, and bounded certificate-only integration.",
+      "Uses reversible executable interventions for information preservation without replicated candidates, sampling, or best-of-N selection."
+    ],
+    "risks": [
+      "Bounded checks may certify a local benefit that does not translate into broader playing strength.",
+      "A delta may be both harmful and beneficial; mandatory legality and regression closure must take precedence when no certificate-consistent alternative exists.",
+      "If failures have only one causally sufficient rollback, retention evidence will not change the emitted engine and the added ledger may yield mostly ties."
+    ]
+  },
+  "structure": {
+    "name": "bidirectional_causal_certificate_ledger",
+    "organization": "collaboration",
+    "information_flow": "One producer creates a single provisional engine. An independent verifier performs reversible champion-to-provisional delta interventions and records both exact rollback certificates for reproduced harm and exact retention certificates for reproduced improvement. A bounded final integrator emits one complete engine by preserving the provisional artifact or applying only failure-closing certified rollbacks, preferring certificate-consistent choices that preserve verified benefits.",
+    "stages": [
+      {
+        "id": "provisional_construction",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "provisional_engine",
+            "role": "provisional engine producer",
+            "objective": "Starting from the champion anchor, produce exactly one complete legal UCI engine using evidence-led repairs; do not generate alternatives, samples, or select among candidate engines.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      },
+      {
+        "id": "bidirectional_certification",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "causal_ledger",
+            "role": "independent bidirectional causal verifier",
+            "objective": "Compare the champion and provisional engines, reproduce bounded executable failures and improvements, and use reversible exact-delta removal and restoration solely as causal interventions. Emit rollback certificates only for deltas whose removal closes a reproduced failure and restoration reopens it. Emit retention certificates only for deltas whose removal reopens a champion weakness closed by the provisional engine and restoration closes it again. Do not author or select an engine.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_engine"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "certificate_bounded_emission",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "final_engine",
+            "role": "certificate-bounded integrator",
+            "objective": "Emit one complete legal UCI engine. Preserve the provisional engine when no rollback is certified. Otherwise apply only an exact verifier-certified rollback set that closes every reproduced failure, preferring causally sufficient choices that preserve retention-certified deltas. Mandatory legality and regression closure take precedence when certificates conflict. Do not invent repairs, generate alternatives, or perform best-of-N selection.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_engine",
+              "causal_ledger"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "final_engine"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  }
+}

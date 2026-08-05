@@ -1,0 +1,25 @@
+{
+  "status": "inconclusive_execution_blocked",
+  "realized_artifact": "execution/calls/01-01-provisional_builder.response.txt",
+  "runtime": {
+    "attempted": true,
+    "result": "Host policy rejected Python/executable invocation; no runtime witness was certified."
+  },
+  "changed_deltas": [
+    "Added PST, KM, and KE evaluation tables.",
+    "Added king-capture exclusions in pawn, knight, slider, and king generation.",
+    "Added piece-square evaluation and side-to-move bias (+8/-8).",
+    "Changed root move ordering to use root transposition-table best move."
+  ],
+  "witnesses": [],
+  "rollback_certificates": [],
+  "preservation_obligations": [
+    "UCI handshake and readiness",
+    "Legal start-position moves",
+    "FEN, castling, en-passant, and promotion handling",
+    "Determinism",
+    "Movetime deadline compliance"
+  ],
+  "emission_guidance": "No certified rollback or no-failure certificate exists; integrator should use the exact champion fallback.",
+  "memory_upload": "Failed twice because executable/network commands were blocked by host policy."
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "The champion's terminal compression tests only one accepted patch at a time. A patch and the downstream repairs needed to compensate for its side effects can therefore make one another appear indispensable under singleton ablation, even when the entire repair cascade is unnecessary in the final assembled context.",
+    "evidence_refs": [
+      "state_capsule.current_champion.structure_summary: terminal final-context compression exactly ablates each surviving patch",
+      "state_capsule.hypothesis_frontier[0]: terminal causal compression was supported by 3W/0L, median delta 66.358, and zero invalid candidate arms",
+      "state_capsule.recent_outcomes[0].weaknesses: removing an older patch can change the context in which downstream patches operate"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Intervention granularity used by terminal final-context compression",
+      "before": "Terminal compression assesses accepted repairs only through independent singleton-patch ablations.",
+      "after": "Terminal compression first assesses provenance-closed repair blocks through joint ablation, with singleton ablation retained as the terminal fallback for blocks that cannot be removed intact.",
+      "why_causal": "Jointly rolling back an edit with repairs caused exclusively by that edit changes the counterfactual being tested from an incoherent intermediate program to a previously coherent program state. This can expose removable compensating cascades that every singleton intervention falsely certifies as necessary."
+    },
+    "expected_effect": "The loop should retain the champion's validated admission process while emitting engines with fewer self-induced repair cascades, stale compensations, and cross-patch interactions. This should improve paired consistency and median strength without increasing invalid engines.",
+    "falsifier": "Falsify the hypothesis if the completed three-pair matched batch has candidate wins less than or equal to candidate losses, candidate median Elo less than or equal to incumbent median Elo, or any invalid candidate arm.",
+    "behavioral_novelty": "The producer can remove an older edit and the downstream repairs that exist only because of it as one causally coherent rollback, even when removing any member alone fails regression replay.",
+    "strengths": [
+      "Extends the supported final-context compression mechanism to interaction-bound repair cascades.",
+      "Uses executable joint counterfactuals and exact rollback rather than speculative source simplification.",
+      "Preserves singleton compression when no removable causal block exists.",
+      "Can recover a coherent earlier engine state instead of evaluating downstream patches in a context for which they were not authored."
+    ],
+    "risks": [
+      "Incorrect provenance attribution could group a broadly useful downstream repair with its historical cause.",
+      "A large causal block may fail joint ablation even though a smaller non-obvious subset is removable.",
+      "Joint replay increases terminal execution cost and may reduce time available for earlier repair work.",
+      "A bounded regression obligation set may approve removal of a block that contributes strength outside the observed evidence."
+    ]
+  },
+  "structure": {
+    "name": "provenance_block_terminal_compression",
+    "organization": "solo",
+    "information_flow": "One producer preserves the champion's continuous evidence and repair trajectory, records exclusive causal provenance between accepted repairs, and changes only terminal compression by testing coherent provenance-closed blocks before singleton fallback. Every tested rollback is restored on failure, and the sole call emits the complete engine.",
+    "stages": [
+      {
+        "id": "produce",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "engine_producer",
+            "role": "transactional engine producer with causal-block rollback",
+            "objective": "Starting from champion_engine, produce one complete legal UCI engine in one continuous call. Preserve raw audit evidence, the champion's ordered transactional A-B-A-B repair admission process, exact reversible deltas, and final-context regression obligations. For each accepted repair, record an exclusive provenance edge only when its motivating failure first appeared after and is causally attributable to an earlier accepted repair. At terminal compression, form bounded provenance-closed blocks from those edges and exactly ablate each block as one transaction. Permanently remove a block only when all precommitted motivating failures remain closed and no regression obligation worsens; otherwise restore it exactly and apply the champion's singleton-ablation fallback within that block. Emit one complete engine, with no replicated candidates, sampling, or best-of-N selection.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "engine_producer"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  }
+}

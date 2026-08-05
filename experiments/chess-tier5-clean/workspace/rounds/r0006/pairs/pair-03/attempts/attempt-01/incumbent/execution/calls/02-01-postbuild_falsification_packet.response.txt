@@ -1,0 +1,15 @@
+Verifier packet:
+
+- Draft source matches the supplied champion; no changed regions or differential witnesses found.
+- Static review found standard-library-only imports and complete required UCI handlers.
+- Runtime execution was unavailable: workspace contains no materialized `engine.py`, and process-launch commands were rejected by policy.
+- Therefore UCI, perft, legality, determinism, and deadline probes remain unexecuted—not certified.
+
+Reproduction commands once materialized:
+
+```powershell
+python -m py_compile engine.py
+@("uci","isready","position startpos","go movetime 50","quit") | python engine.py
+```
+
+Memory upload was attempted twice but blocked by the shell policy.

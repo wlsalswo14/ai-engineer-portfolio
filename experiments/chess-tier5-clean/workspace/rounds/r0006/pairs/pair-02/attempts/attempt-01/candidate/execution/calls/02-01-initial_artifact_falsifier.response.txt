@@ -1,0 +1,24 @@
+{
+  "verdict": "no confirmed failure; bounded runtime certificate unavailable",
+  "runtime_blocker": "Managed read-only shell rejected interpreter execution; no engine.py was materialized.",
+  "counterexamples": [],
+  "implicated_delta": {
+    "location": "pseudo() and legal()",
+    "change": "Opposing-king captures are excluded.",
+    "assessment": "authorized and correctness-preserving; retain byte-for-byte"
+  },
+  "preservation_obligations": [
+    "start position perft: 20, 400, 8902 at depths 1–3",
+    "legal castling, en-passant, promotion, and check-evasion moves",
+    "UCI handshake and exactly one legal bestmove",
+    "deterministic legal output",
+    "movetime 1–20 ms deadline compliance"
+  ],
+  "replay_witnesses": [
+    "position startpos moves e2e4 e7e5",
+    "position fen r3k2r/8/8/8/8/8/R3K2R w KQkq - 0 1",
+    "position fen 4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1",
+    "position fen 4k3/P7/8/8/8/8/8/4K3 w - - 0 1"
+  ],
+  "integration_action": "Preserve the provisional artifact unchanged unless runtime replay finds a concrete failure."
+}

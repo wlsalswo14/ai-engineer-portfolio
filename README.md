@@ -32,20 +32,24 @@ loop-evolution/
 
 ## 현재 상태
 
-- 완료 라운드: R26 (내부 clean 인덱스 R7)
+- 완료 라운드: R28 (내부 clean 인덱스 R9)
 - 현 챔피언: R26에서 승격된 `package_164862893ef916a4`
 - 루프 구조: `loop_2c6ee2e0a1ec021b`
 - 구조 형태: collaboration, 3-call provisional builder → causal attributor → certified rollback integrator
 - 대표 엔진 Elo: `-105.297`
 - R26 승격 근거: 유효 pair `1승 0패 2무`, 후보 중앙값 `-105.297` 대 incumbent `-120.412`
-- 탐색 상태: 국소개선 2회 완료, 창발 후보 1회차 대기
-- 다음 라운드: R27 (내부 clean 인덱스 R8)
+- R27: 창발 1회차 미승격·inconclusive, 유효 pair `1승`, 다음 pair 재시도 소진
+- R28: 창발 2회차 미승격 `0승 2패`, 승격 불가능으로 조기 종료
+- 탐색 상태: 국소개선 `2/2`, 창발 실패 `2/2`, 반대가설 모드
+- 다음 라운드: R29 (내부 clean 인덱스 R10), 승격까지 반대가설 유지
 
 공식 표시 번호는 내부 clean 인덱스에 19를 더한다. 이는 이름만 바꾸는 규칙이며 디렉터리,
 구조 ID, 패키지 ID, 엔진, Elo, 감사 기록은 변경하지 않는다.
 
 R21~R25의 anchor별 결과와 토큰 집계는
-[experiments/chess-tier5-clean/R21-R25-REPORT.md](experiments/chess-tier5-clean/R21-R25-REPORT.md)에 있다.
+[experiments/chess-tier5-clean/R21-R25-REPORT.md](experiments/chess-tier5-clean/R21-R25-REPORT.md),
+R26~R28 결과는
+[experiments/chess-tier5-clean/R26-R28-REPORT.md](experiments/chess-tier5-clean/R26-R28-REPORT.md)에 있다.
 
 이전 `chess-tier5` 계보는 무효 arm이 상대의 승리로 계산될 수 있었던 과거 판정의 영향을 받아
 공식 상태에서 제외했다. 삭제하지 않고 감사·연구용으로 보존한다.

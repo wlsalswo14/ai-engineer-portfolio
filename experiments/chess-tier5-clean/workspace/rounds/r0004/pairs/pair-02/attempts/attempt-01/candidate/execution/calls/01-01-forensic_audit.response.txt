@@ -1,0 +1,83 @@
+{
+  "packet_type": "immutable_forensic_audit",
+  "scope": "Supplied champion source and general-development evidence only; no candidate engine proposed or emitted.",
+  "raw_observations": [
+    "Champion metrics: 4 wins, 31 losses, 65 draws, score rate 0.365, Elo -94.211.",
+    "State capsule reports a different current-champion Elo of -148.002 and different source lineage; provenance is inconsistent.",
+    "Source uses transposition keys containing board, side, castling rights, and en-passant square, but not search ply, halfmove clock, or repetition history.",
+    "Mate scores include search ply: -MATE + ply; stored transposition scores are reused without mate-score normalization.",
+    "Quiescence search examines captures and promotions only when the side is not in check; quiet checking moves are excluded.",
+    "The deadline starts only after root legal-move generation; time is checked once per 32 nodes.",
+    "The UCI go handler catches every exception and falls back to the first legal move.",
+    "FEN parsing and move application silently accept or ignore several malformed states and unrecognized moves.",
+    "Dynamic interpreter probes were not executed: the read-only shell rejected interpreter execution. No measured handshake, perft, timing, or determinism result is asserted."
+  ],
+  "ranked_mechanisms": [
+    {
+      "rank": 1,
+      "mechanism": "Unnormalized mate scores in the transposition table",
+      "raw_basis": "Mate values depend on ply, while the TT key omits ply and retrieval returns the stored score unchanged.",
+      "inference": "The same transposed position reached at different depths/plies can receive an incorrect mate distance, destabilizing forced-mate ordering and tactical choices.",
+      "probe": "Call search on a forced-mate transposition at two different root ply values, first with TT cleared and then with the prior TT entry retained. Compare returned mate scores and chosen moves.",
+      "confidence": "high"
+    },
+    {
+      "rank": 2,
+      "mechanism": "Quiescence horizon excludes quiet checks",
+      "raw_basis": "Non-check qsearch calls legal(p, True); pseudo(..., True) emits captures and promotions, not quiet checks.",
+      "inference": "Tactics whose critical continuation is a non-capturing check can be evaluated incorrectly at the search horizon.",
+      "probe": "For FEN `k7/8/8/8/8/8/4Q3/6K1 w - - 0 1`, verify that `e2a6` is legal and gives check, but is absent from `pseudo(position, True)` and `legal(position, True)`.",
+      "confidence": "high"
+    },
+    {
+      "rank": 3,
+      "mechanism": "Deadline coverage and broad exception fallback",
+      "raw_basis": "Root legal generation occurs before the deadline is set; checks occur only every 32 nodes; any exception emits the first legal move.",
+      "inference": "Tight time controls or latent runtime failures can convert a partially searched position into a legal but strategically arbitrary first move, risking deadline or strength regressions.",
+      "probe": "Run repeated UCI sessions with valid positions and `go movetime 1`, `5`, `20`, and `100`; measure wall-clock completion, count output lines, verify each move is legal, and record any `0000` or first-move fallback.",
+      "confidence": "medium"
+    },
+    {
+      "rank": 4,
+      "mechanism": "Draw/repetition state is absent from search state",
+      "raw_basis": "Position stores halfmove/fullmove fields, but search keys omit them; no prior-position history is retained by setpos or search.",
+      "inference": "Threefold and fifty-move contexts are indistinguishable, and TT reuse can cross draw-state boundaries.",
+      "probe": "Construct identical FENs differing only in halfmove clock, e.g. start position with clocks 0 and 100; verify their TT keys are identical. Replay a repeated move sequence and verify no repetition history is available.",
+      "confidence": "medium"
+    },
+    {
+      "rank": 5,
+      "mechanism": "Insufficient invalid-state and protocol validation",
+      "raw_basis": "FEN fields are parsed without structural validation; pseudo-moves may capture an enemy king; if a king is absent, king() returns -1 and attacked() returns false; unknown position moves are ignored.",
+      "inference": "Malformed or terminal inputs can produce non-chess legal moves, process failure, or conventional `0000` despite the strict bestmove wording.",
+      "probe": "Use adjacent-king FEN `4k3/4K3/8/8/8/8/8/8 w - - 0 1`; assert no generated move captures the opposing king. Also test malformed FEN and unknown move tokens for process survival and state reporting.",
+      "confidence": "low for normal benchmark positions; high for malformed-input robustness"
+    }
+  ],
+  "invariants": {
+    "legality": [
+      "Start-position perft must be 20, 400, and 8902 at depths 1, 2, and 3.",
+      "Kiwipete perft must be 48, 2039, and 97862 at depths 1, 2, and 3.",
+      "Every emitted move must be legal and leave the moving side's king unattacked.",
+      "Castling, en passant, promotion, castling-right updates, and clocks must transition exactly."
+    ],
+    "protocol": [
+      "uci produces exactly one uciok; isready produces readyok.",
+      "Each valid nonterminal go movetime command produces exactly one legal bestmove before the requested deadline.",
+      "Repeated identical command streams are deterministic under a generous fixed time margin.",
+      "No external files, network, nonstandard libraries, or hidden benchmark data are accessed."
+    ],
+    "regression": [
+      "Any repair must preserve all legality/perft/protocol invariants.",
+      "Before strength-oriented changes, record anchor behavior on the invariant suite.",
+      "Do not treat an unmeasured probe as evidence of improvement.",
+      "Retain unresolved ambiguity rather than converting it into a repair obligation."
+    ]
+  },
+  "unresolved_ambiguity": [
+    "The supplied champion metrics and state-capsule champion lineage disagree; causal strength claims should not combine them without provenance resolution.",
+    "No dynamic measurements were available in this arm, so timing, determinism, and actual perft compliance remain unverified.",
+    "The malformed-state king-capture issue may be irrelevant if the evaluator supplies only valid reachable positions.",
+    "The coarse static evaluation is visibly material/heuristic-heavy, but its contribution to the reported Elo cannot be isolated from search and protocol effects."
+  ]
+}

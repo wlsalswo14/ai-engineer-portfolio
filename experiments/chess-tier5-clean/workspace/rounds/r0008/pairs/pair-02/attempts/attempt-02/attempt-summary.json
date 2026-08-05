@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "pair": 2,
+  "attempt": 2,
+  "execution_order": [
+    "candidate",
+    "incumbent"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "frozen_lineage_baseline",
+    "anchor_id": "anchor_eaba2e9ff3e678c1",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\final-output.json",
+    "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+    "metrics": {
+      "draws": 65,
+      "elo": -94.211,
+      "losses": 31,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\benchmark-result-receipt.json",
+      "score_rate": 0.365,
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+      "wins": 4
+    },
+    "origin": "bootstrap:package_ebdecd200797a81e"
+  },
+  "incumbent_structure_id": "loop_2c6ee2e0a1ec021b",
+  "candidate_structure_id": "loop_3947e6cf0fe9be09",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0008\\pairs\\pair-02\\attempts\\attempt-02\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0008\\pairs\\pair-02\\attempts\\attempt-02\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": false,
+    "benchmark_valid": true,
+    "failure_kind": "benchmark_contract_failure:valid_games=100,candidate_failures=4",
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:327784d7ef393967dbe1e9214272b45e41ec785d4565854c8c06372f1b647b39",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.29,
+    "wins": 4,
+    "draws": 50,
+    "losses": 46,
+    "elo": -152.084,
+    "elo_error_95": 107.991,
+    "los": 0.000626,
+    "valid_games": 100,
+    "candidate_failures": 4,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0008\\pairs\\pair-02\\attempts\\attempt-02\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-327784d7ef393967.json",
+    "benchmark_receipt_sha256": "2fff4f7d81e80d3fd7ba68317ac6a4f5a1b8ca0f53311799f980ee44cdf5eb5a",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-327784d7ef393967.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:327784d7ef393967dbe1e9214272b45e41ec785d4565854c8c06372f1b647b39",
+      "chessbench-wdl:4-50-46"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:4d5840fd33dddfba17b83b1e9e00a1be33fbb6ed305842461886a836b69d6f6b",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.315,
+    "wins": 2,
+    "draws": 59,
+    "losses": 39,
+    "elo": -132.041,
+    "elo_error_95": 105.091,
+    "los": 0.002719,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0008\\pairs\\pair-02\\attempts\\attempt-02\\candidate\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4d5840fd33dddfba.json",
+    "benchmark_receipt_sha256": "2c37b4c3f39df6a847aee810a3a95ff6efc62c2ebcb80f15fee6003f69d2af94",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4d5840fd33dddfba.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:4d5840fd33dddfba17b83b1e9e00a1be33fbb6ed305842461886a836b69d6f6b",
+      "chessbench-wdl:2-59-39"
+    ]
+  },
+  "verdict": {
+    "verdict": "invalid",
+    "incumbent_elo": null,
+    "candidate_elo": -132.041
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "construct",
+        "stage_mode": "sequential",
+        "call_id": "provisional_builder",
+        "role": "provisional engine producer",
+        "output_type": "engine",
+        "prompt_sha256": "7d5aefbc4f23fd28fb5a76736451f277919aab7fb99ed12de0682998998f1300",
+        "response_sha256": "b776e775d45f9a1a4f174645fe86a5bb82f006c17894bea137e459c738e8a89e",
+        "usage": {
+          "input_tokens": 21801,
+          "cached_input_tokens": 8960,
+          "output_tokens": 12320,
+          "reasoning_output_tokens": 5752,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "attribute",
+        "stage_mode": "sequential",
+        "call_id": "causal_attributor",
+        "role": "independent terminal falsifier and delta attributor",
+        "output_type": "analysis",
+        "prompt_sha256": "ccf257606761b5106406f4adbb0bb9da128096b8ad0a86d7a0391e7255e7a95d",
+        "response_sha256": "cc67e05e75f78cef277df9c3ac0387dfdab9af0627bbe72bbf48e54b135ed43a",
+        "usage": {
+          "input_tokens": 798809,
+          "cached_input_tokens": 709632,
+          "output_tokens": 10753,
+          "reasoning_output_tokens": 7505,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "emit",
+        "stage_mode": "sequential",
+        "call_id": "certified_rollback_integrator",
+        "role": "constrained final engine emitter",
+        "output_type": "engine",
+        "prompt_sha256": "8bb640d6e3e54b6558a6cb3a1516e232f7af43f10e63efe9b08632bb526704c6",
+        "response_sha256": "dba04210d7af1aa4c72b765c8e5a5f8ef593ca60545dd8c848c46804e4cae228",
+        "usage": {
+          "input_tokens": 26049,
+          "cached_input_tokens": 0,
+          "output_tokens": 4669,
+          "reasoning_output_tokens": 128,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "construct",
+        "stage_mode": "sequential",
+        "call_id": "provisional_constructor",
+        "role": "provisional engine constructor",
+        "output_type": "engine",
+        "prompt_sha256": "0c396fd970e03128c0d2b42f23bc2d180148495b6fe947f7eb49852ce085b0a1",
+        "response_sha256": "b52127c832eb79b453830b153531e6516bc31492f6aec29b5e648d62ba03035d",
+        "usage": {
+          "input_tokens": 22087,
+          "cached_input_tokens": 8960,
+          "output_tokens": 7940,
+          "reasoning_output_tokens": 2546,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "causal_verification",
+        "stage_mode": "sequential",
+        "call_id": "causal_dead_end_verifier",
+        "role": "non-authoring causal intervention verifier",
+        "output_type": "analysis",
+        "prompt_sha256": "225fad2ccf3fa27e5228800ba669b55efc3384481bd39415dc983f36f647caa2",
+        "response_sha256": "10935de3f6694c6b82d28ca39bcb3a525043d4f6a7c11f89046cb93a88b41907",
+        "usage": {
+          "input_tokens": 56725,
+          "cached_input_tokens": 36352,
+          "output_tokens": 6993,
+          "reasoning_output_tokens": 1345,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "emit",
+        "stage_mode": "sequential",
+        "call_id": "strategy_substitution_integrator",
+        "role": "bounded final engine integrator",
+        "output_type": "engine",
+        "prompt_sha256": "647c45f947889dcb1050bd7ef8bdec20b955e239b623b372c06d49a32e918932",
+        "response_sha256": "b52127c832eb79b453830b153531e6516bc31492f6aec29b5e648d62ba03035d",
+        "usage": {
+          "input_tokens": 33581,
+          "cached_input_tokens": 0,
+          "output_tokens": 6262,
+          "reasoning_output_tokens": 868,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false
+}

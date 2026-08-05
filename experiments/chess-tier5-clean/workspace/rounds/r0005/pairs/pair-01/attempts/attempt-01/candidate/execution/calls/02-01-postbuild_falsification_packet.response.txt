@@ -1,0 +1,35 @@
+Verification packet:
+
+- Draft source matches the supplied champion source; no changed regions or differential behavior were identified.
+- No reproducible failure witness established by source inspection.
+- Runtime execution was blocked: no materialized `engine.py`; Python invocation rejected by sandbox.
+- Therefore, no runtime no-failure certificate can be issued.
+
+Required preservation checks:
+
+```powershell
+python -m py_compile .\engine.py
+@"
+uci
+isready
+position startpos
+go movetime 10
+quit
+"@ | python .\engine.py
+```
+
+Perft/determinism probe:
+
+```powershell
+@'
+import engine
+def p(pos,d):
+    if d==0:return 1
+    return sum(p(engine.make(pos,m),d-1) for m in engine.legal(pos))
+x=engine.Position.start()
+print([p(x,d) for d in range(1,4)])
+print([engine.notation(m) for m in engine.legal(x)])
+'@ | python -
+```
+
+Expected start-position perft: `20, 400, 8902`.

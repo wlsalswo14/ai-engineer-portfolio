@@ -1,0 +1,27 @@
+{
+  "status": "inconclusive_no_runtime_certificate",
+  "provisional": "execution/calls/01-01-provisional_builder.response.txt",
+  "runtime": "Blocked: interpreter execution rejected by read-only command policy; only file reads succeeded.",
+  "reproduced_failures": [],
+  "certified_rollback_deltas": [],
+  "static_findings": [
+    {
+      "delta": "insufficient() addition",
+      "finding": "Guard is ineffective on normal positions because uppercase K is not excluded by `x not in '.k'`.",
+      "classification": "optimization defect, no certified behavioral failure"
+    },
+    {
+      "delta": "search/null-move/PVS changes",
+      "finding": "Potential search regressions require runtime witnesses.",
+      "classification": "uncertified"
+    }
+  ],
+  "preservation_obligations": [
+    "syntax and standard-library-only imports",
+    "UCI handshake and exactly one bestmove",
+    "legal start-position moves and perft",
+    "castling, en-passant, promotion, pins, and check evasions",
+    "determinism and movetime deadline compliance"
+  ],
+  "certificate": "No-failure certificate not issued; A-B-A rollback certification was impossible without execution."
+}

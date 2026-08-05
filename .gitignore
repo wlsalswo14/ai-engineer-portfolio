@@ -6,6 +6,8 @@ dist/
 build/
 *.egg-info/
 
-# Experiment history is intentionally retained locally but should not be
-# committed accidentally without an explicit archival decision.
+# Preserve the official clean lineage in Git. Other experiment workspaces
+# remain local research archives unless explicitly admitted later.
 experiments/*/workspace/
+!experiments/chess-tier5-clean/workspace/
+!experiments/chess-tier5-clean/workspace/**

@@ -1,0 +1,21 @@
+{
+  "status": "inconclusive",
+  "runtime_execution": "blocked: shell permits inspection but rejects interpreter/process execution",
+  "reproduced_failures": [],
+  "certified_rollbacks": [],
+  "source_deltas": [
+    "pseudo-move suppression of enemy-king captures",
+    "piece activity evaluation changes",
+    "endgame king evaluation changes",
+    "checked-node qsearch extension",
+    "root PVS re-search"
+  ],
+  "preservation_obligations": [
+    "Python syntax",
+    "UCI handshake and exactly one bestmove",
+    "legal move generation",
+    "start-position perft",
+    "determinism and timeout compliance"
+  ],
+  "decision": "No rollback is certified; runtime evidence is insufficient to issue a no-failure certificate."
+}

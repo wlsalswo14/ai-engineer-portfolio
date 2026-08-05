@@ -1,0 +1,20 @@
+{
+  "status": "failure",
+  "witnesses": [
+    {
+      "type": "source-determined",
+      "fen": "7k/6Q1/5K2/8/8/8/8/8 b - - 0 1",
+      "result": "bestmove 0000",
+      "issue": "0000 is not a legal UCI move under the literal contract",
+      "region": "Engine.think no-moves branch; main bestmove emission",
+      "reproduce": "printf \"position fen 7k/6Q1/5K2/8/8/8/8/8 b - - 0 1\\ngo movetime 10\\nquit\\n\" | python engine.py"
+    }
+  ],
+  "differential": "Draft source matches the supplied champion/anchor; no changed-region differential failure found.",
+  "preservation_checks": [
+    "Retain UCI handshake and normal legal-move behavior.",
+    "Retain castling, en-passant, promotion, perft, determinism, and deadline checks."
+  ],
+  "runtime": "Not executed: workspace has no materialized engine.py and Python execution was rejected by the sandbox.",
+  "memory_upload": "Failed: sandbox rejected both direct POST attempts."
+}

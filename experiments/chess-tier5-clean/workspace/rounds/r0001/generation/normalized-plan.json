@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "The promoted solo loop causally validates each edit in its insertion context, but its structure does not require that acceptance to be reconsidered after later edits change the assembled engine. This leaves an untested persistence assumption: an initially necessary repair may become redundant or harmful through interaction with subsequent repairs while remaining committed.",
+    "evidence_refs": [
+      "STATE_CAPSULE current_champion structure_summary",
+      "STATE_CAPSULE recent_outcomes round 18: solo information preservation promoted with 2W/0L/1T and positive median delta",
+      "STATE_CAPSULE recent_outcomes round 19: A-B-A-B acceptance promoted with 2W/1L/0T; documented weakness says local causal closure does not prove broader engine benefit"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Lifetime of a repair's causal acceptance certificate",
+      "before": "A repair that passes its insertion-time A-B-A-B intervention and regression replay remains accepted through final emission.",
+      "after": "Insertion-time acceptance is provisional: after the ordered repair trajectory, the same producer performs terminal final-context causal compression, exactly ablating each surviving patch and permanently deleting it when its motivating failures remain closed and no precommitted regression obligation worsens.",
+      "why_causal": "Later edits can change whether an earlier patch still contributes to observed closure. Testing exact patch removal in the final assembled context directly intervenes on continued necessity, allowing the emitted engine to exclude repairs whose original causal contribution has been superseded."
+    },
+    "expected_effect": "The loop should preserve the champion's successful raw-evidence solo reasoning and A-B-A-B admission gate while emitting a smaller, less interaction-prone repair stack. Removing superseded or final-context-harmful edits should reduce accumulated overfitting and improve paired consistency and median strength without increasing invalid engines.",
+    "falsifier": "The hypothesis is falsified in the precommitted three-pair batch if any candidate arm is invalid, candidate wins do not exceed candidate losses, or the candidate median Elo is not strictly greater than the incumbent median Elo.",
+    "behavioral_novelty": "An edit that was genuinely necessary and causally validated when introduced can now be removed before emission when a later edit has taken over its function or made it counterproductive. The champion cannot revoke such a stale acceptance certificate based on an exact intervention in the final assembled engine.",
+    "strengths": [
+      "Extends executable causal attribution from edit admission to final repair-stack membership.",
+      "Preserves the promoted solo organization, raw evidence, exact rollback, and one continuous engine trajectory.",
+      "Can eliminate redundant logic, duplicated work, and adverse interactions introduced by individually valid repairs.",
+      "Uses counterfactual source ablations rather than replicated model calls, candidate sampling, or best-of-N selection.",
+      "Can emit the unchanged champion when no complete valid repair stack survives."
+    ],
+    "risks": [
+      "A bounded regression suite may classify a repair as redundant even though it provides strength outside the observed obligations.",
+      "Final-context ablation and replay consume execution budget and may reduce the number of initial repairs attempted.",
+      "Nondeterministic search behavior can make a necessary patch appear dispensable.",
+      "Removing an older patch can alter the context in which another retained patch was assessed, requiring bounded invalidation and replay.",
+      "Code simplification may improve robustness without producing enough Elo gain to satisfy paired promotion."
+    ]
+  },
+  "structure": {
+    "name": "Solo Provisional Repair Stack with Terminal Causal Compression",
+    "organization": "solo",
+    "information_flow": "One self-contained producer starts from the champion engine, preserves raw audit evidence, follows the champion's ordered transactional A-B-A-B repair process, records every accepted edit as an exactly reversible delta, and then causally compresses that provisional stack in the assembled final context before emitting one complete engine.",
+    "stages": [
+      {
+        "id": "produce_and_compress",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "terminal_engine_producer",
+            "role": "evidence-preserving transactional engine producer",
+            "objective": "Starting only from the champion engine and built-ins, audit before divergence and construct one ordered repair trajectory. For every minimal proposed edit, retain the champion's identical-reproducer checkpoint-patch-checkpoint-patch intervention, regression replay, exact rollback, and validity safeguards. Record each accepted edit as an exactly reversible delta with its immutable motivating evidence, treating acceptance as provisional. After construction, perform bounded terminal causal compression on the single assembled engine: examine retained deltas in reverse order, remove exactly one delta, replay its motivating reproductions and the precommitted general regression and UCI-legality obligations, permanently delete the delta only if all motivating failures remain closed and no obligation worsens, and otherwise restore it byte-identically. When a permanent deletion invalidates evidence for affected retained deltas, replay only that affected suffix within the fixed bound. Do not generate alternative engines for selection, replicate calls or samples, tune engine hyperparameters as the structural mechanism, or use ChessBench-specific knowledge. Emit the resulting complete legal UCI engine; if no modified state remains valid, emit the champion engine unchanged.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "terminal_engine_producer"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  },
+  "structure_id": "loop_d9b6fe59cd5b067b"
+}
