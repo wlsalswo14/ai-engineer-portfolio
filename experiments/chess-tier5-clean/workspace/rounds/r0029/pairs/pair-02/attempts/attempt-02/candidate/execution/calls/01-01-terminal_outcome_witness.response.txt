@@ -1,0 +1,8 @@
+WITNESS {
+  "priority_order": ["legality", "protocol_behavior", "bounded_work", "state_integrity", "decision_quality"],
+  "generic_procedure": "Start the untouched anchor, send uci, isready, then position fen 8/QQQQQQQQ/QQQQQQQQ/8/8/8/qqqqqqqq/qqqqqqqq/K6k w - - 0 1 and go movetime 1. Measure from go dispatch until the first bestmove line.",
+  "observed_anchor_trace": "uciok and readyok are produced. think(1) calls legal(self.pos) before assigning self.deadline; the high-branching FEN keeps execution in that unbudgeted generation past the 1 ms deadline, with no bestmove emitted by the deadline.",
+  "failed_terminal_predicate": "For every go movetime command, exactly one legal bestmove is emitted before the requested deadline.",
+  "preservation_predicates": ["The UCI handshake remains correct.", "The supplied source is unchanged.", "No benchmark data or evaluator information is used.", "The test uses one bounded, task-general protocol procedure."],
+  "falsifier": "Falsify this witness if the stated run emits a legal bestmove at or before the 1 ms deadline, or if the deadline is defined only after initial legal move generation."
+}

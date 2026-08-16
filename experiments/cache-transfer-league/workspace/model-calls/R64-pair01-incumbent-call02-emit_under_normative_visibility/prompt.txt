@@ -1,0 +1,84 @@
+Role: R64 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R64,
+matched pair 1, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "Source identities are intentionally sealed; claims are reconciled only by substance and normative obligations. No score, trace, oracle, benchmark source, or external evidence is available.",
+      "witnesses": [
+        {
+          "claim": "A byte-aware two-resident-region design with recency/frequency separation and bounded ghost histories supports scan resistance, phase adaptation, and byte-budget enforcement.",
+          "supporting_distinction": "These mechanisms are heuristics, not guarantees of hit rate or offline-regret improvement."
+        },
+        {
+          "claim": "Ghost-hit feedback can adapt the recency target toward the region whose evictions are being rediscovered.",
+          "supporting_distinction": "Adaptation must remain subordinate to exact capacity and return-value legality."
+        },
+        {
+          "claim": "Promotion on resident hits and insertion of rediscovered items as frequent evidence may protect reused objects after scans or phase changes.",
+          "supporting_distinction": "Large, zero-sized, repeated, and rapidly changing objects can stress byte accounting and replacement choices."
+        },
+        {
+          "claim": "The terminal decision must not condition deference on provenance, attribution, majority status, or any unavailable score.",
+          "conflict": "Generative claims may conflict with one another; preserve the conflict and resolve it using the visible contract rather than source identity."
+        }
+      ],
+      "obligations": [
+        "Use only Python standard-library facilities and online information from the current access.",
+        "Preserve the required Policy constructor and access interface.",
+        "Never exceed capacity_bytes, including capacity zero and objects larger than capacity.",
+        "Return only unique integer keys that are valid cached entries for eviction under the evaluator-owned state model.",
+        "Maintain internally consistent byte accounting across insertion, promotion, resizing, eviction, and rejected oversized objects.",
+        "Use no benchmark paths, hidden traces, oracle decisions, external libraries, networking, subprocesses, or hardcoded workload knowledge.",
+        "Emit one complete policy decision downstream, with no alternative ranking or score-based selection."
+      ],
+      "exact_actions": [
+        "Treat all claims in this packet symmetrically by their contract-relevant substance; discard provenance as a decision variable.",
+        "Prioritize interface legality, evaluator-state compatibility, and capacity safety over speculative optimization gains.",
+        "Use bounded online bookkeeping for recency, frequency, and historical eviction evidence if retained, while preventing stale evidence from violating current-state accounting.",
+        "Handle resident size changes and oversized requests explicitly so returned keys and internal occupancy remain coherent.",
+        "Validate every returned eviction against current residency and uniqueness before handoff.",
+        "Do not infer unavailable scores, traces, benchmark behavior, or anchor superiority; choose behavior solely from the task, contract, constraints, and this analysis."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R63 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

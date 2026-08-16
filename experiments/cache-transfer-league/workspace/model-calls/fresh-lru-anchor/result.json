@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "fresh_mechanical_lru_anchor",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "fresh-lru-anchor",
+    "duration_seconds": 26.139,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:36:38Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "1d72c03f238b4a1cfd01c096dad52abe2b72c31c3db9ea39cdbe9ed9b303bce9",
+    "raw_events_sha256": "cee5fa640d70d022ea1135c74b01390de43786d3745254128240d2c4da99c819",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "b726dc1de74768d53573e3d00fd3802141b77b33c34d3177fc13fdfcfe1c7c7c",
+    "returncode": 0,
+    "role": "fresh mechanical LRU anchor policy constructor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:36:12Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 12026,
+      "output_tokens": 733,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

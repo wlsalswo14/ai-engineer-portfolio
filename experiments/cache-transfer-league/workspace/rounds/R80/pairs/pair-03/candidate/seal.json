@@ -1,0 +1,41 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 5545,
+  "artifact_path": "workspace\\rounds\\R80\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "1e9c09348affc761f74aa234ffcd9d8de4b6cc551a49599c2ea578d5fdb69ca4",
+  "display_round": 80,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R80\\pairs\\pair-03\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "e16a9f19b595153add752c38c25e329194c5a99329f27141f6cd79fd7dfe1083",
+  "label": "pair-03-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R80-pair03-candidate-call01-map_symmetric_provenance\\final-receipt.json",
+      "sha256": "8c36f211c5691f27a7d911fd688d0d18c91b35e4380256e175f3bb9f4fd7dd05"
+    },
+    {
+      "path": "workspace\\model-calls\\R80-pair03-candidate-call02-exercise_unitary_policy_authority\\final-receipt.json",
+      "sha256": "e6e137e4e42689bee5ed867038bda5c63bd6fc70db343b85e53c20a899d1c5fc"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5545,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-10T00:59:56Z"
+}

@@ -1,0 +1,32 @@
+{
+  "HANDOFF_STATE": "QUERY_RESOLVED",
+  "query": "Which anchor lifecycle binding owns persistent repetition-history reset and position-sequence recording across ucinewgame, position [moves ...], and go/root?",
+  "answer": {
+    "owner": "Engine.repetition",
+    "construction": "Engine.__init__",
+    "ucinewgame": "repetition.reset()",
+    "position": "reset ledger; record initial Position; record each successfully replayed post-make Position in order",
+    "go_root": "search-path overlay only; do not append game history"
+  },
+  "answering_trace": {
+    "component": "repetition-ledger-search-seam-v1",
+    "seam": "Engine.root -> Engine.search -> make(...)",
+    "search_order": "enter(SearchNode) -> terminal/search_guard before TT lookup -> recursive search -> leave(mark) in finally cleanup",
+    "fixture_result": "A,B,A,B gives count(A)=2; enter(A) gives count(A)=3 and draw_score=0; leave restores count(A)=2 and empty path; reset clears both"
+  },
+  "causal_target_identity": "detect threefold repetition across game history and reversible search paths",
+  "component_lineage_identity": "repetition-ledger-search-seam-v1",
+  "anchor_bindings": {
+    "position_fields": ["b", "side", "cast", "ep"],
+    "history_owner": "Engine.repetition",
+    "recording_boundary": "position command replay",
+    "search_boundary": "Engine.search node entry"
+  },
+  "preservation_obligations": [
+    "no move-generation, evaluation, TT, UCI, or timing changes",
+    "one ledger and one guard",
+    "one enter/leave pair per search node",
+    "leave always executes during cleanup"
+  ],
+  "final_replay_command": "uci; isready; ucinewgame; position startpos moves g1f3 g8f6 f3g1 f6g8 g1f3 g8f6 f3g1 f6g8; go movetime 20; quit"
+}

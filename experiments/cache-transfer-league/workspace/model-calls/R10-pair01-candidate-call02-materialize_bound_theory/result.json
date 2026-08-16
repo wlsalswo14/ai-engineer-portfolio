@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.entries = {}\n        self.used_bytes = 0\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.reuse_interval = 2\n        self.expiry = 8\n\n    def _learn_gap(self, gap):\n        if gap > 0:\n            self.reuse_interval = max(1, (self.reuse_interval * 7 + gap) // 8)\n            self.expiry = max(8, min(64, self.reuse_interval * 4))\n\n    def _remove(self, key, evicted):\n        record = self.entries.pop(key, None)\n        if record is None:\n            return\n        size = record['size']\n        if record['segment'] == 0:\n            self.probation.pop(key, None)\n            self.probation_bytes -= size\n        else:\n            self.protected.pop(key, None)\n            self.protected_bytes -= size\n        self.used_bytes -= size\n        evicted.append(key)\n\n    def _demote(self, key):\n        record = self.entries.get(key)\n        if record is None or record['segment'] != 1:\n            return\n        size = record['size']\n        self.protected.pop(key, None)\n        self.protected_bytes -= size\n        record['segment'] = 0\n        record['hits'] = 0\n        self.probation[key] = None\n        self.probation_bytes += size\n\n    def _trim_probation(self, evicted, keep=None):\n        limit = max(1, self.capacity_bytes // 4) if self.capacity_bytes else 0\n        while self.probation_bytes > limit:\n            victim = None\n            for candidate in self.probation:\n                if candidate != keep:\n                    victim = candidate\n                    break\n            if victim is None:\n                break\n            self._remove(victim, evicted)\n\n    def _expire_protected(self, now, evicted, keep=None):\n        for key in list(self.protected):\n            if key == keep:\n                continue\n            record = self.entries.get(key)\n            if record is not None and now - record['last'] > self.expiry:\n                self._demote(key)\n                self._trim_probation(evicted, keep)\n\n    def _enforce_protected(self, evicted, keep=None):\n        target = max(1, (self.capacity_bytes * 3) // 4) if self.capacity_bytes else 0\n        while self.protected_bytes > target:\n            victim = None\n            for candidate in self.protected:\n                if candidate != keep:\n                    victim = candidate\n                    break\n            if victim is None:\n                break\n            self._demote(victim)\n            self._trim_probation(evicted, keep)\n\n    def _promote(self, key, evicted):\n        record = self.entries.get(key)\n        if record is None or record['segment'] != 0:\n            return\n        size = record['size']\n        self.probation.pop(key, None)\n        self.probation_bytes -= size\n        record['segment'] = 1\n        self.protected[key] = None\n        self.protected_bytes += size\n        self._enforce_protected(evicted, key)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = max(0, int(size))\n        evicted = []\n        self._expire_protected(now, evicted, key)\n        record = self.entries.get(key)\n\n        if record is not None:\n            gap = now - record['last']\n            if record['segment'] == 1:\n                if gap > self.expiry:\n                    self._demote(key)\n                    self._learn_gap(gap)\n                    record['last'] = now\n                    record['hits'] = 1\n                    self.probation.move_to_end(key)\n                    self._trim_probation(evicted, key)\n                else:\n                    self._learn_gap(gap)\n                    record['last'] = now\n                    self.protected.move_to_end(key)\n                return evicted\n\n            if gap > self.expiry:\n                record['hits'] = 1\n            else:\n                record['hits'] += 1\n            self._learn_gap(gap)\n            record['last'] = now\n            self.probation.move_to_end(key)\n            if record['hits'] >= 2:\n                self._promote(key, evicted)\n            else:\n                self._trim_probation(evicted, key)\n            return evicted\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return evicted\n\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = next(iter(self.probation), None)\n            if victim is None:\n                victim = next(iter(self.protected), None)\n            if victim is None:\n                break\n            self._remove(victim, evicted)\n\n        self.entries[key] = {\n            'size': size,\n            'segment': 0,\n            'last': now,\n            'hits': 1,\n        }\n        self.probation[key] = None\n        self.probation_bytes += size\n        self.used_bytes += size\n        self._trim_probation(evicted, key)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R10-pair01-candidate-call02-materialize_bound_theory",
+    "duration_seconds": 103.673,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:53:33Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "e4262439bdfb4e4c4c930429225e3112855184fad8e7ce6ba3b1061d1136a9ad",
+    "raw_events_path": "workspace\\model-calls\\R10-pair01-candidate-call02-materialize_bound_theory\\raw-events.jsonl",
+    "raw_events_sha256": "079c1ce4d687113d8cafa9601122bed20b17f4961a165e8a0cdd843d5340d103",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "ab5622dc2bd7ac6ceaca39844e4058d3f5ef4262f20a7e6c3c939e6350909484",
+    "returncode": 0,
+    "role": "R10 candidate topology role exclusive realization authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:51:50Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14408,
+      "output_tokens": 8178,
+      "reasoning_output_tokens": 6877
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

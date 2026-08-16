@@ -1,0 +1,397 @@
+{
+  "aggregate": {
+    "all_six_valid_and_deterministic": true,
+    "candidate_median": 78.2498,
+    "candidate_pairwise_majority": false,
+    "candidate_scores": [
+      71.6447,
+      86.4774,
+      78.2498
+    ],
+    "candidate_strict_median_win": false,
+    "candidate_wins": 1,
+    "incumbent_median": 82.0738,
+    "incumbent_scores": [
+      82.0738,
+      82.0738,
+      82.0738
+    ],
+    "incumbent_wins": 2,
+    "invalid_pairs": 0,
+    "ties": 0
+  },
+  "architect": {
+    "candidate_structure_path": "workspace\\rounds\\R19\\architect\\proposed-structure.json",
+    "candidate_structure_sha256": "029ae81b145d352e0c5012026d4d2104a6e5be61d6d4aa751062d0baf2dee7c2",
+    "candidate_topology_fingerprint": "4a0fcf0b5ae0781281e30b3851f1b41adb1e15c63d4f1b54bc493afc17b52d11",
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "mutation control changes from uninterrupted self-ownership to irreversible successor ownership",
+        "recovery behavior changes from historical rollback and terminal pruning to forward successor-state correction"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "the self-adjudicated reversible repair-stack mechanism with terminal causal compression",
+      "independent_replacement_principle": "single-writer succession, where executable-state ownership moves irreversibly across the lineage and only the current owner may correct or publish it",
+      "rejected_assumptions": [
+        "One uninterrupted owner should author and adjudicate its own repair trajectory.",
+        "Historical reversibility and terminal causal compression are necessary for final-policy reliability.",
+        "Mutation authority should remain with the originating producer through publication."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "proposal_path": "workspace\\rounds\\R19\\architect\\proposal.json",
+    "proposal_sha256": "453dee9702331c9912b99dd6801acf7f0bb1b90020b46d2cca3ac84547231619",
+    "structural_mutation": {
+      "after": "An origin owner hands a complete executable policy state to a successor; the edge extinguishes the origin owner's authority and grants the successor exclusive mutation and publication authority.",
+      "before": "One producer retains mutation, rollback, evidence-adjudication, compression, and publication authority throughout a reversible repair stack.",
+      "change_count": 1,
+      "factor": "irreversible single-writer ownership-transfer edge for the executable policy state",
+      "why_structural": "The mutation changes edge authority and state-transition semantics while preserving anchor visibility, provenance, and constructive successor capability; it is neither role renaming nor terminal-role fission."
+    }
+  },
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "runner_sha256": "636304977bc178f9e675f59c39d9b24c32874c964b944a3c0275e13f6408efbc",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "cache_r101_opened": false,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "close_confirmation": {
+    "confirmations": [],
+    "passed": true,
+    "threshold": 0.25,
+    "triggered": false
+  },
+  "completed_at": "2026-08-09T16:36:13Z",
+  "display_round": 19,
+  "final_audit": {
+    "all_six_sealed_before_score": true,
+    "cache_r101_opened": false,
+    "checks": [
+      "prior-atomic-champion-chain-unchanged",
+      "one-score-blind-sol-max-fast-architect",
+      "all-six-sealed-with-luna-high-only",
+      "luna-high-fast-priority-executor-epoch-bound",
+      "frozen-replay2-close-and-promotion-recomputed",
+      "champion-policy-and-structure-bound-to-decision",
+      "state-machine-transition-and-stop-contract",
+      "cache-r101-unopened"
+    ],
+    "display_round": 19,
+    "frozen_replay2_recomputed": true,
+    "git_commit_created": false,
+    "passed": true,
+    "schema_version": 1,
+    "state_machine_recomputed": true,
+    "strict_model_split_passed": true,
+    "test_receipt_path": "workspace\\rounds\\R19\\test-receipt.json",
+    "test_receipt_sha256": "b5ad2bf6dd93d6fad8b6f8fbbf3f7aac4c371dd65e8da827d6e970f8910a375d",
+    "verified_at": "2026-08-09T16:36:13Z"
+  },
+  "git_commit_created": false,
+  "invalids": [],
+  "pairs": [
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "893546acfa37deca138b37566153f35c37aa0a058a281c77d1207892a58ad23a",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "e24a9bdfec24144e77d33e1185f3449f9ba5dd8faff28b80b8645ee16e7e75f8",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R19\\evaluation\\pair-01\\candidate\\replay-01.json",
+          "workspace\\rounds\\R19\\evaluation\\pair-01\\candidate\\replay-02.json"
+        ],
+        "score": 71.6447,
+        "valid": true
+      },
+      "candidate_minus_incumbent": -10.429100000000005,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "b569c2110be396cadac2a82ef5fcfec41cdda0ef158972f9bacfc6324732f5f5",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "e28d08297867f80aea86e66beb405eba1ad36e86bf6a8b5c4de6481ed1b7bad2",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R19\\evaluation\\pair-01\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R19\\evaluation\\pair-01\\incumbent\\replay-02.json"
+        ],
+        "score": 82.0738,
+        "valid": true
+      },
+      "pair": 1,
+      "verdict": "incumbent_win"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "947faf3c2466a12e3fed279f498afc552ad01a363ea4b200bbf65556f98bfa00",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "27c5156c05b3a06710d9fb65696313d140396dfccbe3df5c3a3216f0661a9ce6",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R19\\evaluation\\pair-02\\candidate\\replay-01.json",
+          "workspace\\rounds\\R19\\evaluation\\pair-02\\candidate\\replay-02.json"
+        ],
+        "score": 86.4774,
+        "valid": true
+      },
+      "candidate_minus_incumbent": 4.403599999999997,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "e28d08297867f80aea86e66beb405eba1ad36e86bf6a8b5c4de6481ed1b7bad2",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R19\\evaluation\\pair-02\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R19\\evaluation\\pair-02\\incumbent\\replay-02.json"
+        ],
+        "score": 82.0738,
+        "valid": true
+      },
+      "pair": 2,
+      "verdict": "candidate_win"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "cd6ee1b57dde0bd04211ae7fe2cc5bbff5ad625e3352caaaabd9f674ddcd1f02",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "ea0504daf092b8900e90d5068a27e368d68b13e704c9beedde2067fbccaa4709",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R19\\evaluation\\pair-03\\candidate\\replay-01.json",
+          "workspace\\rounds\\R19\\evaluation\\pair-03\\candidate\\replay-02.json"
+        ],
+        "score": 78.2498,
+        "valid": true
+      },
+      "candidate_minus_incumbent": -3.8240000000000123,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "e28d08297867f80aea86e66beb405eba1ad36e86bf6a8b5c4de6481ed1b7bad2",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R19\\evaluation\\pair-03\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R19\\evaluation\\pair-03\\incumbent\\replay-02.json"
+        ],
+        "score": 82.0738,
+        "valid": true
+      },
+      "pair": 3,
+      "verdict": "incumbent_win"
+    }
+  ],
+  "promotion": {
+    "contract_passed": false,
+    "selection": {
+      "artifact_path": "workspace\\champion-r19\\policy.py",
+      "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+      "cache_r101_opened": false,
+      "champion_source": "retained-r18",
+      "decision_basis": {
+        "all_six_valid_and_deterministic": true,
+        "candidate_median": 78.2498,
+        "candidate_pairwise_majority": false,
+        "candidate_strict_median_win": false,
+        "candidate_wins": 1,
+        "close_confirmation_passed": true,
+        "close_confirmation_triggered": false,
+        "incumbent_median": 82.0738,
+        "incumbent_wins": 2
+      },
+      "display_round": 19,
+      "evaluation_batch_path": "workspace\\rounds\\R19\\evaluation\\evaluation-batch.json",
+      "evaluation_batch_sha256": "8562ae6de3d87ffb4d65b8d4cd22774d8374aa90597beaa0ccad6fe6819060d7",
+      "promoted": false,
+      "promotion_contract": {
+        "all_six_valid_and_replay2_deterministic": true,
+        "candidate_median": "strictly greater than incumbent median",
+        "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+        "failure_action": "retain current champion policy and structure",
+        "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+      },
+      "promotion_contract_passed": false,
+      "representative_pair": null,
+      "schema_version": 1,
+      "search_control_after": {
+        "completed_mode": "counter_hypothesis",
+        "emergent_failure_count": 2,
+        "local_refinement_count": 2,
+        "next_local_refinement_attempt": null,
+        "next_proposal_mode": "counter_hypothesis",
+        "promoted": false,
+        "transition": "counter-persists-until-promotion"
+      },
+      "search_control_before": {
+        "derived_from": "workspace\\rounds\\R18\\state.json",
+        "emergent_failure_count": 2,
+        "local_refinement_attempt": null,
+        "local_refinement_count": 2,
+        "proposal_mode": "counter_hypothesis"
+      },
+      "selected_at": "2026-08-09T16:36:11Z",
+      "source_artifact_path": "workspace\\champion-r18\\policy.py",
+      "source_artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+      "source_seal_path": null,
+      "source_seal_sha256": null,
+      "starting_policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+      "starting_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+      "structure_path": "workspace\\champion-r19\\structure.json",
+      "structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f"
+    }
+  },
+  "schema_version": 1,
+  "sealed_before_frozen_evaluation": true,
+  "search_control_after": {
+    "completed_mode": "counter_hypothesis",
+    "emergent_failure_count": 2,
+    "local_refinement_count": 2,
+    "next_local_refinement_attempt": null,
+    "next_proposal_mode": "counter_hypothesis",
+    "promoted": false,
+    "transition": "counter-persists-until-promotion"
+  },
+  "search_control_before": {
+    "derived_from": "workspace\\rounds\\R18\\state.json",
+    "emergent_failure_count": 2,
+    "local_refinement_attempt": null,
+    "local_refinement_count": 2,
+    "proposal_mode": "counter_hypothesis"
+  },
+  "starting_champion": {
+    "policy_path": "workspace\\champion-r18\\policy.py",
+    "policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "selection_receipt_path": "workspace\\champion-r18\\selection-receipt.json",
+    "selection_receipt_sha256": "c646fc1f28ee17d174a4f4d786738437d1780c24f373c0ce34cee561864331fb",
+    "structure_path": "workspace\\champion-r18\\structure.json",
+    "structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+    "topology_fingerprint": "5ba36af5c6cac26efd3050e9284c760ec7c35dda00673d521acf69fac95a5c31"
+  },
+  "status": "atomic-state-ready",
+  "tests": {
+    "display_round": 19,
+    "finished_at": "2026-08-09T16:36:13Z",
+    "passed": true,
+    "returncode": 0,
+    "schema_version": 1,
+    "started_at": "2026-08-09T16:36:11Z",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "92d8af1d4cd890b8147bfcda5f64a3265980d0e60fb26b1e499ccd1a71ebe59f",
+    "summary": "..........                                                               [100%]\n10 passed in 0.41s"
+  },
+  "token_accounting": {
+    "architect": {
+      "cached_input_tokens": 0,
+      "effective_tokens": 24413,
+      "input_tokens": 14487,
+      "model_calls": 1,
+      "output_tokens": 9926,
+      "reasoning_output_tokens": 9009,
+      "total_tokens": 24413,
+      "uncached_input_tokens": 14487
+    },
+    "completed_model_calls": 10,
+    "discarded_executor_epoch": null,
+    "display_round": 19,
+    "failed_transport_attempts": 0,
+    "receipt_paths": [
+      {
+        "call_id": "R19-pair01-candidate-call01-origin_policy_owner",
+        "path": "workspace\\model-calls\\R19-pair01-candidate-call01-origin_policy_owner\\final-receipt.json",
+        "sha256": "575d0718637503b2ce7ef7c71f3799d990b72cc577096f5445c515307ac4451a"
+      },
+      {
+        "call_id": "R19-pair01-candidate-call02-successor_policy_owner",
+        "path": "workspace\\model-calls\\R19-pair01-candidate-call02-successor_policy_owner\\final-receipt.json",
+        "sha256": "a93e4e34e89954f2e9f0e0253938ce4cc8fd66bb30b19179ea097dc03df06738"
+      },
+      {
+        "call_id": "R19-pair01-incumbent-call01-terminal_policy_producer",
+        "path": "workspace\\model-calls\\R19-pair01-incumbent-call01-terminal_policy_producer\\final-receipt.json",
+        "sha256": "d29840f6762a12a845fca8e029eba7257e75d09bf733304855b43e63c7490e7a"
+      },
+      {
+        "call_id": "R19-pair02-candidate-call01-origin_policy_owner",
+        "path": "workspace\\model-calls\\R19-pair02-candidate-call01-origin_policy_owner\\final-receipt.json",
+        "sha256": "f99959bfd621bc6a8b844723a9e97a19521ddab0a26f72c3a7fc32f325da7949"
+      },
+      {
+        "call_id": "R19-pair02-candidate-call02-successor_policy_owner",
+        "path": "workspace\\model-calls\\R19-pair02-candidate-call02-successor_policy_owner\\final-receipt.json",
+        "sha256": "ab1873ccafdcc1cb9d261bc692538f7ffdb3805405af0e0c8486a04082caf0f2"
+      },
+      {
+        "call_id": "R19-pair02-incumbent-call01-terminal_policy_producer",
+        "path": "workspace\\model-calls\\R19-pair02-incumbent-call01-terminal_policy_producer\\final-receipt.json",
+        "sha256": "f54d6f6ef8fec502532a61fa791b1e4feb1896bc2e44f871b324d9517c918e2f"
+      },
+      {
+        "call_id": "R19-pair03-candidate-call01-origin_policy_owner",
+        "path": "workspace\\model-calls\\R19-pair03-candidate-call01-origin_policy_owner\\final-receipt.json",
+        "sha256": "bab2d3b9bc3a77bb05b3a79273f3ce531e58413ef45a12acf70275a90b4c4123"
+      },
+      {
+        "call_id": "R19-pair03-candidate-call02-successor_policy_owner",
+        "path": "workspace\\model-calls\\R19-pair03-candidate-call02-successor_policy_owner\\final-receipt.json",
+        "sha256": "be67f2facc7fab4149ba23982c069c0ad3696fd324ad56c244f669de42ff34d0"
+      },
+      {
+        "call_id": "R19-pair03-incumbent-call01-terminal_policy_producer",
+        "path": "workspace\\model-calls\\R19-pair03-incumbent-call01-terminal_policy_producer\\final-receipt.json",
+        "sha256": "c2b93cb9cd494bf6fcf93cdd3e464f625ab09950e7745708690207f0fdf5dd35"
+      },
+      {
+        "call_id": "R19-structure-architect",
+        "path": "workspace\\model-calls\\R19-structure-architect\\final-receipt.json",
+        "sha256": "434fe309f5076f2587036eac8c586f0fd9a6ae4b281402f5beb76ceb9c95cc89"
+      }
+    ],
+    "round_model_calls": {
+      "cached_input_tokens": 53760,
+      "effective_tokens": 119594,
+      "input_tokens": 139630,
+      "model_calls": 10,
+      "output_tokens": 33724,
+      "reasoning_output_tokens": 27700,
+      "total_tokens": 173354,
+      "uncached_input_tokens": 85870
+    },
+    "rule": {
+      "effective_tokens": "input_tokens - cached_input_tokens + output_tokens",
+      "reasoning_output_tokens": "subset of output tokens",
+      "total_tokens": "input_tokens + output_tokens"
+    },
+    "schema_version": 1,
+    "spend": {
+      "billing_mode": "ChatGPT subscription via Codex login",
+      "estimated_api_spend_usd": null,
+      "paid_api_spend_usd": 0.0,
+      "paid_api_used": false
+    },
+    "topology_inner_roles": {
+      "cached_input_tokens": 53760,
+      "effective_tokens": 95181,
+      "input_tokens": 125143,
+      "model_calls": 9,
+      "output_tokens": 23798,
+      "reasoning_output_tokens": 18691,
+      "total_tokens": 148941,
+      "uncached_input_tokens": 71383
+    },
+    "transport_attempts": 10,
+    "transport_failures": []
+  }
+}

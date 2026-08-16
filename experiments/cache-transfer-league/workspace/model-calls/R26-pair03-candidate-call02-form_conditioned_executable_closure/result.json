@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.items = {}\n        self.history = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n        self.history_limit = 8192\n        self.clock = 0\n\n    def _remember(self, ghost, key, size, frequency):\n        ghost.pop(key, None)\n        ghost[key] = (size, frequency)\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n        self.history.pop(key, None)\n        self.history[key] = min(255, frequency)\n        while len(self.history) > self.history_limit:\n            self.history.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _adapt(self, key, size):\n        if key in self.ghost_probation:\n            delta = max(1, self.capacity_bytes // 16, min(size, self.capacity_bytes))\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + delta,\n            )\n        elif key in self.ghost_protected:\n            delta = max(1, self.capacity_bytes // 16, min(size, self.capacity_bytes))\n            self.protected_target = max(0, self.protected_target - delta)\n        self._forget_ghost(key)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            old_key, _ = self.protected.popitem(last=False)\n            entry = self.items.get(old_key)\n            if entry is None:\n                continue\n            self.protected_bytes -= entry[0]\n            entry[1] = 0\n            self.probation[old_key] = None\n\n    def _probation_victim(self):\n        victim = None\n        best = None\n        for index, key in enumerate(self.probation):\n            entry = self.items.get(key)\n            if entry is not None:\n                candidate = (entry[2], entry[3])\n                if best is None or candidate < best:\n                    best = candidate\n                    victim = key\n            if index >= 31:\n                break\n        return victim\n\n    def _evict_one(self):\n        if self.probation:\n            key = self._probation_victim()\n            if key is None:\n                return None\n            self.probation.pop(key, None)\n            entry = self.items.pop(key, None)\n            if entry is None:\n                return None\n            size, _, frequency, _ = entry\n            self.used_bytes -= size\n            self._remember(self.ghost_probation, key, size, frequency)\n            return key\n\n        if self.protected:\n            key, _ = self.protected.popitem(last=False)\n            entry = self.items.pop(key, None)\n            if entry is None:\n                return None\n            size, _, frequency, _ = entry\n            self.protected_bytes -= size\n            self.used_bytes -= size\n            self._remember(self.ghost_protected, key, size, frequency)\n            return key\n\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.clock += 1\n        entry = self.items.get(key)\n\n        if entry is not None:\n            entry[2] = min(255, entry[2] + 1)\n            entry[3] = self.clock\n            if entry[1] == 0:\n                self.probation.pop(key, None)\n                entry[1] = 1\n                self.protected[key] = None\n                self.protected_bytes += entry[0]\n                self._rebalance()\n            else:\n                self.protected.move_to_end(key)\n            return []\n\n        if self.capacity_bytes <= 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        previous_frequency = self.history.get(key, 0)\n        self._adapt(key, size)\n        frequency = min(255, previous_frequency + 1)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                break\n            evicted.append(victim)\n\n        self.probation[key] = None\n        self.items[key] = [size, 0, frequency, self.clock]\n        self.history.pop(key, None)\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R26-pair03-candidate-call02-form_conditioned_executable_closure",
+    "duration_seconds": 60.39,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:34:05Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "36e708b56bd12b46c72db056d7232abdabee88b35fc88d4a5b5e63a1043cf981",
+    "raw_events_path": "workspace\\model-calls\\R26-pair03-candidate-call02-form_conditioned_executable_closure\\raw-events.jsonl",
+    "raw_events_sha256": "021340b2a7f3fa9db3de1a1aa0bebc57b7ab880d3abc6242ae4af14d4a8e9c57",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "00f9513800a2fcffcf5a424478bbe6dd9de5076123a594c1bd4b24d5fa5cc712",
+    "returncode": 0,
+    "role": "R26 candidate topology role causal-frame-conditioned executable closure former",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:33:05Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15149,
+      "output_tokens": 4746,
+      "reasoning_output_tokens": 3578
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

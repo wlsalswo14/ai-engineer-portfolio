@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self._adapt_step = max(1, self.capacity_bytes // 16)\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _adjust_target(self, size, increase):\n        delta = max(self._adapt_step, min(size, self.capacity_bytes))\n        if increase:\n            self.protected_target = min(self.capacity_bytes, self.protected_target + delta)\n        else:\n            self.protected_target = max(0, self.protected_target - delta)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            if stored_size > self.protected_target:\n                self.protected_target = min(self.capacity_bytes, stored_size)\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        if key in self.ghost_probation:\n            self._adjust_target(size, True)\n        elif key in self.ghost_protected:\n            self._adjust_target(size, False)\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R47-pair01-incumbent-call02-contract_bounded_behavior_authority",
+    "duration_seconds": 53.965,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:04:30Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "868fbc5b36792a69958184313bb4342da1d8ae7a73a5116e837b32c97dc39c88",
+    "raw_events_path": "workspace\\model-calls\\R47-pair01-incumbent-call02-contract_bounded_behavior_authority\\raw-events.jsonl",
+    "raw_events_sha256": "21ba1c87372fcad06ecf6e70495785dc0382f21d0b2836b17abeafceb7e13fa2",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "74e88046a831c2d8928c04fd99943ed38fcc9a382ac7ffbba45b28eb86baeb3f",
+    "returncode": 0,
+    "role": "R47 incumbent topology role contract-bounded behavioral authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:03:36Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13698,
+      "output_tokens": 4186,
+      "reasoning_output_tokens": 3398
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

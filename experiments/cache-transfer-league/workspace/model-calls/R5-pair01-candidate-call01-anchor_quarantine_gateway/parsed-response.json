@@ -1,0 +1,35 @@
+{
+  "analysis_packet": {
+    "certificate": "Construct one independent, online-only cache policy from the task contract. Preserve the required Policy interface, standard-library-only execution, unique integer eviction keys, current-cache validity, and capacity safety. Treat all implementation-specific anchor mechanisms, data structures, thresholds, behavioral choices, and repair lineage as quarantined and non-inheritable. The policy must make its own contract-grounded choices for scan resistance, phase-shift adaptation, object and byte hit rate, and regret, using only observations available through prior accesses and the current request.",
+    "exact_actions": [
+      "Ignore anchor_policy contents and all anchor-derived implementation or repair details.",
+      "Translate the task and contract into the obligations and admissibility boundaries above before selecting any mechanism.",
+      "Design one fresh policy architecture whose state and decisions are explainable solely from online accesses and current capacity.",
+      "Specify safe handling for hits, misses, repeated keys, oversized objects, zero capacity, and all eviction responses.",
+      "Check each eviction response against current-cache membership, integer-key uniqueness, and capacity accounting before returning it.",
+      "Use behavioral reasoning or local trace examples covering hot reuse, scans, and phase transitions as evidence for the retained commitments.",
+      "Pass the producer only this constitution together with the permitted direct task and contract context; withhold implementation details and lineage information."
+    ],
+    "obligations": [
+      "Expose exactly __init__(capacity_bytes: int) and access(key: int, size: int, now: int) -> list[int].",
+      "Use only Python standard-library facilities and remain deterministic or otherwise contract-safe under online sequential execution.",
+      "Maintain an internally coherent representation of the keys the policy believes are currently cached, including byte accounting sufficient to enforce the capacity bound.",
+      "Return only keys currently cached by the evaluator, never duplicate a key, and never return the requested key unless it was already cached and is validly evicted under the chosen policy semantics.",
+      "Ensure every admitted object fits within capacity after all returned evictions; never exceed capacity_bytes, including empty and oversized-capacity cases.",
+      "Use request recency, frequency, size, age, or other signals only as online observations, without assumptions about hidden traces or offline knowledge.",
+      "Make admission and eviction choices that explicitly support scan resistance and phase-shift adaptation while balancing object hit rate, byte hit rate, and offline-regret-oriented behavior.",
+      "Do not copy, reconstruct, adapt, or semantically preserve any quarantined anchor mechanism or repair lineage.",
+      "Emit one complete policy artifact only; do not emit alternatives, rankings, patches, or evaluator-specific logic."
+    ],
+    "witnesses": [
+      "Initialization accepts an integer capacity and establishes state whose represented cached bytes never exceed the nonnegative capacity bound.",
+      "Every access consumes only key, size, now, and internally accumulated online state; no future trace, score, oracle, benchmark, filesystem, network, subprocess, or external package is consulted.",
+      "A hit returns no eviction for that request unless independently required by the contract, and a miss admits an object only when doing so can preserve capacity safety.",
+      "Every returned key is an integer, unique within the response, and currently represented as cached immediately before evaluator application of that response.",
+      "Across arbitrary request sequences, tracked occupancy after each response is never greater than capacity_bytes.",
+      "Oversized objects and zero-capacity cases terminate safely without producing invalid eviction keys.",
+      "Behavioral evidence must include both repeated-hot-object accesses and streaming scans, plus a workload phase transition demonstrating adaptation without violating the direct validity obligations."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

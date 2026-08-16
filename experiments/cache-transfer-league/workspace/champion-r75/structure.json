@@ -1,0 +1,43 @@
+{
+  "final_call_id": "construct_with_open_visibility",
+  "information_flow": "The first call receives every common input and emits an analysis containing a binding admissibility boundary without producing a policy artifact. The final call consumes that analysis, directly receives every common input, may construct within the admissible space, may not reinstate vetoed commitments, and emits one complete policy.",
+  "name": "Negative-Authority Open Aperture",
+  "organization": "two-call sequential lineage whose sole edge substitutes binding negative authority for source-class gating",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "establish_admissibility_boundary",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile all visible evidence with normative obligations, identify unsupported commitments as binding exclusions, and preserve admissible conflicts in one analysis without constructing a policy.",
+          "output_type": "analysis",
+          "role": "negative-authority evidence adjudicator"
+        },
+        {
+          "id": "construct_with_open_visibility",
+          "inputs": [
+            "establish_admissibility_boundary",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume establish_admissibility_boundary, directly examine all common evidence, honor its binding exclusions, reconcile remaining admissible claims, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "bounded constructive policy authority"
+        }
+      ],
+      "id": "negative_authority_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

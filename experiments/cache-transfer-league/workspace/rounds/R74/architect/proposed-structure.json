@@ -1,0 +1,43 @@
+{
+  "final_call_id": "construct_after_late_boundary",
+  "information_flow": "The first call receives every common input and emits one binding admissibility analysis without producing a policy artifact. The final call receives every common input in its original order, then consumes the immediately preceding analysis as late-bound evidence, honors its exclusions, and emits one complete policy.",
+  "name": "Late-Bound Negative Authority",
+  "organization": "two-call sequential lineage with the binding negative-authority edge serialized last at the policy-emitting call",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "establish_admissibility_boundary",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile all visible evidence with normative obligations, identify unsupported commitments as binding exclusions, and preserve admissible conflicts in one analysis without constructing a policy.",
+          "output_type": "analysis",
+          "role": "negative-authority evidence adjudicator"
+        },
+        {
+          "id": "construct_after_late_boundary",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure",
+            "establish_admissibility_boundary"
+          ],
+          "objective": "Examine the directly visible common evidence, then consume establish_admissibility_boundary as the last-bound input, honor its exclusions, reconcile remaining admissible claims, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "bounded constructive policy authority"
+        }
+      ],
+      "id": "late_bound_negative_authority_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

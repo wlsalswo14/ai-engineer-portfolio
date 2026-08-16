@@ -1,0 +1,71 @@
+{
+  "architect_scope": "one-R94-structural-factor-only",
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The incumbent executable handoff does not make causal dependency closure among retained commitments authoritative at the retraction boundary, so a justified local retraction can strand semantics that depended on the removed commitment.",
+    "causal_change": "Change only the existing handoff state semantics: the origin emits one complete executable policy closure, and the terminal exercises unchanged retract-only authority through closure-preserving state transitions while retaining full common-evidence visibility.",
+    "expected_effect": "Retraction should remain corrective while preserving causally supported executable coherence and avoiding the unnecessary removal of independent commitments.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "causal-dependency closure authority on the executable handoff edge",
+    "before": "A complete policy capsule crosses the origin-to-terminal edge, whose retract-only authority preserves executable completeness without an authoritative dependency-closure state.",
+    "after": "A complete executable policy closure crosses the same edge, making dependency-closed retraction transitions authoritative while leaving call count, evidence visibility, and retract-only terminal authority unchanged.",
+    "why_structural": "The mutation changes the policy-bearing edge state and the causal transitions available to its consumer, rather than adding a role, checklist, gate, branch, or renamed responsibility."
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only the origin-to-terminal edge state semantics changes from a policy capsule to an authoritative executable dependency closure; full common-input visibility, origin authorship, two-call lineage, and retract-only terminal authority remain fixed.",
+    "why_not_repeat_role_fission": "No call is added, divided, or reassigned: the same two authorities remain, and the single mutation changes the causal granularity of their existing handoff rather than creating another producer, reviewer, or finalizer."
+  },
+  "candidate_structure": {
+    "name": "Closure-Bound Retraction Executable Dyad",
+    "organization": "two-call sequential lineage with one executable dependency-closure origin and one closure-preserving retract-only terminal authority",
+    "information_flow": "The first call receives every common input and emits one complete executable policy closure carrying authoritative causal dependencies among its commitments. The final call consumes that closure, reopens every common input simultaneously, applies only closure-preserving retractions without adding or substituting semantics, and emits one policy.",
+    "stages": [
+      {
+        "id": "single_closure_bound_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "originate_executable_dependency_closure",
+            "role": "joint-evidence executable closure origin authority",
+            "objective": "Reconcile the jointly visible evidence and obligations into one complete executable policy artifact whose causal dependencies define authoritative closure-preserving retraction transitions.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_closure"
+          },
+          {
+            "id": "closure_preserving_retract_emit",
+            "role": "joint-evidence closure-preserving retract-only terminal authority",
+            "objective": "Consume originate_executable_dependency_closure, inspect the complete artifact against jointly visible common evidence, retract unsupported semantics only through its authoritative closure-preserving transitions, add or substitute no semantics, and emit one complete policy.",
+            "inputs": [
+              "originate_executable_dependency_closure",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "closure_preserving_retract_emit"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

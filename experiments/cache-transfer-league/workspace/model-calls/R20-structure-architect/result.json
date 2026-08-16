@@ -1,0 +1,119 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R20-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "atomic_policy_committer",
+      "information_flow": "The first call sees all common inputs and emits only a relational map of objective interactions and validity obligations. The final call consumes that map with the common inputs, evaluates obligations against one complete artifact, and emits one policy without exposing or retaining intermediate policy states.",
+      "name": "Relational Evidence to Atomic Policy Commit",
+      "organization": "two-call sequential chain with a nonconstructive evidence role followed by one atomic materialization role",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "relational_evidence_mapper",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Identify relationships, tensions, and validity obligations present in the supplied evidence without proposing edits, an implementation recipe, or a candidate artifact; emit one relational coherence map for downstream consumption.",
+              "output_type": "analysis",
+              "role": "nonconstructive cross-objective evidence mapper"
+            },
+            {
+              "id": "atomic_policy_committer",
+              "inputs": [
+                "relational_evidence_mapper",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding relational coherence map and visible common evidence, materialize one complete contract-compliant artifact as a single candidate-state commit, evaluate interface and authoritative-state obligations on the complete artifact, and emit one policy without an accepted-edit ledger or retrospective causal compression.",
+              "output_type": "policy",
+              "role": "history-free whole-artifact policy materializer"
+            }
+          ],
+          "id": "map_then_commit",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "candidate state-transition granularity",
+        "timing of obligation evaluation"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "terminal causal compression of an anchor-derived reversible-delta stack",
+      "independent_replacement_principle": "atomic whole-artifact coherence from relational evidence without intermediate candidate states",
+      "rejected_assumptions": [
+        "Contract validity requires an anchor-relative checkpoint-and-patch trajectory.",
+        "Generalization requires retrospective compression of an accepted reversible-delta history."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace mutable policy-state succession with a history-free atomic transition from a relational evidence map to one complete policy artifact.",
+      "expected_effect": "Whole-artifact coherence can cross anchor-local repair boundaries while complete-artifact obligation evaluation preserves operational validity without relying on self-justifying edit history.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The incumbent's anchor-relative reversible-delta trajectory and terminal compression remain confined to the causal frame created by earlier local repairs, producing structural path dependence."
+    },
+    "structural_mutation": {
+      "after": "A nonconstructive evidence call emits a relational coherence map, after which the final call transitions directly from no candidate state to one complete candidate without interstitial policy states or accepted-edit history.",
+      "before": "One terminal producer accumulates reversible anchor-relative policy states and retrospectively compresses their accepted-delta history.",
+      "change_count": 1,
+      "factor": "history-free atomic policy-state transition",
+      "why_structural": "The mutation changes lineage state-transition semantics from a mutable policy-state path to a single analysis-to-policy commit edge; the two roles and their visibility follow from that one state-space change."
+    }
+  },
+  "receipt": {
+    "call_id": "R20-structure-architect",
+    "duration_seconds": 196.661,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:39:47Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "984d9d40282d319ff33499b553e169108079c6bb73ecec32708949bcabdd6d68",
+    "raw_events_path": "workspace\\model-calls\\R20-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "9b67cbd59c221f25e2a871156385820823cfdecf88d0dab5fe56824d92147f05",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "2e8d58f5932867f3cabf325750addd1239692361ad945ec27d75d9cec672e3bf",
+    "returncode": 0,
+    "role": "score-blind R20 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:36:30Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 2816,
+      "input_tokens": 14479,
+      "output_tokens": 9705,
+      "reasoning_output_tokens": 8804
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

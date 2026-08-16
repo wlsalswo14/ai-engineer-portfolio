@@ -1,0 +1,56 @@
+Role: R41 candidate topology role sole policy author with predecessor-only visibility
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R41,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: instantiate_unitary_policy
+Role: sole policy author with predecessor-only visibility
+Objective: Consume synthesize_preartifact_charter as the sole visible evidence, exercise undivided authorship to materialize exactly one complete policy, and emit that policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_preartifact_charter": {
+    "analysis_packet": {
+      "certificate": "The terminal policy must preserve the required interface and online-only legality while prioritizing adaptive, scan-resistant retention under changing workloads; safety obligations are absolute, while implementation choices remain open to the sole downstream author.",
+      "witnesses": [
+        "The task requires object-hit rate, byte-hit rate, scan resistance, phase-shift adaptation, and low regret against offline optimum.",
+        "The contract requires returning only currently cached unique integer keys and never exceeding capacity_bytes.",
+        "The anchor maintains separate probationary and protected populations with ghost histories, exposing tensions between recency, repeated-use protection, scan resistance, and adaptive partitioning.",
+        "The candidate hypothesis identifies inherited representation as a possible source of premature anchoring and proposes resolving evidence tradeoffs before artifact materialization.",
+        "Scores and benchmark traces are unavailable, so no empirical ranking or trace-specific conclusion is justified."
+      ],
+      "obligations": [
+        "Maintain the exact Policy constructor and access interface.",
+        "Process one access at a time using only information available online.",
+        "Account for object sizes and enforce the byte-capacity limit, including zero, nonpositive, and oversized requests.",
+        "Return only keys that are currently cached, with no duplicates.",
+        "Balance frequent-object protection against scan pollution and retain useful behavior across workload phase shifts.",
+        "Use standard-library facilities only and avoid evaluator implementation access, hidden-trace inference, benchmark hardcoding, oracle adaptation, networking, subprocesses, and external packages.",
+        "Materialize exactly one final policy downstream; this stage must remain analysis-only."
+      ],
+      "exact_actions": [
+        "Treat contract legality and capacity safety as non-negotiable acceptance conditions.",
+        "Use the anchor behavior as evidence of relevant tradeoffs, not as a required representation or source artifact.",
+        "Resolve the retention tradeoff between recency, repeated hits, byte efficiency, scan resistance, and phase adaptation before selecting implementation structures.",
+        "Prefer general online signals and bounded state over trace-specific assumptions.",
+        "Create the sole complete policy only in the terminal instantiation stage, using this charter as its entire evidence base."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  }
+}

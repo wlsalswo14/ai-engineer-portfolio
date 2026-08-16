@@ -1,0 +1,96 @@
+Role: R29 incumbent topology role provenance-blind final semantic authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R29,
+matched pair 2, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: provenance_blind_policy_authority
+Role: provenance-blind final semantic authority
+Objective: Consume the preceding executable closure and exercise sole final semantic authority from its current semantics and supplied public obligations. Without access to the anchor implementation or construction provenance, reconcile contract validity within that single state and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "form_executable_closure": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.ghost_limit = 4096\n        self.frequent_target = self.capacity_bytes // 2\n        self.frequent_bytes = 0\n        self.used_bytes = 0\n        self.sketch_width = 2048\n        self.sketch = [[0] * self.sketch_width for _ in range(4)]\n        self.events = 0\n        self.mask = (1 << 64) - 1\n\n    def _slot(self, key, salt):\n        x = (int(key) + salt) & self.mask\n        x ^= x >> 30\n        x = (x * 0xbf58476d1ce4e5b9) & self.mask\n        x ^= x >> 27\n        x = (x * 0x94d049bb133111eb) & self.mask\n        x ^= x >> 31\n        return x % self.sketch_width\n\n    def _touch(self, key):\n        salts = (0x9e3779b97f4a7c15, 0xc2b2ae3d27d4eb4f, 0x165667b19e3779f9, 0xd6e8feb86659fd93)\n        for row, salt in zip(self.sketch, salts):\n            slot = self._slot(key, salt)\n            if row[slot] < 255:\n                row[slot] += 1\n        self.events += 1\n        if self.events >= 4096:\n            self.events = 0\n            for row in self.sketch:\n                for index, value in enumerate(row):\n                    row[index] = value >> 1\n\n    def _frequency(self, key):\n        salts = (0x9e3779b97f4a7c15, 0xc2b2ae3d27d4eb4f, 0x165667b19e3779f9, 0xd6e8feb86659fd93)\n        return min(row[self._slot(key, salt)] for row, salt in zip(self.sketch, salts))\n\n    def _remember(self, ghost, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _rebalance(self):\n        while self.frequent and self.frequent_bytes > self.frequent_target:\n            old_key, old_size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= old_size\n            self.recent[old_key] = old_size\n\n    def _remove(self, key):\n        if key in self.recent:\n            size = self.recent.pop(key)\n            self._remember(self.ghost_recent, key)\n        elif key in self.frequent:\n            size = self.frequent.pop(key)\n            self.frequent_bytes -= size\n            self._remember(self.ghost_frequent, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._touch(key)\n\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        step = max(1, self.capacity_bytes // 32)\n        if key in self.ghost_recent:\n            self.frequent_target = min(self.capacity_bytes, self.frequent_target + max(step, min(size, self.capacity_bytes)))\n        elif key in self.ghost_frequent:\n            self.frequent_target = max(0, self.frequent_target - max(step, min(size, self.capacity_bytes)))\n        self._rebalance()\n\n        incoming_frequency = self._frequency(key)\n        required = self.used_bytes + size - self.capacity_bytes\n        planned = []\n        planned_bytes = 0\n        if required > 0:\n            for queue in (self.recent, self.frequent):\n                for candidate, candidate_size in queue.items():\n                    if self._frequency(candidate) > incoming_frequency:\n                        return []\n                    planned.append(candidate)\n                    planned_bytes += candidate_size\n                    if planned_bytes >= required:\n                        break\n                if planned_bytes >= required:\n                    break\n\n        evicted = []\n        for candidate in planned:\n            removed = self._remove(candidate)\n            if removed is not None:\n                evicted.append(removed)\n\n        self._forget_ghost(key)\n        self.recent[key] = size\n        self.used_bytes += size\n        return evicted\n",
+    "sha256": "73dbbb9cd245370591743745467720410c9a8452ea11c24a1f9e90d366fc02a6"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R28 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Reverse semantic authority across the lineage edge: the first call makes the sole irrevocable semantic commitment, and the final call receives read-only semantic authority.",
+    "expected_effect": "Origin-locked semantics should reduce handoff drift and move contract reconciliation from terminal reinterpretation to evidence-visible policy formation.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family leaves executable semantics provisional until a provenance-blind terminal authority reinterprets them, separating final commitments from the evidence that originally made them coherent."
+  },
+  "loop_structure": {
+    "final_call_id": "provenance_blind_policy_authority",
+    "information_flow": "The first call forms exactly one self-contained executable closure and removes construction provenance from its handoff. The second call consumes that complete policy-bearing output with public obligations but without anchor-policy visibility, exercises sole final semantic authority, and emits one policy.",
+    "name": "Provenance-Blind Executable Closure Relay",
+    "organization": "two-call sequential lineage separated by one post-construction provenance firewall",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_executable_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Form exactly one self-contained executable policy state from the supplied task, public obligations, hypothesis, and contextual anchor evidence. Justify its current semantics directly against public obligations, exclude anchor-relative construction provenance from the handoff, and pass the complete executable state forward.",
+            "output_type": "executable_policy_closure",
+            "role": "executable semantic closure former"
+          },
+          {
+            "id": "provenance_blind_policy_authority",
+            "inputs": [
+              "form_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the preceding executable closure and exercise sole final semantic authority from its current semantics and supplied public obligations. Without access to the anchor implementation or construction provenance, reconcile contract validity within that single state and emit one complete policy.",
+            "output_type": "policy",
+            "role": "provenance-blind final semantic authority"
+          }
+        ],
+        "id": "closure_relay",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

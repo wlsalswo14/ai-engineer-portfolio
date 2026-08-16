@@ -1,0 +1,118 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R36-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "contract_bounded_behavior_authority",
+      "information_flow": "The first call receives all common evidence, creates one complete executable closure, and binds its public-contract conformance as immutable. The terminal call consumes that closure with public non-anchor evidence, retains no authority to alter the locked conformance boundary, revises only behavior-bearing semantics, and emits one policy.",
+      "name": "Contract-Locked Behavioral Authority Relay",
+      "organization": "two-call sequential lineage with one contract-locked executable handoff",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "lock_contract_closure",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Form exactly one complete executable policy closure from the supplied evidence, bind public-contract conformance as an immutable authority boundary, delegate only behavior-semantic revision, and pass the complete artifact forward.",
+              "output_type": "executable_policy_closure",
+              "role": "contract-lock authority"
+            },
+            {
+              "id": "contract_bounded_behavior_authority",
+              "inputs": [
+                "lock_contract_closure",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume lock_contract_closure and the supplied public evidence, preserve its locked contract conformance, exercise authority only over behavior-bearing semantics within that boundary, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "contract-bounded behavioral authority"
+            }
+          ],
+          "id": "contract_locked_relay",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "resistance to transient scan-driven displacement",
+        "adaptation after workload phase shifts"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "unrestricted terminal reconciliation of both contract conformance and behavior semantics",
+      "independent_replacement_principle": "upstream contract lock with downstream behavior-only semantic authority",
+      "rejected_assumptions": [
+        "Terminal contract reconciliation requires unrestricted authority over a complete predecessor artifact.",
+        "Contract conformance and behavior-semantic revision must remain coupled under one terminal authority."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Lock public-contract conformance upstream and delegate only behavior-semantic revision downstream on the same complete policy-bearing lineage.",
+      "expected_effect": "The authority boundary should preserve operation validity while allowing coherent downstream changes to scan resistance and phase-shift adaptation.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active structure assumes terminal contract repair requires unrestricted semantic authority, allowing conformance reconciliation to overwrite coordinated behavior in a complete predecessor artifact."
+    },
+    "structural_mutation": {
+      "after": "The first call binds contract conformance immutably, while the terminal call may revise only behavior-bearing semantics within that boundary.",
+      "before": "The terminal call holds unpartitioned authority to reconcile contract conformance and behavioral semantics throughout the predecessor closure.",
+      "change_count": 1,
+      "factor": "immutable public-contract authority boundary on the executable-closure handoff",
+      "why_structural": "This changes edge authority and state-transition semantics without adding candidates, branches, or terminal role fission."
+    }
+  },
+  "receipt": {
+    "call_id": "R36-structure-architect",
+    "duration_seconds": 105.591,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:45:11Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "7a0c2b5fe76aab8e08399c32e44d515eb634ac08aa6366d64b7ca59eb406ef95",
+    "raw_events_path": "workspace\\model-calls\\R36-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "a34a76a0d54f3ba16a9521d24a44b3a085904f1cbfcec8819f0d721b73df820f",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "fa98db93dd449bb08cf674353e75a7b41c4abf0127f92af69bdb918340f07a0a",
+    "returncode": 0,
+    "role": "score-blind R36 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:43:25Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14523,
+      "output_tokens": 6774,
+      "reasoning_output_tokens": 5920
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

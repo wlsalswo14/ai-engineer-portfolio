@@ -1,0 +1,106 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R93-structure-architect\\final-receipt.json",
+    "sha256": "9c431ac3f1b9087e631b90c0ecf7e3a6920c1cd8745dabbf298cdf32e2a11b26"
+  },
+  "architect_response": {
+    "architect_scope": "one-R93-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "proposal_opaque_retract_emit",
+      "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule and directly sees task, anchor_contract, task_constraints, and loop_structure, while anchor_policy and candidate_hypothesis remain visible only through their already-reconciled capsule effects; it may retract unsupported commitments and emits one policy.",
+      "name": "Proposal-Opaque Retraction Dyad",
+      "organization": "two-call sequential lineage with full-evidence executable origination and proposal-opaque retract-only terminal authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "originate_reconciled_executable",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile the visible evidence and obligations into one complete executable policy capsule while retaining semantic authorship over every included commitment.",
+              "output_type": "policy_capsule",
+              "role": "full-evidence executable origin authority"
+            },
+            {
+              "id": "proposal_opaque_retract_emit",
+              "inputs": [
+                "originate_reconciled_executable",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "loop_structure"
+              ],
+              "objective": "Consume originate_reconciled_executable, assess its commitments using the complete artifact and directly visible obligations and structural context, retract only unsupported commitments without adding or substituting policy semantics, preserve executable completeness, and emit one policy.",
+              "output_type": "policy",
+              "role": "proposal-opaque retract-only terminal authority"
+            }
+          ],
+          "id": "proposal_opaque_authority_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only terminal visibility of anchor_policy and candidate_hypothesis changes; call count, sequential lineage, executable origination, retract-only authority, and final emission remain unchanged.",
+      "why_not_repeat_role_fission": "No call is added, split, renamed, or replicated; the incumbent dyad remains intact and the mutation is solely an edge-visibility restriction."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Remove the direct anchor_policy and candidate_hypothesis visibility edges from the terminal call while preserving their first-call visibility and their mediated effects through the executable capsule.",
+      "expected_effect": "Terminal retraction should respond to the completed artifact and directly visible obligations rather than renewed competition between proposal sources, preserving supported reconciled commitments while retaining authoritative constraint visibility.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The incumbent directly reopens anchor_policy and candidate_hypothesis after their commitments have already been reconciled into a complete executable capsule, allowing proposal provenance to influence a terminal authority that can only retract semantics."
+    },
+    "structural_mutation": {
+      "after": "The terminal call consumes the executable capsule plus task, anchor_contract, task_constraints, and loop_structure; anchor_policy and candidate_hypothesis reach it only through the capsule.",
+      "before": "The terminal call consumes the executable capsule and directly reopens all six common inputs.",
+      "change_count": 1,
+      "factor": "proposal-source opacity at the retract-only terminal authority",
+      "why_structural": "This deletes two direct evidence-visibility edges and changes when proposal-source evidence can causally affect terminal retraction, without changing authority type, adding a role, or breaking the executable lineage."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 93,
+  "incumbent_structure_sha256": "c907cfebd2011c00c4a17d4a12a8f25f0f76ab7dbda9b969287a07383677fcb7",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "local_refinement",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R93\\qualitative-error-notebook.json",
+    "sha256": "cfbaf1b4e3e7faf6c5d71ea39259aef06c968319e325433b92562a29e2b37196"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R93\\source-manifest.json",
+    "sha256": "57aabeeb4396d8551aa31d56cd5c6856e793f578ab9689694a357eb8d3648879"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "proposal-source opacity at the retract-only terminal authority",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "originate_reconciled_executable",
+        "executor_semantics": "complete policy artifact plus obligation evidence on the same single lineage",
+        "output_type": "policy_capsule"
+      }
+    ],
+    "semantic_topology_fingerprint": "78205efb5773973dc962631ce22ffa322aa5f1bc9c68efaf8924d60ddd4852a8",
+    "topology_fingerprint": "28a54e2e4eb9d4d76eee0922ce4c315c6b45470230eacbb12182ce742e7952a0"
+  }
+}

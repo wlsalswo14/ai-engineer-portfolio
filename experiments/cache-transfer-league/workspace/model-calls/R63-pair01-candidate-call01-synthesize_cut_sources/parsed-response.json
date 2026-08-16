@@ -1,0 +1,44 @@
+{
+  "analysis_packet": {
+    "certificate": "The anchor is an online, byte-aware two-queue recency/frequency design with adaptive ghost feedback, but its guarantees are conditional on exact bookkeeping and valid eviction reporting. No score evidence is available, so no performance conclusion is certified.",
+    "exact_actions": [
+      "Treat the anchor’s segment promotion, ghost feedback, and byte-target adaptation as inherited evidence rather than mandatory behavior.",
+      "Verify every proposed behavioral claim against interface legality, current-residency reporting, uniqueness, and byte-capacity safety.",
+      "Resolve size-change, oversized-request, nonpositive-size, and zero-capacity cases explicitly before accepting any policy behavior.",
+      "Preserve the distinction between demonstrated contract compliance and unverified optimization benefits.",
+      "Emit no artifact from this stage; pass only the synthesized claims, conflicts, obligations, and uncertainty to the normative policy-authority call."
+    ],
+    "obligations": [
+      "Preserve the declared Policy constructor and access signatures.",
+      "Use only online information from the current request and prior internal state; do not infer hidden traces, oracle decisions, benchmark paths, or scores.",
+      "Return only unique integer keys that are currently cached immediately before eviction reporting, and report each key at most once.",
+      "Never allow resident byte usage to exceed the nonnegative capacity, including requests with changed sizes, zero or negative sizes, oversized objects, and zero capacity.",
+      "Keep all reasoning at analysis level; do not emit policy source, a patch, a diff, or an alternative design.",
+      "Reconcile object-oriented recency/frequency evidence with byte-weighted capacity effects and explicitly retain unresolved performance uncertainty.",
+      "At final emission, rely only on this analysis plus the directly visible task, anchor contract, and task constraints; do not reacquire the cut generative sources."
+    ],
+    "witnesses": [
+      {
+        "claim": "The anchor separates recent entries from repeated entries and uses ghost histories to adapt its byte target.",
+        "conflict": "Object-count ghost limits coexist with byte-capacity accounting, so the adaptation signal is not dimensionally uniform.",
+        "support": "t1/t2 state, b1/b2 ghost state, target adjustment on ghost hits, and recency-ordered eviction are explicit."
+      },
+      {
+        "claim": "The anchor promotes hits into the repeated-entry segment and returns evicted keys from current resident state.",
+        "conflict": "A size-changing hit is treated as removal plus reinsertion, which can evict other residents even though the requested key was already cached.",
+        "support": "Resident entries are removed before room-making and inserted into t2; eviction removes from t1 or t2 and records the key in a ghost list."
+      },
+      {
+        "claim": "Oversized positive requests are not admitted and may remove an existing copy of the requested key.",
+        "conflict": "The general room-making path assumes an admissible request, while zero capacity and nonpositive sizes follow separate semantics.",
+        "support": "Requests larger than capacity take the key from residency and return it if present, without inserting the oversized object."
+      },
+      {
+        "claim": "The design is standard-library compatible and has no trace, oracle, benchmark, or external-library dependency.",
+        "conflict": "These legality properties do not establish hit-rate, scan-resistance, phase-adaptation, or regret superiority without scores or traces.",
+        "support": "The visible source uses only OrderedDict and current-call state."
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

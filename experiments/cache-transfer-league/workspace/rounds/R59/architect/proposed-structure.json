@@ -1,0 +1,37 @@
+{
+  "final_call_id": "act_on_closed_evidence",
+  "information_flow": "The first call receives every common input, adjudicates their relevance under the counter-hypothesis, and emits one authoritative policy-free analysis. The final call consumes only that analysis, cannot reacquire external evidence, and emits one policy.",
+  "name": "Evidence-Closed Delegation",
+  "organization": "two-call sequential lineage with one common-evidence intake followed by a completely evidence-closed policy authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "commit_counter_evidence",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Assess all supplied sources, settle their admissibility under the counter-hypothesis, preserve consequential tensions, and emit one authoritative policy-free analysis sufficient for downstream action.",
+          "output_type": "analysis",
+          "role": "delegated evidence principal"
+        },
+        {
+          "id": "act_on_closed_evidence",
+          "inputs": [
+            "commit_counter_evidence"
+          ],
+          "objective": "Consume commit_counter_evidence as the sole visible evidence, preserve its settled exclusions without reopening external sources, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "evidence-closed policy authority"
+        }
+      ],
+      "id": "closed_delegation_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

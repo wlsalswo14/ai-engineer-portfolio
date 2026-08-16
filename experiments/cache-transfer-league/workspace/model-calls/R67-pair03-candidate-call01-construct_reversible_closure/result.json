@@ -1,0 +1,42 @@
+{
+  "parsed_response": {
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self._serial = 0\n        self._ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self._ghost_count_limit = 4096\n        self._pending = None\n\n    def _snapshot(self):\n        return (OrderedDict(self.t1), OrderedDict(self.t2),\n                OrderedDict(self.b1), OrderedDict(self.b2),\n                self.t1_bytes, self.t2_bytes, self.b1_bytes,\n                self.b2_bytes, self.used, self.target, self._serial)\n\n    def _restore(self, state):\n        (self.t1, self.t2, self.b1, self.b2, self.t1_bytes,\n         self.t2_bytes, self.b1_bytes, self.b2_bytes, self.used,\n         self.target, self._serial) = state\n\n    def rollback_candidate_transition(self):\n        if self._pending is None:\n            return False\n        self._restore(self._pending)\n        self._pending = None\n        return True\n\n    def commit_candidate_transition(self):\n        self._pending = None\n\n    def _drop_ghost(self, key):\n        value = self.b1.pop(key, None)\n        if value is not None:\n            self.b1_bytes -= value[0]\n        value = self.b2.pop(key, None)\n        if value is not None:\n            self.b2_bytes -= value[0]\n\n    def _trim_ghosts(self):\n        while (self.b1_bytes + self.b2_bytes > self._ghost_limit or\n               len(self.b1) + len(self.b2) > self._ghost_count_limit):\n            first = None\n            if self.b1:\n                first = (1, next(iter(self.b1.values()))[1])\n            if self.b2:\n                candidate = (2, next(iter(self.b2.values()))[1])\n                if first is None or candidate[1] < first[1]:\n                    first = candidate\n            ghosts = self.b1 if first[0] == 1 else self.b2\n            _, value = ghosts.popitem(last=False)\n            if first[0] == 1:\n                self.b1_bytes -= value[0]\n            else:\n                self.b2_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self._serial += 1\n        value = (size, self._serial)\n        if kind == 1:\n            self.b1[key] = value\n            self.b1_bytes += size\n        else:\n            self.b2[key] = value\n            self.b2_bytes += size\n        self._trim_ghosts()\n\n    def _remove_resident(self, key):\n        value = self.t1.pop(key, None)\n        if value is not None:\n            self.t1_bytes -= value\n            self.used -= value\n            return value, 1\n        value = self.t2.pop(key, None)\n        if value is not None:\n            self.t2_bytes -= value\n            self.used -= value\n            return value, 2\n        return 0, 0\n\n    def _evict_one(self, prefer_t1):\n        if prefer_t1 and self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        return None\n\n    def _make_room(self, incoming, ghost_kind):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            prefer_t1 = self.t1_bytes > self.target\n            if ghost_kind == 1 and self.t1_bytes >= self.target:\n                prefer_t1 = True\n            if ghost_kind == 2 and self.t1_bytes == self.target:\n                prefer_t1 = False\n            key = self._evict_one(prefer_t1)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def _adapt_target(self, kind):\n        if self.capacity <= 0:\n            return\n        if kind == 1:\n            delta = self.capacity if self.b1_bytes == 0 else max(\n                1, min(self.capacity, self.b2_bytes // self.b1_bytes or 1))\n            self.target = min(self.capacity, self.target + delta)\n        else:\n            delta = self.capacity if self.b2_bytes == 0 else max(\n                1, min(self.capacity, self.b1_bytes // self.b2_bytes or 1))\n            self.target = max(0, self.target - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        key = int(key)\n        size = max(0, int(size))\n        self._pending = None\n\n        if key in self.t1 or key in self.t2:\n            self._remove_resident(key)\n            if size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            self._drop_ghost(key)\n            self.t2[key] = size\n            self.t2_bytes += size\n            self.used += size\n            return evicted\n\n        ghost_kind = 1 if key in self.b1 else 2 if key in self.b2 else 0\n        if size > self.capacity or (self.capacity == 0 and size == 0):\n            return []\n\n        if ghost_kind:\n            self._pending = self._snapshot()\n            self._adapt_target(ghost_kind)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size, ghost_kind)\n        self.t2[key] = size if ghost_kind else size\n        self.t2_bytes += size if ghost_kind else 0\n        if not ghost_kind:\n            self.t2.pop(key)\n            self.t1[key] = size\n            self.t1_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R67-pair03-candidate-call01-construct_reversible_closure",
+    "duration_seconds": 53.913,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:53:06Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "e6d8b93743f9d23b365f5b8700a778e02159f74390ebc53d2701e61b7dc05327",
+    "raw_events_path": "workspace\\model-calls\\R67-pair03-candidate-call01-construct_reversible_closure\\raw-events.jsonl",
+    "raw_events_sha256": "03082d084879ce541283887aa0920a8b8452a5d025220058d40a714cd5ab5b89",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "f345c712f012c51fa7f3d3a2caae2301e77175dc7a08903e6bc8092ef90300da",
+    "returncode": 0,
+    "role": "R67 candidate topology role transactional executable-state constructor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:52:12Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15000,
+      "output_tokens": 4187,
+      "reasoning_output_tokens": 2542
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

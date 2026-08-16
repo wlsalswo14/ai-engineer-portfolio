@@ -7,7 +7,12 @@ from pathlib import Path
 from typing import Any
 
 from loop_evolution.platform.backends.codex import CodexBackend
-from loop_evolution.platform.config import ProposalPolicy, RuntimePolicy
+from loop_evolution.platform.config import (
+    ProposalPolicy,
+    RuntimePolicy,
+    proposal_policy_identity,
+    runtime_policy_identity,
+)
 from loop_evolution.platform.runtime.answers import extract_final_answer
 from loop_evolution.common import atomic_json, canonical_json, content_hash, parse_json_object, read_json
 from loop_evolution.plan import LoopPlan, PlanValidationError
@@ -63,18 +68,58 @@ class CodexModelClient:
 
 def architect_prompt(capsule: dict[str, Any], *, validation_feedback: str = "") -> str:
     mode = str(capsule["search_control"]["proposal_mode"])
+    development = capsule.get("development_candidate")
+    has_development = isinstance(development, dict) and bool(development)
+    if has_development:
+        design_parent_instruction = (
+            "The official champion remains the promotion opponent, but it is not this round's design parent. "
+            "Refine the active development candidate described in STATE_CAPSULE.development_candidate. Read only "
+            "its exact execution_plan_path when the summary is insufficient. Preserve that candidate's structural "
+            "family unless EMERGENT-EXPLORATION MODE explicitly asks for a new capability within the family."
+        )
+        development_schema = '''
+    "development_lineage": {
+      "parent_structure_id": "exact structure_id from STATE_CAPSULE.development_candidate",
+      "preserved_family": "exact structural_family from STATE_CAPSULE.development_candidate",
+      "relationship": "general_refinement|emergent_extension"
+    },'''
+    else:
+        design_parent_instruction = (
+            "There is no active development candidate. In local or emergent mode, the official champion is the "
+            "design parent. In counter-hypothesis mode, the official champion is evidence and the promotion "
+            "opponent, but must not be used as a template or parent."
+        )
+        development_schema = ""
     if mode == "counter_hypothesis":
         mode_instruction = (
-            "COUNTER-HYPOTHESIS MODE persists until promotion. Identify the dominant assumption behind the current "
-            "search direction, invert it, and fill hypothesis.dominant_assumption and hypothesis.inversion. The "
-            "inversion may switch collaboration to solo or solo to collaboration, but it may instead invert another "
-            "evidenced dominant assumption."
+            "COUNTER-HYPOTHESIS MODE searches for a genuinely different structural family and persists until a "
+            "candidate either promotes or retains at least the configured development threshold of champion "
+            "performance. Extract the champion family's causal principle, reject one or two core assumptions, and "
+            "declare the champion mechanisms that the candidate is forbidden to use. Design from a replacement "
+            "causal principle rather than editing or reversing the champion stage-by-stage. A role rename, reordered "
+            "version of the same draft-review-integrate flow, extra gate, or collaboration/solo switch alone is not "
+            "a family break. One replacement principle may have consequences across multiple dimensions while still "
+            "counting as the single causal factor. Explain at least two changed behavioral dimensions and provide a "
+            "probe that can distinguish the new family from the champion on the same evidence. Use an "
+            "alternative_family not listed in counter_families_already_tested. Fill dominant_assumption, inversion, "
+            "and family_break completely."
         )
-        emergent_schema = ""
+        mode_schema = '''
+    "family_break": {
+      "champion_family": "compact causal description of the incumbent family",
+      "alternative_family": "stable compact name for the independent replacement family",
+      "rejected_core_assumptions": ["one or two assumptions rejected by this candidate"],
+      "forbidden_champion_mechanisms": ["mechanism that must not reappear under another name"],
+      "alternative_causal_principle": "one replacement principle from which the structure is derived",
+      "changed_dimensions": ["at least two of information_flow|error_detection|candidate_selection|final_decision|failure_recovery"],
+      "difference_from_champion": {"information_flow": "concrete behavioral difference for every listed dimension"},
+      "non_derivative_probe": "probe distinguishing the new family from the champion on the same evidence"
+    },'''
     elif mode == "emergent_exploration":
+        parent_name = "development candidate" if has_development else "champion"
         mode_instruction = (
-            "EMERGENT-EXPLORATION MODE. Preserve supported champion strengths but enable one observable action that "
-            "the champion's current control flow cannot perform. A larger packet, an extra certificate field, a "
+            f"EMERGENT-EXPLORATION MODE. Preserve the supported {parent_name} family but enable one observable action "
+            f"that the {parent_name}'s current control flow cannot perform. A larger packet, an extra certificate field, a "
             "moved audit, a finer rollback scope, a renamed ledger, or an added reviewer/gate is not emergent unless "
             "it creates a genuinely new trigger-dependent state transition and decision path. Derive the capability "
             "from the evidence rather than choosing from a fixed menu. Do not merely repair the previous emergent "
@@ -82,7 +127,7 @@ def architect_prompt(capsule: dict[str, Any], *, validation_feedback: str = "") 
             "family. Fill hypothesis.emergent_capability completely and make its novelty_probe executable or "
             "otherwise concretely observable."
         )
-        emergent_schema = '''
+        mode_schema = '''
     "emergent_capability": {
       "capability_family": "stable compact name for the new kind of behavior",
       "champion_limitation": "behavior the current champion structurally cannot perform",
@@ -94,25 +139,30 @@ def architect_prompt(capsule: dict[str, Any], *, validation_feedback: str = "") 
       "not_local_refinement": "why this is not another certificate, audit, rollback, packet, or role-detail refinement"
     },'''
     else:
+        parent_name = "development candidate" if has_development else "champion"
         mode_instruction = (
-            "LOCAL-REFINEMENT MODE. Make one evidence-led causal refinement while preserving the champion's macro "
+            f"LOCAL-REFINEMENT MODE. Make one evidence-led causal refinement while preserving the {parent_name}'s macro "
             "capability family. This round counts toward the two-round local budget whether or not it promotes. Do "
             "not fill dominant_assumption or inversion merely for novelty."
         )
-        emergent_schema = ""
+        mode_schema = ""
     retry_instruction = (
         "\nThe preceding proposal was rejected before evaluation. Correct the stated contract violation while "
         f"still proposing one coherent candidate. VALIDATION_FEEDBACK={validation_feedback}\n"
         if validation_feedback
         else ""
     )
-    return f"""You are the single Sol xhigh architect evolving a loop structure, not a chess engine.
+    return f"""You are an independent Sol max structural-architect subagent evolving a loop structure, not a chess engine.
 
-The current champion is one indivisible package: loop structure plus the engine that structure produced. Propose one
-new loop structure that will start from the champion anchor engine and attempt to produce a stronger engine. The
-candidate and current champion structures will each run from the exact same anchor in three matched pairs. Their final
+The official champion is one indivisible package: loop structure plus the engine that structure produced. Propose one
+new loop structure that will start from the supplied anchor engine and attempt to produce a stronger engine.
+{design_parent_instruction} The candidate and official champion structures will each run from the exact same anchor in
+three matched pairs. Their final
 engines are evaluated by the frozen ChessBench; promotion requires paired superiority, candidate-median superiority,
-and zero invalid candidate arms. The precommitted median-ranked candidate engine represents a winning batch. Solo and
+and zero invalid arms. A counter-hypothesis batch that does not promote may enter a bounded development cycle only when
+its median score-rate ratio is at least 90%, proven either by three valid pairs or by decisive two-pair worst-case bounds
+after formal promotion is already impossible. Do not apply
+percentages to negative Elo. The precommitted median-ranked candidate engine represents a winning or development batch. Solo and
 collaboration are two
 allowed organizations in the same lineage. Direct is only an external same-model calibration control, never a
 candidate, champion, or promotion opponent.
@@ -160,7 +210,8 @@ Call output_type is analysis or engine. Return exactly one JSON object and no Ma
     "expected_effect": "behavioral prediction",
     "falsifier": "decisive three-pair batch condition",
     "behavioral_novelty": "new observable behavior enabled by the one causal change",
-{emergent_schema}
+{development_schema}
+{mode_schema}
     "strengths": ["predicted strength"],
     "risks": ["predicted weakness"],
     "dominant_assumption": "required only in counter_hypothesis mode",
@@ -199,9 +250,43 @@ class Architect:
     def __init__(self, client: CodexModelClient) -> None:
         self.client = client
 
+    @property
+    def policy_identity(self) -> dict[str, Any] | None:
+        policy = getattr(self.client, "policy", None)
+        if not isinstance(policy, ProposalPolicy):
+            return None
+        return proposal_policy_identity(policy)
+
     def propose(self, *, capsule: dict[str, Any], round_dir: Path) -> LoopPlan:
         generation_dir = round_dir / "generation"
         generation_dir.mkdir(parents=True, exist_ok=True)
+        policy_identity = self.policy_identity
+        policy_sha256 = content_hash(policy_identity) if policy_identity is not None else None
+        session_path = generation_dir / "architect-session.json"
+        if policy_identity is not None:
+            if session_path.is_file():
+                session = read_json(session_path)
+                if (
+                    session.get("proposal_policy") != policy_identity
+                    or session.get("proposal_policy_sha256") != policy_sha256
+                ):
+                    raise RuntimeError(
+                        "architect policy provenance does not match the active independent subagent"
+                    )
+            elif any(generation_dir.iterdir()):
+                raise RuntimeError(
+                    "architect policy provenance is missing from an existing partial generation"
+                )
+            else:
+                atomic_json(
+                    session_path,
+                    {
+                        "schema_version": 1,
+                        "agent_role": "structural_architect",
+                        "proposal_policy": policy_identity,
+                        "proposal_policy_sha256": policy_sha256,
+                    },
+                )
         attempts_dir = generation_dir / "attempts"
         attempts_dir.mkdir(parents=True, exist_ok=True)
         search_control = capsule.get("search_control", {})
@@ -218,6 +303,14 @@ class Architect:
             error_path = attempt_dir / "validation-error.txt"
 
             if response_path.is_file() and receipt_path.is_file():
+                receipt = read_json(receipt_path)
+                if (
+                    policy_sha256 is not None
+                    and receipt.get("proposal_policy_sha256") != policy_sha256
+                ):
+                    raise RuntimeError(
+                        "architect policy provenance does not match an existing proposal attempt"
+                    )
                 prompt = (
                     prompt_path.read_text(encoding="utf-8")
                     if prompt_path.is_file()
@@ -228,7 +321,7 @@ class Architect:
                 prompt = architect_prompt(capsule, validation_feedback=validation_feedback)
                 prompt_path.write_text(prompt, encoding="utf-8")
                 response = self.client.complete(
-                    role="Sol xhigh causal loop-structure architect",
+                    role="Sol max independent structural-architect subagent",
                     prompt=prompt,
                     working_directory=round_dir.parents[1],
                     allow_workspace_read=True,
@@ -239,6 +332,15 @@ class Architect:
                     receipt_path,
                     {
                         "attempt": attempt_index,
+                        **(
+                            {
+                                "agent_role": "structural_architect",
+                                "proposal_policy": policy_identity,
+                                "proposal_policy_sha256": policy_sha256,
+                            }
+                            if policy_identity is not None
+                            else {}
+                        ),
                         "prompt_sha256": content_hash(prompt),
                         "response_sha256": content_hash(response_text),
                         "usage": response.usage,
@@ -319,6 +421,10 @@ class LoopExecutor:
         round_dir: Path,
         builtins: dict[str, str],
     ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        runtime_policy = getattr(self.client, "policy", None)
+        if not isinstance(runtime_policy, RuntimePolicy):
+            raise RuntimeError("loop execution requires a provenanced RuntimePolicy")
+        runtime_policy.validate()
         outputs: dict[str, str] = {}
         traces: list[dict[str, Any]] = []
         calls_dir = round_dir / "execution" / "calls"
@@ -373,6 +479,12 @@ class LoopExecutor:
                     "output_type": str(call["output_type"]),
                     "prompt_sha256": content_hash(prompt),
                     "response_sha256": content_hash(output),
+                    "model": runtime_policy.model,
+                    "reasoning_effort": runtime_policy.reasoning_effort,
+                    "service_tier": runtime_policy.service_tier,
+                    "request_tier": runtime_policy.request_tier,
+                    "tier_contract": runtime_policy.tier_contract,
+                    "runtime_policy_sha256": content_hash(runtime_policy_identity(runtime_policy)),
                     "usage": result.usage,
                     "trace_refs": list(result.trace_refs),
                 }

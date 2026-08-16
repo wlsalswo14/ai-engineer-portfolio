@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    _RESIDENT_LIMIT = 4096\n    _GHOST_LIMIT = 4096\n\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.used = 0\n        self.target = 0\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n\n    @staticmethod\n    def _size(value):\n        try:\n            return max(0, int(value))\n        except (TypeError, ValueError, OverflowError):\n            return 0\n\n    def _remember_ghost(self, key, size, frequent):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n        target = self.b2 if frequent else self.b1\n        target[key] = size\n        while len(target) > self._GHOST_LIMIT:\n            target.popitem(last=False)\n\n    def _victim(self, favor_recent):\n        if self.t1 and (not self.t2 or self.t1_bytes >= self.target or favor_recent):\n            return self.t1, False\n        if self.t2:\n            return self.t2, True\n        if self.t1:\n            return self.t1, False\n        return None, False\n\n    def _make_room(self, incoming, evicted, favor_recent=False):\n        while (self.used + incoming > self.capacity or\n               len(self.t1) + len(self.t2) >= self._RESIDENT_LIMIT):\n            source, frequent = self._victim(favor_recent)\n            if source is None:\n                break\n            key, size = source.popitem(last=False)\n            self.used -= size\n            self._remember_ghost(key, size, frequent)\n            if key not in evicted:\n                evicted.append(key)\n\n    def _install(self, key, size, frequent, evicted, favor_recent=False):\n        self._make_room(size, evicted, favor_recent)\n        target = self.t2 if frequent else self.t1\n        target[key] = size\n        self.used += size\n\n    def _resident_hit(self, key, size):\n        if key in self.t1:\n            old = self.t1.pop(key)\n        else:\n            old = self.t2.pop(key)\n        self.used -= old\n        if size > self.capacity:\n            return [key]\n        evicted = []\n        self._install(key, size, True, evicted)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = self._size(size)\n        if key in self.t1 or key in self.t2:\n            return self._resident_hit(key, size)\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            old = self.b1.pop(key)\n            self.target = min(self.capacity, self.target + max(1, old))\n        elif in_b2:\n            old = self.b2.pop(key)\n            self.target = max(0, self.target - max(1, old))\n\n        if size > self.capacity:\n            return []\n\n        evicted = []\n        self._install(key, size, bool(in_b1 or in_b2), evicted, in_b2)\n        return evicted\n\n    @property\n    def t1_bytes(self):\n        return sum(self.t1.values())\n"
+  },
+  "receipt": {
+    "call_id": "R71-pair02-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 51.288,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:27:18Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "8e05adfe1ec4ce7da4f35ea752cb7410da243342af77907dad41cd08d03734b5",
+    "raw_events_path": "workspace\\model-calls\\R71-pair02-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "4a159accb818ba3686dab43ff1516650df71edacd021b56e7df36323f54141b6",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "f996ef2701571f4ce220547eb013fccb615afa6c0237821bba18410317657ee9",
+    "returncode": 0,
+    "role": "R71 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:26:27Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13547,
+      "output_tokens": 3950,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

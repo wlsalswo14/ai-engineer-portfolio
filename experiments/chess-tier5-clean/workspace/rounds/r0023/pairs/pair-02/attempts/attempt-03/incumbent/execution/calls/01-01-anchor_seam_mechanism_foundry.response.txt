@@ -1,0 +1,148 @@
+## Sole component: `KingCaptureGuard`
+
+Causal capability: reject any candidate whose destination contains a king before the anchor’s `make()` transition. This preserves legal-move state integrity without changing search, evaluation, timing, or engine parameters.
+
+### Component source
+
+```python
+class KingCaptureGuard:
+    def __init__(self, limit=64):
+        if type(limit) is not int or limit <= 0:
+            raise ValueError("limit")
+        self.limit = limit
+        self._board = None
+        self._side = None
+        self._checks = 0
+        self._rejected = 0
+        self._open = False
+
+    def begin(self, board, side):
+        if self._open:
+            raise RuntimeError("session already open")
+        board = tuple(board)
+        valid = ".PNBRQKpnbrqk"
+        if (
+            len(board) != 64
+            or side not in (0, 1)
+            or any(type(x) is not str or len(x) != 1 or x not in valid
+                   for x in board)
+        ):
+            raise ValueError("invalid anchor Position shape")
+        self._board = board
+        self._side = side
+        self._checks = 0
+        self._rejected = 0
+        self._open = True
+        return ("open", side, 64)
+
+    def admit(self, move):
+        if not self._open:
+            raise RuntimeError("session closed")
+        if self._checks >= self.limit:
+            raise OverflowError("bounded work")
+        if type(move) is not int or move < 0:
+            raise ValueError("encoded move")
+        dst = (move >> 6) & 63
+        self._checks += 1
+        rejected = self._board[dst].lower() == "k"
+        if rejected:
+            self._rejected += 1
+        return not rejected
+
+    def close(self):
+        if not self._open:
+            raise RuntimeError("session closed")
+        trace = ("close", self._checks, self._rejected)
+        self._board = self._side = None
+        self._checks = self._rejected = 0
+        self._open = False
+        return trace
+```
+
+### Anchor-seam surrogate
+
+Provenance: anchor `Position.__init__` fields (`b, side, cast, ep, half, full`); `pseudo()` emits encoded moves via `enc()`; `legal()` consumes those moves before calling `make()` and `attacked()`.
+
+```python
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class AnchorState:
+    b: tuple
+    side: int
+    cast: int
+    ep: int
+    half: int
+    full: int
+
+def seam_surrogate(state, candidates, guard):
+    forwarded = []
+    consumer_inputs = []
+
+    opened = guard.begin(state.b, state.side)
+    for move in tuple(candidates):
+        if guard.admit(move):
+            forwarded.append(move)
+            consumer_inputs.append((state, move))
+    closed = guard.close()
+
+    return (
+        tuple(forwarded),
+        tuple(consumer_inputs),
+        (opened, closed),
+    )
+```
+
+The surrogate preserves the anchor state shape, opens and closes one bounded admission lifecycle, forwards only admitted encoded moves, and leaves downstream `make/attacked` ownership with the anchor.
+
+### Deterministic fixture traces
+
+Fixture coverage:
+
+- King-target candidate: rejected; consumer receives nothing.
+- Null candidate set: ordinary moves forwarded unchanged.
+- Boundary lifecycle: nested/open-after-close misuse rejected.
+- Repeated lifecycle: counters reset across reuse.
+- Dependency closure: exact 64-square board, side `0/1`, encoded move contract.
+- Bounded work: admission limit enforced.
+
+Expected deterministic traces:
+
+```text
+predicted_effect:
+  forwarded=()
+  lifecycle=(("open",0,64),("close",1,1))
+
+null_case:
+  forwarded=(1292,1804)
+  lifecycle=(("open",0,64),("close",2,0))
+
+repeated_lifecycle:
+  first=(("close",1,1))
+  second=(("close",1,0))
+
+bounded_work:
+  first two admissions succeed
+  third admission raises OverflowError
+```
+
+The managed shell refused Python process execution before the fixture ran; no files were modified and no engine was emitted.
+
+### Causal falsifier
+
+Falsify if the guard:
+
+- rejects a non-king destination;
+- forwards a king-target move;
+- mutates `AnchorState`;
+- exceeds its admission bound;
+- leaks lifecycle counters across reuse; or
+- requires any dependency beyond the supplied board, side, and encoded move.
+
+### Graft invariants
+
+1. Invoke exactly once per `legal()` candidate session, before `make()`.
+2. Preserve `pseudo()`, `make()`, `attacked()`, search, evaluation, and UCI behavior.
+3. Reject only destinations containing `k` or `K`.
+4. Leave `b`, `side`, `cast`, `ep`, `half`, and `full` unchanged.
+5. Keep the anchor as the sole state owner and graft this component exactly once.

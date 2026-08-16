@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self._recent = OrderedDict()\n        self._frequent = OrderedDict()\n        self._recent_bytes = 0\n        self._frequent_bytes = 0\n        self._used = 0\n        self._target = self.capacity_bytes // 2\n        self._b1 = OrderedDict()\n        self._b2 = OrderedDict()\n        self._ghost_order = OrderedDict()\n        self._ghost_limit = max(32, min(4096, self.capacity_bytes // 64 + 32))\n\n    def _size(self, value):\n        value = int(value)\n        return max(0, value)\n\n    def _remember_ghost(self, key, size, segment):\n        self._b1.pop(key, None)\n        self._b2.pop(key, None)\n        self._ghost_order.pop(key, None)\n        target = self._b1 if segment == 1 else self._b2\n        target[key] = size\n        self._ghost_order[key] = segment\n        while len(self._ghost_order) > self._ghost_limit:\n            old_key, old_segment = self._ghost_order.popitem(last=False)\n            if old_segment == 1:\n                self._b1.pop(old_key, None)\n            else:\n                self._b2.pop(old_key, None)\n\n    def _ghost_hit(self, key, size):\n        segment = None\n        if key in self._b1:\n            self._b1.pop(key, None)\n            segment = 1\n        elif key in self._b2:\n            self._b2.pop(key, None)\n            segment = 2\n        if segment is None:\n            return None\n        self._ghost_order.pop(key, None)\n        if self.capacity_bytes:\n            step = max(1, min(self.capacity_bytes, size or 1))\n            if segment == 1:\n                self._target = min(self.capacity_bytes, self._target + step)\n            else:\n                self._target = max(0, self._target - step)\n        return segment\n\n    def _make_room(self, incoming, evicted, emitted):\n        while self._used + incoming > self.capacity_bytes:\n            if not self._recent and not self._frequent:\n                break\n            if self._recent and (self._recent_bytes > self._target or not self._frequent):\n                key, size = self._recent.popitem(last=False)\n                self._recent_bytes -= size\n                segment = 1\n            else:\n                key, size = self._frequent.popitem(last=False)\n                self._frequent_bytes -= size\n                segment = 2\n            self._used -= size\n            self._remember_ghost(key, size, segment)\n            if isinstance(key, int) and key not in emitted:\n                emitted.add(key)\n                evicted.append(key)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = self._size(size)\n        evicted = []\n        emitted = set()\n\n        if key in self._recent:\n            old_size = self._recent.pop(key)\n            self._recent_bytes -= old_size\n            self._used -= old_size\n            if requested > self.capacity_bytes:\n                return [key] if isinstance(key, int) else []\n            self._make_room(requested, evicted, emitted)\n            self._frequent[key] = requested\n            self._frequent_bytes += requested\n            self._used += requested\n            return evicted\n\n        if key in self._frequent:\n            old_size = self._frequent.pop(key)\n            self._frequent_bytes -= old_size\n            self._used -= old_size\n            if requested > self.capacity_bytes:\n                return [key] if isinstance(key, int) else []\n            self._make_room(requested, evicted, emitted)\n            self._frequent[key] = requested\n            self._frequent_bytes += requested\n            self._used += requested\n            return evicted\n\n        ghost_segment = self._ghost_hit(key, requested)\n        if requested > self.capacity_bytes:\n            return evicted\n\n        self._make_room(requested, evicted, emitted)\n        if ghost_segment is None:\n            self._recent[key] = requested\n            self._recent_bytes += requested\n        else:\n            self._frequent[key] = requested\n            self._frequent_bytes += requested\n        self._used += requested\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R73-pair02-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 93.38,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:51:33Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "0569f5c56364148bc026bf4235a1866d764f4b659fe584d31d606e35056b8314",
+    "raw_events_path": "workspace\\model-calls\\R73-pair02-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "ea1c9798fd4c13d0f02ee94be97e865fb2a68537b9ff6b1d6fd807b5dce3cbeb",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "10811d3418121f8c201f22c7844135705555840b466f1efd0e757d0e105201ae",
+    "returncode": 0,
+    "role": "R73 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:50:00Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13796,
+      "output_tokens": 5179,
+      "reasoning_output_tokens": 4108
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

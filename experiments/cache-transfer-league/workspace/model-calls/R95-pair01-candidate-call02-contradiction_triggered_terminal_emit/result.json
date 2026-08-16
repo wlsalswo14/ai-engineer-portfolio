@@ -1,0 +1,44 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _drop_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_frequent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if kind == 1:\n            self.ghost_recent[key] = value\n        else:\n            self.ghost_frequent[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_count_limit):\n            source = None\n            oldest = None\n            for ghosts in (self.ghost_recent, self.ghost_frequent):\n                if ghosts:\n                    value = next(iter(ghosts.values()))\n                    if oldest is None or value[1] < oldest[1]:\n                        oldest = value\n                        source = ghosts\n            if source is None:\n                return\n            _, value = source.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _adjust_target(self, kind):\n        if self.capacity <= 0:\n            return\n        recent_bytes = sum(value[0] for value in self.ghost_recent.values())\n        frequent_bytes = sum(value[0] for value in self.ghost_frequent.values())\n        if kind == 1:\n            delta = self.capacity if recent_bytes == 0 else max(1, min(self.capacity, frequent_bytes // recent_bytes or 1))\n            self.target = min(self.capacity, self.target + delta)\n        else:\n            delta = self.capacity if frequent_bytes == 0 else max(1, min(self.capacity, recent_bytes // frequent_bytes or 1))\n            self.target = max(0, self.target - delta)\n\n    def _remove_resident(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.recent_bytes -= value\n            self.used -= value\n            return value\n        value = self.frequent.pop(key, None)\n        if value is not None:\n            self.frequent_bytes -= value\n            self.used -= value\n            return value\n        return None\n\n    def _evict_one(self):\n        if self.recent and (self.recent_bytes > self.target or not self.frequent):\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        return None\n\n    def _make_room(self, incoming):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one()\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def _insert(self, key, size, frequent):\n        if frequent:\n            self.frequent[key] = size\n            self.frequent_bytes += size\n        else:\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used += size\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = int(size)\n\n        resident = key in self.recent or key in self.frequent\n        if resident:\n            self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                self._drop_ghost(key)\n                return [key]\n            evicted = self._make_room(size)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            self._insert(key, size, True)\n            return evicted\n\n        mode = 1 if key in self.ghost_recent else 2 if key in self.ghost_frequent else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if mode:\n            self._adjust_target(mode)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size)\n        if self.used + size > self.capacity:\n            return evicted\n        self._insert(key, size, mode != 0)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R95-pair01-candidate-call02-contradiction_triggered_terminal_emit",
+    "duration_seconds": 38.623,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T03:55:00Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "6c7de94572ff0ff1f7b46a89ba436814c2ce66682396e40d2373139132017f36",
+    "raw_events_path": "workspace\\model-calls\\R95-pair01-candidate-call02-contradiction_triggered_terminal_emit\\raw-events.jsonl",
+    "raw_events_sha256": "5fbd533d2779dc5e386e2ac3c7d3e3aaa01e0cc262d176c86190740d6f5f8978",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "acb4df7b84903917197cbb523efe82475ca1c1944493e7f552278fe797bac8a1",
+    "returncode": 0,
+    "role": "R95 candidate topology role evidence-triggered authority-state controller and terminal emitter",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T03:54:21Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 16539,
+      "output_tokens": 2903,
+      "reasoning_output_tokens": 1552
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "amendment_id": "chess-display-r41-r43-all-subagents-fast-20260809",
+  "created_at_utc": "2026-08-09T14:05:20.4145249Z",
+  "parent_contract_path": "experiments/chess-tier5-clean/workspace/continuations/display-r40-to-r43-20260809.json",
+  "parent_contract_content_sha256": "6f9edcca702f7b20876c8e98c2a8d1955ae58e1de9e6df744d7b888ba4ac7eff",
+  "authorization": "For display R41 through R43, every fresh Sol structural architect and every Luna internal-loop role must use Fast service; fail closed on missing or default tier provenance.",
+  "effective_before_any_r41_runtime_call": true,
+  "architect_contract": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "receipt_required": true
+  },
+  "runtime_contract": {
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "tier_contract": "fast_priority_required",
+    "cli_override": "service_tier=fast",
+    "strict_config": true,
+    "per_call_receipt_required": true,
+    "missing_or_default_tier_action": "fail_closed"
+  },
+  "active_files": {
+    "experiment_config": {
+      "path": "experiments/chess-tier5-clean/config.json",
+      "sha256": "dffde6d19aac7da84235c5be40a9e7752929a8e395f36facc3205b018f325d0d"
+    },
+    "runtime_policy": {
+      "path": "resources/policies/luna-high-fast-slot1-chessbench100-v2.json",
+      "sha256": "f16dad23df696e8b0cbf89b8c9465482e11342579279f28f6e64d073083b3b5c"
+    },
+    "policy_loader": {
+      "path": "src/loop_evolution/platform/config.py",
+      "sha256": "2e83bbb7709f7b3ac17420f9fb49321125267cd92e9a5e2ae42034b0cf056aa9"
+    },
+    "codex_backend": {
+      "path": "src/loop_evolution/platform/backends/codex.py",
+      "sha256": "7c724b812ccaa856f26dddedb8e235416aa4dbaca8ec07be97b614ab935cd255"
+    },
+    "loop_executor": {
+      "path": "src/loop_evolution/agents.py",
+      "sha256": "4806bbe750dc5e80f18305f62602233d8a6eb32c3cdae2f08b6230bba6cd5cc1"
+    },
+    "resource_manifest": {
+      "path": "resources/manifest.json",
+      "sha256": "bd40c9b20d182ec3da9fe1b7b9a8e0815133d6107f7505d2452dfbde45189f8a"
+    },
+    "fast_tier_tests": {
+      "path": "tests/test_fast_runtime_tier.py",
+      "sha256": "820462813f6224e9d47db1135f2af49581e3eea73f54d4479dedb60db6988054"
+    }
+  },
+  "verification": {
+    "pytest_result": "41 passed",
+    "r41_runtime_calls_before_activation": 0,
+    "historical_v1_runtime_policy_preserved": true,
+    "historical_round_artifacts_rewritten": false
+  },
+  "content_sha256": "238cb63eacd718c5b0bc5bc543a063c045783ee0adaab3b4e9dfbd8fc3fb7126"
+}

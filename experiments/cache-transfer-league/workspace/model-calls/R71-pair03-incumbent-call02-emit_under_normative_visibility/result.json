@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.target_recent = 0\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.used = 0\n        self.ghost_clock = 0\n        self.ghost_limit = 4096\n\n    def _remember(self, ghost, key, size):\n        if self.capacity == 0:\n            return\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n        self.ghost_clock += 1\n        ghost[key] = (size, self.ghost_clock)\n        while len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_limit:\n            if not self.ghost_recent:\n                self.ghost_frequent.popitem(last=False)\n            elif not self.ghost_frequent:\n                self.ghost_recent.popitem(last=False)\n            else:\n                rk = next(iter(self.ghost_recent))\n                fk = next(iter(self.ghost_frequent))\n                if self.ghost_recent[rk][1] <= self.ghost_frequent[fk][1]:\n                    self.ghost_recent.popitem(last=False)\n                else:\n                    self.ghost_frequent.popitem(last=False)\n\n    def _remove(self, table, key, ghost):\n        size = table.pop(key)\n        self.used -= size\n        self._remember(ghost, key, size)\n        return size\n\n    def _evict_one(self, prefer_recent):\n        if prefer_recent and self.recent:\n            table, ghost = self.recent, self.ghost_recent\n        elif self.frequent:\n            table, ghost = self.frequent, self.ghost_frequent\n        elif self.recent:\n            table, ghost = self.recent, self.ghost_recent\n        else:\n            return None\n        key, size = table.popitem(last=False)\n        self.used -= size\n        self._remember(ghost, key, size)\n        return key\n\n    def _make_room(self, incoming, prefer_frequent):\n        evicted = []\n        while self.used + incoming > self.capacity and (self.recent or self.frequent):\n            prefer_recent = bool(self.recent) and (\n                self._recent_bytes() > self.target_recent\n                or (prefer_frequent and self._recent_bytes() == self.target_recent)\n            )\n            key = self._evict_one(prefer_recent)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def _recent_bytes(self):\n        return sum(self.recent.values())\n\n    def _adjust_target(self, upward, amount):\n        if self.capacity == 0:\n            return\n        delta = max(1, min(self.capacity, amount))\n        if upward:\n            self.target_recent = min(self.capacity, self.target_recent + delta)\n        else:\n            self.target_recent = max(0, self.target_recent - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        try:\n            size = max(0, int(size))\n        except (TypeError, ValueError):\n            size = 0\n\n        if key in self.recent:\n            old_size = self.recent.pop(key)\n            self.used -= old_size\n            if size > self.capacity:\n                self._remember(self.ghost_recent, key, old_size)\n                return [key]\n            self.frequent[key] = size\n            self.used += size\n            return self._make_room(0, False)\n\n        if key in self.frequent:\n            old_size = self.frequent.pop(key)\n            self.used -= old_size\n            if size > self.capacity:\n                self._remember(self.ghost_frequent, key, old_size)\n                return [key]\n            self.frequent[key] = size\n            self.used += size\n            return self._make_room(0, False)\n\n        if self.capacity == 0 or size > self.capacity:\n            return []\n\n        if key in self.ghost_recent:\n            old_size, _ = self.ghost_recent.pop(key)\n            self._adjust_target(True, max(old_size, size))\n            evicted = self._make_room(size, True)\n            self.frequent[key] = size\n            self.used += size\n            return evicted\n\n        if key in self.ghost_frequent:\n            old_size, _ = self.ghost_frequent.pop(key)\n            self._adjust_target(False, max(old_size, size))\n            evicted = self._make_room(size, True)\n            self.frequent[key] = size\n            self.used += size\n            return evicted\n\n        evicted = self._make_room(size, False)\n        self.recent[key] = size\n        self.used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R71-pair03-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 76.335,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:29:20Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "0a1a17d9699c6147d2bf50aa5a25d4b6f6191a37583a6341c69f2ce62c2b985b",
+    "raw_events_path": "workspace\\model-calls\\R71-pair03-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "4633e5f91d38d33f14fe067da8b1a5ffdc2e1d8ad5cbaac79bef0c860e7f7f1d",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "bc10cc850686d2e73279cf6c2644e39723b7f9b2a6a7a7c7a3abcffc143d780a",
+    "returncode": 0,
+    "role": "R71 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:28:04Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13069,
+      "output_tokens": 6064,
+      "reasoning_output_tokens": 4893
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, record = self.protected.popitem(last=False)\n            size = record[0]\n            self.protected_bytes -= size\n            self.probation[key] = record\n            self.probation_bytes += size\n\n    def _evict_one(self):\n        if self.probation:\n            key, record = self.probation.popitem(last=False)\n            self.probation_bytes -= record[0]\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, record = self.protected.popitem(last=False)\n            self.protected_bytes -= record[0]\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= record[0]\n        return key\n\n    def _touch(self, bucket, key, now):\n        record = bucket.pop(key)\n        record[1] = min(record[1] + 1, 255)\n        record[2] = now\n        bucket[key] = record\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            self._touch(self.protected, key, now)\n            return []\n\n        if key in self.probation:\n            record = self.probation.pop(key)\n            self.probation_bytes -= record[0]\n            record[1] = min(record[1] + 1, 255)\n            record[2] = now\n            self.protected[key] = record\n            self.protected_bytes += record[0]\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, size),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, size),\n            )\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                return evicted\n            evicted.append(old_key)\n\n        self.probation[key] = [size, 1, now]\n        self.probation_bytes += size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R25-pair01-incumbent-call01-form_executable_closure",
+    "duration_seconds": 33.95,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:25:47Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "caa003c523a517487a68415f93c5304da915d2ac32899d3b860f598149f4fdb5",
+    "raw_events_path": "workspace\\model-calls\\R25-pair01-incumbent-call01-form_executable_closure\\raw-events.jsonl",
+    "raw_events_sha256": "ec571a6e6aef1881149f24d9ec300a2e068fd897548d14067809cec44cf2fe2e",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "68eabd360873dbd5f34b29adb836772a094e42690d8466f69e5b9221ca94aa66",
+    "returncode": 0,
+    "role": "R25 incumbent topology role executable semantic closure former",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:25:13Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13782,
+      "output_tokens": 2530,
+      "reasoning_output_tokens": 1655
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

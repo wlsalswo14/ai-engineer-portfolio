@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.ghost_limit = 4096\n        self.recent_target = self.capacity_bytes // 2\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _evict_from(self, cache, ghost, frequent):\n        if not cache:\n            return None\n        key, size = cache.popitem(last=False)\n        if frequent:\n            self.frequent_bytes -= size\n        else:\n            self.recent_bytes -= size\n        self.used_bytes -= size\n        self._remember(ghost, key)\n        return key\n\n    def _replace(self):\n        if self.recent and (self.recent_bytes > self.recent_target or not self.frequent):\n            return self._evict_from(self.recent, self.ghost_recent, False)\n        if self.frequent:\n            return self._evict_from(self.frequent, self.ghost_frequent, True)\n        if self.recent:\n            return self._evict_from(self.recent, self.ghost_recent, False)\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        adjustment = max(step, min(size, self.capacity_bytes))\n        if key in self.ghost_recent:\n            self.recent_target = min(\n                self.capacity_bytes,\n                self.recent_target + adjustment,\n            )\n        elif key in self.ghost_frequent:\n            self.recent_target = max(0, self.recent_target - adjustment)\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._replace()\n            if old_key is None:\n                return evicted\n            evicted.append(old_key)\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R43-pair03-incumbent-call02-contract_bounded_behavior_authority",
+    "duration_seconds": 53.165,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:40:44Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "f5e5ba3af19ad8d8c0a61f9f3b9b56f68eaad6d3c6ac0ce541973b8b964cc3cb",
+    "raw_events_path": "workspace\\model-calls\\R43-pair03-incumbent-call02-contract_bounded_behavior_authority\\raw-events.jsonl",
+    "raw_events_sha256": "65718291a668a502f2fcb12b47bc0bfc0bf66ae7d95bb4815be48cd594aa286c",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "59e0c2eb41215b40e0759d6ae4203c99588046b093bd91f56d1e52a143a05a94",
+    "returncode": 0,
+    "role": "R43 incumbent topology role contract-bounded behavioral authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:39:51Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13694,
+      "output_tokens": 4094,
+      "reasoning_output_tokens": 3340
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

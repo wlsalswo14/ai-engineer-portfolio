@@ -1,0 +1,42 @@
+{
+  "analysis_packet": {
+    "certificate": "Admissible evidence is limited to the visible task, immutable anchor, contract, constraints, hypothesis, and loop structure. The causal hypothesis is unverified because scores and evaluator results are withheld. Binding exclusions: no oracle, benchmark, trace, external library, hidden state, score-based claim, policy construction, interface change, or constraint relaxation. The late-bound analysis may constrain the final constructor only through these exclusions and the stated obligations; it cannot mandate an unsupported replacement design.",
+    "exact_actions": [
+      "Pass the analysis as late-bound evidence to construct_after_late_boundary.",
+      "Require the constructor to honor every binding exclusion stated here.",
+      "Permit the constructor to use only admissible visible evidence and its own justified synthesis.",
+      "Reject any construction relying on hidden traces, evaluator references, oracle decisions, benchmark paths, external packages, scores, or unsupported performance guarantees.",
+      "Require exactly one complete policy artifact from the subsequent call."
+    ],
+    "obligations": [
+      "Reconcile only the visible common evidence.",
+      "Treat unsupported commitments and unverifiable causal claims as non-authoritative exclusions.",
+      "Preserve admissible conflicts without resolving them through invented facts or scores.",
+      "Maintain interface legality, capacity safety, online one-access-at-a-time visibility, standard-library compliance, and evaluator-owned state boundaries.",
+      "Emit no policy artifact or policy source from this call."
+    ],
+    "witnesses": [
+      {
+        "evidence": "task",
+        "finding": "Requires a standard-library-only online cache policy with the specified interface and optimization objectives."
+      },
+      {
+        "evidence": "anchor_contract",
+        "finding": "Requires preserving interface legality, capacity safety, and online-only visibility."
+      },
+      {
+        "evidence": "task_constraints",
+        "finding": "Requires unique currently cached integer evictions, capacity compliance, no oracle adaptation, no scores, and one final policy."
+      },
+      {
+        "evidence": "candidate_hypothesis",
+        "finding": "Proposes late-bound negative authority but supplies no validated performance evidence."
+      },
+      {
+        "evidence": "loop_structure",
+        "finding": "This call emits analysis only; the subsequent constructor receives this analysis last and must honor its exclusions."
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

@@ -12,7 +12,7 @@ anchors must be source-diverse whenever the lineage contains enough distinct val
 slots; stagnation leaves the panel stable.
 
 Token accounting is observational and does not affect promotion. Every accepted and invalid attempt contributes its actual
-model-call usage. The round ledger separates Sol xhigh proposal usage from Luna high internal-loop usage and reports both
+model-call usage. The round ledger separates independent Sol max structural-architect usage from Luna high internal-loop usage and reports both
 raw and effective totals:
 
 ```text
@@ -21,3 +21,5 @@ effective tokens = input tokens - cached input tokens + output tokens
 ```
 
 Reasoning output tokens are reported separately but are not added again because they are a subset of output tokens.
+`proposal_structural_architect` is the canonical proposal key. `proposal_sol_max` and the historical
+`proposal_sol_xhigh` key are non-additive aliases for compatibility with existing round readers.

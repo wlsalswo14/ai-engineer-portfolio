@@ -1,0 +1,72 @@
+{
+  "architect_scope": "one-R67-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "rollback_on_normative_witness",
+    "information_flow": "The first call receives every common input and emits one complete executable policy closure with a single active state and reversible candidate-caused transformation. The final call consumes that closure, directly receives only task, anchor_contract, and task_constraints, and emits the same lineage as one complete policy after preserving or causally rolling back its active transformation.",
+    "name": "Transactional Causal Rollback Edge",
+    "organization": "two-call sequential nonbranching lineage carrying one reversible executable closure through an evidence-triggered terminal state transition",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "construct_reversible_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile the available evidence and obligations into one complete executable policy closure whose candidate-caused transformation is reversible within the same sole artifact, without creating parallel alternatives.",
+            "output_type": "executable_policy_closure",
+            "role": "transactional executable-state constructor"
+          },
+          {
+            "id": "rollback_on_normative_witness",
+            "inputs": [
+              "construct_reversible_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints"
+            ],
+            "objective": "Consume construct_reversible_closure and the visible normative inputs, preserve its active state unless a specific normative contradiction is causally attributable to its transformation, and on that evidence transition the same artifact to its restored state before emitting one complete policy.",
+            "output_type": "policy",
+            "role": "causal rollback policy authority"
+          }
+        ],
+        "id": "reversible_executable_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "capability_family": "evidence-triggered transactional rollback of a single executable artifact",
+    "champion_limitation": "The champion discards executable continuity at the analysis handoff and therefore provides no recoverable state when a candidate-caused transformation conflicts with a visible obligation.",
+    "not_local_refinement": "This introduces reversible causal state and rollback control on an executable edge, rather than refining a fixed aperture, restoring source visibility, deauthorizing an analysis edge, adding a field, or splitting terminal roles.",
+    "observable_effect": "Without the witness, the emitted policy retains the active transformation; with the witness, the causally implicated transformation is absent while the artifact remains complete and executable.",
+    "state_transition": "The same sole artifact changes from candidate-active state to pre-transformation-restored state; no second artifact or alternate lineage is created.",
+    "trigger": "The terminal call witnesses a specific incompatibility between a candidate-caused transformation in the carried closure and an obligation visible in task, anchor_contract, or task_constraints."
+  },
+  "proposal_mode": "emergent_exploration",
+  "qualitative_hypothesis": {
+    "causal_change": "Replace the sole handoff protocol with one complete reversible executable closure whose candidate-caused transformation can be rolled back when directly contradicted by a terminal-visible normative obligation.",
+    "expected_effect": "Executable continuity should reduce rematerialization failures while causal rollback preserves supported transformations and removes only transformations implicated by witnessed incompatibility.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion's analysis-only cut carries claims but no executable continuity, so the terminal cannot causally undo a hypothesis-induced incompatibility and must rematerialize the entire artifact."
+  },
+  "structural_mutation": {
+    "after": "One complete executable closure crosses the sole edge; a witnessed normative contradiction causes the same artifact to transition from candidate-active state to its pre-transformation state before terminal emission.",
+    "before": "A forward-only analysis crosses the sole edge, after which the terminal independently materializes a policy under permanently cut generative-source visibility.",
+    "change_count": 1,
+    "factor": "evidence-triggered causal rollback semantics on the sole executable closure edge",
+    "why_structural": "The sole edge changes from a non-policy forward-only message into a reversible executable state channel with causal rollback authority, without adding a reviewer, gate, certificate, branch, or parallel artifact."
+  }
+}

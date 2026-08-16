@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_target_bytes = self.capacity_bytes // 2\n\n    def _trim_ghosts(self):\n        limit = max(1, 2 * (len(self.probation) + len(self.protected)))\n        while len(self.ghost_recent) + len(self.ghost_protected) > limit:\n            if self.ghost_recent:\n                self.ghost_recent.popitem(last=False)\n            elif self.ghost_protected:\n                self.ghost_protected.popitem(last=False)\n\n    def _record_recent_ghost(self, key):\n        self.ghost_protected.pop(key, None)\n        self.ghost_recent.pop(key, None)\n        self.ghost_recent[key] = None\n        self._trim_ghosts()\n\n    def _record_protected_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_protected.pop(key, None)\n        self.ghost_protected[key] = None\n        self._trim_ghosts()\n\n    def _demote_protected(self):\n        while self.protected and self.protected_bytes > self.protected_target_bytes:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self, evicted):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self.used_bytes -= size\n            self._record_recent_ghost(key)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.used_bytes -= size\n            self._record_protected_ghost(key)\n        else:\n            return False\n        evicted.append(key)\n        return True\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._demote_protected()\n            return []\n\n        if size < 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        if key in self.ghost_recent:\n            self.ghost_recent.pop(key, None)\n            step = max(1, size, self.capacity_bytes // 16)\n            self.protected_target_bytes = max(0, self.protected_target_bytes - step)\n        elif key in self.ghost_protected:\n            self.ghost_protected.pop(key, None)\n            step = max(1, size, self.capacity_bytes // 16)\n            self.protected_target_bytes = min(\n                self.capacity_bytes,\n                self.protected_target_bytes + step,\n            )\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if not self._evict_one(evicted):\n                break\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        self._trim_ghosts()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R12-pair01-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 52.424,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:21:29Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c9d1b1a65dfa3150095466516bdaf3609c441ba6751e0dcd6b281b2ce8bfa351",
+    "raw_events_path": "workspace\\model-calls\\R12-pair01-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "bdd7bbb51104b7fdb7a5b3e84f0513371cd615e0759f95226b60c4d5569a5b29",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "6d25922501015da6611ec9bdbb7b3ded0cc191f6a98a0e90fb2da035b201d872",
+    "returncode": 0,
+    "role": "R12 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:20:37Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13593,
+      "output_tokens": 3975,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

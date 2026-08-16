@@ -1,0 +1,56 @@
+Role: R3 candidate topology role evidence-triggered causal state transformer
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R3,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: responsibility_rebase
+Role: evidence-triggered causal state transformer
+Objective: Consume responsibility_probe and let its non-separability witness trigger a change from anchor-relative repair state to contract-relative joint-responsibility state at the evidenced boundary. Preserve unaffected obligations and evidence provenance, then emit the transitioned construction state.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output Python, policy source, a patch, a diff, alternative policies, or
+a ranked selection. Analyze or transform evidence only for the one lineage.
+
+Visible inputs fixed by this topology:
+{
+  "responsibility_probe": {
+    "analysis_packet": {
+      "certificate": "A causal non-separability witness exists at the probation/protected responsibility boundary: a probation hit promotes the object and may demote protected entries, jointly determining both recency protection and future eviction eligibility. Capacity safety and online-only visibility remain fixed, while scan resistance and phase-shift adaptation cannot be assigned independently of this boundary. Current construction state is anchor-relative repair.",
+      "witnesses": [
+        {
+          "boundary": "probation-to-protected promotion with protected-to-probation demotion",
+          "evidence": "Policy.access promotes probation hits into protected and _demote_protected moves oldest protected entries back when protected bytes exceed half capacity.",
+          "held_fixed": [
+            "interface legality",
+            "capacity accounting",
+            "capacity safety",
+            "online one-access-at-a-time visibility"
+          ],
+          "non_separability": "The same transition controls protection for repeated objects and eviction exposure for scan or phase-shift objects."
+        }
+      ],
+      "obligations": [
+        "return only currently cached unique integer keys",
+        "never exceed capacity_bytes",
+        "preserve online-only visibility",
+        "support scan resistance",
+        "adapt across phase shifts"
+      ],
+      "exact_actions": [
+        "retain the evidenced probation/protected boundary as the responsibility witness",
+        "record the candidate-triggered construction transition as contract-relative joint-responsibility synthesis",
+        "leave unrelated interface, visibility, and capacity obligations unchanged"
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  }
+}

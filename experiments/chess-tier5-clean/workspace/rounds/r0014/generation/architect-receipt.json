@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "attempt": 1,
+  "agent_role": "structural_architect",
+  "proposal_policy": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "auth_mode": "codex_subscription",
+    "allow_paid_api": false,
+    "allow_model_fallback": false,
+    "sandbox": "read-only",
+    "max_model_calls": 1,
+    "max_tokens": 120000,
+    "max_wall_seconds": 1800,
+    "codex_executable": "codex.cmd"
+  },
+  "proposal_policy_sha256": "635f29bc92d9e1d7ff6d31ab49f6e9ff4b5928d0ca8f79f544c84cbe6ca0ce31",
+  "execution_provenance": "collaboration_subagent_direct_contingency",
+  "official_codex_backend_invoked": false,
+  "delegated_subagent_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\manual-proposals\\r0014\\subagent-receipt.json",
+  "delegated_subagent_receipt_sha256": "8620f92a07372930620b49f104214065f46384aeae6ce7f421dc7ba8c972ac11",
+  "prompt_sha256": "8f69a237e0a87e77d7c9ce1912f6f12d4b033a49ae2f4fd1890bfb0ffed96020",
+  "response_sha256": "3d4c3f34a0d38efae47379a6fb97625e7d3c35fb927c3a54e2401c4194f63da9",
+  "usage": {
+    "input_tokens": 0,
+    "cached_input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_output_tokens": 0,
+    "model_calls": 0
+  },
+  "trace_refs": [
+    "collaboration-subagent:gpt-5.6-sol:max"
+  ],
+  "validation": {
+    "passed": true,
+    "loader": "LoopPlan.from_payload(payload, expected_mode='emergent_exploration')",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "validated_capsule_file_sha256": "06084cd36b9002b738d7e04a5d56e7c74cb7be10a6ce5eea02d4a0cc1ae2f21c",
+    "normalized_payload_matches_file": true,
+    "validated_structure_id": "loop_28426aaed6077e2d",
+    "validated_call_count": 3,
+    "emergent_schema_fields_complete": true,
+    "capability_family_unique_in_bounded_history": true,
+    "previously_seen_structure_id": false
+  }
+}

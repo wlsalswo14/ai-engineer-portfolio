@@ -1,0 +1,27 @@
+{
+  "analysis_packet": {
+    "certificate": "The inherited anchor is an online, standard-library-only, byte-capacity-safe ARC-like policy with separate recent/frequent resident sets and bounded ghost evidence. The candidate hypothesis concerns terminal materialization continuity, not a validated behavioral improvement; no score or external counter-evidence is available.",
+    "exact_actions": [
+      "Treat the anchor as the inherited behavioral baseline and preserve its legality, capacity accounting, resident-set separation, ghost bounds, and online visibility.",
+      "Record the candidate hypothesis as an artifact-continuity claim whose expected effect is reduced reconstruction failure, with falsification unavailable because scores are withheld.",
+      "Tell the terminal normative authority to reconstruct one complete policy from the task, contract, constraints, and this analysis, without assuming access to the anchor source or any cut source.",
+      "Require final validation of interface legality, capacity safety, eviction-key validity and uniqueness, online-only operation, and standard-library compliance."
+    ],
+    "obligations": [
+      "Preserve the exact Policy constructor and access interface.",
+      "Use only online request state and standard-library facilities.",
+      "Return only unique integer keys that were currently cached and were evicted by the request.",
+      "Never leave accounted resident bytes above capacity, including zero-capacity and oversized-object cases.",
+      "Do not use benchmark paths, hidden traces, reference implementations, oracle decisions, external libraries, networking, or subprocesses.",
+      "Emit analysis only; do not materialize policy source or select among alternatives."
+    ],
+    "witnesses": [
+      "The anchor maintains explicit byte counters and evicts until used plus incoming size is within capacity.",
+      "Resident hits promote objects to the frequent set; misses enter recent unless matching ghost evidence.",
+      "Ghost hits adjust the recent/frequent target and promote reintroduced objects, supporting phase adaptation.",
+      "Oversized new objects are rejected, while oversized resident requests remove and report the resident key.",
+      "Eviction output is produced from resident entries and is unique under the anchor's disjoint-set invariant."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

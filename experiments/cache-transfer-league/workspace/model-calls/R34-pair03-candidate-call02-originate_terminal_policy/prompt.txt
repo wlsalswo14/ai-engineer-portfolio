@@ -1,0 +1,120 @@
+Role: R34 candidate topology role terminal-origin policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R34,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: originate_terminal_policy
+Role: terminal-origin policy authority
+Objective: Consume the preceding analysis as nonbinding evidence, reconcile its identified tensions against the supplied public obligations, originate the lineage's first and only complete executable policy artifact, and emit one policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "map_obligation_tensions": {
+    "analysis_packet": {
+      "certificate": "The terminal call must reconcile legality obligations separately from uncertain performance assumptions; anchor behavior is evidence, not binding semantics.",
+      "witnesses": [
+        "The contract requires online one-access-at-a-time processing, capacity safety, and eviction outputs limited to unique integer keys currently cached.",
+        "The anchor assumes probation/protected recency structure, ghost-history adaptation, promotion on repeated access, and size-based admission; their causal effects on scan resistance, phase adaptation, and regret are uncertain.",
+        "Object-hit and byte-hit objectives can conflict, especially when object sizes vary.",
+        "Scan resistance and rapid phase adaptation can conflict with recency retention and protected-segment stability.",
+        "The supplied timestamp is publicly available, but the anchor does not use it; the value of temporal evidence remains unresolved.",
+        "The anchor records stored sizes on admission and does not visibly revise them on hits; the effect of any size evolution assumptions is unresolved.",
+        "Oversized, nonpositive, and zero-capacity cases require terminal reconciliation with the contract's exact return and state obligations."
+      ],
+      "obligations": [
+        "Preserve the required Policy constructor and access interface.",
+        "Maintain evaluator-visible capacity safety for every request.",
+        "Return only currently cached, unique integer keys evicted by the current request.",
+        "Use only online public information and the Python standard library.",
+        "Avoid benchmark, trace, oracle, external-library, networking, subprocess, and provenance-dependent behavior.",
+        "Produce one deterministic final artifact whose legality is independently checkable from the public contract."
+      ],
+      "exact_actions": [
+        "Carry these tensions forward as nonbinding evidence for terminal reconciliation.",
+        "Separate hard interface and capacity obligations from uncertain optimization hypotheses.",
+        "Require the terminal originator to resolve unresolved assumptions using only the supplied public inputs.",
+        "Do not treat anchor structure, anchor provenance, or the candidate hypothesis as executable semantics."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R33 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Replace the policy-bearing closure relay with an analysis-only handoff and make the terminal call the first origin of executable policy semantics.",
+    "expected_effect": "Deferring executable commitment should reduce anchor-relative behavioral inertia and increase responsiveness to unresolved public-obligation conflicts while preserving one deterministic lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family assumes that removing provenance neutralizes anchoring, while the inherited executable artifact itself may impose semantic commitment inertia on terminal judgment."
+  },
+  "loop_structure": {
+    "final_call_id": "originate_terminal_policy",
+    "information_flow": "The first call receives all common inputs and emits only provenance-neutral analysis, carrying neither executable semantics nor anchor implementation provenance. The final call consumes that analysis plus public contextual inputs, has no direct anchor-policy visibility, originates the first executable artifact in the lineage, and emits one policy.",
+    "name": "Terminal-Origin Policy Lineage",
+    "organization": "two-call sequential lineage with one analysis-only pre-policy edge",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "map_obligation_tensions",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Identify contract-relevant tensions, causal uncertainties, and anchor-derived behavioral assumptions that require terminal reconciliation; emit one provenance-neutral analysis without forming or prescribing executable policy semantics.",
+            "output_type": "analysis",
+            "role": "non-policy obligation evidence mapper"
+          },
+          {
+            "id": "originate_terminal_policy",
+            "inputs": [
+              "map_obligation_tensions",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the preceding analysis as nonbinding evidence, reconcile its identified tensions against the supplied public obligations, originate the lineage's first and only complete executable policy artifact, and emit one policy.",
+            "output_type": "policy",
+            "role": "terminal-origin policy authority"
+          }
+        ],
+        "id": "terminal_origin_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

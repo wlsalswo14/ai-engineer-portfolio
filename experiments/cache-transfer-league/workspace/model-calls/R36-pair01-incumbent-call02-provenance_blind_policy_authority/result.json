@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n        self.frequencies = {}\n        self.frequency_limit = 16384\n\n    def _record_request(self, key):\n        if len(self.frequencies) >= self.frequency_limit and key not in self.frequencies:\n            for current in list(self.frequencies):\n                value = self.frequencies[current] // 2\n                if value:\n                    self.frequencies[current] = value\n                else:\n                    del self.frequencies[current]\n        self.frequencies[key] = self.frequencies.get(key, 0) + 1\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        protected_bytes = sum(item[0] for item in self.protected.values())\n        while self.protected and protected_bytes > self.protected_target:\n            key, value = self.protected.popitem(last=False)\n            self.probation[key] = value\n            protected_bytes -= value[0]\n\n    def _evict_one(self):\n        if self.probation:\n            key, value = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, value = self.protected.popitem(last=False)\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= value[0]\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._record_request(key)\n\n        if key in self.protected:\n            stored_size, hits = self.protected.pop(key)\n            self.protected[key] = (stored_size, hits + 1)\n            return []\n\n        if key in self.probation:\n            stored_size, hits = self.probation.pop(key)\n            self.protected[key] = (stored_size, hits + 1)\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, size),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, size),\n            )\n        self._forget(key)\n        self._rebalance()\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                return evicted\n            evicted.append(victim)\n\n        self.probation[key] = (size, 1)\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R36-pair01-incumbent-call02-provenance_blind_policy_authority",
+    "duration_seconds": 46.496,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:47:06Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "f62a0ac40a74279ad51094986c93d30b261b4fcc7e1bc98fc9db0abd7babe0be",
+    "raw_events_path": "workspace\\model-calls\\R36-pair01-incumbent-call02-provenance_blind_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "19f89f8282ed55318c5d505549b84f545b57df07918d0e6711787d6212228c05",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "7a7cc18252812d5df9a75180e2cbf03fe3e801b9c437b5dac322905f067d8583",
+    "returncode": 0,
+    "role": "R36 incumbent topology role provenance-blind final semantic authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:46:20Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14016,
+      "output_tokens": 3557,
+      "reasoning_output_tokens": 2689
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

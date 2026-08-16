@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self._tick = 0\n\n    def _age(self):\n        for cache in (self.probation, self.protected):\n            for record in cache.values():\n                record[1] = max(1, record[1] // 2)\n\n    def _touch(self, cache, key):\n        record = cache.pop(key)\n        record[1] = min(255, record[1] + 1)\n        record[2] = self._tick\n        cache[key] = record\n\n    def _rebalance(self):\n        target = (self.capacity_bytes * 2) // 3\n        while self.protected and self.protected_bytes > target:\n            key, record = self.protected.popitem(last=False)\n            self.protected_bytes -= record[0]\n            self.probation[key] = record\n\n    def _victim(self, cache):\n        return min(cache.items(), key=lambda item: (item[1][1], item[1][2]))[0]\n\n    def _make_room(self, size):\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            cache = self.probation if self.probation else self.protected\n            if not cache:\n                break\n            key = self._victim(cache)\n            record = cache.pop(key)\n            self.used_bytes -= record[0]\n            if cache is self.protected:\n                self.protected_bytes -= record[0]\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._tick += 1\n        if self._tick % 256 == 0:\n            self._age()\n\n        if key in self.protected:\n            self._touch(self.protected, key)\n            return []\n\n        if key in self.probation:\n            record = self.probation.pop(key)\n            record[1] = min(255, record[1] + 1)\n            record[2] = self._tick\n            self.protected[key] = record\n            self.protected_bytes += record[0]\n            self._rebalance()\n            return []\n\n        if size < 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        evicted = self._make_room(size)\n        self.probation[key] = [size, 1, self._tick]\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R1-pair03-candidate-call02-independent_terminal_finalizer",
+    "duration_seconds": 56.589,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T08:18:50Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "be36707cd6b0544a1eca932a9a5715d872dba33929f9ceac56976e10e5d463a9",
+    "raw_events_path": "workspace\\model-calls\\R1-pair03-candidate-call02-independent_terminal_finalizer\\raw-events.jsonl",
+    "raw_events_sha256": "6b970ef3709e2501c19a3c9e97fd19bb57240b7165c7aef2ffeda47c6e14f7e0",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 2,
+    "response_sha256": "8151c519905d427d54314d4105f88ccff58599d777d84e880a04f7caaa03e895",
+    "returncode": 0,
+    "role": "R1 candidate topology role independent causal falsifier and terminal finalizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T08:17:53Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14799,
+      "output_tokens": 2931,
+      "reasoning_output_tokens": 2253
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

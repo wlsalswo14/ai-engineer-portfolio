@@ -1,0 +1,115 @@
+Role: R92 incumbent topology role integrated executable originator
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R92,
+matched pair 3, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: originate_executable_capsule
+Role: integrated executable originator
+Objective: Reconcile the visible evidence and obligations into one complete executable policy artifact without issuing a separate adjudicative boundary.
+Output kind: policy_capsule
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "0e76fd3c963504da1ed2d5d58a0f23e2c0a081eac1af3a5da040da27275b80bd",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _drop_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_frequent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if kind == 1:\n            self.ghost_recent[key] = value\n        else:\n            self.ghost_frequent[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_count_limit):\n            candidate = None\n            source = None\n            for ghosts in (self.ghost_recent, self.ghost_frequent):\n                if ghosts:\n                    key = next(iter(ghosts))\n                    value = ghosts[key]\n                    if candidate is None or value[1] < candidate[1]:\n                        candidate = value\n                        source = ghosts\n            key, value = source.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _adjust_target(self, kind):\n        if self.capacity <= 0:\n            return\n        b1 = sum(value[0] for value in self.ghost_recent.values())\n        b2 = sum(value[0] for value in self.ghost_frequent.values())\n        if kind == 1:\n            delta = self.capacity if b1 == 0 else max(1, min(self.capacity, b2 // b1 or 1))\n            self.target = min(self.capacity, self.target + delta)\n        else:\n            delta = self.capacity if b2 == 0 else max(1, min(self.capacity, b1 // b2 or 1))\n            self.target = max(0, self.target - delta)\n\n    def _remove_resident(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.recent_bytes -= value\n            self.used -= value\n            return value\n        value = self.frequent.pop(key, None)\n        if value is not None:\n            self.frequent_bytes -= value\n            self.used -= value\n            return value\n        return None\n\n    def _evict_one(self, prefer_recent):\n        if prefer_recent and self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        return None\n\n    def _make_room(self, incoming, ghost_kind):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            prefer_recent = self.recent_bytes > self.target\n            if ghost_kind == 1 and self.recent_bytes >= self.target:\n                prefer_recent = True\n            if ghost_kind == 2 and self.recent_bytes == self.target:\n                prefer_recent = False\n            key = self._evict_one(prefer_recent)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.recent or key in self.frequent:\n            self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.used += size\n            return evicted\n\n        ghost_kind = 1 if key in self.ghost_recent else 2 if key in self.ghost_frequent else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if ghost_kind:\n            self._adjust_target(ghost_kind)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size, ghost_kind)\n        if self.used + size > self.capacity:\n            return evicted\n        if ghost_kind:\n            self.frequent[key] = size\n            self.frequent_bytes += size\n        else:\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R91 champion policy anchor",
+    "artifact_sha256": "0e76fd3c963504da1ed2d5d58a0f23e2c0a081eac1af3a5da040da27275b80bd",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Replace serial bidirectional custody with one monotone retract-only terminal authority edge over a complete executable predecessor.",
+    "expected_effect": "Surviving commitments retain stable provenance while contradictory evidence can still suppress unsupported commitments, reducing order-sensitive reinterpretation and operation-validity drift.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family assumes serial custodians with disjoint evidence windows should repeatedly rewrite a complete executable artifact, but that distributed positive authority permits later windows to replace commitments justified by evidence they cannot see."
+  },
+  "loop_structure": {
+    "final_call_id": "task_hypothesis_window_emit",
+    "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The second consumes that capsule and reopens only anchor_policy and anchor_contract. The third consumes the resulting complete executable state and reopens only task_constraints and loop_structure. The final call consumes the resulting complete executable closure, reopens only task and candidate_hypothesis, and emits one policy. Downstream evidence windows never overlap.",
+    "name": "Disjoint Reentry Executable Relay",
+    "organization": "four-call sequential lineage maintaining one complete executable artifact under mutually exclusive downstream evidence windows",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "originate_executable_capsule",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile the visible evidence and obligations into one complete executable policy artifact without issuing a separate adjudicative boundary.",
+            "output_type": "policy_capsule",
+            "role": "integrated executable originator"
+          },
+          {
+            "id": "anchor_window_transition",
+            "inputs": [
+              "originate_executable_capsule",
+              "anchor_policy",
+              "anchor_contract"
+            ],
+            "objective": "Consume originate_executable_capsule, assess the inherited complete artifact against only the reentered anchor evidence and contract obligations, reconcile visible conflicts directly in that artifact, and emit one complete executable policy state.",
+            "output_type": "executable_policy_state",
+            "role": "anchor-window executable custodian"
+          },
+          {
+            "id": "constraint_window_transition",
+            "inputs": [
+              "anchor_window_transition",
+              "task_constraints",
+              "loop_structure"
+            ],
+            "objective": "Consume anchor_window_transition, assess the inherited complete artifact against only the reentered constraints and structural evidence, reconcile visible conflicts directly in that artifact, and emit one complete executable policy closure.",
+            "output_type": "executable_policy_closure",
+            "role": "constraint-window executable custodian"
+          },
+          {
+            "id": "task_hypothesis_window_emit",
+            "inputs": [
+              "constraint_window_transition",
+              "task",
+              "candidate_hypothesis"
+            ],
+            "objective": "Consume constraint_window_transition, assess the inherited complete artifact against only the reentered task and hypothesis evidence, reconcile remaining visible conflicts in that same artifact, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "task-hypothesis window policy authority"
+          }
+        ],
+        "id": "single_reentry_executable_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

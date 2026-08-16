@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from loop_evolution.pipeline import EvolutionPipeline
+from loop_evolution.platform.config import ProposalPolicy, RuntimePolicy
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,23 @@ def test_chess_experiment_is_self_contained() -> None:
     ]
     for raw in paths:
         assert _resolve(base, raw).exists(), raw
+
+
+def test_active_architect_is_an_independent_sol_max_subagent() -> None:
+    config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    base = CONFIG_PATH.parent
+    proposal_path = _resolve(base, config["proposal_policy_path"])
+    execution_path = _resolve(base, config["execution_policy_path"])
+    proposal = ProposalPolicy.load(proposal_path)
+    execution = RuntimePolicy.load(execution_path)
+
+    assert proposal_path.name == "sol-max-independent-structural-architect-1800s.json"
+    assert proposal.model == "gpt-5.6-sol"
+    assert proposal.reasoning_effort == "max"
+    assert proposal.agent_mode == "independent_subagent"
+    assert proposal.max_model_calls == 1
+    assert execution.model == "gpt-5.6-luna"
+    assert execution.reasoning_effort == "high"
 
 
 def test_source_has_no_v3_lite_runtime_import() -> None:

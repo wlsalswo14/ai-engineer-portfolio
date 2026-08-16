@@ -1,0 +1,25 @@
+{
+  "analysis_packet": {
+    "certificate": "Scan resistance, phase-shift adaptation, and hit-rate objectives interact causally through recency evidence: immediate reuse rewards retention, while one-pass scans create misleading evidence that can displace reusable objects. Byte hit rate adds a size-weighted displacement effect, so large objects can amplify regret even when object-level behavior appears favorable. Adaptation requires responsiveness to changed reuse patterns, but excessive responsiveness destroys stability and increases scan pollution. Capacity safety and legal eviction reporting are hard invariants that constrain every objective tradeoff; online-only visibility prevents using future or oracle information to resolve them. The anchor is contextual evidence of this inherited interaction structure, not an edit substrate.",
+    "exact_actions": [
+      "Model reuse value, scan pollution, object size, and phase change as interacting causal factors.",
+      "Keep behavioral objectives distinct from hard contract invariants when reasoning about tradeoffs.",
+      "Treat the anchor as contextual evidence and exclude inherited repair state from the causal account.",
+      "Pass one unified causal frame to direct synthesis without generating alternatives or vetoes."
+    ],
+    "obligations": [
+      "Preserve the declared Policy constructor and access interface.",
+      "Use only standard-library and current-request information available online one access at a time.",
+      "Never exceed capacity_bytes, including zero-capacity and oversized-object cases.",
+      "Return only unique integer keys that are currently cached and evicted by the current request.",
+      "Avoid benchmark paths, trace hardcoding, oracle adaptation, external libraries, networking, and subprocesses."
+    ],
+    "witnesses": [
+      "A repeated-hot object can lose protection when a scan supplies more recent but non-repeating accesses.",
+      "A large scanned object can reduce byte hit rate disproportionately by consuming capacity before its reuse value is established.",
+      "A phase transition can make stale historical preference harmful, while immediate wholesale adaptation can discard still-useful incumbents.",
+      "An eviction is contract-valid only when its key is currently cached, unique in the returned list, and accompanied by state that remains within capacity."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

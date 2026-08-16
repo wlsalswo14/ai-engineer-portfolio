@@ -1,0 +1,40 @@
+{
+  "final_call_id": "author_with_generative_sovereignty",
+  "information_flow": "The first call receives every common input and emits only an analysis carrying normative grounding, source distinctions, and unresolved conflicts. The final call consumes that analysis, directly receives anchor_policy, candidate_hypothesis, and loop_structure, has no direct visibility of task, anchor_contract, or task_constraints, and emits one complete policy.",
+  "name": "Generative-Sovereignty Polarity Inversion",
+  "organization": "two-call sequential lineage with categorical inversion of terminal source-class visibility",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "ground_before_inversion",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Establish normative obligations, distinguish inherited and counter-generative evidence, preserve unresolved conflicts, and emit only an analysis.",
+          "output_type": "analysis",
+          "role": "upstream normative-grounding analyst"
+        },
+        {
+          "id": "author_with_generative_sovereignty",
+          "inputs": [
+            "ground_before_inversion",
+            "anchor_policy",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume ground_before_inversion, directly assess the visible generative sources against predecessor-carried obligations, resolve preserved conflicts, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "terminal generative-source policy authority"
+        }
+      ],
+      "id": "polarity_inversion_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

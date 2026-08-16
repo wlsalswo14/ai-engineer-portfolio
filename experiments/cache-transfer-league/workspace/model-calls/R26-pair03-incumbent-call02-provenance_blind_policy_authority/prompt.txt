@@ -1,0 +1,96 @@
+Role: R26 incumbent topology role provenance-blind final semantic authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R26,
+matched pair 3, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: provenance_blind_policy_authority
+Role: provenance-blind final semantic authority
+Objective: Consume the preceding executable closure and exercise sole final semantic authority from its current semantics and supplied public obligations. Without access to the anchor implementation or construction provenance, reconcile contract validity within that single state and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "form_executable_closure": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.used_bytes = 0\n        self.target_t1_bytes = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _drop_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key):\n        self._drop_ghost(key)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _evict_one(self):\n        if self.t1 and (self.t1_bytes > self.target_t1_bytes or not self.t2):\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n        elif self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._remember(self.b2, key)\n        elif self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def _insert(self, key, size, protected):\n        if protected:\n            self.t2[key] = size\n            self.t2_bytes += size\n        else:\n            self.t1[key] = size\n            self.t1_bytes += size\n        self.used_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            self.target_t1_bytes = min(\n                self.capacity_bytes,\n                self.target_t1_bytes + max(1, min(size, self.capacity_bytes)),\n            )\n        elif in_b2:\n            self.target_t1_bytes = max(\n                0,\n                self.target_t1_bytes - max(1, min(size, self.capacity_bytes)),\n            )\n        self._drop_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self._insert(key, size, in_b1 or in_b2)\n        return evicted\n",
+    "sha256": "58a02b7832465ea15499fc93c855b005e8d234e9e5a8a1d95979ee6a8742ef16"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R25 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Insert one analysis-only causal-frame transition before executable closure formation, requiring construction to consume an already formed causal relationship among the supplied hypothesis, obligations, and anchor-visible evidence.",
+    "expected_effect": "Earlier causal framing should improve coherence of the executable closure while preserving the champion's complete policy-bearing, provenance-blind final relay.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion co-forms executable semantics and their causal rationale in its first call, so the rationale becomes available only during the transition it is meant to discipline."
+  },
+  "loop_structure": {
+    "final_call_id": "provenance_blind_policy_authority",
+    "information_flow": "The first call forms exactly one self-contained executable closure and removes construction provenance from its handoff. The second call consumes that complete policy-bearing output with public obligations but without anchor-policy visibility, exercises sole final semantic authority, and emits one policy.",
+    "name": "Provenance-Blind Executable Closure Relay",
+    "organization": "two-call sequential lineage separated by one post-construction provenance firewall",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_executable_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Form exactly one self-contained executable policy state from the supplied task, public obligations, hypothesis, and contextual anchor evidence. Justify its current semantics directly against public obligations, exclude anchor-relative construction provenance from the handoff, and pass the complete executable state forward.",
+            "output_type": "executable_policy_closure",
+            "role": "executable semantic closure former"
+          },
+          {
+            "id": "provenance_blind_policy_authority",
+            "inputs": [
+              "form_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the preceding executable closure and exercise sole final semantic authority from its current semantics and supplied public obligations. Without access to the anchor implementation or construction provenance, reconcile contract validity within that single state and emit one complete policy.",
+            "output_type": "policy",
+            "role": "provenance-blind final semantic authority"
+          }
+        ],
+        "id": "closure_relay",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

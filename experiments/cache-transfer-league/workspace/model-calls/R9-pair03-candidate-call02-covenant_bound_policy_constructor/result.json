@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.protected = OrderedDict()\n        self.recent_bytes = 0\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self.frequency = {}\n        self.ticks = 0\n\n    def _record(self, key):\n        count = min(255, self.frequency.pop(key, 0) + 1)\n        self.frequency[key] = count\n        self.ticks += 1\n        if self.ticks % 2048 == 0:\n            for item in list(self.frequency):\n                value = self.frequency[item] // 2\n                if value:\n                    self.frequency[item] = value\n                else:\n                    del self.frequency[item]\n        if len(self.frequency) > 8192:\n            for item in list(self.frequency):\n                if item not in self.recent and item not in self.protected:\n                    del self.frequency[item]\n                    break\n\n    def _rebalance(self):\n        target = (self.capacity_bytes * 2) // 3\n        while self.protected and self.protected_bytes > target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.recent[key] = size\n            self.recent_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._record(key)\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        required = self.used_bytes + size - self.capacity_bytes\n        if required > self.recent_bytes and self.frequency.get(key, 1) <= 1:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.recent:\n                old_key, old_size = self.recent.popitem(last=False)\n                self.recent_bytes -= old_size\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        if self.used_bytes + size > self.capacity_bytes:\n            return evicted\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R9-pair03-candidate-call02-covenant_bound_policy_constructor",
+    "duration_seconds": 73.994,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:40:46Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fcfe7a18e1d9f1a26d29c73d1a103f6a0a68848658cc1277bf83083eb70609f2",
+    "raw_events_path": "workspace\\model-calls\\R9-pair03-candidate-call02-covenant_bound_policy_constructor\\raw-events.jsonl",
+    "raw_events_sha256": "58211bd7248eabaff26394a69141447a3f3604b4f895f992117b7295dcd32547",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "826cb575e8521f95b9e86c6b92e82938cbc59272a64146d71bb85345b924d544",
+    "returncode": 0,
+    "role": "R9 candidate topology role exclusive artifact-construction authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:39:32Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14462,
+      "output_tokens": 5861,
+      "reasoning_output_tokens": 5151
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

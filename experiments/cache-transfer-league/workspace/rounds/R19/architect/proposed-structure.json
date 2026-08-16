@@ -1,0 +1,43 @@
+{
+  "final_call_id": "successor_policy_owner",
+  "information_flow": "The origin owner receives all common inputs and creates one complete executable policy state with its qualitative conformance basis. The successor consumes that state and receives the same common evidence. Visibility and provenance remain intact, but mutation and publication authority migrate irreversibly at the handoff.",
+  "name": "Irreversible Executable-State Ownership Relay",
+  "organization": "two-call sequential single-writer succession",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "origin_policy_owner",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Use the supplied evidence to establish one complete contract-conforming executable policy state and its qualitative conformance basis, then transfer exclusive ownership and relinquish further mutation, rollback, and publication authority.",
+          "output_type": "executable_policy_state",
+          "role": "origin executable-state owner"
+        },
+        {
+          "id": "successor_policy_owner",
+          "inputs": [
+            "origin_policy_owner",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the predecessor's complete executable state, exercise exclusive current-owner authority to reconcile it with the visible contract evidence through forward correction, and emit one complete contract-compliant policy.",
+          "output_type": "policy",
+          "role": "successor executable-state owner and sole publisher"
+        }
+      ],
+      "id": "ownership_relay",
+      "mode": "sequential"
+    }
+  ]
+}

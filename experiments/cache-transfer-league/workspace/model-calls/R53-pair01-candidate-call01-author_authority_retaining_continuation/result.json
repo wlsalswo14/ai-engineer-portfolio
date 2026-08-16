@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.protected_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, entry = self.protected.popitem(last=False)\n            size, frequency = entry\n            self.protected_bytes -= size\n            self.probation[key] = (size, frequency)\n\n    def _evict_one(self):\n        if self.probation:\n            key, entry = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, entry = self.protected.popitem(last=False)\n            self.protected_bytes -= entry[0]\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= entry[0]\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size, frequency = self.protected.pop(key)\n            self.protected[key] = (stored_size, min(frequency + 1, 255))\n            return []\n\n        if key in self.probation:\n            stored_size, frequency = self.probation.pop(key)\n            self.protected[key] = (stored_size, min(frequency + 1, 255))\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = (size, 1)\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R53-pair01-candidate-call01-author_authority_retaining_continuation",
+    "duration_seconds": 35.643,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:42:58Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "b14995d44cb9d70e1bde9cc8e6d8956446e5f935e3476cbfa7b18323127e5ace",
+    "raw_events_path": "workspace\\model-calls\\R53-pair01-candidate-call01-author_authority_retaining_continuation\\raw-events.jsonl",
+    "raw_events_sha256": "5b0176c11a04a6d224c274521a2a80566567f56956bd4141b5a6a484036d8b17",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "43b96400f417658a807e1b13a42827f14c780e6ed302f98495c9d47d2fc9ee3f",
+    "returncode": 0,
+    "role": "R53 candidate topology role artifact-sovereign continuation author",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:42:22Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14381,
+      "output_tokens": 2651,
+      "reasoning_output_tokens": 1865
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

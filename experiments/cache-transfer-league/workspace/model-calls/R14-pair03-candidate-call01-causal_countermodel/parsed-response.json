@@ -1,0 +1,27 @@
+{
+  "analysis_packet": {
+    "certificate": "Online cache objectives are coupled through admission and retention: broad recency favors object and byte hits on repeated locality but admits scans that displace reusable state; stronger scan resistance protects established reuse but can delay phase-shift adaptation and increase regret after workload changes. Byte hit rate additionally makes size-sensitive retention consequential, while object hit rate can favor numerous small objects. These tensions must be resolved under one-access-at-a-time information, with validity obligations acting as hard boundaries rather than optimization objectives. The anchor is contextual evidence of an inherited compromise, not an edit substrate.",
+    "exact_actions": [
+      "Represent the objective interactions as causal tradeoffs rather than independent targets.",
+      "Carry scan pollution, reuse preservation, size effects, and phase staleness as one shared causal frame.",
+      "Treat interface legality, current-state eviction legality, capacity safety, and online visibility as non-negotiable boundary conditions.",
+      "Leave the anchor observational and avoid importing repair history or edit authority."
+    ],
+    "obligations": [
+      "Preserve the specified Policy constructor and access interface.",
+      "Use only standard-library and online-visible information.",
+      "Return only unique integer keys currently cached by the evaluator.",
+      "Never cause cached bytes to exceed capacity_bytes.",
+      "Avoid benchmark, trace, oracle, reference-implementation, and external-library dependence.",
+      "Emit one directly generable policy lineage without score-based claims."
+    ],
+    "witnesses": [
+      "Repeated locality benefits retention of recently reused objects.",
+      "One-pass scans create recency pressure without future reuse.",
+      "Phase changes make previously protected state stale and require online adaptation.",
+      "Variable object sizes couple byte utilization to object-count behavior.",
+      "Eviction legality depends on the evaluator's current cached state, not policy assumptions."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

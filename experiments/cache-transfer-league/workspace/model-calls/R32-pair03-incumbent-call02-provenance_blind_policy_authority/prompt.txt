@@ -1,0 +1,96 @@
+Role: R32 incumbent topology role provenance-blind final semantic authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R32,
+matched pair 3, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: provenance_blind_policy_authority
+Role: provenance-blind final semantic authority
+Objective: Consume the preceding executable closure and exercise sole final semantic authority from its current semantics and supplied public obligations. Without access to the anchor implementation or construction provenance, reconcile contract validity within that single state and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "form_executable_closure": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass _InnerPolicy:\n    def __init__(self, capacity_bytes):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.probation[old_key] = old_size\n            protected_bytes -= old_size\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key, size, now):\n        if key in self.protected:\n            stored = self.protected.pop(key)\n            self.protected[key] = stored\n            return []\n\n        if key in self.probation:\n            stored = self.probation.pop(key)\n            self.protected[key] = stored\n            self._rebalance()\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self._inner = _InnerPolicy(self.capacity_bytes)\n        self._cached = set()\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        evicted = self._inner.access(key, size, now)\n        result = []\n        seen = set()\n        for old_key in evicted:\n            if isinstance(old_key, int) and not isinstance(old_key, bool):\n                if old_key in self._cached and old_key not in seen:\n                    seen.add(old_key)\n                    result.append(old_key)\n                    self._cached.remove(old_key)\n\n        if (\n            key not in self._cached\n            and self.capacity_bytes > 0\n            and isinstance(size, int)\n            and not isinstance(size, bool)\n            and size > 0\n            and size <= self.capacity_bytes\n        ):\n            self._cached.add(key)\n\n        return result\n",
+    "sha256": "458618bf44a3876fcc99f203784c297888e44cb4504f6cfca44f7a658637e68b"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R31 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Replace flat terminal rewriting with non-destructive nested supervision: the predecessor remains an intact executable inner policy while terminal authority acts through one public-obligation-governed outer layer.",
+    "expected_effect": "Separating inner behavior formation from outer obligation mediation should localize corrective action while preserving inherited behavioral continuity.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion's flat closure relay lets terminal reconciliation reopen inherited semantics as one mutable whole, so a local public-obligation concern can destabilize otherwise coherent behavior."
+  },
+  "loop_structure": {
+    "final_call_id": "provenance_blind_policy_authority",
+    "information_flow": "The first call forms exactly one self-contained executable closure and removes construction provenance from its handoff. The second call consumes that complete policy-bearing output with public obligations but without anchor-policy visibility, exercises sole final semantic authority, and emits one policy.",
+    "name": "Provenance-Blind Executable Closure Relay",
+    "organization": "two-call sequential lineage separated by one post-construction provenance firewall",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_executable_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Form exactly one self-contained executable policy state from the supplied task, public obligations, hypothesis, and contextual anchor evidence. Justify its current semantics directly against public obligations, exclude anchor-relative construction provenance from the handoff, and pass the complete executable state forward.",
+            "output_type": "executable_policy_closure",
+            "role": "executable semantic closure former"
+          },
+          {
+            "id": "provenance_blind_policy_authority",
+            "inputs": [
+              "form_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the preceding executable closure and exercise sole final semantic authority from its current semantics and supplied public obligations. Without access to the anchor implementation or construction provenance, reconcile contract validity within that single state and emit one complete policy.",
+            "output_type": "policy",
+            "role": "provenance-blind final semantic authority"
+          }
+        ],
+        "id": "closure_relay",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

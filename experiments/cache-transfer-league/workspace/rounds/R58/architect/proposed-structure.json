@@ -1,0 +1,43 @@
+{
+  "final_call_id": "propagate_retraction_and_emit",
+  "information_flow": "The first call receives every common input and emits one complete executable policy state whose commitments remain causally revocable. The final call consumes that state and independently receives every common input. Withdrawal of support for an operative premise triggers dependency-directed rollback and rederivation within the same artifact lineage; no side channel or alternate candidate exists.",
+  "name": "Revocable Executable Truth-Maintenance Edge",
+  "organization": "two-call sequential lineage with one complete executable-state handoff and terminal dependency-retraction authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "instantiate_revocable_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Construct one complete executable policy artifact from the supplied evidence while making each adopted commitment operationally dependent on the premises that authorize it.",
+          "output_type": "executable_policy_state",
+          "role": "executable causal-state constructor"
+        },
+        {
+          "id": "propagate_retraction_and_emit",
+          "inputs": [
+            "instantiate_revocable_state",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the executable state alongside reacquired common evidence, trigger rollback when support is withdrawn from a causally necessary premise, rederive affected commitments from surviving evidence, preserve independent commitments, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "dependency-directed rollback authority"
+        }
+      ],
+      "id": "truth_maintenance_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

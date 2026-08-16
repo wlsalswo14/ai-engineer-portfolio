@@ -1,0 +1,134 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R72-structure-architect\\final-receipt.json",
+    "sha256": "b450edf1c341106dc655cd15ad6276ba0d279c531fb76aea8b5a208f61a9ce02"
+  },
+  "architect_response": {
+    "architect_scope": "one-R72-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "adjudicate_commitment",
+      "information_flow": "The first call receives every common input and emits a source-attributed obligation analysis. The second consumes that analysis, directly receives every common input, and emits one complete executable policy capsule with unresolved obligations identified. The final call consumes that capsule, directly receives every common input, preserves settled commitments, amends only identified unresolved obligations using visible provenance, and emits one policy.",
+      "name": "Defeasible Provenance Commitment",
+      "organization": "three-call sequential nonbranching lineage governed by one provenance-complete policy-commitment edge",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "map_provenance_obligations",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Relate inherited and counter-generative evidence to normative obligations, retain disagreements and provenance, identify unresolved obligations, and emit analysis without creating a policy artifact.",
+              "output_type": "analysis",
+              "role": "source-attributed obligation mapper"
+            },
+            {
+              "id": "bind_defeasible_commitment",
+              "inputs": [
+                "map_provenance_obligations",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume map_provenance_obligations and the directly visible sources, bind the reconciled evidence into one complete executable policy capsule, and identify any unresolved obligations eligible for downstream amendment.",
+              "output_type": "policy_capsule",
+              "role": "executable commitment authority"
+            },
+            {
+              "id": "adjudicate_commitment",
+              "inputs": [
+                "bind_defeasible_commitment",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume bind_defeasible_commitment and the directly visible sources, preserve settled executable commitments, amend only commitments tied to identified unresolved obligations when supported by visible evidence, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "obligation-keyed amendment authority"
+            }
+          ],
+          "id": "defeasible_commitment_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "policy-artifact creation timing",
+        "terminal edit authority",
+        "terminal evidence visibility"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "permanent generative-source cut at the terminal policy authority",
+      "independent_replacement_principle": "A complete executable commitment should precede final adjudication, with all provenance visible and amendment jurisdiction limited to unresolved obligations.",
+      "rejected_assumptions": [
+        "Terminal independence requires permanently withholding generative sources.",
+        "An analysis-only handoff preserves enough evidence for reliable policy materialization.",
+        "Exclusive terminal construction authority is preferable to defeasible executable commitment."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace that family with one defeasible provenance-complete policy-commitment edge: a fully informed middle call creates the complete executable artifact, and the terminal call receives both that artifact and every source while holding amendment authority only over explicitly unresolved obligations.",
+      "expected_effect": "Earlier executable commitment should preserve cross-source coherence, while bounded terminal amendment should reduce unsupported reconstruction and improve contract-consistent behavioral tradeoffs.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion concentrates policy creation in a terminal call that receives only source-compressed analysis while permanently losing direct generative provenance."
+    },
+    "structural_mutation": {
+      "after": "The lineage contains a policy-bearing commitment edge carrying one complete executable artifact to a provenance-complete terminal call with obligation-keyed amendment jurisdiction.",
+      "before": "An analysis-only edge feeds an exclusively authoritative terminal policy constructor whose direct visibility permanently excludes generative source classes.",
+      "change_count": 1,
+      "factor": "defeasible provenance-complete policy-commitment edge",
+      "why_structural": "This single edge-semantic mutation changes the graph from analysis-to-policy into analysis-to-policy_capsule-to-policy and concretely changes artifact timing, terminal authority, and source visibility; it is not role renaming or terminal-call fission."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 72,
+  "incumbent_structure_sha256": "048bd7f7978a9edc6cce1abb46639026e00145b8afa355da2f0c45cd85e10f88",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R72\\qualitative-error-notebook.json",
+    "sha256": "6d4d56efe45a83a0f232bbdfe9f76f5778196808b942d38ac98565737b0f4d20"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R72\\source-manifest.json",
+    "sha256": "b72e962c77c6e6962c7527bf6bfef29cb1960f1cfd8fb5598c35f2d58e9d63f8"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 3,
+    "coarse_topology_collision_override": null,
+    "factor": "defeasible provenance-complete policy-commitment edge",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "bind_defeasible_commitment",
+        "executor_semantics": "complete policy artifact plus obligation evidence on the same single lineage",
+        "output_type": "policy_capsule"
+      }
+    ],
+    "semantic_topology_fingerprint": "949762a88e3b2f44c9bc6e7a95db4fe7a4fc03c506b118cd72c1cb4fb485f505",
+    "topology_fingerprint": "cbe4db4569edef17fef155d3f37d0be3381262c07a73473d9e6e19b7ce8f1f29"
+  }
+}

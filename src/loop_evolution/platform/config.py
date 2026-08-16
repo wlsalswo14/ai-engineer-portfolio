@@ -77,6 +77,9 @@ def _validate_codex_home_pool(
 class RuntimePolicy:
     model: str = "gpt-5.6-luna"
     reasoning_effort: str = "medium"
+    service_tier: str = "default"
+    request_tier: str = "default"
+    tier_contract: str = "legacy_default"
     auth_mode: str = "codex_subscription"
     allow_paid_api: bool = False
     allow_model_fallback: bool = False
@@ -96,7 +99,15 @@ class RuntimePolicy:
     @classmethod
     def load(cls, path: Path) -> RuntimePolicy:
         payload = json.loads(path.read_text(encoding="utf-8"))
-        payload.pop("schema_version", None)
+        schema_version = int(payload.pop("schema_version", 1))
+        if schema_version >= 2:
+            required_tier_fields = {"service_tier", "request_tier", "tier_contract"}
+            missing = sorted(required_tier_fields - set(payload))
+            if missing:
+                raise PolicyConfigurationError(
+                    "schema-v2 runtime policy is missing fail-closed tier fields: "
+                    + ", ".join(missing)
+                )
         if "allowed_harness_slots" in payload:
             payload["allowed_harness_slots"] = tuple(payload["allowed_harness_slots"])
         if "codex_home_pool" in payload:
@@ -110,6 +121,18 @@ class RuntimePolicy:
             raise PolicyConfigurationError("only gpt-5.6-luna with Codex subscription authentication is allowed")
         if self.reasoning_effort not in {"medium", "high"}:
             raise PolicyConfigurationError("reasoning effort must be medium or explicitly selected high")
+        if self.tier_contract == "fast_priority_required":
+            if self.service_tier != "fast" or self.request_tier != "priority":
+                raise PolicyConfigurationError(
+                    "fast runtime policy requires service_tier=fast and request_tier=priority"
+                )
+        elif self.tier_contract == "legacy_default":
+            if self.service_tier != "default" or self.request_tier != "default":
+                raise PolicyConfigurationError(
+                    "legacy runtime policy must retain the default service/request tier"
+                )
+        else:
+            raise PolicyConfigurationError(f"unknown runtime tier contract: {self.tier_contract}")
         if self.allow_paid_api:
             raise PolicyConfigurationError("paid API execution is forbidden")
         if self.allow_model_fallback:
@@ -153,7 +176,8 @@ class ProposalPolicy:
     """Codex-subscription-only policy for the structural package architect."""
 
     model: str = "gpt-5.6-sol"
-    reasoning_effort: str = "xhigh"
+    reasoning_effort: str = "max"
+    agent_mode: str = "independent_subagent"
     auth_mode: str = "codex_subscription"
     allow_paid_api: bool = False
     allow_model_fallback: bool = False
@@ -178,10 +202,11 @@ class ProposalPolicy:
         if (
             self.model != "gpt-5.6-sol"
             or self.reasoning_effort not in {"xhigh", "max"}
+            or self.agent_mode != "independent_subagent"
             or self.auth_mode != "codex_subscription"
         ):
             raise PolicyConfigurationError(
-                "structural proposals require Sol xhigh/max with Codex subscription"
+                "structural proposals require an independent Sol xhigh/max subagent with Codex subscription"
             )
         if self.allow_paid_api or self.allow_model_fallback:
             raise PolicyConfigurationError("paid API execution and model fallback are forbidden")
@@ -195,6 +220,14 @@ class ProposalPolicy:
         self.validate()
         _reject_paid_environment()
         _validate_codex_home_pool(tuple(self.codex_home_pool), require_live_auth=True)
+
+
+def proposal_policy_identity(policy: ProposalPolicy) -> dict[str, Any]:
+    """Stable proposal-agent identity; account routing is not part of capability."""
+
+    payload = asdict(policy)
+    payload.pop("codex_home_pool", None)
+    return payload
 
 
 @dataclass(frozen=True)

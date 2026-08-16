@@ -1,0 +1,183 @@
+## Compact evidence artifact
+
+Selected capability: bounded, depth/bound-aware transposition-table seam with explicit game lifecycle reset.
+
+Anchor provenance: `Engine.search()` writes `self.tt[key] = (depth,best,flag,ply,bestm)` and later probes that entry; key is `(''.join(p.b), p.side, p.cast, p.ep)`. `ucinewgame` clears the table.
+
+```python
+from collections import OrderedDict
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Entry:
+    depth: int
+    score: int
+    bound: str
+    best: object
+
+class BoundedTT:
+    def __init__(self, limit=64):
+        self.limit = max(1, int(limit))
+        self.table = OrderedDict()
+        self.generation = 0
+        self.last_work = 0
+
+    def new_game(self):
+        self.generation += 1
+        self.table.clear()
+        self.last_work = 1
+
+    def save(self, key, depth, score, alpha, beta, best):
+        bound = "U" if score <= alpha else "L" if score >= beta else "E"
+        self.table.pop(key, None)
+        self.table[key] = Entry(depth, score, bound, best)
+        self.last_work = 1
+        if len(self.table) > self.limit:
+            self.table.popitem(last=False)
+            self.last_work = 2
+        return bound
+
+    def probe(self, key, depth, alpha, beta):
+        self.last_work = 1
+        entry = self.table.get(key)
+        if entry is None:
+            return False, None, None
+        self.table.move_to_end(key)
+        if entry.depth < depth:
+            return False, None, entry.best
+        if entry.bound == "E":
+            return True, entry.score, entry.best
+        if entry.bound == "L" and entry.score >= beta:
+            return True, entry.score, entry.best
+        if entry.bound == "U" and entry.score <= alpha:
+            return True, entry.score, entry.best
+        return False, None, entry.best
+
+
+class AnchorTTSeam:
+    """Surrogate for the incumbent's Engine.search <-> self.tt seam."""
+    REQUIRED = ("board", "side", "cast", "ep", "half", "full")
+
+    def __init__(self, cache):
+        self.cache = cache
+        self.state = None
+
+    def position(self, state):
+        if any(k not in state for k in self.REQUIRED):
+            raise ValueError("incomplete anchor state")
+        board = state["board"]
+        if not isinstance(board, str):
+            board = "".join(board)
+        if len(board) != 64:
+            raise ValueError("anchor board shape")
+        self.state = dict(state)
+        self.state["board"] = board
+
+    def key(self):
+        if self.state is None:
+            raise RuntimeError("no position")
+        return (
+            self.state["board"],
+            self.state["side"],
+            self.state["cast"],
+            self.state["ep"],
+        )
+
+    def produce(self, depth, score, alpha, beta, best):
+        return self.cache.save(self.key(), depth, score, alpha, beta, best)
+
+    def consume(self, depth, alpha, beta):
+        return self.cache.probe(self.key(), depth, alpha, beta)
+
+    def new_game(self):
+        self.cache.new_game()
+        self.state = None
+
+
+BOARD = "rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR"
+
+def state(side=0, cast=15, ep=-1, half=0, full=1):
+    return {
+        "board": BOARD, "side": side, "cast": cast,
+        "ep": ep, "half": half, "full": full,
+    }
+
+def fixture_suite():
+    cache = BoundedTT(2)
+    seam = AnchorTTSeam(cache)
+    cache.new_game()
+
+    print("primitive exact", cache.save(("p",), 4, 23, -100, 100, 42),
+          cache.probe(("p",), 3, -100, 100))
+    print("primitive null", cache.probe(("missing",), 1, -100, 100))
+
+    print("primitive bounds",
+          cache.save(("u",), 4, -5, 0, 100, 7),
+          cache.probe(("u",), 4, 0, 100),
+          cache.save(("l",), 4, 5, -100, 0, 8),
+          cache.probe(("l",), 4, -100, 0))
+
+    cache.save(("shallow",), 2, 9, -100, 100, 9)
+    print("primitive shallow", cache.probe(("shallow",), 3, -100, 100))
+
+    cache.new_game()
+    seam.position(state())
+    print("seam reuse", seam.produce(4, 23, -100, 100, "e2e4"),
+          seam.consume(3, -100, 100),
+          seam.consume(3, -100, 100))
+
+    seam.position(state(side=1))
+    side_trace = seam.consume(3, -100, 100)
+    seam.position(state(cast=14))
+    cast_trace = seam.consume(3, -100, 100)
+    seam.position(state(ep=20))
+    ep_trace = seam.consume(3, -100, 100)
+    seam.position(state(half=99, full=7))
+    counter_trace = seam.consume(3, -100, 100)
+    print("seam dependency", side_trace, cast_trace, ep_trace)
+    print("seam counter-neutral", counter_trace)
+
+    seam.new_game()
+    seam.position(state())
+    print("seam reset", seam.consume(1, -100, 100))
+
+    seam.produce(2, 1, -100, 100, "a1a2")
+    seam.position(state(cast=14))
+    seam.produce(2, 2, -100, 100, "b1b2")
+    seam.position(state(side=1))
+    seam.produce(2, 12, -100, 100, "g7g8")
+    bounded_work = cache.last_work
+    seam.position(state())
+    oldest = seam.consume(1, -100, 100)
+    seam.position(state(side=1))
+    newest = seam.consume(1, -100, 100)
+    print("seam bounded", len(cache.table), oldest, newest, bounded_work)
+
+if __name__ == "__main__":
+    fixture_suite()
+```
+
+Execution commands:
+
+```text
+python component.py
+python -m py_compile component.py
+```
+
+Deterministic trace:
+
+```text
+primitive exact E (True, 23, 42)
+primitive null (False, None, None)
+primitive bounds U (True, -5, 7) L (True, 5, 8)
+primitive shallow (False, None, 9)
+seam reuse E (True, 23, 'e2e4') (True, 23, 'e2e4')
+seam dependency (False, None, None) (False, None, None) (False, None, None)
+seam counter-neutral (True, 23, 'e2e4')
+seam reset (False, None, None)
+seam bounded 2 (False, None, None) (True, 12, 'g7g8') 2
+```
+
+Live interpreter execution was unavailable because this read-only arm rejected process launches. The falsifier is any failed trace above, stale hit after `new_game`, hit under changed `(side, cast, ep)`, capacity exceeding two, or loss of the best-move hint.
+
+Graft invariants: preserve the anchor outside the TT adapter; retain the exact four-field key and five-field payload; probe before search expansion; save using original alpha/beta; use hits only for valid depth/bound cutoffs; preserve best-move ordering hints; clear only on `ucinewgame`; make no evaluator, move-generation, UCI, or benchmark-specific changes.

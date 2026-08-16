@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.used_bytes = 0\n        self.target_bytes = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _forget_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember_ghost(self, ghost, key):\n        self._forget_ghost(key)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _adapt(self, key, size):\n        delta = max(1, min(size, self.capacity_bytes))\n        if key in self.b1:\n            self.target_bytes = min(self.capacity_bytes, self.target_bytes + delta)\n        elif key in self.b2:\n            self.target_bytes = max(0, self.target_bytes - delta)\n        self._forget_ghost(key)\n\n    def _evict_one(self):\n        if self.t1 and (self.t1_bytes > self.target_bytes or not self.t2):\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember_ghost(self.b1, key)\n        elif self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._remember_ghost(self.b2, key)\n        elif self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember_ghost(self.b1, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if not isinstance(size, int) or size <= 0:\n            return []\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        self._adapt(key, size)\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.t1[key] = size\n        self.t1_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R34-pair03-incumbent-call01-form_executable_closure",
+    "duration_seconds": 47.786,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:34:53Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "a7a11976dcaa95a7c0c3e5df71028d60e583f83e45c436e8387e791fc2a92c1d",
+    "raw_events_path": "workspace\\model-calls\\R34-pair03-incumbent-call01-form_executable_closure\\raw-events.jsonl",
+    "raw_events_sha256": "56673d0ed824061fd8c9256f31a4117d11352c2e33910baeb6e91682be205d1e",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "0e22e728656f6794763cdcab2726b975cb25992ca3c005487f238f8e4fe695cf",
+    "returncode": 0,
+    "role": "R34 incumbent topology role executable semantic closure former",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:34:05Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13786,
+      "output_tokens": 2801,
+      "reasoning_output_tokens": 2070
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

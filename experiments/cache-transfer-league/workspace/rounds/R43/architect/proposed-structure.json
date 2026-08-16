@@ -1,0 +1,51 @@
+{
+  "final_call_id": "independent_terminal_adjudication",
+  "information_flow": "The first call sees all common inputs and emits one complete executable policy state with only provisional commitments. The rebase sees solely that state, preserves its complete executable artifact, and nullifies all inherited normative authority. The terminal call sees the rebased state and public non-anchor evidence, jointly adjudicates conformance and behavior without predecessor authority, and emits one policy.",
+  "name": "Authority-Nullifying Executable Rebase",
+  "organization": "three-call sequential lineage with one mandatory authority-reset transition",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "provisional_executable_synthesis",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form one complete executable policy state from the supplied evidence and expose its contract and behavioral commitments as provisional evidence for mandatory rebasing.",
+          "output_type": "executable_policy_state",
+          "role": "provisional evidence synthesizer"
+        },
+        {
+          "id": "authority_nullifying_rebase",
+          "inputs": [
+            "provisional_executable_synthesis"
+          ],
+          "objective": "Consume provisional_executable_synthesis, preserve its complete executable artifact, extinguish predecessor-granted normative authority, and emit one authority-neutral complete executable policy state.",
+          "output_type": "executable_policy_state",
+          "role": "normative-authority reset transition"
+        },
+        {
+          "id": "independent_terminal_adjudication",
+          "inputs": [
+            "authority_nullifying_rebase",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume authority_nullifying_rebase and the supplied public evidence, jointly reconcile public-contract conformance and behavioral evidence without inheriting predecessor commitments, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "independent terminal policy authority"
+        }
+      ],
+      "id": "authority_discontinuous_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

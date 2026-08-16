@@ -1,0 +1,117 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R3-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "rebased_policy_materializer",
+      "information_flow": "The probe alone receives the six common inputs. Its complete evidence state is visible to and consumed by the rebase call; the complete transitioned state is then visible to and consumed by the final materializer. There are no parallel paths, bypasses, or unconsumed outputs.",
+      "name": "Interventional Responsibility Rebase Lineage",
+      "organization": "Three-node sequential causal-state lineage with one probe, one state transformer, and one post-transition materializer.",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "responsibility_probe",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Using only the supplied inputs, establish one causal non-separability witness at an inherited responsibility boundary by relating the candidate hypothesis to distinct contract obligations while holding unrelated responsibilities fixed. Emit the evidenced boundary and current construction state.",
+              "output_type": "analysis",
+              "role": "counterfactual responsibility probe"
+            },
+            {
+              "id": "responsibility_rebase",
+              "inputs": [
+                "responsibility_probe"
+              ],
+              "objective": "Consume responsibility_probe and let its non-separability witness trigger a change from anchor-relative repair state to contract-relative joint-responsibility state at the evidenced boundary. Preserve unaffected obligations and evidence provenance, then emit the transitioned construction state.",
+              "output_type": "analysis",
+              "role": "evidence-triggered causal state transformer"
+            },
+            {
+              "id": "rebased_policy_materializer",
+              "inputs": [
+                "responsibility_rebase"
+              ],
+              "objective": "Consume responsibility_rebase and realize its transitioned causal organization as exactly one complete contract-compliant policy while retaining its visible evidence obligations and authoritative-state constraints.",
+              "output_type": "policy",
+              "role": "post-transition policy materializer"
+            }
+          ],
+          "id": "probe_rebase_materialize",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "evidence-triggered causal-responsibility rebasing",
+      "champion_limitation": "The champion cannot leave its anchor-relative delta coordinate system when an inherited responsibility simultaneously supports one obligation and causes another obligation's failure.",
+      "not_local_refinement": "This changes the model class and causal control regime; no call reviews, certifies, gates, renames, or subdivides the champion's existing producer duties.",
+      "observable_effect": "The final producer receives a rebased causal model in which the implicated obligations can be realized through a newly organized shared responsibility rather than compensating edits around the inherited decomposition.",
+      "state_transition": "The construction state changes from anchor-relative delta repair to contract-relative joint-responsibility synthesis at the evidenced causal boundary, with unaffected responsibilities preserved.",
+      "trigger": "A counterfactual responsibility probe establishes non-separability: suppressing the inherited cause implicated by the candidate hypothesis closes one obligation only by reopening a distinct protected obligation while unrelated responsibilities remain fixed."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Introduce one evidence-triggered causal-responsibility rebase that changes the construction state from anchor-relative repair to contract-relative joint-responsibility synthesis before policy materialization.",
+      "expected_effect": "When inherited responsibility boundaries cause lock-in, the transitioned state makes a task-general causal organization reachable without accumulating compensating anchor-relative edits.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion can add, reverse, and compress anchor-relative deltas, but it remains inside the anchor's inherited responsibility decomposition when distinct contract obligations are causally entangled."
+    },
+    "structural_mutation": {
+      "after": "A three-call directed lineage establishes causal non-separability, rebases the implicated responsibility model, and materializes one policy from the transitioned state.",
+      "before": "One terminal producer performs anchor-relative reversible repair and terminal causal compression without changing the inherited responsibility model.",
+      "change_count": 1,
+      "factor": "evidence-triggered causal-responsibility rebasing",
+      "why_structural": "The added capability changes the design representation and reachable causal organization in response to evidence; it is not terminal role fission, review, certification, or pre-mutation evidence precommitment."
+    }
+  },
+  "receipt": {
+    "call_id": "R3-structure-architect",
+    "duration_seconds": 129.561,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T08:47:18Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ba0371c1649420e56565863f7c9b901a975132057f9f85d69a429da117c88b32",
+    "raw_events_path": "workspace\\model-calls\\R3-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "7e5ebaf19321a521e4427efb550f702c6af66b3139798b5d10781d71425cb202",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "570a123055783f957750f37db6fc2cb65c5a7154ee62a63a719128a6f9fa905a",
+    "returncode": 0,
+    "role": "score-blind R3 emergent_exploration structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T08:45:09Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13603,
+      "output_tokens": 6586,
+      "reasoning_output_tokens": 5535
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

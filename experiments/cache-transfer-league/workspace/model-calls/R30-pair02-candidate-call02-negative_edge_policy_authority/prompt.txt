@@ -1,0 +1,96 @@
+Role: R30 candidate topology role negative-edge independent policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R30,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: negative_edge_policy_authority
+Role: negative-edge independent policy authority
+Objective: Consume the immediately preceding complete executable closure as disconfirming evidence without treating any predecessor commitment as a default. Independently ground exactly one complete policy in the other visible task, contract, constraint, hypothesis, and loop evidence, then emit it.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "form_visible_executable_closure": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.protected_target = (self.capacity_bytes * 3) // 5\n        self.used_bytes = 0\n        self.events = 0\n        self.history_limit = max(256, min(16384, self.capacity_bytes // 64 + 256))\n        self.ghost_limit = max(64, min(8192, self.capacity_bytes // 64 + 64))\n        self.history = OrderedDict()\n\n    def _touch_history(self, key):\n        count = self.history.pop(key, 0)\n        self.history[key] = min(255, count + 1)\n        self.events += 1\n        if self.events % 2048 == 0:\n            for old_key in list(self.history):\n                value = self.history[old_key] // 2\n                if value:\n                    self.history[old_key] = value\n                else:\n                    del self.history[old_key]\n        while len(self.history) > self.history_limit:\n            self.history.popitem(last=False)\n\n    def _score(self, key):\n        return max(1, self.history.get(key, 1))\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.probation[old_key] = old_size\n            protected_bytes -= old_size\n\n    def _evict_one(self, avoid=None):\n        for cache, ghost in (\n            (self.probation, self.ghost_probation),\n            (self.protected, self.ghost_protected),\n        ):\n            old_key = next((candidate for candidate in cache if candidate != avoid), None)\n            if old_key is None:\n                continue\n            old_size = cache.pop(old_key)\n            self._remember(ghost, old_key)\n            self.used_bytes -= old_size\n            return old_key\n        return None\n\n    def _remove_resident(self, key):\n        for cache, ghost in (\n            (self.probation, self.ghost_probation),\n            (self.protected, self.ghost_protected),\n        ):\n            if key in cache:\n                size = cache.pop(key)\n                self.used_bytes -= size\n                self._remember(ghost, key)\n                return size\n        return None\n\n    def _can_admit(self, size, candidate_score, ghosted):\n        required = self.used_bytes + size - self.capacity_bytes\n        if required <= 0:\n            return True\n        freed = 0\n        for cache in (self.probation, self.protected):\n            for victim, victim_size in cache.items():\n                victim_score = self._score(victim)\n                if candidate_score < victim_score or (\n                    candidate_score == victim_score and not ghosted\n                ):\n                    return False\n                freed += victim_size\n                if freed >= required:\n                    return True\n        return False\n\n    def _resize_existing(self, key, size, cache):\n        old_size = cache[key]\n        if size <= 0 or size > self.capacity_bytes:\n            self._remove_resident(key)\n            return [key]\n        delta = size - old_size\n        evicted = []\n        while delta > 0 and self.used_bytes + delta > self.capacity_bytes:\n            victim = self._evict_one(avoid=key)\n            if victim is None:\n                self._remove_resident(key)\n                return evicted + [key]\n            evicted.append(victim)\n        cache[key] = size\n        self.used_bytes += delta\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._touch_history(key)\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return self._resize_existing(key, size, self.protected)\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            evicted = self._resize_existing(key, size, self.protected)\n            if key in self.protected:\n                self._rebalance()\n            return evicted\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        ghosted = key in self.ghost_probation or key in self.ghost_protected\n        candidate_score = self._score(key)\n        if not self._can_admit(size, candidate_score, ghosted):\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                return evicted\n            evicted.append(victim)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n",
+    "sha256": "64cf33f78d9c371d688856fa34448539027d24185fbd35fe69caf7753119123e"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R29 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Invert only the predecessor edge's authority polarity: retain full executable-artifact visibility but make the closure disconfirming evidence rather than a semantic starting point.",
+    "expected_effect": "The terminal call should independently ground its semantics in public evidence while using the visible closure to expose unsupported commitments, changing both predecessor deference and construction timing.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The complete predecessor closure carries presumptive positive semantic authority, so terminal reconciliation can preserve correlated blind spots instead of independently challenging inherited commitments."
+  },
+  "loop_structure": {
+    "final_call_id": "negative_edge_policy_authority",
+    "information_flow": "The first call forms and passes one complete executable closure. The second call receives that artifact with the same public external evidence as the champion, but the handoff confers no positive semantic authority: predecessor semantics serve only as disconfirming evidence while the terminal call independently grounds and emits one policy.",
+    "name": "Negative-Authority Executable Relay",
+    "organization": "two-call sequential lineage joined by one unconditional negative-authority predecessor edge",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_visible_executable_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Form exactly one complete executable policy closure from the supplied evidence, justify its semantics against the public obligations, remove construction provenance from the handoff, and pass the complete artifact forward.",
+            "output_type": "executable_policy_closure",
+            "role": "executable semantic closure former"
+          },
+          {
+            "id": "negative_edge_policy_authority",
+            "inputs": [
+              "form_visible_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the immediately preceding complete executable closure as disconfirming evidence without treating any predecessor commitment as a default. Independently ground exactly one complete policy in the other visible task, contract, constraint, hypothesis, and loop evidence, then emit it.",
+            "output_type": "policy",
+            "role": "negative-edge independent policy authority"
+          }
+        ],
+        "id": "negative_authority_relay",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

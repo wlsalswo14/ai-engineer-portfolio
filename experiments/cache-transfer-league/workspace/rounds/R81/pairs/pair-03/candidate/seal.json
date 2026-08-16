@@ -1,0 +1,45 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 5887,
+  "artifact_path": "workspace\\rounds\\R81\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "56f164641235282bc19b995903443ffa912550cf73a5378f222c0a84a5f48870",
+  "display_round": 81,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R81\\pairs\\pair-03\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "7e8f6604b7bd6cfdd812ad123840386e6882a1b1c3d44cf5abb3949b80859b73",
+  "label": "pair-03-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R81-pair03-candidate-call01-instantiate_complete_state\\final-receipt.json",
+      "sha256": "c1774471fb3e1c15f4d114bece8f619be996f8612d4bc0b7cbe236f5d295a88e"
+    },
+    {
+      "path": "workspace\\model-calls\\R81-pair03-candidate-call02-reground_complete_state\\final-receipt.json",
+      "sha256": "a8e876cf2de5b8562f40b1b4056eeda1875c5e019757af69700a45bcbca71aa5"
+    },
+    {
+      "path": "workspace\\model-calls\\R81-pair03-candidate-call03-emit_regrounded_policy\\final-receipt.json",
+      "sha256": "a6e41720b1da9d783bcaa0b639258c15808e4cbdd81023becb93f39ccc06a782"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5887,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-10T01:12:41Z"
+}

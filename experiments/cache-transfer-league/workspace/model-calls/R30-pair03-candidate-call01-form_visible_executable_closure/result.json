@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.target_frequent = self.capacity_bytes // 2\n        self.ghost_limit = max(32, min(8192, self.capacity_bytes // 64 + 32))\n\n    def _remember(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _rebalance(self):\n        while self.frequent and self.frequent_bytes > self.target_frequent:\n            old_key, old_size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= old_size\n            self.recent[old_key] = old_size\n            self.recent_bytes += old_size\n\n    def _evict_one(self):\n        if self.recent and (self.recent_bytes > self.target_frequent or not self.frequent):\n            old_key, old_size = self.recent.popitem(last=False)\n            self.recent_bytes -= old_size\n            self._remember(self.ghost_recent, old_key, old_size)\n            return old_key\n        if self.frequent:\n            old_key, old_size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= old_size\n            self._remember(self.ghost_frequent, old_key, old_size)\n            return old_key\n        if self.recent:\n            old_key, old_size = self.recent.popitem(last=False)\n            self.recent_bytes -= old_size\n            self._remember(self.ghost_recent, old_key, old_size)\n            return old_key\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_recent:\n            self.target_frequent = min(\n                self.capacity_bytes,\n                self.target_frequent + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_frequent:\n            self.target_frequent = max(\n                0,\n                self.target_frequent - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget(key)\n\n        evicted = []\n        while self.recent_bytes + self.frequent_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-pair03-candidate-call01-form_visible_executable_closure",
+    "duration_seconds": 38.101,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:08:20Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "8fcdcd7713901844398302123faacbf8108a897847d0aa28b71eac85a2bfda81",
+    "raw_events_path": "workspace\\model-calls\\R30-pair03-candidate-call01-form_visible_executable_closure\\raw-events.jsonl",
+    "raw_events_sha256": "272db36ec8fe02e11949ba582146e980714353d219f1733426c4f0f0cad21051",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "ccbbf7526a0ba34e11516b56e5ac7e75a5ce096d3fce52e1325da3f7878635ba",
+    "returncode": 0,
+    "role": "R30 candidate topology role executable semantic closure former",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:07:42Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14411,
+      "output_tokens": 2715,
+      "reasoning_output_tokens": 1868
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

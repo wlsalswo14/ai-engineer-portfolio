@@ -1,0 +1,117 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R29-structure-architect\\final-receipt.json",
+    "sha256": "27ca4dd4a0d9fc194a03b2ec9a2ccb25246609b834eef0225dffafa45535ad63"
+  },
+  "architect_response": {
+    "architect_scope": "one-R29-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "expose_committed_policy",
+      "information_flow": "The first call sees all common evidence and forms exactly one complete executable policy state whose semantics are final. The second call consumes that state with public obligations visible but without anchor-policy visibility; it has no authority to reinterpret, replace, or revise the inherited semantics and emits the contained policy through an identity-preserving transition.",
+      "name": "Origin-Locked Semantic Relay",
+      "organization": "two-call sequential lineage with upstream-exclusive semantic authority and one downstream semantic write barrier",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "commit_executable_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Use the supplied evidence to resolve public obligations and form exactly one complete executable policy state whose semantics constitute the lineage's sole final commitment.",
+              "output_type": "executable_policy_state",
+              "role": "origin-bound semantic authority"
+            },
+            {
+              "id": "expose_committed_policy",
+              "inputs": [
+                "commit_executable_state",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding complete executable state, verify its correspondence to the visible public obligations without semantic reinterpretation, and emit exactly its committed policy.",
+              "output_type": "policy",
+              "role": "read-only policy exposer"
+            }
+          ],
+          "id": "origin_locked_relay",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "location and timing of semantic commitment",
+        "terminal response to perceived contract tension",
+        "semantic stability across the handoff"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "post-construction provenance-blind terminal semantic authority",
+      "independent_replacement_principle": "Semantic intent becomes irrevocable where the complete executable state is formed, and every downstream transition preserves that intent by identity.",
+      "rejected_assumptions": [
+        "A terminal call requires independent semantic discretion after a complete executable artifact already exists.",
+        "Separating final semantic commitment from formation-time evidence improves reconciliation."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Reverse semantic authority across the lineage edge: the first call makes the sole irrevocable semantic commitment, and the final call receives read-only semantic authority.",
+      "expected_effect": "Origin-locked semantics should reduce handoff drift and move contract reconciliation from terminal reinterpretation to evidence-visible policy formation.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active family leaves executable semantics provisional until a provenance-blind terminal authority reinterprets them, separating final commitments from the evidence that originally made them coherent."
+    },
+    "structural_mutation": {
+      "after": "The first call holds sole semantic authority when forming one complete executable state; the lineage edge makes those semantics immutable, and the final call may only expose that state as policy.",
+      "before": "The first call forms a provisional executable closure, while the provenance-blind final call holds sole authority to reconcile and revise its semantics.",
+      "change_count": 1,
+      "factor": "origin-bound semantic authority enforced by an irreversible semantic write barrier",
+      "why_structural": "The mutation reverses control authority on the only inter-call edge and changes its state-transition semantics from revisable transfer to identity-preserving transfer."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 29,
+  "incumbent_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R29\\qualitative-error-notebook.json",
+    "sha256": "7d1a97cb261743bd094963677608ddb40e1005dd2071f4436f19a31176c635dd"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R29\\source-manifest.json",
+    "sha256": "064ae272b001794cb77bb1f434c9616bf84293f19ce3ed7d0525df3e54fe755b"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "origin-bound semantic authority enforced by an irreversible semantic write barrier",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "commit_executable_state",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      }
+    ],
+    "semantic_topology_fingerprint": "a98e9eba70e98bc22441d3cd87a088468d04efb2898df162c89388b7d4c316e6",
+    "topology_fingerprint": "03fdd7abec13c7a5026b4ccab5ee34de5e3c342188f6ed0e07b11111d1243ffa"
+  }
+}

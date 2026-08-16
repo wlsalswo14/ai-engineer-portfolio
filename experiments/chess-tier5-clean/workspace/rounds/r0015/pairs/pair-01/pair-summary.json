@@ -1,0 +1,382 @@
+{
+  "schema_version": 4,
+  "pair": 1,
+  "attempt": 1,
+  "execution_order": [
+    "incumbent",
+    "candidate"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "current_champion",
+    "anchor_id": "anchor_61f6c6bacbc6b14e",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0011\\final-output.json",
+    "engine_source_sha256": "61f6c6bacbc6b14ea5f83f86536b02a5801e197ff12902e38bffaf4d3bea0317",
+    "metrics": {
+      "elo": -120.412,
+      "score_rate": 0.33,
+      "wins": 3,
+      "draws": 60,
+      "losses": 37,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0011\\benchmark-result-receipt.json",
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-61f6c6bacbc6b14e.json"
+    },
+    "origin": "champion:package_a9dd70e3fc84f08d"
+  },
+  "incumbent_structure_id": "loop_b51c38b8268a6c22",
+  "candidate_structure_id": "loop_d92bdf6686eec427",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0015\\pairs\\pair-01\\attempts\\attempt-01\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0015\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:61f6c6bacbc6b14ea5f83f86536b02a5801e197ff12902e38bffaf4d3bea0317",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.33,
+    "wins": 3,
+    "draws": 60,
+    "losses": 37,
+    "elo": -120.412,
+    "elo_error_95": 103.588,
+    "los": 0.005787,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0015\\pairs\\pair-01\\attempts\\attempt-01\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-61f6c6bacbc6b14e.json",
+    "benchmark_receipt_sha256": "c3b7d21d1cc41bcc23b3acd81b783c326b8786ccbb44e1c7c4826ab93fda8bc1",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-61f6c6bacbc6b14e.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:61f6c6bacbc6b14ea5f83f86536b02a5801e197ff12902e38bffaf4d3bea0317",
+      "chessbench-wdl:3-60-37"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:db794e70bca919da1a783c96fcacbb72199046e968828f7b24412d5ff3217e84",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.315,
+    "wins": 1,
+    "draws": 61,
+    "losses": 38,
+    "elo": -132.041,
+    "elo_error_95": 105.091,
+    "los": 0.002719,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0015\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-db794e70bca919da.json",
+    "benchmark_receipt_sha256": "edfce7b6195b70f5f105661112a3b5c29aab6c4836d16c23dc82f1f639e651f0",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-db794e70bca919da.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:db794e70bca919da1a783c96fcacbb72199046e968828f7b24412d5ff3217e84",
+      "chessbench-wdl:1-61-38"
+    ]
+  },
+  "verdict": {
+    "verdict": "candidate_loss",
+    "incumbent_elo": -120.412,
+    "candidate_elo": -132.041
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "semantic_normalization",
+        "stage_mode": "sequential",
+        "call_id": "semantic_normalizer_engine",
+        "role": "semantic-normal-form transducer",
+        "output_type": "engine",
+        "prompt_sha256": "403de47a7d9ff42c3bc0320f528213679f586cf5dc9b479b9550b540bb6352c9",
+        "response_sha256": "01fd6ff5134b5a388bf6874d8274f4b74594cfa0dc0c7d1fba1ba327cfd57d9a",
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0
+        },
+        "trace_refs": [
+          "supervisor-direct-contingency:codex-quota-unavailable"
+        ],
+        "execution_provenance": "supervisor_direct_contingency",
+        "official_runtime_policy_reproduced": false,
+        "user_authorized_direct_role_substitution": true,
+        "validation": {
+          "syntax": "passed",
+          "start_position_legal_moves": 20,
+          "parent_immutable_after_make": true,
+          "uci_handshake": "passed",
+          "legal_bestmove_smoke": "bestmove b1c3"
+        }
+      },
+      {
+        "stage": "forward_strength_transduction",
+        "stage_mode": "sequential",
+        "call_id": "strength_transducer_engine",
+        "role": "obligation-preserving strength transducer",
+        "output_type": "engine",
+        "prompt_sha256": null,
+        "response_sha256": "01fd6ff5134b5a388bf6874d8274f4b74594cfa0dc0c7d1fba1ba327cfd57d9a",
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0
+        },
+        "trace_refs": [
+          "supervisor-direct-contingency:codex-quota-unavailable"
+        ],
+        "execution_provenance": "supervisor_direct_contingency",
+        "official_runtime_policy_reproduced": false,
+        "user_authorized_direct_role_substitution": true,
+        "validation": {
+          "syntax": "passed",
+          "start_position_legal_moves": 20,
+          "parent_immutable_after_make": true,
+          "uci_handshake": "passed",
+          "legal_bestmove_smoke": "bestmove b1c3"
+        }
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "semantic_normalization",
+        "stage_mode": "sequential",
+        "call_id": "semantic_normalizer_engine",
+        "role": "semantic-normal-form transducer",
+        "output_type": "engine",
+        "prompt_sha256": "f58468f24bef98466efb72939206e45269e04f8e60d301c0434150180ec132f5",
+        "response_sha256": "01fd6ff5134b5a388bf6874d8274f4b74594cfa0dc0c7d1fba1ba327cfd57d9a",
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0
+        },
+        "trace_refs": [
+          "supervisor-direct-contingency:codex-quota-unavailable"
+        ],
+        "execution_provenance": "supervisor_direct_contingency",
+        "official_runtime_policy_reproduced": false,
+        "user_authorized_direct_role_substitution": true,
+        "validation": {
+          "syntax": "passed",
+          "start_position_legal_moves": 20,
+          "parent_immutable_after_make": true,
+          "uci_handshake": "passed",
+          "legal_bestmove_smoke": "bestmove b1c3"
+        }
+      },
+      {
+        "stage": "adaptive_causal_evidence_acquisition",
+        "stage_mode": "sequential",
+        "call_id": "adaptive_probe_synthesizer",
+        "role": "non-authoring evidence-deficit probe synthesizer",
+        "output_type": "analysis",
+        "prompt_sha256": null,
+        "response_sha256": "52322bb66373136d59e64f085a8d611399b4ad340d93bb3c9334cca41b95340b",
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0
+        },
+        "trace_refs": [
+          "supervisor-direct-contingency:codex-quota-unavailable"
+        ],
+        "execution_provenance": "supervisor_direct_contingency",
+        "official_runtime_policy_reproduced": false,
+        "user_authorized_direct_role_substitution": true,
+        "validation": {
+          "analysis_contract": "one_precommitted_causal_target",
+          "engine_emitted": false
+        }
+      },
+      {
+        "stage": "evidence_grounded_forward_transduction",
+        "stage_mode": "sequential",
+        "call_id": "evidence_grounded_strength_engine",
+        "role": "probe-grounded obligation-preserving strength transducer",
+        "output_type": "engine",
+        "prompt_sha256": null,
+        "response_sha256": "60e0723a499fb0d180fe4ee241948320524ef0170e37fdd4b508f0144f42a558",
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0
+        },
+        "trace_refs": [
+          "supervisor-direct-contingency:codex-quota-unavailable"
+        ],
+        "execution_provenance": "supervisor_direct_contingency",
+        "official_runtime_policy_reproduced": false,
+        "user_authorized_direct_role_substitution": true,
+        "validation": {
+          "syntax": "passed",
+          "start_position_legal_moves": 20,
+          "parent_immutable_after_make": true,
+          "uci_handshake": "passed",
+          "legal_bestmove_smoke": "bestmove b1c3",
+          "synthesized_prior_pv_root_order_probe": "passed"
+        }
+      }
+    ]
+  },
+  "recovered_interruption": true,
+  "attempts_used": 1,
+  "max_attempts": 3,
+  "attempt_summary_paths": [
+    "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0015\\pairs\\pair-01\\attempts\\attempt-01\\attempt-summary.json"
+  ],
+  "invalid_attempts_exhausted": false,
+  "token_usage": {
+    "all_attempts": {
+      "incumbent": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      },
+      "candidate": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      },
+      "combined": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      }
+    },
+    "decision_attempt": {
+      "incumbent": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      },
+      "candidate": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      },
+      "combined": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      }
+    },
+    "decision_attempt_valid": true,
+    "invalid_attempts": {
+      "count": 0,
+      "incumbent": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      },
+      "candidate": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      },
+      "combined": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0,
+        "model_calls": 0,
+        "uncached_input_tokens": 0,
+        "total_tokens": 0,
+        "effective_tokens": 0
+      }
+    },
+    "per_attempt": [
+      {
+        "attempt": 1,
+        "incumbent": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0,
+          "uncached_input_tokens": 0,
+          "total_tokens": 0,
+          "effective_tokens": 0
+        },
+        "candidate": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0,
+          "uncached_input_tokens": 0,
+          "total_tokens": 0,
+          "effective_tokens": 0
+        },
+        "combined": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0,
+          "uncached_input_tokens": 0,
+          "total_tokens": 0,
+          "effective_tokens": 0
+        }
+      }
+    ]
+  }
+}

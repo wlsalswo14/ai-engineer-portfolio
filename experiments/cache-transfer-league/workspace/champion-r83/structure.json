@@ -1,0 +1,61 @@
+{
+  "final_call_id": "task_hypothesis_window_emit",
+  "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The second consumes that capsule and reopens only anchor_policy and anchor_contract. The third consumes the resulting complete executable state and reopens only task_constraints and loop_structure. The final call consumes the resulting complete executable closure, reopens only task and candidate_hypothesis, and emits one policy. Downstream evidence windows never overlap.",
+  "name": "Disjoint Reentry Executable Relay",
+  "organization": "four-call sequential lineage maintaining one complete executable artifact under mutually exclusive downstream evidence windows",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_executable_capsule",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the visible evidence and obligations into one complete executable policy artifact without issuing a separate adjudicative boundary.",
+          "output_type": "policy_capsule",
+          "role": "integrated executable originator"
+        },
+        {
+          "id": "anchor_window_transition",
+          "inputs": [
+            "originate_executable_capsule",
+            "anchor_policy",
+            "anchor_contract"
+          ],
+          "objective": "Consume originate_executable_capsule, assess the inherited complete artifact against only the reentered anchor evidence and contract obligations, reconcile visible conflicts directly in that artifact, and emit one complete executable policy state.",
+          "output_type": "executable_policy_state",
+          "role": "anchor-window executable custodian"
+        },
+        {
+          "id": "constraint_window_transition",
+          "inputs": [
+            "anchor_window_transition",
+            "task_constraints",
+            "loop_structure"
+          ],
+          "objective": "Consume anchor_window_transition, assess the inherited complete artifact against only the reentered constraints and structural evidence, reconcile visible conflicts directly in that artifact, and emit one complete executable policy closure.",
+          "output_type": "executable_policy_closure",
+          "role": "constraint-window executable custodian"
+        },
+        {
+          "id": "task_hypothesis_window_emit",
+          "inputs": [
+            "constraint_window_transition",
+            "task",
+            "candidate_hypothesis"
+          ],
+          "objective": "Consume constraint_window_transition, assess the inherited complete artifact against only the reentered task and hypothesis evidence, reconcile remaining visible conflicts in that same artifact, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "task-hypothesis window policy authority"
+        }
+      ],
+      "id": "single_reentry_executable_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

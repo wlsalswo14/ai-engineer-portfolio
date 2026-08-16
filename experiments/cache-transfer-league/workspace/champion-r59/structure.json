@@ -1,0 +1,43 @@
+{
+  "final_call_id": "reacquire_and_unify_authority",
+  "information_flow": "The first call receives every common input and emits only a source-distinguished counter-assumption analysis carrying no policy or settlement authority. The final call consumes that analysis while independently receiving every common input, treats the analysis as defeasible evidence, reconciles both views under undivided authority, and emits one policy.",
+  "name": "Defeasible Dual-View Reacquisition",
+  "organization": "two-call sequential lineage with one nonbinding analysis handoff and terminal lossless evidence reacquisition",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "map_counter_assumptions",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+          "output_type": "analysis",
+          "role": "defeasible counter-assumption mapper"
+        },
+        {
+          "id": "reacquire_and_unify_authority",
+          "inputs": [
+            "map_counter_assumptions",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume map_counter_assumptions together with every common input, treat the analysis as defeasible rather than binding, resolve disagreements through direct evidence comparison, and emit one complete policy under undivided authority.",
+          "output_type": "policy",
+          "role": "raw-evidence-reacquiring unitary policy authority"
+        }
+      ],
+      "id": "dual_view_reacquisition_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "arm": "incumbent",
+  "artifact_bytes": 4815,
+  "artifact_path": "workspace\\rounds\\R87\\pairs\\pair-02\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "078236c8c26815d4ded68bd30185e1e314055db71574f247bdcc00e37c1f5ecb",
+  "display_round": 87,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R87\\pairs\\pair-02\\incumbent\\generation-manifest.json",
+  "generation_manifest_sha256": "80ed22d1ae1f827f747f652d94963f6421c2d3df4e848385b75979126759f782",
+  "label": "pair-02-incumbent",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R87-pair02-incumbent-call01-originate_executable_capsule\\final-receipt.json",
+      "sha256": "00bfee45a9f566bb47263127184d42e2002b2d291ebc781c080ef18cc7c36975"
+    },
+    {
+      "path": "workspace\\model-calls\\R87-pair02-incumbent-call02-anchor_window_transition\\final-receipt.json",
+      "sha256": "41ff415d352ff924b0a2b45011836b528a36a4bae51a5a5d1d8bce90cd19dd68"
+    },
+    {
+      "path": "workspace\\model-calls\\R87-pair02-incumbent-call03-constraint_window_transition\\final-receipt.json",
+      "sha256": "89454a53379a6df1639a49d4688333b2051716f61f0bc5c720b5d3741300b86d"
+    },
+    {
+      "path": "workspace\\model-calls\\R87-pair02-incumbent-call04-task_hypothesis_window_emit\\final-receipt.json",
+      "sha256": "5e733e9800ae28e2588d393596a5f301f4b8139311b22abc0a54c18ab6e30fda"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 2,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 4815,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-10T02:38:57Z",
+  "transport_resumes": []
+}

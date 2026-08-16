@@ -1,0 +1,42 @@
+{
+  "final_call_id": "expose_committed_policy",
+  "information_flow": "The first call sees all common evidence and forms exactly one complete executable policy state whose semantics are final. The second call consumes that state with public obligations visible but without anchor-policy visibility; it has no authority to reinterpret, replace, or revise the inherited semantics and emits the contained policy through an identity-preserving transition.",
+  "name": "Origin-Locked Semantic Relay",
+  "organization": "two-call sequential lineage with upstream-exclusive semantic authority and one downstream semantic write barrier",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "commit_executable_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Use the supplied evidence to resolve public obligations and form exactly one complete executable policy state whose semantics constitute the lineage's sole final commitment.",
+          "output_type": "executable_policy_state",
+          "role": "origin-bound semantic authority"
+        },
+        {
+          "id": "expose_committed_policy",
+          "inputs": [
+            "commit_executable_state",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding complete executable state, verify its correspondence to the visible public obligations without semantic reinterpretation, and emit exactly its committed policy.",
+          "output_type": "policy",
+          "role": "read-only policy exposer"
+        }
+      ],
+      "id": "origin_locked_relay",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Policy-neutral analysis only; no executable artifact, inherited implementation, anchor-specific decision, score, trace, oracle, or benchmark detail is transmitted.",
+      "exact_actions": [
+        "Author the sole policy independently from the task, contract, constraints, hypothesis, and this policy-neutral packet; do not revise or reproduce any inherited executable design.",
+        "Define explicit state invariants for membership, stored sizes, byte accounting, and eviction legality, then preserve them on every access path.",
+        "Handle hits, admissions, evictions, rejected objects, and boundary capacities using only current online state.",
+        "Before emission, check interface legality, unique-current-key returns, capacity non-overflow, standard-library compliance, and absence of hidden-evidence dependencies."
+      ],
+      "obligations": [
+        "Preserve the required constructor and access signatures.",
+        "Maintain capacity safety for all inputs, including nonpositive sizes, zero capacity, and objects larger than capacity.",
+        "Return only currently cached unique integer keys evicted by the current request.",
+        "Use only information available through prior and current online accesses and public task evidence.",
+        "Emit one complete policy artifact without importing, copying, inspecting, or adapting evaluator-side implementations, hidden traces, oracle decisions, benchmark paths, or external libraries.",
+        "Balance recency/frequency, object/byte efficiency, scan resistance, and phase adaptation without assuming any unavailable score or trace."
+      ],
+      "witnesses": [
+        "The interface requires Policy(capacity_bytes) and access(key, size, now) returning evicted integer keys.",
+        "The evaluator owns authoritative cache state; returned keys must be currently cached, unique, and capacity-safe.",
+        "Evaluation rewards object hit rate, byte hit rate, scan resistance, phase-shift adaptation, and regret against offline optimum.",
+        "Execution is standard-library-only, online, one access at a time, with no hidden-trace or oracle adaptation.",
+        "The hypothesis identifies inherited executable authority as a possible source of representation path dependence and proposes independent terminal authorship after an irreversible evidence boundary."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R45-pair02-candidate-call01-extinguish_transitive_policy_authority",
+    "duration_seconds": 13.353,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:50:26Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fa0fb6a8288761f8a5745820798bb144b93bf9749d59e23900744469b47ae344",
+    "raw_events_path": "workspace\\model-calls\\R45-pair02-candidate-call01-extinguish_transitive_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "51003c4580dea45124161d6413db0618e8dd54355527e9aa61a93116cc46d2e5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "c98a4953e3d195b40d884c5936335b6e96be2248fb4ef60dd0d73b2ae716cbd8",
+    "returncode": 0,
+    "role": "R45 candidate topology role one-way evidence-boundary authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:50:12Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13709,
+      "output_tokens": 821,
+      "reasoning_output_tokens": 424
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,104 @@
+{
+  "PREIMAGE_CLOSURE": {
+    "terminal": {
+      "id": "T",
+      "type": "aggregate_decision_quality",
+      "predicate": "Across the fixed 100-game receipt, wins > losses and score_rate >= 0.5"
+    },
+    "prerequisites": [
+      {
+        "id": "P1",
+        "type": "per_position_move_decision",
+        "predicate": "For each reached position, one deterministic legal move is selected with sufficient game-relevant quality before the deadline"
+      },
+      {
+        "id": "P2",
+        "type": "bounded_search_signal",
+        "predicate": "The root decision receives a reliable comparison signal from completed search, terminal detection, and evaluation within the allowed time"
+      },
+      {
+        "id": "P3",
+        "type": "state_transition_integrity",
+        "predicate": "Successor states preserve board, side, castling, en-passant, clocks, promotion, capture, and castling effects"
+      },
+      {
+        "id": "P4",
+        "type": "legal_move_closure",
+        "predicate": "Generated moves are complete and legal, including king safety, checks, captures, promotions, en-passant, and castling"
+      },
+      {
+        "id": "P5",
+        "type": "position_lifecycle_integrity",
+        "predicate": "Initial FEN/start state and supplied move sequences produce the exact current position consumed by decision-making"
+      }
+    ],
+    "edges": [
+      {
+        "from": "P5",
+        "to": "P4",
+        "anchor_facts": [
+          "setpos initializes Position.start or Position.fen",
+          "setpos applies each supplied move through legal and make"
+        ]
+      },
+      {
+        "from": "P4",
+        "to": "P3",
+        "anchor_facts": [
+          "legal filters pseudo moves after make by checking the moving side's king",
+          "make performs captures, en-passant, promotions, castling rook movement, and castling-right updates"
+        ]
+      },
+      {
+        "from": "P3",
+        "to": "P2",
+        "anchor_facts": [
+          "search and qsearch recurse through make",
+          "search terminal checks and attacked/king status depend on resulting positions"
+        ]
+      },
+      {
+        "from": "P4",
+        "to": "P2",
+        "anchor_facts": [
+          "root and search enumerate legal positions through legal",
+          "qsearch also selects legal tactical continuations"
+        ]
+      },
+      {
+        "from": "P2",
+        "to": "P1",
+        "anchor_facts": [
+          "think iterates root search until its deadline",
+          "root compares legal root moves using search scores",
+          "search terminates at qsearch, whose stand-pat value is evaluate"
+        ]
+      },
+      {
+        "from": "P1",
+        "to": "T",
+        "anchor_facts": [
+          "go invokes think on the current position",
+          "main emits the selected move as bestmove",
+          "the witness receipt records 4 wins, 65 draws, 31 losses, and score_rate 0.365"
+        ]
+      }
+    ],
+    "preservation_boundary": [
+      "single standard-library engine source",
+      "task-specified UCI commands and one bounded bestmove response",
+      "legal moves and bounded responses",
+      "state transitions outside this closure",
+      "no benchmark-specific data or evaluator details"
+    ],
+    "dependency_order": [
+      "P5",
+      "P4",
+      "P3",
+      "P2",
+      "P1",
+      "T"
+    ],
+    "unresolved_assumption": "The aggregate shortfall is attributable to the shared per-position decision pipeline; individual losses and benchmark-specific tactical causes are unavailable, so no narrower causal deficiency can be established."
+  }
+}

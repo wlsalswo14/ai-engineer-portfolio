@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost = OrderedDict()\n        self.frequency = {}\n        self.used_bytes = 0\n        self.requests = 0\n        self.protected_ratio = 0.70\n        self.recent_hits = 0\n        self.protected_hits = 0\n        self.ghost_hits = 0\n        self.misses = 0\n        self.miss_streak = 0\n        self.ghost_limit = 4096\n\n    def _protected_target(self):\n        return int(self.capacity_bytes * self.protected_ratio)\n\n    def _rebalance(self):\n        target = self._protected_target()\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > target:\n            key, size = self.protected.popitem(last=False)\n            self.recent[key] = size\n            protected_bytes -= size\n\n    def _age(self):\n        for key in list(self.frequency):\n            value = self.frequency[key] >> 1\n            if value:\n                self.frequency[key] = value\n            else:\n                del self.frequency[key]\n\n    def _finish_request(self):\n        if self.requests % 64 == 0:\n            recent_signal = self.recent_hits + 2 * self.ghost_hits\n            protected_signal = self.protected_hits\n            if recent_signal > protected_signal + 2:\n                self.protected_ratio = max(0.35, self.protected_ratio - 0.08)\n            elif protected_signal > recent_signal + 2:\n                self.protected_ratio = min(0.85, self.protected_ratio + 0.08)\n            if self.misses > recent_signal + protected_signal + 8:\n                self.protected_ratio = max(0.35, self.protected_ratio - 0.04)\n            self.recent_hits = 0\n            self.protected_hits = 0\n            self.ghost_hits = 0\n            self.misses = 0\n        if self.requests % 256 == 0:\n            self._age()\n        self._rebalance()\n\n    def _utility(self, key, size, protected):\n        frequency = min(32, self.frequency.get(key, 0))\n        byte_term = (frequency * min(size, self.capacity_bytes) * 8) // max(1, self.capacity_bytes)\n        return frequency * 16 + byte_term + (8 if protected else 0)\n\n    def _victim(self):\n        candidates = []\n        for rank, (key, size) in enumerate(list(self.recent.items())[:16]):\n            candidates.append((self._utility(key, size, False), 0, rank, key))\n        for rank, (key, size) in enumerate(list(self.protected.items())[:16]):\n            candidates.append((self._utility(key, size, True), 1, rank, key))\n        if not candidates:\n            return None\n        candidates.sort(key=lambda item: (item[0], item[1], item[2]))\n        return candidates[0][3]\n\n    def _remove(self, key):\n        if key in self.recent:\n            size = self.recent.pop(key)\n        else:\n            size = self.protected.pop(key)\n        self.used_bytes -= size\n        if self.used_bytes < 0:\n            self.used_bytes = 0\n        self.ghost[key] = size\n        self.ghost.move_to_end(key)\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n        return size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.requests += 1\n        self.frequency[key] = self.frequency.get(key, 0) + 1\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            self.protected_hits += 1\n            self.miss_streak = 0\n            self._finish_request()\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.protected[key] = stored_size\n            self.recent_hits += 1\n            self.miss_streak = 0\n            self._finish_request()\n            return []\n\n        self.misses += 1\n        self.miss_streak += 1\n        ghost_hit = key in self.ghost\n        if ghost_hit:\n            self.ghost_hits += 1\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            self._finish_request()\n            return []\n\n        if (self.used_bytes + size > self.capacity_bytes and\n                not ghost_hit and\n                self.frequency.get(key, 0) <= 1 and\n                self.miss_streak >= 4 and\n                size * 2 > self.capacity_bytes and\n                self.protected):\n            self._finish_request()\n            return []\n\n        self._rebalance()\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._victim()\n            if victim is None:\n                break\n            self._remove(victim)\n            evicted.append(victim)\n\n        if self.used_bytes + size <= self.capacity_bytes:\n            self.ghost.pop(key, None)\n            self.recent[key] = size\n            self.used_bytes += size\n\n        self._finish_request()\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R18-pair02-candidate-call02-forward_policy_materializer",
+    "duration_seconds": 101.585,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:20:34Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "d9ce01f39308a493b998959bc9e32e5b5e03398138c38917fed616d2b99f1570",
+    "raw_events_path": "workspace\\model-calls\\R18-pair02-candidate-call02-forward_policy_materializer\\raw-events.jsonl",
+    "raw_events_sha256": "ec5e005d2a9413c813949a9dade12fc774b384f22e84266bd6b7f0196a995d59",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "142291945b275a6f49a895fc052973b71f020a7a36f04a36de64e7d405b43c1a",
+    "returncode": 0,
+    "role": "R18 candidate topology role forward-only policy materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:18:53Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14023,
+      "output_tokens": 7535,
+      "reasoning_output_tokens": 6214
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

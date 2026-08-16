@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "# Provenance carried forward from the supplied assumption-accountability charter.\n# origin=anchor-derived; status=inherited assumption, not binding.\n# origin=public-task-and-contract; status=binding obligation.\n# origin=candidate-hypothesis; status=testable hypothesis, not evidence.\n# The provenance is declarative only and does not contain benchmark or trace data.\n\nfrom collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        try:\n            capacity = int(capacity_bytes)\n        except Exception:\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self._items = {}\n        self._probation = OrderedDict()\n        self._protected = OrderedDict()\n        self._ghosts = OrderedDict()\n        self._ghost_limit = 4096\n        self._bytes = 0\n        self._protected_bytes = 0\n        self._protected_target = (self.capacity_bytes * 2) // 3\n\n    @staticmethod\n    def _size_value(size):\n        try:\n            value = int(size)\n        except Exception:\n            value = 0\n        return max(0, value)\n\n    def _remember_ghost(self, key, segment):\n        self._ghosts.pop(key, None)\n        self._ghosts[key] = segment\n        while len(self._ghosts) > self._ghost_limit:\n            self._ghosts.popitem(last=False)\n\n    def _remove(self, key, remember=True):\n        record = self._items.pop(key, None)\n        if record is None:\n            return\n        segment = record[\"segment\"]\n        if segment == \"protected\":\n            self._protected.pop(key, None)\n            self._protected_bytes -= record[\"size\"]\n        else:\n            self._probation.pop(key, None)\n        self._bytes -= record[\"size\"]\n        if remember:\n            self._remember_ghost(key, segment)\n\n    def _touch(self, key, segment):\n        queue = self._protected if segment == \"protected\" else self._probation\n        queue.pop(key, None)\n        queue[key] = None\n\n    def _promote(self, key):\n        record = self._items[key]\n        if record[\"segment\"] == \"protected\":\n            self._touch(key, \"protected\")\n            return\n        self._probation.pop(key, None)\n        record[\"segment\"] = \"protected\"\n        self._protected[key] = None\n        self._protected_bytes += record[\"size\"]\n\n    def _demote_oldest_protected(self):\n        if not self._protected:\n            return False\n        key = next(iter(self._protected))\n        record = self._items[key]\n        self._protected.pop(key, None)\n        self._protected_bytes -= record[\"size\"]\n        record[\"segment\"] = \"probation\"\n        self._probation[key] = None\n        return True\n\n    def _rebalance(self):\n        while (\n            self._protected\n            and self._protected_bytes > self._protected_target\n        ):\n            if not self._demote_oldest_protected():\n                break\n\n    def _victim(self, excluded):\n        for key in self._probation:\n            if key != excluded:\n                return key\n        for key in self._protected:\n            if key != excluded:\n                return key\n        return None\n\n    def _make_room(self, excluded):\n        evicted = []\n        self._rebalance()\n        while self._bytes > self.capacity_bytes:\n            victim = self._victim(excluded)\n            if victim is None:\n                break\n            evicted.append(victim)\n            self._remove(victim, remember=True)\n        return evicted\n\n    def _adapt_target(self, ghost_segment):\n        if self.capacity_bytes <= 0:\n            return\n        if ghost_segment == \"probation\":\n            delta = max(\n                1, (self.capacity_bytes - self._protected_target) // 8\n            )\n            self._protected_target = max(\n                0, self._protected_target - delta\n            )\n        elif ghost_segment == \"protected\":\n            delta = max(1, self._protected_target // 8)\n            self._protected_target = min(\n                self.capacity_bytes,\n                self._protected_target + delta,\n            )\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        requested_size = self._size_value(size)\n\n        if key in self._items:\n            record = self._items[key]\n            old_size = record[\"size\"]\n            record[\"size\"] = requested_size\n            self._bytes += requested_size - old_size\n\n            if record[\"segment\"] == \"probation\":\n                self._promote(key)\n            else:\n                self._touch(key, \"protected\")\n\n            if requested_size > self.capacity_bytes:\n                self._remove(key, remember=True)\n                return [key]\n            return self._make_room(key)\n\n        if self.capacity_bytes <= 0 or requested_size > self.capacity_bytes:\n            return []\n\n        ghost_segment = self._ghosts.pop(key, None)\n        if ghost_segment is not None:\n            self._adapt_target(ghost_segment)\n\n        self._items[key] = {\n            \"size\": requested_size,\n            \"segment\": \"probation\",\n        }\n        self._probation[key] = None\n        self._bytes += requested_size\n        return self._make_room(key)"
+  },
+  "receipt": {
+    "call_id": "R35-pair01-candidate-call02-materialize_accountable_state",
+    "duration_seconds": 83.957,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:39:38Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "536a9e2098616c6e1ffd1a764c82714ff3a308a251e4f5385bc540ec34d77290",
+    "raw_events_path": "workspace\\model-calls\\R35-pair01-candidate-call02-materialize_accountable_state\\raw-events.jsonl",
+    "raw_events_sha256": "8295e541fb849306c877b3b3afe96790cba2f80e35c22d06f49c0ddd90b1f6fd",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "1f884588efa3074da828d2a06026a044fcc773af8c1be051de533afb36e2ab5b",
+    "returncode": 0,
+    "role": "R35 candidate topology role accountable executable-state materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:38:14Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14450,
+      "output_tokens": 6612,
+      "reasoning_output_tokens": 5302
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

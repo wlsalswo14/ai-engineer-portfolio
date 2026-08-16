@@ -1,0 +1,44 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\nimport operator\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity = operator.index(capacity_bytes)\n        except (TypeError, ValueError):\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self._items = OrderedDict()\n        self._used = 0\n\n    def access(self, key, size, now):\n        evicted = []\n        if type(key) is not int:\n            return evicted\n        try:\n            requested = operator.index(size)\n        except (TypeError, ValueError):\n            requested = 0\n\n        previous = self._items.pop(key, None)\n        if previous is not None:\n            self._used -= previous\n\n        if requested <= 0 or requested > self.capacity_bytes:\n            if previous is not None:\n                evicted.append(key)\n            return evicted\n\n        while self._used + requested > self.capacity_bytes:\n            old_key, old_size = self._items.popitem(last=False)\n            self._used -= old_size\n            evicted.append(old_key)\n\n        self._items[key] = requested\n        self._used += requested\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R91-pair01-candidate-call02-materialize_from_charter",
+    "duration_seconds": 31.43,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T03:18:37Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ec920329661dd852d204aca43fe441ab1970a678df04b99a3e4893581407048e",
+    "raw_events_path": "workspace\\model-calls\\R91-pair01-candidate-call02-materialize_from_charter\\raw-events.jsonl",
+    "raw_events_sha256": "60a000db1d9d93712af6b4ce146636e7a8c7525285cfc6c269c3ca96e6c499e3",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "0f72776fc587905db29ba0afce8c3ade49d4a4b3af6aec7aaeaeefecc94a39a5",
+    "returncode": 0,
+    "role": "R91 candidate topology role source-blind sole policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T03:18:06Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 5888,
+      "input_tokens": 12986,
+      "output_tokens": 1461,
+      "reasoning_output_tokens": 1161
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

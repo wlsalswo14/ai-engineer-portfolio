@@ -1,0 +1,138 @@
+Role: R96 candidate topology role sole post-transition executable authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R96,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: author_under_inverted_authority
+Role: sole post-transition executable authority
+Objective: Consume the established authority state, reconcile it with jointly visible common evidence, exercise de novo semantic authority only when the omission trigger has changed the state, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "establish_omission_authority_state": {
+    "analysis_packet": {
+      "certificate": "All mandatory obligations are represented by inherited semantics; no evidenced omission triggers authority inversion.",
+      "witnesses": [
+        {
+          "obligation": "interface_legality",
+          "evidence": "Policy defines the required constructor and access methods with the required return shape."
+        },
+        {
+          "obligation": "capacity_safety",
+          "evidence": "Resident byte accounting and eviction make-room logic prevent stored usage from exceeding capacity; oversized objects are rejected."
+        },
+        {
+          "obligation": "online_only_visibility",
+          "evidence": "Behavior depends only on per-access inputs and internal state, with no external or evaluator-side visibility."
+        },
+        {
+          "obligation": "valid_unique_evictions",
+          "evidence": "Evictions are drawn from resident OrderedDict entries, each resident key has one membership, and returned keys are integer-normalized."
+        },
+        {
+          "obligation": "stdlib_and_prohibitions",
+          "evidence": "The anchor uses only collections.OrderedDict and contains no networking, subprocesses, external libraries, traces, paths, or oracle adaptation."
+        }
+      ],
+      "obligations": [
+        "preserve interface legality",
+        "never exceed capacity",
+        "operate online one access at a time",
+        "return only currently cached unique integer keys",
+        "use only the standard library",
+        "avoid prohibited evaluator or benchmark access"
+      ],
+      "exact_actions": [
+        "retain inherited authority state",
+        "do not activate authority inversion",
+        "pass the unchanged inherited state to the executable author"
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "23a2eb77605a9dd21f7083e42d8d0d441cc1a7a53267bc45ff286239fa9c6832",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _drop_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_frequent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if kind == 1:\n            self.ghost_recent[key] = value\n        else:\n            self.ghost_frequent[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_count_limit):\n            source = None\n            oldest = None\n            for ghosts in (self.ghost_recent, self.ghost_frequent):\n                if ghosts:\n                    value = next(iter(ghosts.values()))\n                    if oldest is None or value[1] < oldest[1]:\n                        oldest = value\n                        source = ghosts\n            _, value = source.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _adjust_target(self, kind):\n        if self.capacity <= 0:\n            return\n        recent_ghost_bytes = sum(value[0] for value in self.ghost_recent.values())\n        frequent_ghost_bytes = sum(value[0] for value in self.ghost_frequent.values())\n        if kind == 1:\n            delta = (self.capacity if recent_ghost_bytes == 0 else\n                     max(1, min(self.capacity, frequent_ghost_bytes // recent_ghost_bytes or 1)))\n            self.target = min(self.capacity, self.target + delta)\n        else:\n            delta = (self.capacity if frequent_ghost_bytes == 0 else\n                     max(1, min(self.capacity, recent_ghost_bytes // frequent_ghost_bytes or 1)))\n            self.target = max(0, self.target - delta)\n\n    def _remove_resident(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.recent_bytes -= value\n            self.used -= value\n            return value\n        value = self.frequent.pop(key, None)\n        if value is not None:\n            self.frequent_bytes -= value\n            self.used -= value\n            return value\n        return None\n\n    def _evict_one(self, mode):\n        choose_recent = False\n        if mode == 1 and self.recent and self.recent_bytes >= self.target:\n            choose_recent = True\n        elif mode == 2 and self.frequent and self.recent_bytes <= self.target:\n            choose_recent = False\n        elif self.recent and self.recent_bytes > self.target:\n            choose_recent = True\n        elif not self.frequent and self.recent:\n            choose_recent = True\n\n        if choose_recent and self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        return None\n\n    def _make_room(self, incoming, mode):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one(mode)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = int(size)\n\n        if key in self.recent or key in self.frequent:\n            self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.used += size\n            return evicted\n\n        mode = 1 if key in self.ghost_recent else 2 if key in self.ghost_frequent else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if mode:\n            self._adjust_target(mode)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size, mode)\n        if self.used + size > self.capacity:\n            return evicted\n        if mode:\n            self.frequent[key] = size\n            self.frequent_bytes += size\n        else:\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R95 champion policy anchor",
+    "artifact_sha256": "23a2eb77605a9dd21f7083e42d8d0d441cc1a7a53267bc45ff286239fa9c6832",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Move sole executable authorship after an evidence-triggered authority inversion: evidence that a mandatory obligation is unrepresented by inherited semantics changes the lineage from anchor inheritance to de novo obligation synthesis before artifact creation.",
+    "expected_effect": "The lineage can recover task-general omissions while retaining one coherent executable artifact and one deterministic final author.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion creates the complete executable artifact before terminal adjudication, so its retract-only authority cannot supply a required semantic commitment omitted by the originating artifact."
+  },
+  "loop_structure": {
+    "final_call_id": "author_under_inverted_authority",
+    "information_flow": "The first call sees all common inputs and emits the authority analysis consumed by the final call. The final call also sees all common evidence, applies the omission-triggered authority state before any artifact exists, and emits the lineage's only complete policy.",
+    "name": "Omission-Activated Authority Inversion Dyad",
+    "organization": "two-call sequential nonbranching lineage with one non-policy semantic-authority controller followed by the sole executable author",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "establish_omission_authority_state",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Determine from jointly visible evidence whether every mandatory obligation is represented by inherited semantics and establish the single authority-state transition when an evidenced obligation is absent.",
+            "output_type": "analysis",
+            "role": "pre-artifact semantic-authority controller"
+          },
+          {
+            "id": "author_under_inverted_authority",
+            "inputs": [
+              "establish_omission_authority_state",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the established authority state, reconcile it with jointly visible common evidence, exercise de novo semantic authority only when the omission trigger has changed the state, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "sole post-transition executable authority"
+          }
+        ],
+        "id": "single_preartifact_authority_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

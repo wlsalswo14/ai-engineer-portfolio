@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_limit = (self.capacity_bytes * 3) // 4\n\n    def _demote_oldest_protected(self):\n        if not self.protected:\n            return\n        key, size = self.protected.popitem(last=False)\n        self.protected_bytes -= size\n        self.probation[key] = size\n\n    def _trim_protected(self):\n        while self.protected and self.protected_bytes > self.protected_limit:\n            self._demote_oldest_protected()\n\n    def _evict_oldest_probation(self, evicted):\n        if not self.probation:\n            return False\n        key, size = self.probation.popitem(last=False)\n        self.used_bytes -= size\n        evicted.append(key)\n        return True\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            if self.protected_limit > 0:\n                self.protected[key] = stored_size\n                self.protected_bytes += stored_size\n                self._trim_protected()\n            else:\n                self.probation[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes or size < 0:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if not self._evict_oldest_probation(evicted):\n                if self.protected:\n                    self._demote_oldest_protected()\n                else:\n                    break\n\n        self.probation[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R26-rep02-call01-provisional_builder",
+    "duration_seconds": 41.405,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:48:02Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "547b0652e39b19a4b01d9e4d72e844b30cba359e55f8e58bf56243e53b3c8e51",
+    "raw_events_path": "workspace\\model-calls\\R26-rep02-call01-provisional_builder\\raw-events.jsonl",
+    "raw_events_sha256": "bb412492030e78d8913efac0968eb0d4cd5f70e88e9208d696d22ff50b3bdc0f",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 1,
+    "response_sha256": "b14be406059a0803a0a5b9641fcfc9a7340b310ad928012c9f7644dafdc97769",
+    "returncode": 0,
+    "role": "provisional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:47:21Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14053,
+      "output_tokens": 2066,
+      "reasoning_output_tokens": 1552
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

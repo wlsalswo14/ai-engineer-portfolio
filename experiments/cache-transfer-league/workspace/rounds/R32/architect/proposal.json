@@ -1,0 +1,121 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R32-structure-architect\\final-receipt.json",
+    "sha256": "77b44d3f7b3f9684e5df84514612d2693a3eee19d0f11cab1d46a73da36f7cc1"
+  },
+  "architect_response": {
+    "architect_scope": "one-R32-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "compose_outer_obligation_supervisor",
+      "information_flow": "The first call forms exactly one complete executable inner policy from all supplied evidence. The second call consumes that artifact intact, retains visibility of its current semantics, and emits one complete policy by exercising terminal authority only through an outer public-obligation supervisory layer.",
+      "name": "Nested Supervisory Policy Composition",
+      "organization": "two-call sequential lineage joined by one non-destructive containment edge",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "form_intact_inner_policy",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Form exactly one complete executable policy artifact from the supplied task, public obligations, hypothesis, loop context, and anchor evidence, and pass that single artifact forward intact with the evidence needed to identify its public action commitments.",
+              "output_type": "executable_policy_closure",
+              "role": "inner executable policy author"
+            },
+            {
+              "id": "compose_outer_obligation_supervisor",
+              "inputs": [
+                "form_intact_inner_policy",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the preceding complete executable policy as an intact inner component, assess its exposed actions against supplied public obligations, and emit exactly one complete policy through outer mediation without rewriting, replacing, or multiplying the inner artifact.",
+              "output_type": "policy",
+              "role": "outer public-obligation supervisor"
+            }
+          ],
+          "id": "nested_composition",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "stability of inherited action semantics under terminal correction",
+        "locality of public-obligation intervention"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "terminal in-place rewriting or replacement of the predecessor executable closure",
+      "independent_replacement_principle": "non-destructive layered composition in which an intact executable inner policy is governed by a terminal public-obligation supervisor",
+      "rejected_assumptions": [
+        "A complete executable closure must be reopened as one mutable semantic whole by the terminal call.",
+        "Contract reconciliation and inherited policy behavior must occupy the same editable semantic layer."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace flat terminal rewriting with non-destructive nested supervision: the predecessor remains an intact executable inner policy while terminal authority acts through one public-obligation-governed outer layer.",
+      "expected_effect": "Separating inner behavior formation from outer obligation mediation should localize corrective action while preserving inherited behavioral continuity.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion's flat closure relay lets terminal reconciliation reopen inherited semantics as one mutable whole, so a local public-obligation concern can destabilize otherwise coherent behavior."
+    },
+    "structural_mutation": {
+      "after": "The terminal call retains the predecessor as an intact executable inner policy and emits one complete policy through an outer supervisory layer without rewriting or replacing that inner artifact.",
+      "before": "A provenance-blind terminal authority flattens and reconciles the predecessor executable closure under unrestricted final semantic control.",
+      "change_count": 1,
+      "factor": "non-destructive nested supervision of the predecessor executable policy",
+      "why_structural": "The single handoff changes from flatten-and-rewrite state transition semantics to containment-and-mediate semantics, relocating terminal control from inherited-policy authorship to outer action mediation."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 32,
+  "incumbent_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R32\\qualitative-error-notebook.json",
+    "sha256": "4d60fb532a959523679ff24e6553e4f3709cdd98d9df6bab6addb745b438ca68"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R32\\source-manifest.json",
+    "sha256": "33ccb9f7557396451827126cbbc670da69bff9d264f467d0220a6adb3acb8559"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": {
+      "coarse_topology_fingerprint": "77f3f01e91c941ec17b784361bf133c53e6607cca68a98d73254b0630be50d58",
+      "matches_incumbent_coarse_shape": true,
+      "mere_role_fission_or_rename": false,
+      "reason": "coarse call shape reused with a novel certified edge/control semantic factor"
+    },
+    "factor": "non-destructive nested supervision of the predecessor executable policy",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "form_intact_inner_policy",
+        "executor_semantics": "self-contained executable policy artifact crossing a provenance-blind closure edge",
+        "output_type": "executable_policy_closure"
+      }
+    ],
+    "semantic_topology_fingerprint": "334b6f467c241d0efe1fd81aa16b116f812efaeecd522611e7c258df093c982f",
+    "topology_fingerprint": "77f3f01e91c941ec17b784361bf133c53e6607cca68a98d73254b0630be50d58"
+  }
+}

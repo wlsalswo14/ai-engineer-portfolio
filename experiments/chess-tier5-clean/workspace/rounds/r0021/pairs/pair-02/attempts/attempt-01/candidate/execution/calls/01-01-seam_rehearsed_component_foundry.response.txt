@@ -1,0 +1,153 @@
+Producer-authored foundry artifact
+
+- Identity: `mate-score-transport@1`
+- Causal target: preserve mate distance when transposition-table scores cross search-ply boundaries.
+- Anchor seam: `Engine.search` TT store/probe; existing tuple shape `(depth, score, flag, ply, bestmove)`.
+- Anchor evidence: scores are stored raw in `self.tt[key]` and later consumed as `ent[1]`; ply is retained but not applied.
+- Scope: one component, one seam surrogate, no engine emitted.
+
+```python
+import json
+
+MATE = 100000
+MATE_WINDOW = 1000
+MATE_THRESHOLD = MATE - MATE_WINDOW
+
+
+class MateScoreTransport:
+    component_id = "mate-score-transport@1"
+
+    @staticmethod
+    def _check(score, ply):
+        if type(score) is not int:
+            raise TypeError("score must be int")
+        if type(ply) is not int or ply < 0:
+            raise ValueError("ply must be a non-negative int")
+
+    @staticmethod
+    def classify(score):
+        if score > MATE_THRESHOLD or score < -MATE_THRESHOLD:
+            return "mate"
+        return "ordinary"
+
+    def store_score(self, score, ply):
+        self._check(score, ply)
+        if score > MATE_THRESHOLD:
+            return score + ply
+        if score < -MATE_THRESHOLD:
+            return score - ply
+        return score
+
+    def probe_score(self, stored_score, ply):
+        self._check(stored_score, ply)
+        if stored_score > MATE_THRESHOLD:
+            return stored_score - ply
+        if stored_score < -MATE_THRESHOLD:
+            return stored_score + ply
+        return stored_score
+
+
+class AnchorTranspositionSeam:
+    """Executable surrogate for the anchor's Engine.search TT boundary."""
+
+    def __init__(self, transport=None):
+        self.transport = transport or MateScoreTransport()
+        self.entries = {}
+
+    def store(self, key, depth, score, flag, ply, bestmove):
+        packed = self.transport.store_score(score, ply)
+        self.entries[key] = (depth, packed, flag, ply, bestmove)
+
+    def probe(self, key, ply):
+        entry = self.entries.get(key)
+        if entry is None:
+            return None
+        depth, packed, flag, stored_ply, bestmove = entry
+        score = self.transport.probe_score(packed, ply)
+        return (depth, score, flag, stored_ply, bestmove)
+
+    def clear(self):
+        self.entries.clear()
+
+
+def run_fixtures():
+    t = MateScoreTransport()
+
+    positive = t.store_score(MATE - 12, 2)
+    positive_out = t.probe_score(positive, 7)
+    negative = t.store_score(-MATE + 12, 2)
+    negative_out = t.probe_score(negative, 7)
+    ordinary = t.store_score(37, 4)
+
+    assert positive == 99990 and positive_out == 99983
+    assert negative == -99990 and negative_out == -99983
+    assert t.probe_score(ordinary, 11) == 37
+
+    assert t.classify(99000) == "ordinary"
+    assert t.classify(99001) == "mate"
+    assert t.classify(-99000) == "ordinary"
+    assert t.classify(-99001) == "mate"
+    assert t.probe_score(t.store_score(99001, 3), 3) == 99001
+    assert t.probe_score(t.store_score(-99001, 3), 3) == -99001
+
+    seam = AnchorTranspositionSeam(t)
+    seam.store("node-A", 5, MATE - 9, 1, 3, "e2e4")
+    first = seam.probe("node-A", 3)
+    shifted = seam.probe("node-A", 8)
+    repeated = seam.probe("node-A", 3)
+
+    assert first == (5, 99991, 1, 3, "e2e4")
+    assert shifted == (5, 99986, 1, 3, "e2e4")
+    assert repeated == first
+
+    seam.clear()
+    assert seam.probe("node-A", 3) is None
+    seam.store("node-A", 2, 123, 0, 0, "a2a3")
+    assert seam.probe("node-A", 9) == (2, 123, 0, 0, "a2a3")
+
+    for i in range(1024):
+        store_ply = i % 11
+        probe_ply = (i + 3) % 11
+        score = MATE - 20 - (i % 7)
+        packed = t.store_score(score, store_ply)
+        observed = t.probe_score(packed, probe_ply)
+        assert observed == score - (probe_ply - store_ply)
+
+    return {
+        "status": "PASS",
+        "component_id": t.component_id,
+        "primitive_trace": {
+            "positive_mate": [99988, 2, 99990, 7, 99983],
+            "negative_mate": [-99988, 2, -99990, 7, -99983],
+            "null_ordinary": [37, 4, 37, 11, 37],
+            "boundary": [99000, 99001, -99000, -99001]
+        },
+        "seam_trace": {
+            "state_shape_preserved": True,
+            "same_ply": first,
+            "shifted_ply": shifted,
+            "repeated_lifecycle": repeated,
+            "clear_then_reuse": True
+        },
+        "bounded_work": {
+            "iterations": 1024,
+            "primitive_work": "O(1)"
+        }
+    }
+
+
+if __name__ == "__main__":
+    print(json.dumps(run_fixtures(), sort_keys=True))
+```
+
+Binding claims:
+
+- Causal identity: grounded.
+- TT state shape and lifecycle: grounded by anchor source and seam surrogate.
+- Non-mate preservation and metadata preservation: fixture-verified by embedded assertions.
+- Host execution: unavailable under the read-only command policy; self-test is deterministic and replayable.
+- Integrated engine behavior: not claimed at foundry stage.
+
+Preservation envelope: only TT score encoding/decoding changes; board state, legal moves, evaluation, move ordering, search depth, timing, flags, keys, and best moves remain outside the dependency closure.
+
+Graft invariants: one component identity, one store/probe seam, mate-only transformation, exact five-field TT entry shape, no alternative mechanism, and no engine artifact.

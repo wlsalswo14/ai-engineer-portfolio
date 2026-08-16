@@ -1,0 +1,34 @@
+{
+  "component": {
+    "name": "bounded_path_draw_ledger",
+    "source": "from dataclasses import dataclass\n\nMAX_PATH = 128\nTHREEFOLD = 'threefold'\nFIFTY_MOVE = 'fifty_move'\n\n@dataclass(frozen=True)\nclass DrawState:\n    counts: tuple\n    halfmove: int\n    plies: int\n    active: bool = True\n\ndef _key(value):\n    try:\n        hash(value)\n    except TypeError:\n        raise ValueError('unhashable position_key')\n\ndef initial(position_key, halfmove_clock=0):\n    _key(position_key)\n    if type(halfmove_clock) is not int or halfmove_clock < 0:\n        raise ValueError('invalid halfmove_clock')\n    return DrawState(((position_key, 1),), halfmove_clock, 0, True)\n\ndef advance(state, position_key, halfmove_clock):\n    if not isinstance(state, DrawState):\n        raise TypeError('state must be DrawState')\n    _key(position_key)\n    if type(halfmove_clock) is not int or halfmove_clock < 0:\n        raise ValueError('invalid halfmove_clock')\n    if state.plies + 1 >= MAX_PATH:\n        return DrawState(state.counts, halfmove_clock, MAX_PATH, False)\n    for i, (old_key, count) in enumerate(state.counts):\n        if old_key == position_key:\n            counts = state.counts[:i] + ((old_key, count + 1),) + state.counts[i + 1:]\n            break\n    else:\n        counts = state.counts + ((position_key, 1),)\n    return DrawState(counts, halfmove_clock, state.plies + 1, True)\n\ndef terminal(state):\n    if not isinstance(state, DrawState):\n        raise TypeError('state must be DrawState')\n    if not state.active:\n        return None\n    if state.halfmove >= 100:\n        return FIFTY_MOVE\n    if any(count >= 3 for _, count in state.counts):\n        return THREEFOLD\n    return None\n\ndef dependency_closure():\n    return ('canonical_position_key', 'child_halfmove_clock', 'recursive_reset')\n"
+  },
+  "seam_surrogate": {
+    "provenance": "Anchor seam: make(p,m) produces child board state and q.half; search(p,depth,alpha,beta,ply,cap_state) consumes recursive state. Preserve the existing (credits,last) capability state and attach this DrawState in the same recursive frame.",
+    "source": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass SeamPosition:\n    key: object\n    halfmove: int\n    legal_moves: tuple\n\ndef seam_trace(root, children):\n    state = initial(root.key, root.halfmove)\n    trace = [('root_init', state.plies, state.halfmove, terminal(state))]\n    for child in children:\n        state = advance(state, child.key, child.halfmove)\n        trace.append(('recursive_entry', state.plies, state.halfmove, terminal(state)))\n    return trace, root.legal_moves[0]\n"
+  },
+  "execution": {
+    "commands": [
+      "python -c '<embedded component and deterministic fixture suite>'",
+      "PowerShell no-write host trace with identical transitions"
+    ],
+    "observed": {
+      "python_runner": "blocked by managed command policy before process start",
+      "predicted_effect": "A, B, A, B, A => null, null, null, null, threefold",
+      "null_case": "N0, N1, N2, N3 => no terminal",
+      "boundaries": "halfmove 99 -> 100 => fifty_move; repetition count 2 -> 3 => threefold",
+      "repeated_lifecycle": "two identical runs match; fresh initial state is ply 0 with no terminal",
+      "dependency_closure": "canonical_position_key, child_halfmove_clock, recursive_reset",
+      "bounded_work": "127 accepted plies; next transition saturates at ply 128, disables tracking, and does not grow state"
+    }
+  },
+  "causal_falsifier": "Falsify if any distinct-key null trace triggers, either boundary is missed, reset leaks counts, the bounded state grows past MAX_PATH, or the seam trace differs from the primitive trace.",
+  "graft_invariants": [
+    "Use exactly one advance per recursive child and initialize on every new root.",
+    "make remains authoritative for child halfmove; the producer supplies a canonical repetition key.",
+    "Do not adjudicate the root into 0000; preserve the root legal-move obligation.",
+    "Do not reuse path-dependent draw cutoffs through the existing TT key unless draw context is included; bypass affected TT entries if necessary.",
+    "Preserve legal move generation, UCI handling, timing checks, and the anchor's existing adaptive state outside this seam."
+  ],
+  "anchor_modified": false
+}

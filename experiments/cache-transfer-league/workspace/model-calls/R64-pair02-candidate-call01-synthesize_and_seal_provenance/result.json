@@ -1,0 +1,111 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Source-anonymous synthesis: retain the substantive adaptive two-segment cache evidence while treating interface legality, online visibility, unique-current-resident evictions, and byte-capacity safety as binding obligations. Resolve performance tradeoffs only within those constraints; no attribution or source identity is material to evaluation.",
+      "exact_actions": [
+        "Use the source-anonymous behavioral evidence as non-authoritative design evidence; do not recover, infer, or disclose its generative attribution.",
+        "Preserve explicit admission, update, eviction, and capacity invariants for zero, positive, and oversized objects.",
+        "Maintain byte accounting consistently across every resident transition and ensure every returned key is resident immediately before its eviction.",
+        "Use bounded online metadata only when it cannot violate capacity safety or return-value legality.",
+        "Resolve performance conflicts in favor of the binding contract, then apply conservative adaptive behavior to balance recency and repeated-access retention.",
+        "Emit exactly one complete policy implementation conforming to the task interface and restrictions."
+      ],
+      "obligations": [
+        {
+          "priority": "binding",
+          "requirement": "Implement the exact Policy constructor and access interface using only the Python standard library."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Operate online, one access at a time, using only current request data and policy-maintained state."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Never exceed capacity_bytes, including after updates and evictions."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Return only unique integer keys that are currently cached and evicted by the current request."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Do not use benchmark traces, evaluator references, oracle decisions, external libraries, networking, subprocesses, or hidden paths."
+        },
+        {
+          "priority": "optimization",
+          "requirement": "Balance object hit rate, byte hit rate, scan resistance, phase-shift adaptation, and regret without violating binding obligations."
+        }
+      ],
+      "witnesses": [
+        {
+          "claim": "Resident entries are separated into recency-oriented and frequency-oriented groups with bounded ghost records for recently evicted entries.",
+          "evidence": "The behavior tracks resident byte totals, a tunable recency target, and bounded metadata for both eviction categories.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Resident hits refresh the entry and promote it into the frequency-oriented group, while ghost hits adjust the recency target and enter the frequency-oriented group.",
+          "evidence": "Observed transitions distinguish resident hits, recent-ghost hits, and frequent-ghost hits.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Eviction selects the oldest eligible resident entry and records its category for future adaptation.",
+          "evidence": "Eviction order is category-aware and oldest-first within each ordered resident group.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Oversized new objects are not admitted; oversized resident updates are removed and reported as evicted.",
+          "evidence": "Admission and update handling explicitly test object size against capacity.",
+          "status": "substantive"
+        },
+        {
+          "claim": "The request timestamp is not required for legality or adaptation.",
+          "evidence": "All decisions can be made from the current key, size, and maintained online state.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Recency adaptation, scan resistance, phase-shift response, and hit-rate optimization can conflict.",
+          "evidence": "Increasing recency allocation protects scans and new working sets, while increasing frequency retention protects repeated accesses and may resist scans.",
+          "status": "conflict requiring normative resolution"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R64-pair02-candidate-call01-synthesize_and_seal_provenance",
+    "duration_seconds": 17.662,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:20:10Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "aff8d33eda0ec35553581abe03e8ed3f7c5d1a02d9e1adcb96709e7fad93417a",
+    "raw_events_path": "workspace\\model-calls\\R64-pair02-candidate-call01-synthesize_and_seal_provenance\\raw-events.jsonl",
+    "raw_events_sha256": "4dfb1577e6c1ffd3abb8442117323fd6da7e9693d3e0708d218f69a74f81a1eb",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "817e92a98c1be3539548b9b2c1abdced7da707637d82b33fa0ca3cfcfeff1c1c",
+    "returncode": 0,
+    "role": "R64 candidate topology role provenance-sealing evidence synthesizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:19:52Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14342,
+      "output_tokens": 1181,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

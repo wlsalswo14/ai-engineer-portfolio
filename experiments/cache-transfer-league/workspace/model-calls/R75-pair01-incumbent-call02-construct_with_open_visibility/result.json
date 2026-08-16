@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.used = 0\n        self.protected_target = self.capacity // 2\n\n    def _remove(self, key):\n        size = self.probation.pop(key, None)\n        if size is not None:\n            self.probation_bytes -= size\n            self.used -= size\n            return size\n        size = self.protected.pop(key, None)\n        if size is not None:\n            self.protected_bytes -= size\n            self.used -= size\n            return size\n        return None\n\n    def _make_room(self, incoming):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            if self.probation:\n                key, size = self.probation.popitem(last=False)\n                self.probation_bytes -= size\n            elif self.protected:\n                key, size = self.protected.popitem(last=False)\n                self.protected_bytes -= size\n            else:\n                break\n            self.used -= size\n            evicted.append(int(key))\n        return evicted\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n            self.probation_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n\n        in_probation = key in self.probation\n        in_protected = key in self.protected\n        if in_probation or in_protected:\n            self._remove(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size)\n            if in_probation:\n                self.protected[key] = size\n                self.protected_bytes += size\n            else:\n                self.protected[key] = size\n                self.protected_bytes += size\n            self.used += size\n            self._rebalance()\n            return evicted\n\n        if size <= 0 or size > self.capacity:\n            return []\n\n        evicted = self._make_room(size)\n        self.probation[key] = size\n        self.probation_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R75-pair01-incumbent-call02-construct_with_open_visibility",
+    "duration_seconds": 36.533,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:05:31Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "349ebef3d2fa39257a06ef10b0be29ac47797d6065c0647df580e8836acc10f6",
+    "raw_events_path": "workspace\\model-calls\\R75-pair01-incumbent-call02-construct_with_open_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "d3ef896794535104759d28c5f77ca8a5b359952a55125fe61ce802020d0edd41",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "6348264820fd79cb3818f22844d2a0a9d5899ce680ba3a7a56c3269a8675f4db",
+    "returncode": 0,
+    "role": "R75 incumbent topology role bounded constructive policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:04:54Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14942,
+      "output_tokens": 2185,
+      "reasoning_output_tokens": 1552
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -12,6 +12,7 @@ from loop_evolution.batch import (
     PAIR_COUNT,
     PROTOCOL_ID,
     judge_batch,
+    partial_relative_performance_bounds,
     pair_verdict,
     rejection_is_irreversible,
 )
@@ -25,6 +26,7 @@ from loop_evolution.common import (
 )
 from loop_evolution.evaluator import ExistingChessBench, promoted_package
 from loop_evolution.plan import LoopPlan, direct_control_plan
+from loop_evolution.platform.config import ProposalPolicy, proposal_policy_identity
 from loop_evolution.platform.runtime.answers import extract_final_answer
 from loop_evolution.state import StateStore
 from loop_evolution.usage import empty_usage, normalize_usage, pair_usage, sum_usage
@@ -38,6 +40,7 @@ class EvolutionPipeline:
         architect: Architect | None = None,
         executor: LoopExecutor | None = None,
         evaluator: ExistingChessBench | None = None,
+        force_complete_pairs: bool = False,
     ) -> None:
         self.config_path = config_path.resolve()
         self.base = self.config_path.parent
@@ -49,6 +52,7 @@ class EvolutionPipeline:
         self._architect = architect
         self._executor = executor
         self._evaluator = evaluator
+        self.force_complete_pairs = bool(force_complete_pairs)
 
     @property
     def architect(self) -> Architect:
@@ -72,6 +76,38 @@ class EvolutionPipeline:
             cache_dir = resolve_path(self.base, str(cache_raw)) if cache_raw else None
             self._evaluator = ExistingChessBench(path, result_cache_dir=cache_dir)
         return self._evaluator
+
+    def _active_proposal_policy_identity(self) -> dict[str, Any] | None:
+        if isinstance(self._architect, Architect):
+            return self._architect.policy_identity
+        if self._architect is not None:
+            return None
+        path = resolve_path(self.base, str(self.config["proposal_policy_path"]))
+        return proposal_policy_identity(ProposalPolicy.load(path))
+
+    def _assert_active_architect_provenance(self, round_dir: Path) -> None:
+        generation_dir = round_dir / "generation"
+        if not generation_dir.is_dir() or not any(generation_dir.iterdir()):
+            return
+        expected = self._active_proposal_policy_identity()
+        if expected is None:
+            return
+        session_path = generation_dir / "architect-session.json"
+        if not session_path.is_file():
+            raise RuntimeError(
+                "architect policy provenance is missing from the partial generation; "
+                "archive or abort it before generating with the active policy"
+            )
+        session = read_json(session_path)
+        expected_sha256 = content_hash(expected)
+        if (
+            session.get("proposal_policy") != expected
+            or session.get("proposal_policy_sha256") != expected_sha256
+        ):
+            raise RuntimeError(
+                "architect policy provenance differs from the active policy; "
+                "archive or abort the partial generation instead of reusing it"
+            )
 
     def initialize(self) -> dict[str, Any]:
         initial = dict(self.config["initial_champion"])
@@ -388,6 +424,7 @@ class EvolutionPipeline:
         state = self.store.migrate_to_matched_pairs()
         capsule = read_json(self.store.capsule_path)
         round_dir = self._round_dir(state)
+        self._assert_active_architect_provenance(round_dir)
         normalized_path = round_dir / "generation" / "normalized-plan.json"
         if normalized_path.is_file():
             plan = LoopPlan.from_payload(
@@ -643,18 +680,19 @@ class EvolutionPipeline:
             if attempt_summary_path.is_file():
                 attempt_summary = read_json(attempt_summary_path)
             else:
-                arms = self._recover_interrupted_attempt(attempt_dir)
-                recovered_interruption = arms is not None
-                if arms is None:
-                    arms = {}
-                    for arm in order:
-                        arms[arm] = self._run_arm(
-                            plan=incumbent_plan if arm == "incumbent" else candidate_plan,
-                            arm_dir=attempt_dir / arm,
-                            builtins=(
-                                incumbent_builtins if arm == "incumbent" else candidate_builtins
-                            ),
-                        )
+                recovered = self._recover_interrupted_attempt(attempt_dir)
+                recovered_interruption = recovered is not None
+                arms = recovered or {}
+                for arm in order:
+                    if arm in arms:
+                        continue
+                    arms[arm] = self._run_arm(
+                        plan=incumbent_plan if arm == "incumbent" else candidate_plan,
+                        arm_dir=attempt_dir / arm,
+                        builtins=(
+                            incumbent_builtins if arm == "incumbent" else candidate_builtins
+                        ),
+                    )
                 verdict = pair_verdict(
                     arms["incumbent"]["evaluation"], arms["candidate"]["evaluation"]
                 )
@@ -718,17 +756,15 @@ class EvolutionPipeline:
             evaluation_path = arm_dir / "evaluation" / "evaluation.json"
             artifact_path = arm_dir / "artifact" / "final-output.json"
             receipts = sorted((arm_dir / "execution" / "calls").glob("*.receipt.json"))
-            evaluation = (
-                read_json(evaluation_path)
-                if evaluation_path.is_file()
-                else {
-                    "valid": False,
-                    "failure_kind": "interrupted_partial_arm",
-                    "elo": None,
-                    "valid_games": 0,
-                    "candidate_failures": 1,
-                }
-            )
+            if evaluation_path.is_file():
+                evaluation = read_json(evaluation_path)
+            elif artifact_path.is_file():
+                evaluation = self.evaluator.evaluate(
+                    artifact_path,
+                    evaluation_dir=arm_dir / "evaluation",
+                )
+            else:
+                continue
             arms[arm] = {
                 "artifact_path": str(artifact_path.resolve()) if artifact_path.is_file() else None,
                 "evaluation": evaluation,
@@ -736,6 +772,81 @@ class EvolutionPipeline:
                 "reused": True,
             }
         return arms
+
+    @staticmethod
+    def _partial_representative_pair(pairs: list[dict[str, Any]]) -> int:
+        """Choose the conservative observed candidate for a bounded early decision."""
+
+        ranked = sorted(
+            enumerate(pairs, start=1),
+            key=lambda item: (
+                float(item[1]["candidate_evaluation"]["score_rate"]),
+                item[0],
+            ),
+        )
+        return ranked[0][0]
+
+    def _partial_search_assessment(
+        self,
+        *,
+        pairs: list[dict[str, Any]],
+        candidate_plan: LoopPlan,
+        capsule: dict[str, Any],
+    ) -> dict[str, Any]:
+        bounds = partial_relative_performance_bounds(pairs)
+        if bounds is None:
+            return {"decisive": False, "status": "insufficient_valid_score_rate"}
+
+        search = dict(capsule.get("search_control", {}))
+        representative_pair = self._partial_representative_pair(pairs)
+        if candidate_plan.proposal_mode == "counter_hypothesis":
+            threshold = float(search.get("development_performance_ratio", 0.9))
+            if bounds["relative_performance_lower"] >= threshold:
+                status = "qualification_guaranteed"
+                decisive = True
+            elif bounds["relative_performance_upper"] < threshold:
+                status = "qualification_impossible"
+                decisive = True
+            else:
+                status = "qualification_undecided"
+                decisive = False
+        else:
+            development = capsule.get("development_candidate")
+            active_ratio = (
+                development.get("relative_performance_ratio")
+                if isinstance(development, dict)
+                else None
+            )
+            emergent_budget_exhausted = (
+                candidate_plan.proposal_mode == "emergent_exploration"
+                and int(search.get("emergent_failure_count", 0)) + 1
+                >= int(search.get("emergent_failure_limit", 2))
+            )
+            threshold = float(active_ratio) if isinstance(active_ratio, (int, float)) else None
+            if emergent_budget_exhausted:
+                status = "development_budget_exhausted"
+                decisive = True
+            elif threshold is None:
+                status = "development_improvement_undecided"
+                decisive = False
+            elif bounds["relative_performance_lower"] > threshold:
+                status = "development_improvement_guaranteed"
+                decisive = True
+            elif bounds["relative_performance_upper"] <= threshold:
+                status = "development_improvement_impossible"
+                decisive = True
+            else:
+                status = "development_improvement_undecided"
+                decisive = False
+
+        return {
+            "decisive": decisive,
+            "status": status,
+            "formal_promotion_already_impossible": True,
+            "threshold": threshold,
+            "representative_candidate_pair": representative_pair,
+            **bounds,
+        }
 
     def _run_matched_batch(
         self,
@@ -749,6 +860,11 @@ class EvolutionPipeline:
         anchors = self._anchor_panel(root_dir, champion)
         pairs: list[dict[str, Any]] = []
         completed_early = False
+        partial_assessment: dict[str, Any] | None = None
+        development_assessment_required = (
+            candidate_plan.proposal_mode == "counter_hypothesis"
+            or isinstance(capsule.get("development_candidate"), dict)
+        )
         for pair_index in range(1, PAIR_COUNT + 1):
             anchor = anchors[pair_index - 1]
             anchor_text = Path(anchor["artifact_path"]).read_text(encoding="utf-8")
@@ -779,17 +895,44 @@ class EvolutionPipeline:
                 for item in pairs
             ]
             invalid_pair = verdicts[-1].verdict == "invalid"
-            if invalid_pair or (
+            promotion_impossible = (
                 len(pairs) < PAIR_COUNT and rejection_is_irreversible(verdicts)
-            ):
+            )
+            if invalid_pair:
                 completed_early = True
                 break
+            if promotion_impossible:
+                if self.force_complete_pairs:
+                    continue
+                if development_assessment_required:
+                    partial_assessment = self._partial_search_assessment(
+                        pairs=pairs,
+                        candidate_plan=candidate_plan,
+                        capsule=capsule,
+                    )
+                    if bool(partial_assessment.get("decisive")):
+                        completed_early = True
+                        break
+                else:
+                    completed_early = True
+                    break
         batch = judge_batch(
             pairs=pairs,
             anchor_elo=float(champion["metrics"]["elo"]),
             completed_early=completed_early,
         )
         batch["anchor_policy"] = "three precommitted diverse anchors; common within each pair"
+        batch["development_assessment_required"] = development_assessment_required
+        batch["force_complete_pairs"] = self.force_complete_pairs
+        batch["partial_development_assessment"] = partial_assessment
+        batch["bounded_development_early_stop_applied"] = bool(
+            completed_early
+            and partial_assessment is not None
+            and partial_assessment.get("decisive")
+        )
+        batch["irreversible_rejection_early_stop_applied"] = (
+            completed_early and not development_assessment_required
+        )
         batch["anchor_panel"] = [
             {
                 "pair": index,
@@ -805,6 +948,67 @@ class EvolutionPipeline:
             {anchor["engine_source_sha256"] for anchor in anchors}
         )
         return pairs, batch
+
+    def _development_candidate_snapshot(
+        self,
+        *,
+        round_index: int,
+        round_dir: Path,
+        plan: LoopPlan,
+        pairs: list[dict[str, Any]],
+        batch: dict[str, Any],
+    ) -> dict[str, Any] | None:
+        representative_pair = batch.get("representative_candidate_pair")
+        partial_assessment = batch.get("partial_development_assessment")
+        if not isinstance(representative_pair, int) and isinstance(
+            partial_assessment, dict
+        ):
+            representative_pair = partial_assessment.get(
+                "representative_candidate_pair"
+            )
+        if not isinstance(representative_pair, int) or not 1 <= representative_pair <= len(pairs):
+            return None
+        representative = pairs[representative_pair - 1]
+        artifact_path = representative.get("candidate_artifact_path")
+        evaluation = representative.get("candidate_evaluation")
+        if not artifact_path or not isinstance(evaluation, dict):
+            return None
+        change = plan.hypothesis["causal_change"]
+        family_break = plan.hypothesis.get("family_break", {})
+        return {
+            "updated_round": round_index,
+            "structure_id": plan.structure_id,
+            "organization": plan.structure["organization"],
+            "changed_factor": str(change["factor"]),
+            "structure_summary": str(plan.structure["information_flow"]),
+            "structural_family": (
+                str(family_break.get("alternative_family", ""))
+                if isinstance(family_break, dict)
+                else ""
+            ),
+            "execution_plan_path": str(
+                (round_dir / "generation" / "normalized-plan.json").resolve()
+            ),
+            "representative_engine_path": str(Path(artifact_path).resolve()),
+            "representative_engine_sha256": self._engine_source_sha256(Path(artifact_path)),
+            "representative_elo": evaluation.get("elo"),
+            "median_score_rate": batch.get("candidate_median_score_rate"),
+            "relative_performance_ratio": (
+                partial_assessment.get("relative_performance_lower")
+                if isinstance(partial_assessment, dict)
+                and partial_assessment.get("status")
+                in {"qualification_guaranteed", "development_improvement_guaranteed"}
+                else batch.get("relative_performance_ratio")
+            ),
+            "partial_assessment": partial_assessment,
+            "qualification_batch": {
+                "candidate_wins": batch.get("candidate_wins"),
+                "candidate_losses": batch.get("candidate_losses"),
+                "ties": batch.get("ties"),
+                "candidate_median_elo": batch.get("candidate_median_elo"),
+                "incumbent_median_elo": batch.get("incumbent_median_elo"),
+            },
+        }
 
     def _write_round_token_accounting(
         self, *, round_dir: Path, pairs: list[dict[str, Any]]
@@ -853,7 +1057,15 @@ class EvolutionPipeline:
                 "total=input+output; effective=(input-cached_input)+output; "
                 "reasoning_output is a subset of output and is not added again"
             ),
+            "proposal_structural_architect": proposal,
+            "proposal_sol_max": proposal,
             "proposal_sol_xhigh": proposal,
+            "proposal_usage_aliases": {
+                "canonical": "proposal_structural_architect",
+                "current": "proposal_sol_max",
+                "legacy": "proposal_sol_xhigh",
+                "additive": False,
+            },
             "proposal_invalid_spend": proposal_invalid,
             "internal_loop_luna_high": {
                 "incumbent": incumbent,
@@ -945,12 +1157,21 @@ class EvolutionPipeline:
                 source_plan_path=round_dir / "generation" / "normalized-plan.json",
             )
 
+        development_snapshot = self._development_candidate_snapshot(
+            round_index=round_index,
+            round_dir=round_dir,
+            plan=plan,
+            pairs=pairs,
+            batch=batch,
+        )
+
         updated = self.store.apply_batch_outcome(
             state=state,
             round_index=round_index,
             plan=plan.payload,
             batch=batch,
             promoted_package=promoted,
+            development_candidate_snapshot=development_snapshot,
         )
         record = {
             "event": event,
@@ -969,12 +1190,24 @@ class EvolutionPipeline:
             "batch_decision": batch,
             "token_accounting_path": token_accounting["path"],
             "token_usage": {
+                "proposal_structural_architect": token_accounting[
+                    "proposal_structural_architect"
+                ],
+                "proposal_sol_max": token_accounting["proposal_sol_max"],
                 "proposal_sol_xhigh": token_accounting["proposal_sol_xhigh"],
                 "proposal_invalid_spend": token_accounting["proposal_invalid_spend"],
                 "internal_loop_luna_high": token_accounting["internal_loop_luna_high"],
                 "round_total": token_accounting["round_total"],
             },
             "promoted": promoted is not None,
+            "development_disposition": updated["recent_outcomes"][-1].get(
+                "development_disposition"
+            ),
+            "development_candidate_after": (
+                updated.get("development_candidate", {}).get("structure_id")
+                if isinstance(updated.get("development_candidate"), dict)
+                else None
+            ),
             "champion_package_after": updated["champion"]["package_id"],
             "stagnation_count_after": updated["stagnation_count"],
             "local_refinement_count_after": updated["local_refinement_count"],

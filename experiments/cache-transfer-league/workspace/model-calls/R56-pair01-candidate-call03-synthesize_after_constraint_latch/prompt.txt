@@ -1,0 +1,140 @@
+Role: R56 candidate topology role unitary post-latch policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R56,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: synthesize_after_constraint_latch
+Role: unitary post-latch policy authority
+Objective: Consume latch_constraint_authority, reacquire the remaining direct evidence after constraint latching, settle defeasible tensions under sole policy authority, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "latch_constraint_authority": {
+    "analysis_packet": {
+      "certificate": "Lossless source-separated constraint-aware analysis established; authoritative task, contract, and explicit constraints are latched as boundaries, defeasible artifact and hypothesis evidence remain non-authoritative, unresolved tensions are preserved, and no policy decision, approval, rejection, settlement, or emission authority is exercised.",
+      "witnesses": [
+        {
+          "source": "authoritative_boundary",
+          "authority": "authoritative",
+          "evidence": "The task and anchor_contract require a legal online interface, capacity safety, unique currently cached integer evictions, standard-library-only implementation, and no oracle or trace access."
+        },
+        {
+          "source": "inherited_artifact",
+          "authority": "defeasible_evidence",
+          "evidence": "anchor_policy is an immutable R55 champion artifact whose score is withheld; its behavior is evidence, not authority to override the contract."
+        },
+        {
+          "source": "supplied_claim",
+          "authority": "defeasible_evidence",
+          "evidence": "candidate_hypothesis asserts a possible benefit from constraint-first reacquisition and supplies an unverified bottleneck, expected effect, and falsifier."
+        },
+        {
+          "source": "topology_boundary",
+          "authority": "authoritative_scope_boundary",
+          "evidence": "loop_structure assigns this call source-tension mapping only; later calls retain policy settlement and emission authority."
+        },
+        {
+          "source": "unresolved_tension",
+          "authority": "unresolved",
+          "evidence": "Optimization objectives and the hypothesis favor adaptation and retention changes, while contract obligations impose legality and safety constraints; no score or evaluator result resolves the tradeoff."
+        },
+        {
+          "source": "task_constraints",
+          "authority": "authoritative",
+          "evidence": "Standard-library-only implementation, online one-access-at-a-time operation, only currently cached unique integer keys returned, capacity never exceeded, no benchmark-path hardcoding, trace access, or oracle adaptation, no scores available, and one final policy only."
+        }
+      ],
+      "obligations": [
+        "Preserve all source distinctions and unresolved conflicts for downstream consumption.",
+        "Treat task, contract, and explicit constraints as authoritative boundaries.",
+        "Treat anchor behavior and candidate-hypothesis effects as defeasible evidence only.",
+        "Emit no policy, patch, ranking, approval, rejection, or settlement."
+      ],
+      "exact_actions": [
+        "Classify each visible input by authority and provenance.",
+        "Record conflicts between optimization aims, inherited behavior, and hard constraints without resolving them.",
+        "Forward the lossless analysis state to the constraint-latching stage."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "ec1ccb464a5e08c51726868594c64fb5e3c6de895d8e852c00ea7d4c5741dc6c",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.ghost_limit = 4096\n        self.target = self.capacity_bytes // 2\n        self.bytes1 = 0\n        self.bytes2 = 0\n\n    def _forget_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._forget_ghost(key)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _take(self, key):\n        if key in self.t1:\n            size = self.t1.pop(key)\n            self.bytes1 -= size\n            return size, 1\n        if key in self.t2:\n            size = self.t2.pop(key)\n            self.bytes2 -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, b2_hit):\n        use_t1 = bool(self.t1) and (\n            self.bytes1 > self.target\n            or (b2_hit and self.bytes1 == self.target)\n        )\n        if use_t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.bytes2 -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, b2_hit):\n        evicted = []\n        while self.bytes1 + self.bytes2 + size > self.capacity_bytes:\n            key = self._evict_one(b2_hit)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n\n        if requested <= 0:\n            if key in self.t1:\n                self.t1.move_to_end(key)\n            elif key in self.t2:\n                self.t2.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._take(key)\n            if segment == 1:\n                self._remember(self.b1, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.b2, key, old_size)\n                return [key]\n            return []\n\n        if key in self.t1:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        if key in self.t2:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        b1_hit = key in self.b1\n        b2_hit = key in self.b2\n        if b1_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(step, min(requested, self.capacity_bytes)),\n            )\n        elif b2_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = max(\n                0,\n                self.target - max(step, min(requested, self.capacity_bytes)),\n            )\n\n        self._forget_ghost(key)\n        evicted = self._make_room(requested, b2_hit)\n        if b1_hit or b2_hit:\n            self.t2[key] = requested\n            self.bytes2 += requested\n        else:\n            self.t1[key] = requested\n            self.bytes1 += requested\n        return evicted\n"
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Relocate direct anchor_contract and task_constraints reacquisition to one intervening non-policy state transition, making those boundaries causally prior to the final call's direct reacquisition of the remaining evidence.",
+    "expected_effect": "Constraint authority should remain salient through final synthesis while direct anchor_policy visibility and undivided terminal policy authority remain intact.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion presents authoritative contract boundaries and policy-shaping evidence to the final authority in one simultaneous reacquisition event, leaving no persistent constraint-first evidence state."
+  },
+  "loop_structure": {
+    "final_call_id": "synthesize_after_constraint_latch",
+    "information_flow": "The first call receives every common input and emits non-policy source-distinguished analysis. The second call consumes that analysis and directly reacquires anchor_contract and task_constraints, preserving them in a constraint-latched analysis without accepting, rejecting, or producing a policy. The final call consumes that state, directly reacquires task, anchor_policy, candidate_hypothesis, and loop_structure, resolves remaining defeasible tensions, and emits one policy.",
+    "name": "Constraint-Latched Staggered Reacquisition",
+    "organization": "three-call sequential lineage with source-distinguished analysis, constraint-first evidence-state transition, and one undivided terminal policy authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "map_source_tensions",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Distinguish evidence sources, expose conflicts among inherited assumptions, supplied claims, and authoritative boundaries, preserve unresolved tensions, and emit analysis without policy or settlement authority.",
+            "output_type": "analysis",
+            "role": "defeasible source-tension mapper"
+          },
+          {
+            "id": "latch_constraint_authority",
+            "inputs": [
+              "map_source_tensions",
+              "anchor_contract",
+              "task_constraints"
+            ],
+            "objective": "Consume map_source_tensions with freshly reacquired contract and constraint evidence, establish their source authority within a lossless analysis state, and pass every resulting state forward without policy approval, rejection, or emission.",
+            "output_type": "analysis",
+            "role": "constraint-timing state transducer"
+          },
+          {
+            "id": "synthesize_after_constraint_latch",
+            "inputs": [
+              "latch_constraint_authority",
+              "task",
+              "anchor_policy",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume latch_constraint_authority, reacquire the remaining direct evidence after constraint latching, settle defeasible tensions under sole policy authority, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "unitary post-latch policy authority"
+          }
+        ],
+        "id": "staggered_reacquisition_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Source-complete analysis only: the anchor supplies inherited executable behavior, the contract and constraints supply binding legality obligations, and the candidate hypothesis supplies the proposed provenance-and-amendment topology; no score or evaluator evidence is available.",
+      "exact_actions": [
+        {
+          "action": "Use every witness and obligation to produce one complete executable policy capsule; mark unresolved tradeoffs explicitly and attach their source provenance.",
+          "stage": "bind_defeasible_commitment"
+        },
+        {
+          "action": "Preserve all settled interface, safety, legality, visibility, adaptation, and provenance commitments; amend only o_object_byte_tradeoff or o_regret when visible evidence supports the amendment.",
+          "stage": "adjudicate_commitment"
+        },
+        {
+          "action": "Do not infer scores, hidden traces, evaluator behavior, benchmark details, or majority/median outcomes; emit no policy from this analysis stage.",
+          "stage": "all_stages"
+        }
+      ],
+      "obligations": [
+        {
+          "id": "o_interface",
+          "norm": "Implement Policy(capacity_bytes) and access(key, size, now) with the required return type.",
+          "provenance": [
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "status": "settled"
+        },
+        {
+          "id": "o_capacity",
+          "norm": "Never exceed nonnegative capacity; handle zero-capacity and oversized objects without retaining invalid residents.",
+          "provenance": [
+            "task",
+            "anchor_policy.policy_source",
+            "task_constraints"
+          ],
+          "status": "settled"
+        },
+        {
+          "id": "o_eviction_legality",
+          "norm": "Return only unique integer keys that are currently cached and are evicted by the request.",
+          "provenance": [
+            "task",
+            "task_constraints"
+          ],
+          "status": "settled"
+        },
+        {
+          "id": "o_online_visibility",
+          "norm": "Use only current policy state and the current access tuple; do not use hidden traces, reference implementations, oracle decisions, benchmark paths, networking, subprocesses, or non-stdlib packages.",
+          "provenance": [
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "status": "settled"
+        },
+        {
+          "id": "o_adaptation",
+          "norm": "Retain online mechanisms supporting scan resistance and phase-shift adaptation, including evidence-sensitive recency/frequency behavior where compatible with legality.",
+          "provenance": [
+            "task",
+            "anchor_policy.policy_source",
+            "task"
+          ],
+          "status": "settled_but_tradeoff_sensitive"
+        },
+        {
+          "id": "o_object_byte_tradeoff",
+          "norm": "Balance object hit rate and byte hit rate without violating capacity or eviction legality.",
+          "provenance": [
+            "task",
+            "anchor_policy.policy_source"
+          ],
+          "status": "unresolved"
+        },
+        {
+          "id": "o_regret",
+          "norm": "Reduce regret against an offline optimum using only online heuristics, without claiming measured improvement because scores and traces are withheld.",
+          "provenance": [
+            "task",
+            "candidate_hypothesis",
+            "task_constraints"
+          ],
+          "status": "unresolved"
+        },
+        {
+          "id": "o_provenance_commitment",
+          "norm": "Bind all settled source-supported decisions coherently before the terminal call and preserve their provenance.",
+          "provenance": [
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "status": "settled"
+        },
+        {
+          "id": "o_amendment_scope",
+          "norm": "Permit terminal amendments only when tied to explicitly unresolved obligations and supported by directly visible provenance; do not redesign settled commitments.",
+          "provenance": [
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "status": "settled"
+        }
+      ],
+      "witnesses": [
+        {
+          "evidence": "The inherited policy uses recent/frequent resident partitions, ghost histories, adaptive recent_target adjustment, byte accounting, and eviction tracking.",
+          "id": "w_anchor",
+          "implication": "Preserve useful online adaptation and state accounting unless a specific unresolved obligation justifies amendment.",
+          "source": "anchor_policy.policy_source"
+        },
+        {
+          "evidence": "The artifact must preserve interface legality, capacity safety, and online-only visibility.",
+          "id": "w_contract",
+          "implication": "These are settled, non-negotiable obligations for every downstream commitment.",
+          "source": "anchor_contract.required_comparison"
+        },
+        {
+          "evidence": "Only standard-library facilities and one-access-at-a-time online information are permitted; returned keys must be unique integer keys currently cached, capacity must not be exceeded, and hidden traces, oracle behavior, benchmark paths, and scores are unavailable.",
+          "id": "w_constraints",
+          "implication": "Any policy commitment must be self-contained, online, capacity-safe, and evaluator-independent.",
+          "source": "task_constraints"
+        },
+        {
+          "evidence": "The proposed topology creates an earlier complete commitment, retains all source provenance for the terminal call, and limits amendment authority to explicitly unresolved obligations.",
+          "id": "w_hypothesis",
+          "implication": "Downstream calls should preserve settled commitments and use provenance only to resolve identified gaps.",
+          "source": "candidate_hypothesis"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R72-pair02-candidate-call01-map_provenance_obligations",
+    "duration_seconds": 22.891,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:34:51Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ec6fc55a104ad7bdb3815d103c39f4042b123a7d9419959acf9a26f941d5944d",
+    "raw_events_path": "workspace\\model-calls\\R72-pair02-candidate-call01-map_provenance_obligations\\raw-events.jsonl",
+    "raw_events_sha256": "424e52770b473141e876b4941eec3568206d7bb9060d6cc5da4bc48c72c2e341",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "179c78275bf2b4914d78c516adc02d107834ef62ff0ff5d113433e057b5f5a10",
+    "returncode": 0,
+    "role": "R72 candidate topology role source-attributed obligation mapper",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:34:28Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14488,
+      "output_tokens": 1276,
+      "reasoning_output_tokens": 379
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

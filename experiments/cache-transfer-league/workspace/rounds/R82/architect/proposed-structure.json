@@ -1,0 +1,48 @@
+{
+  "final_call_id": "release_sealed_policy",
+  "information_flow": "The first call receives every common input and originates one complete executable policy state. The second call consumes that state, sees only the anchor contract and task constraints as external evidence, may correct only demonstrated contract incompatibility, and emits a sealed executable closure. The final call consumes only that closure and emits its enclosed policy unchanged.",
+  "name": "Descending Executable Custody",
+  "organization": "three-call sequential nonbranching lineage with continuously complete executable custody and monotonically narrowing mutation authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_executable_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile all visible evidence and normative obligations into one complete executable policy state.",
+          "output_type": "executable_policy_state",
+          "role": "sole constructive origin authority"
+        },
+        {
+          "id": "seal_contract_closure",
+          "inputs": [
+            "originate_executable_state",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "objective": "Consume originate_executable_state, assess the complete artifact only against the visible contract obligations, apply solely necessary conformance repair, and close further constructive mutation while preserving one complete executable artifact.",
+          "output_type": "executable_policy_closure",
+          "role": "narrow contract-sealing custodian"
+        },
+        {
+          "id": "release_sealed_policy",
+          "inputs": [
+            "seal_contract_closure"
+          ],
+          "objective": "Consume seal_contract_closure and emit its complete enclosed policy unchanged, without external evidence re-entry or renewed adjudicative authority.",
+          "output_type": "policy",
+          "role": "zero-mutation closure emitter"
+        }
+      ],
+      "id": "descending_custody_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

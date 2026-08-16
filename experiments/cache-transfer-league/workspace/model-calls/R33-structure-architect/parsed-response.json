@@ -1,0 +1,75 @@
+{
+  "architect_scope": "one-R33-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "closed_world_policy_authority",
+    "information_flow": "The first call receives all common inputs and forms exactly one self-contained executable closure carrying one complete executable policy artifact and its public-obligation justification. The final call consumes only that closure as its sole evidence and control source, exercises final authority within the received state, and emits one policy.",
+    "name": "Closed-World Terminal Cut",
+    "organization": "two-call sequential lineage with one complete executable closure followed by a terminal call having no external side inputs",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_closed_world_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Use the supplied evidence to form exactly one self-contained executable closure carrying one complete executable policy artifact, its current semantic account, and its justification against public obligations.",
+            "output_type": "executable_policy_closure",
+            "role": "closed-world closure former"
+          },
+          {
+            "id": "closed_world_policy_authority",
+            "inputs": [
+              "form_closed_world_closure"
+            ],
+            "objective": "Consume the preceding complete executable closure as the sole available evidence and control source, adjudicate its internal semantic and contract claims, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "closed-world final semantic authority"
+          }
+        ],
+        "id": "closed_world_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "changed_behavioral_dimensions": [
+      "timing of contract accountability",
+      "response to predecessor-versus-context conflict",
+      "stability under terminal reinterpretation"
+    ],
+    "counter_until_promotion": true,
+    "forbidden_inherited_mechanism": "terminal public-context re-entry beside the predecessor executable closure",
+    "independent_replacement_principle": "closed-world closure sufficiency: after one complete executable closure exists, terminal authority acts solely on that immediate predecessor",
+    "rejected_assumptions": [
+      "A complete executable closure still requires terminal public-context re-entry to remain authoritative.",
+      "Independent side evidence at the terminal call improves reconciliation of predecessor semantics."
+    ]
+  },
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "causal_change": "Apply one terminal visibility cut so the final call receives only the immediately preceding complete executable closure, making that artifact the sole evidence and control surface.",
+    "expected_effect": "Closed-world terminal consumption should reduce late semantic reinterpretation and relocate contract accountability earlier, changing both evidence-conflict response and policy-state stability.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active dual-source terminal-reconciliation family lets final authority combine a completed executable closure with separately re-entered public context, reopening settled meaning and splitting accountability between predecessor state and side evidence."
+  },
+  "structural_mutation": {
+    "after": "The final authority consumes only the immediately preceding complete executable closure.",
+    "before": "The final authority consumes the predecessor closure alongside task, anchor_contract, task_constraints, candidate_hypothesis, and loop_structure.",
+    "change_count": 1,
+    "factor": "zero-external-visibility terminal edge",
+    "why_structural": "One terminal cut-set removes all external evidence and control edges, changing the final transition from multi-source reconciliation to closed-world consumption without role fission."
+  }
+}

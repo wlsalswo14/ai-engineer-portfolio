@@ -1,0 +1,15 @@
+{
+  "status": "inconclusive_no_runtime_access",
+  "source_delta": "Only Engine.root and its think() call changed: provisional adds preferred-move ordering and PVS null-window searches; all board, legality, state, evaluation, and UCI code matches the champion.",
+  "observed_failures": [],
+  "rollback_intervention": "A(anchor) -> B(provisional) -> A(anchor) is exact and reversible. No failure witness was executable, so no rollback is certified.",
+  "preservation_obligations": [
+    "UCI handshake and command protocol",
+    "Legal moves and special-move state transitions",
+    "Perft start position: 20, 400, 8902 at depths 1-3",
+    "Deterministic legal bestmove under repeated identical searches",
+    "Deadline compliance for go movetime"
+  ],
+  "execution_blocker": "Local interpreter/process execution was rejected by the sandbox; runtime transcripts could not be produced.",
+  "emission_guidance": "Attribution is incomplete; constrained integrator should fall back to the exact champion anchor."
+}

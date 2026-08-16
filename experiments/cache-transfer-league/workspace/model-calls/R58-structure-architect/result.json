@@ -1,0 +1,114 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R58-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "propagate_retraction_and_emit",
+      "information_flow": "The first call receives every common input and emits one complete executable policy state whose commitments remain causally revocable. The final call consumes that state and independently receives every common input. Withdrawal of support for an operative premise triggers dependency-directed rollback and rederivation within the same artifact lineage; no side channel or alternate candidate exists.",
+      "name": "Revocable Executable Truth-Maintenance Edge",
+      "organization": "two-call sequential lineage with one complete executable-state handoff and terminal dependency-retraction authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "instantiate_revocable_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Construct one complete executable policy artifact from the supplied evidence while making each adopted commitment operationally dependent on the premises that authorize it.",
+              "output_type": "executable_policy_state",
+              "role": "executable causal-state constructor"
+            },
+            {
+              "id": "propagate_retraction_and_emit",
+              "inputs": [
+                "instantiate_revocable_state",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the executable state alongside reacquired common evidence, trigger rollback when support is withdrawn from a causally necessary premise, rederive affected commitments from surviving evidence, preserve independent commitments, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "dependency-directed rollback authority"
+            }
+          ],
+          "id": "truth_maintenance_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "assumption-based executable truth maintenance",
+      "champion_limitation": "The champion has defeasible evidence reconciliation but no executable state from which loss of premise support can causally retract downstream commitments.",
+      "not_local_refinement": "This introduces operational truth-maintenance control over an executable artifact rather than source demotion, evidence timing adjustment, an added reviewer, gate, field, role split, certificate, or rename.",
+      "observable_effect": "The final policy contains no commitment supported solely through the withdrawn premise and preserves commitments with surviving independent support.",
+      "state_transition": "The artifact moves from supported-commitment state to rollback-and-rederive state, removing authority from dependent commitments while retaining independently supported commitments on the same lineage.",
+      "trigger": "Reacquired common evidence withdraws support from a premise that is causally necessary to a commitment in the carried executable policy state."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the non-policy handoff with a revocable executable policy state whose terminal consumer retracts and rederives commitments causally dependent on any premise that loses evidential support.",
+      "expected_effect": "Unsupported consequences cease propagating while independently supported commitments remain intact within one executable lineage.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion can reconcile two evidence views but cannot propagate withdrawal of support through commitments already combined during terminal synthesis."
+    },
+    "structural_mutation": {
+      "after": "The sole edge carries one complete revocable executable policy state, and reacquired evidence can trigger terminal rollback of causally dependent commitments before one policy is emitted.",
+      "before": "A nonbinding analysis crosses the sole edge, after which the terminal call reacquires all common inputs and synthesizes a policy without a prior executable commitment state.",
+      "change_count": 1,
+      "factor": "evidence-triggered dependency-directed rollback authority on the executable handoff",
+      "why_structural": "This replaces the analysis edge with a stateful causal-control edge whose executable payload and dependency-directed revocation authority are inseparable."
+    }
+  },
+  "receipt": {
+    "call_id": "R58-structure-architect",
+    "duration_seconds": 167.483,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T21:16:23Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "406bbaf7b606f923cf9266facf8d3a40f0af87ed7e6ee33ad08b7d8badfd6aef",
+    "raw_events_path": "workspace\\model-calls\\R58-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "32b9f2579d9c77095a6bc84d8175571eb70e71fa8a701777913448165749d15c",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "45b19f0ca1200bef94a7d174ad838f660c31198c2569541a6c3eede82f264da0",
+    "returncode": 0,
+    "role": "score-blind R58 emergent_exploration structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T21:13:35Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14505,
+      "output_tokens": 8310,
+      "reasoning_output_tokens": 7358
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

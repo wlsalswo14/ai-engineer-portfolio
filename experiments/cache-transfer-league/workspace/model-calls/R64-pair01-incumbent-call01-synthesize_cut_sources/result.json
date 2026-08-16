@@ -1,0 +1,80 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Source identities are intentionally sealed; claims are reconciled only by substance and normative obligations. No score, trace, oracle, benchmark source, or external evidence is available.",
+      "exact_actions": [
+        "Treat all claims in this packet symmetrically by their contract-relevant substance; discard provenance as a decision variable.",
+        "Prioritize interface legality, evaluator-state compatibility, and capacity safety over speculative optimization gains.",
+        "Use bounded online bookkeeping for recency, frequency, and historical eviction evidence if retained, while preventing stale evidence from violating current-state accounting.",
+        "Handle resident size changes and oversized requests explicitly so returned keys and internal occupancy remain coherent.",
+        "Validate every returned eviction against current residency and uniqueness before handoff.",
+        "Do not infer unavailable scores, traces, benchmark behavior, or anchor superiority; choose behavior solely from the task, contract, constraints, and this analysis."
+      ],
+      "obligations": [
+        "Use only Python standard-library facilities and online information from the current access.",
+        "Preserve the required Policy constructor and access interface.",
+        "Never exceed capacity_bytes, including capacity zero and objects larger than capacity.",
+        "Return only unique integer keys that are valid cached entries for eviction under the evaluator-owned state model.",
+        "Maintain internally consistent byte accounting across insertion, promotion, resizing, eviction, and rejected oversized objects.",
+        "Use no benchmark paths, hidden traces, oracle decisions, external libraries, networking, subprocesses, or hardcoded workload knowledge.",
+        "Emit one complete policy decision downstream, with no alternative ranking or score-based selection."
+      ],
+      "witnesses": [
+        {
+          "claim": "A byte-aware two-resident-region design with recency/frequency separation and bounded ghost histories supports scan resistance, phase adaptation, and byte-budget enforcement.",
+          "supporting_distinction": "These mechanisms are heuristics, not guarantees of hit rate or offline-regret improvement."
+        },
+        {
+          "claim": "Ghost-hit feedback can adapt the recency target toward the region whose evictions are being rediscovered.",
+          "supporting_distinction": "Adaptation must remain subordinate to exact capacity and return-value legality."
+        },
+        {
+          "claim": "Promotion on resident hits and insertion of rediscovered items as frequent evidence may protect reused objects after scans or phase changes.",
+          "supporting_distinction": "Large, zero-sized, repeated, and rapidly changing objects can stress byte accounting and replacement choices."
+        },
+        {
+          "claim": "The terminal decision must not condition deference on provenance, attribution, majority status, or any unavailable score.",
+          "conflict": "Generative claims may conflict with one another; preserve the conflict and resolve it using the visible contract rather than source identity."
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R64-pair01-incumbent-call01-synthesize_cut_sources",
+    "duration_seconds": 24.365,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:18:38Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ae9279e4888cdb4a2a0e11c5e451a777d631afb98010169b67b7ec53856f7be3",
+    "raw_events_path": "workspace\\model-calls\\R64-pair01-incumbent-call01-synthesize_cut_sources\\raw-events.jsonl",
+    "raw_events_sha256": "7426fd8d350512c74388294d01a36634b0ce818929b417164c50a5ac8ad4953e",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "5ea22f80537391b8ed54edf47b59e78156a0f000096398cb9e443589034c683d",
+    "returncode": 0,
+    "role": "R64 incumbent topology role upstream generative-evidence synthesizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:18:14Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14290,
+      "output_tokens": 1404,
+      "reasoning_output_tokens": 896
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

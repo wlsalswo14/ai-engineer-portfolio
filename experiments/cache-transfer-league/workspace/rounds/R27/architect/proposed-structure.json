@@ -1,0 +1,42 @@
+{
+  "final_call_id": "contradiction_triggered_policy_authority",
+  "information_flow": "The first call forms one self-contained executable closure and removes construction provenance from its handoff. The final call consumes that complete closure with public obligations but without anchor-policy visibility. A derivable contradiction with those obligations triggers revocation of predecessor semantic authority and obligation-grounded reconstitution within the same single lineage; the final call emits one policy.",
+  "name": "Contradiction-Triggered Semantic Revocation Relay",
+  "organization": "two-call sequential lineage with a provenance firewall and one defeasible semantic-authority edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_executable_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form exactly one self-contained executable policy closure from the supplied evidence and public obligations, remove anchor-relative construction provenance from the handoff, and pass the complete executable artifact forward.",
+          "output_type": "executable_policy_closure",
+          "role": "executable semantic closure former"
+        },
+        {
+          "id": "contradiction_triggered_policy_authority",
+          "inputs": [
+            "form_executable_closure",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Compare represented predecessor commitments with explicit public obligations, retain closure authority absent a derivable incompatibility, or revoke that authority upon such evidence and reconstitute the single artifact under obligation authority, then emit one complete policy.",
+          "output_type": "policy",
+          "role": "defeasible-closure final semantic authority"
+        }
+      ],
+      "id": "defeasible_closure_relay",
+      "mode": "sequential"
+    }
+  ]
+}

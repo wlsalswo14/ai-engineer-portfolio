@@ -1,0 +1,194 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Two replacement/regression failures are reproduced against the anchor. No eviction-validity or interface-protocol violation is reproduced for nonnegative integer capacities and sizes. Delta D_promote is causally certified by exact A-B-A rollback: removing it closes both witnesses and restoring it reopens them.",
+      "exact_actions": [
+        {
+          "certification": "D_promote is causally implicated in both reproduced failures.",
+          "changed_region": "The provisional probationary-hit transition that removes a key from probationary, inserts it into protected, increments protected_bytes, and invokes _rebalance_protected.",
+          "delta_id": "D_promote",
+          "phase_A": "Run the provisional policy on witness traces; observe [2,3] and [4,3] at the divergent eviction points.",
+          "phase_A_restore": "Restore exactly D_promote; rerun the same traces and observe [2,3] and [4,3] again.",
+          "phase_B": "Rollback exactly D_promote to the anchor recency-preserving hit transition, with no other changed region modified; observe [2,1] and [4], matching the anchor."
+        }
+      ],
+      "obligations": [
+        {
+          "id": "O1",
+          "requirement": "All returned eviction keys must be unique integer keys currently cached by the evaluator.",
+          "status": "preserved_on_examined_traces"
+        },
+        {
+          "id": "O2",
+          "requirement": "After every accepted insertion, tracked resident bytes must not exceed capacity_bytes.",
+          "status": "preserved_on_examined_traces"
+        },
+        {
+          "id": "O3",
+          "requirement": "Access decisions must use only the current key, size, now, and policy-local state.",
+          "status": "preserved"
+        },
+        {
+          "id": "O4",
+          "requirement": "After certified rollback, both witnesses must reproduce the anchor eviction sequences.",
+          "status": "required_replay"
+        }
+      ],
+      "witnesses": [
+        {
+          "capacity_bytes": 3,
+          "failure": "The candidate retains protected key 1 and evicts newer key 3; the anchor evicts key 1 and retains key 3.",
+          "kind": "replacement_decision_failure",
+          "trace": [
+            {
+              "anchor_evicted": [],
+              "candidate_evicted": [],
+              "key": 1,
+              "now": 1,
+              "size": 1
+            },
+            {
+              "anchor_evicted": [],
+              "candidate_evicted": [],
+              "key": 2,
+              "now": 2,
+              "size": 1
+            },
+            {
+              "anchor_evicted": [],
+              "candidate_evicted": [],
+              "key": 1,
+              "now": 3,
+              "size": 1
+            },
+            {
+              "anchor_evicted": [],
+              "candidate_evicted": [],
+              "key": 3,
+              "now": 4,
+              "size": 1
+            },
+            {
+              "anchor_evicted": [
+                2,
+                1
+              ],
+              "candidate_evicted": [
+                2,
+                3
+              ],
+              "key": 4,
+              "now": 5,
+              "size": 1
+            }
+          ]
+        },
+        {
+          "anchor_evictions": [
+            [],
+            [],
+            [],
+            [],
+            [
+              2,
+              1
+            ],
+            [],
+            [
+              4
+            ]
+          ],
+          "candidate_evictions": [
+            [],
+            [],
+            [],
+            [],
+            [
+              2,
+              3
+            ],
+            [],
+            [
+              4,
+              3
+            ]
+          ],
+          "capacity_bytes": 3,
+          "failure": "At now 6 the candidate misses key 3 while the anchor hits it; at now 7 the candidate unnecessarily evicts key 3 while the anchor retains it.",
+          "kind": "anchor_regression",
+          "trace": [
+            {
+              "key": 1,
+              "now": 1,
+              "size": 1
+            },
+            {
+              "key": 2,
+              "now": 2,
+              "size": 1
+            },
+            {
+              "key": 1,
+              "now": 3,
+              "size": 1
+            },
+            {
+              "key": 3,
+              "now": 4,
+              "size": 1
+            },
+            {
+              "key": 4,
+              "now": 5,
+              "size": 1
+            },
+            {
+              "key": 3,
+              "now": 6,
+              "size": 1
+            },
+            {
+              "key": 5,
+              "now": 7,
+              "size": 1
+            }
+          ]
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R26-rep03-call02-causal_attributor",
+    "duration_seconds": 146.381,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:41:40Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "e8daed760d76477b607e9bef325a0c14f645d951e5906fc8a4e5185f47fdbc59",
+    "raw_events_sha256": "1bde4a5799ed7509242137a1efe353722dacb3ff554c4fe151396923e505c48b",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "c9e6644a24f463ad6ffde8d855545a0817c6a21e39747488678d6db1f8f13732",
+    "returncode": 0,
+    "role": "independent terminal falsifier and delta attributor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:39:14Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14646,
+      "output_tokens": 7958,
+      "reasoning_output_tokens": 7250
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

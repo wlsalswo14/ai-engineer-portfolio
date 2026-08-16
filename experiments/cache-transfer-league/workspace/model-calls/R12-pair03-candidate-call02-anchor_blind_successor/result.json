@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.target_t1_bytes = self.capacity_bytes // 2\n        self.used_bytes = 0\n        self.ghost_limit = 8192\n        self.ghost_byte_limit = max(4096, self.capacity_bytes * 2)\n\n    def _discard_ghost(self, key):\n        if key in self.b1:\n            self.b1_bytes -= self.b1.pop(key)\n        if key in self.b2:\n            self.b2_bytes -= self.b2.pop(key)\n\n    def _record_ghost(self, table, key, size):\n        self._discard_ghost(key)\n        table[key] = size\n        if table is self.b1:\n            self.b1_bytes += size\n        else:\n            self.b2_bytes += size\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (len(self.b1) + len(self.b2) > self.ghost_limit or\n               self.b1_bytes + self.b2_bytes > self.ghost_byte_limit):\n            if self.b1 and (not self.b2 or self.b1_bytes >= self.b2_bytes):\n                _, size = self.b1.popitem(last=False)\n                self.b1_bytes -= size\n            elif self.b2:\n                _, size = self.b2.popitem(last=False)\n                self.b2_bytes -= size\n            else:\n                break\n\n    def _evict_t1(self):\n        key, size = self.t1.popitem(last=False)\n        self.t1_bytes -= size\n        self.used_bytes -= size\n        self._record_ghost(self.b1, key, size)\n        return key\n\n    def _evict_t2(self):\n        key, size = self.t2.popitem(last=False)\n        self.t2_bytes -= size\n        self.used_bytes -= size\n        self._record_ghost(self.b2, key, size)\n        return key\n\n    def _replace(self, incoming: int, from_b2: bool = False):\n        evicted = []\n        while self.used_bytes + incoming > self.capacity_bytes:\n            if self.t1 and (self.t1_bytes > self.target_t1_bytes or\n                            (from_b2 and self.t1_bytes == self.target_t1_bytes)):\n                evicted.append(self._evict_t1())\n            elif self.t2:\n                evicted.append(self._evict_t2())\n            elif self.t1:\n                evicted.append(self._evict_t1())\n            else:\n                break\n        return evicted\n\n    def _insert_t1(self, key, size):\n        self.t1[key] = size\n        self.t1_bytes += size\n        self.used_bytes += size\n\n    def _insert_t2(self, key, size):\n        self.t2[key] = size\n        self.t2_bytes += size\n        self.used_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored = self.t1.pop(key)\n            self.t1_bytes -= stored\n            self.t2[key] = stored\n            self.t2_bytes += stored\n            return []\n\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] = stored\n            return []\n\n        incoming = max(0, int(size))\n        if self.capacity_bytes == 0 or incoming == 0 or incoming > self.capacity_bytes:\n            return []\n\n        from_b2 = key in self.b2\n        if key in self.b1:\n            b1_bytes = max(1, self.b1_bytes)\n            delta = max(1, self.b2_bytes // b1_bytes)\n            self.target_t1_bytes = min(self.capacity_bytes,\n                                       self.target_t1_bytes + delta)\n            self._discard_ghost(key)\n            evicted = self._replace(incoming)\n            self._insert_t2(key, incoming)\n            return evicted\n\n        if from_b2:\n            b2_bytes = max(1, self.b2_bytes)\n            delta = max(1, self.b1_bytes // b2_bytes)\n            self.target_t1_bytes = max(0, self.target_t1_bytes - delta)\n            self._discard_ghost(key)\n            evicted = self._replace(incoming, True)\n            self._insert_t2(key, incoming)\n            return evicted\n\n        evicted = self._replace(incoming)\n        self._insert_t1(key, incoming)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R12-pair03-candidate-call02-anchor_blind_successor",
+    "duration_seconds": 41.231,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:25:26Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fdf56ac7c928277dbed9bbf9d8d8aed8f1d2a7f496f0217e7cb48d1b9df4330e",
+    "raw_events_path": "workspace\\model-calls\\R12-pair03-candidate-call02-anchor_blind_successor\\raw-events.jsonl",
+    "raw_events_sha256": "dd538a6af57e1a4b2376d6c3941f430524b1739ed4bead4384202607ea2601d4",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "86b494acffecb3362f66c9ff714ae3482efbdc9f26eb20ce71573d7a4ea22d34",
+    "returncode": 0,
+    "role": "R12 candidate topology role whole-state successor owner",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:24:44Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14840,
+      "output_tokens": 3051,
+      "reasoning_output_tokens": 1882
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

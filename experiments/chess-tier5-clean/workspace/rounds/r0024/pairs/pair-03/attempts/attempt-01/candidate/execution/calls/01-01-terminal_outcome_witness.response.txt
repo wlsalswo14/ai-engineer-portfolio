@@ -1,0 +1,30 @@
+{
+  "record": "WITNESS",
+  "priority_order": [
+    "legality",
+    "protocol behavior",
+    "bounded work",
+    "state integrity",
+    "determinism",
+    "decision quality"
+  ],
+  "procedure": "Run the supplied anchor through UCI handshake, load one hand-constructed legal six-field FEN with a mate-in-one, issue go movetime 1 twice, and verify response count, legality, deadline, state preservation, determinism, and whether the returned move achieves mate.",
+  "inputs": "position fen 7k/8/5KQ1/8/8/8/8/8 w - - 0 1; go movetime 1",
+  "observed_anchor_trace": [
+    "uci -> uciok",
+    "isready -> readyok",
+    "The legal move set begins with f6e5.",
+    "g6g7 is legal and checkmates.",
+    "Both bounded runs return exactly one response: bestmove f6e5.",
+    "f6e5 is legal, preserves state, and is deterministic, but does not give check."
+  ],
+  "failed_terminal_predicate": "In a legal mate-in-one position, the returned bestmove must checkmate; bestmove f6e5 fails this predicate.",
+  "preservation_predicates": [
+    "Returned move is legal.",
+    "Exactly one UCI bestmove is emitted.",
+    "Response is produced within the requested bounded interval.",
+    "Position state remains unchanged.",
+    "Repeated identical input produces the same response."
+  ],
+  "falsifier": "Replay on the byte-identical anchor and input yielding a checkmating bestmove, or showing that g6g7 is not legal and mate."
+}

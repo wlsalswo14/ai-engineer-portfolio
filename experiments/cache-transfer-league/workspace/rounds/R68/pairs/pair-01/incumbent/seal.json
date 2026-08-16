@@ -1,0 +1,34 @@
+{
+  "arm": "incumbent",
+  "artifact_bytes": 3816,
+  "artifact_path": "workspace\\rounds\\R68\\pairs\\pair-01\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "5e82482e28c0908601a1964585028d7686b728763b39e89a421693010af1c109",
+  "display_round": 68,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_manifest_path": "workspace\\rounds\\R68\\pairs\\pair-01\\incumbent\\generation-manifest.json",
+  "generation_manifest_sha256": "d49b39de3d417032591c41377fb209508b5cad943a460ad511b58fad02a889b5",
+  "label": "pair-01-incumbent",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R68-pair01-incumbent-call01-synthesize_cut_sources\\final-receipt.json",
+      "sha256": "8e13a904de3886c63f864d643f9aa623fe45a027e25c8480fb7c2f560f0082ae"
+    },
+    {
+      "path": "workspace\\model-calls\\R68-pair01-incumbent-call02-emit_under_normative_visibility\\final-receipt.json",
+      "sha256": "b016babba05c03769c7854b807f09c180706baf4650fa9401f230054bed65230"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 1,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 34, in replay\n    raise AssertionError(\"evicted nonresident key\")\nAssertionError: evicted nonresident key\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 3816,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T23:04:14Z"
+}

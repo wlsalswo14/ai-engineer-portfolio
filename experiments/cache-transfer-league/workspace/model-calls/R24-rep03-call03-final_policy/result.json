@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R24-rep03-call03-final_policy",
+    "duration_seconds": 11.703,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:38:20Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "b9e3a76d74a28c03312613ee9be8bc2f5e1971446c8f5180ffdf55daee3af93e",
+    "raw_events_sha256": "ce5402c265f084b2f6d45170c6127b1840f744e71e329272748842ef0d74104c",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "dde65b863d2d74f67d4c7a71424295010843b535a8fef419a097c721e1ce351d",
+    "returncode": 0,
+    "role": "evidence-bound repair and rollback integrator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:38:08Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14423,
+      "output_tokens": 438,
+      "reasoning_output_tokens": 224
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

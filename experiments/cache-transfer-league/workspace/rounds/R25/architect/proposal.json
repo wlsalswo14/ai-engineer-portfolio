@@ -1,0 +1,102 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R25-structure-architect\\final-receipt.json",
+    "sha256": "5d5c06cc3c7b04624fd5c15d64b0038daa66f6e57f403987654fdae11fb91c7c"
+  },
+  "architect_response": {
+    "architect_scope": "one-R25-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "predecessor_exclusive_policy_emitter",
+      "information_flow": "The first call forms one self-contained executable closure from all common inputs and removes construction provenance from the handoff. The final call receives only that closure, treats it as the sole causal state, and emits its complete policy artifact.",
+      "name": "Predecessor-Exclusive Closure Relay",
+      "organization": "two-call sequential lineage with the incumbent provenance firewall followed by a predecessor-exclusive emission edge",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "form_executable_closure",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Form exactly one self-contained executable policy closure from the supplied evidence and public obligations, establish its semantics within that complete state, remove construction provenance from the handoff, and pass the complete executable artifact forward.",
+              "output_type": "executable_policy_closure",
+              "role": "executable semantic closure former"
+            },
+            {
+              "id": "predecessor_exclusive_policy_emitter",
+              "inputs": [
+                "form_executable_closure"
+              ],
+              "objective": "Consume the preceding complete executable closure as the sole causal input and emit its single policy artifact without introducing external evidence or reopening its established semantics.",
+              "output_type": "policy",
+              "role": "predecessor-exclusive policy emitter"
+            }
+          ],
+          "id": "exclusive_closure_relay",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only final-edge causal-source exclusivity changes; closure formation, the two-call lineage, the incumbent provenance firewall, and the complete executable artifact are preserved.",
+      "why_not_repeat_role_fission": "No call is added, split, renamed as a substitute for structure, or arranged as a producer-reviewer-finalizer chain; the mutation changes incoming-edge authority on the existing final node."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Make the completed executable closure the final call's exclusive causal input, eliminating every parallel external edge into policy emission.",
+      "expected_effect": "Preserve the coherence of the evidence-bound executable state by preventing semantic drift after closure formation while retaining a complete policy-bearing lineage.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The incumbent final call has parallel causal access to the completed executable closure and to external contextual evidence, permitting post-closure semantic reopening."
+    },
+    "structural_mutation": {
+      "after": "The final call consumes only the immediately preceding complete executable closure and emits its policy artifact without reopening semantics from external context.",
+      "before": "The final call consumes the executable closure alongside task, anchor contract, task constraints, candidate hypothesis, and loop structure, and may reopen semantics from those parallel inputs.",
+      "change_count": 1,
+      "factor": "exclusive predecessor-only causal input at policy emission",
+      "why_structural": "This removes parallel visibility and control edges into the final node and changes its causal authority from contextual semantic re-derivation to predecessor-exclusive continuation."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 25,
+  "incumbent_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "local_refinement",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R25\\qualitative-error-notebook.json",
+    "sha256": "9c7b2fbdfab7a69b23b2658859f16caeaf1cbf72142e554ff898f8c96f646e32"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R25\\source-manifest.json",
+    "sha256": "a5fecd3b38c067170ed576e1b6c4d41bb02cd0e7749da39e0b59dbd67d1748a3"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "exclusive predecessor-only causal input at policy emission",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "form_executable_closure",
+        "executor_semantics": "self-contained executable policy artifact crossing a provenance-blind closure edge",
+        "output_type": "executable_policy_closure"
+      }
+    ],
+    "semantic_topology_fingerprint": "ae1d5a8e678343abd341223c96f67ac748136974b7b7a31e9f0e782c606c46d0",
+    "topology_fingerprint": "71d9e149e042b2a3cb1e01144993103e0e7450651917330912dc6dde6feda689"
+  }
+}

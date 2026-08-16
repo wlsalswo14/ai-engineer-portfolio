@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "pair": 2,
+  "attempt": 1,
+  "execution_order": [
+    "candidate",
+    "incumbent"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "frozen_lineage_baseline",
+    "anchor_id": "anchor_eaba2e9ff3e678c1",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\final-output.json",
+    "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+    "metrics": {
+      "draws": 65,
+      "elo": -94.211,
+      "losses": 31,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\benchmark-result-receipt.json",
+      "score_rate": 0.365,
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+      "wins": 4
+    },
+    "origin": "bootstrap:package_ebdecd200797a81e"
+  },
+  "incumbent_structure_id": "loop_c7fe6bbff2040ac3",
+  "candidate_structure_id": "loop_c97a4545a4e80f75",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0026\\pairs\\pair-02\\attempts\\attempt-01\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0026\\pairs\\pair-02\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:1155e3f5452f14616a78b22403c0c8f02a423a835e55cd035a518392e4fc7ae8",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.335,
+    "wins": 3,
+    "draws": 61,
+    "losses": 36,
+    "elo": -116.594,
+    "elo_error_95": 103.122,
+    "los": 0.007307,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0026\\pairs\\pair-02\\attempts\\attempt-01\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-1155e3f5452f1461.json",
+    "benchmark_receipt_sha256": "35000325d033bd23c1b2d72c7a123e70552f13f098c545699ef22fedcfce6534",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-1155e3f5452f1461.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:1155e3f5452f14616a78b22403c0c8f02a423a835e55cd035a518392e4fc7ae8",
+      "chessbench-wdl:3-61-36"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": false,
+    "failure_kind": "public_uci_smoke_failed",
+    "public_score": 0.0,
+    "public_evidence": [
+      "engine-source:7239362e4f066daa599a95d94ccdb5242e42714d2800c6635a3500305b4c7f2c"
+    ],
+    "elo": null
+  },
+  "verdict": {
+    "verdict": "invalid",
+    "incumbent_elo": -116.594,
+    "candidate_elo": null
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "single_terminal_outcome_commitment",
+        "stage_mode": "sequential",
+        "call_id": "terminal_outcome_witness",
+        "role": "single terminal-outcome witness committer",
+        "output_type": "analysis",
+        "prompt_sha256": "5201cbb3f5488383d007eb8dd8cc1d7e0da444ee932b606c15228f6c7a47386e",
+        "response_sha256": "92ca560ff86e269b8486a02a023c47a7bcea40f4f02e2a57fc3c61e20cac5613",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 254990,
+          "cached_input_tokens": 225024,
+          "output_tokens": 5487,
+          "reasoning_output_tokens": 3884,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_backward_causal_preimage",
+        "stage_mode": "sequential",
+        "call_id": "causal_preimage_backchainer",
+        "role": "single implementation-neutral causal-preimage backchainer",
+        "output_type": "analysis",
+        "prompt_sha256": "9ae2878c04ebb65411f29e7715319d4825d54787b98af257e8f2a346abd7ff72",
+        "response_sha256": "17806aa5eb2313d318ec38d6f174308f6a24a8c2a379b821a2032c1615b8922c",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 23711,
+          "cached_input_tokens": 8960,
+          "output_tokens": 1534,
+          "reasoning_output_tokens": 1034,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_anchor_native_preimage_binding",
+        "stage_mode": "sequential",
+        "call_id": "preimage_realization_site_binder",
+        "role": "single non-authoring anchor-native prerequisite-site binder",
+        "output_type": "analysis",
+        "prompt_sha256": "7a16cf81ac2b5aeff037a90bdff0afda26626018af8c22007f996d8d435431d3",
+        "response_sha256": "78ae3b4860c17862906f54e2aacb9fd33b995264c593a60d4b7238c712fd06bc",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 24309,
+          "cached_input_tokens": 8960,
+          "output_tokens": 2565,
+          "reasoning_output_tokens": 1034,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_anchor_bound_preimage_realization",
+        "stage_mode": "sequential",
+        "call_id": "anchor_bound_preimage_engine_producer",
+        "role": "single anchor-bound outcome-preimage whole-engine producer",
+        "output_type": "engine",
+        "prompt_sha256": "79bdfcddeb1d4bc7638791a9c6279810f9e6c1aa105620009a30873c3f0c585e",
+        "response_sha256": "3df871eab06ff0e795873876f930f4e44416afc6e411b6544fc9658abdc32b1e",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 25577,
+          "cached_input_tokens": 0,
+          "output_tokens": 7929,
+          "reasoning_output_tokens": 3104,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "single_terminal_outcome_commitment",
+        "stage_mode": "sequential",
+        "call_id": "terminal_outcome_witness",
+        "role": "single terminal-outcome witness committer",
+        "output_type": "analysis",
+        "prompt_sha256": "5036b12522a3823d50814d84636a944a69659fa74b023002b0ec0740aaf0cb18",
+        "response_sha256": "04e810787441c2d399fb9cf582a265a67fd4de082a304eb189a50d628c84a721",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 288240,
+          "cached_input_tokens": 256512,
+          "output_tokens": 9636,
+          "reasoning_output_tokens": 8239,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_backward_causal_preimage",
+        "stage_mode": "sequential",
+        "call_id": "causal_preimage_backchainer",
+        "role": "single implementation-neutral causal-preimage backchainer",
+        "output_type": "analysis",
+        "prompt_sha256": "b105baf6d37cb8c704bf63744b0771b7197901dd28e8749d5b546c950e26c47f",
+        "response_sha256": "e2faa78fb39acfb59233b2300f7f5ac40a76092252292393fa140a6fd3b4d741",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 23630,
+          "cached_input_tokens": 0,
+          "output_tokens": 857,
+          "reasoning_output_tokens": 516,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_lifecycle_dominant_preimage_binding",
+        "stage_mode": "sequential",
+        "call_id": "lifecycle_dominant_preimage_binder",
+        "role": "single non-authoring lifecycle-dominant anchor-native prerequisite binder",
+        "output_type": "analysis",
+        "prompt_sha256": "46dc122a4aa8aab9bb21fab1fcc4bcc1df65bb0c66dd8b6df062e88bc940308d",
+        "response_sha256": "25468756eb322467a466d5c040926307f69a6777c92f03de7230e6eaeb80fda1",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 52961,
+          "cached_input_tokens": 35328,
+          "output_tokens": 6340,
+          "reasoning_output_tokens": 1552,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_lifecycle_bound_preimage_realization",
+        "stage_mode": "sequential",
+        "call_id": "lifecycle_bound_preimage_engine_producer",
+        "role": "single lifecycle-bound outcome-preimage whole-engine producer",
+        "output_type": "engine",
+        "prompt_sha256": "bba6ab39dd9aea9e7dc75109c6715fa66ec6d4ee973a2e7f97798cb6ec64e38b",
+        "response_sha256": "69d68016e6f423fa87ea22988ad557b01fd988e2406c75714bafd4d642080271",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 29512,
+          "cached_input_tokens": 8960,
+          "output_tokens": 6984,
+          "reasoning_output_tokens": 2383,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false
+}

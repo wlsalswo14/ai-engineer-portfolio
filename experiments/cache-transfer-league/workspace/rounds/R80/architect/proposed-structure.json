@@ -1,0 +1,43 @@
+{
+  "final_call_id": "exercise_unitary_policy_authority",
+  "information_flow": "The first call receives every common input and emits a non-policy analysis that preserves provenance-linked supporting and opposing claims without exclusions or mandates. The final call consumes that analysis, directly receives every common input, may reinterpret or reject any transmitted claim, independently reconciles obligations and evidence, and emits one complete policy.",
+  "name": "Symmetric Provenance Unitary Authority",
+  "organization": "two-call sequential lineage with an authority-free evidentiary edge and one final policy authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "map_symmetric_provenance",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Map provenance-linked supporting and opposing claims, preserve unresolved conflicts, and expose obligation-relevant uncertainty without adjudicating commitments or constructing a policy.",
+          "output_type": "analysis",
+          "role": "non-authoritative evidence cartographer"
+        },
+        {
+          "id": "exercise_unitary_policy_authority",
+          "inputs": [
+            "map_symmetric_provenance",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume map_symmetric_provenance, directly examine all common evidence, independently resolve transmitted conflicts without inherited edge authority, satisfy normative obligations, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "unitary policy authority"
+        }
+      ],
+      "id": "rebuttable_provenance_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

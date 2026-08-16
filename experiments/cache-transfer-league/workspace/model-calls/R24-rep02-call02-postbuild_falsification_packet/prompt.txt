@@ -1,0 +1,39 @@
+Role: independent realized-artifact verifier
+
+Execute exactly one role in a fixed historical topology translated to Cache
+Policy vocabulary. This is representative 2 for topology R24.
+It is an independent run: no other representative, candidate, evaluation, or
+score is visible. Do not use tools or inspect the filesystem; use only the inline
+visible inputs below. Do not search, sample variants, or ask another agent.
+
+Role id: postbuild_falsification_packet
+Role: independent realized-artifact verifier
+Objective: Inspect and exercise the single draft_policy against task requirements, interface and authoritative-state obligations, reproducible differential probes against anchor_policy, and failure modes exposed by its realized changes. Return a bounded evidence-only analysis packet containing reproducible witnesses, implicated changed regions, required preservation checks, and exact reproduction procedures; if none are found, return an explicit no-failure certificate. Do not propose another policy, rank alternatives, or author policy code.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output policy source, Python, patches, diffs, alternative policies, or a
+ranked selection. Analyze only the one visible policy lineage and provide the
+bounded evidence requested by your role.
+
+Visible inputs, exactly as fixed by the topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "fresh mechanical byte-capacity LRU anchor",
+    "artifact_sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality and online-only access visibility"
+  },
+  "draft_policy": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n",
+    "sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348"
+  }
+}

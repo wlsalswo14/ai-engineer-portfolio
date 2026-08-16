@@ -1,0 +1,177 @@
+Artifact: one component, no engine emitted or modified.
+
+Capability: path-local threefold-cycle guard for recursive search. It uses the anchor’s existing TT identity exactly:
+
+`(''.join(p.b), p.side, p.cast, p.ep)`
+
+Seam provenance: `Engine.search`/`qsearch`’s `make(position, move) → recursive consumer` boundary. The guard enters once per recursive position, returns draw score `0` only on the third active occurrence, and always pops in `finally`.
+
+```python
+import json
+
+class CycleGuard:
+    def __init__(self, max_ply=128):
+        if not isinstance(max_ply, int) or max_ply < 1:
+            raise ValueError("max_ply must be positive")
+        self.max_ply = max_ply
+        self._stack = []
+        self._counts = {}
+        self.operations = 0
+
+    def reset(self):
+        self._stack.clear()
+        self._counts.clear()
+        self.operations = 0
+
+    def push(self, key):
+        hash(key)
+        if len(self._stack) >= self.max_ply:
+            raise OverflowError("cycle-guard path bound exceeded")
+        count = self._counts.get(key, 0) + 1
+        self._stack.append(key)
+        self._counts[key] = count
+        self.operations += 1
+        return {
+            "depth": len(self._stack),
+            "occurrences": count,
+            "draw": count >= 3,
+        }
+
+    def pop(self):
+        if not self._stack:
+            raise RuntimeError("cycle-guard underflow")
+        key = self._stack.pop()
+        count = self._counts[key] - 1
+        if count:
+            self._counts[key] = count
+        else:
+            del self._counts[key]
+        self.operations += 1
+        return {"depth": len(self._stack), "key": key}
+
+    def empty(self):
+        return not self._stack and not self._counts
+
+
+class AnchorSeamSurrogate:
+    def __init__(self, guard, max_steps=128):
+        self.guard = guard
+        self.max_steps = max_steps
+
+    def consume_path(self, root_key, child_keys):
+        if len(child_keys) + 1 > self.max_steps:
+            raise OverflowError("surrogate work bound exceeded")
+
+        trace = []
+        self.guard.reset()
+
+        def consume(key, tail):
+            state = self.guard.push(key)
+            trace.append(
+                ("enter", state["depth"], state["occurrences"], state["draw"])
+            )
+            try:
+                if state["draw"]:
+                    trace.append(("consumer", "draw", 0))
+                    return 0
+                if not tail:
+                    trace.append(("consumer", "leaf", 1))
+                    return 1
+                return consume(tail[0], tail[1:])
+            finally:
+                trace.append(("leave", self.guard.pop()["depth"]))
+
+        try:
+            result = consume(root_key, list(child_keys))
+            trace.append(("closed", self.guard.empty(), self.guard.operations))
+            return result, trace
+        finally:
+            self.guard.reset()
+
+
+def key(tag, side=0, cast=0, ep=-1):
+    return (tag * 64, side, cast, ep)
+
+
+def fixtures():
+    guard = CycleGuard(max_ply=8)
+    seam = AnchorSeamSurrogate(guard, max_steps=8)
+
+    effect, effect_trace = seam.consume_path(
+        key("A"), [key("B"), key("A"), key("B"), key("A")]
+    )
+    null, null_trace = seam.consume_path(
+        key("A"), [key("B"), key("C"), key("B")]
+    )
+
+    guard.reset()
+    boundary = [
+        ("reset", guard.empty(), guard.operations),
+        ("push_A", guard.push(key("A"))["depth"]),
+        ("push_B", guard.push(key("B"))["depth"]),
+        ("pop_B", guard.pop()["depth"]),
+        ("pop_A", guard.pop()["depth"]),
+        ("reset_again", guard.empty()),
+    ]
+
+    first, first_trace = seam.consume_path(key("X"), [key("Y")])
+    second, second_trace = seam.consume_path(key("P"), [key("Q"), key("P")])
+
+    bounded = CycleGuard(max_ply=4)
+    for tag in "ABCD":
+        bounded.push(key(tag))
+    try:
+        bounded.push(key("E"))
+        overflow = False
+    except OverflowError:
+        overflow = True
+
+    return {
+        "predicted_effect": [effect, effect_trace],
+        "null_case": [null, null_trace],
+        "boundary_transitions": boundary,
+        "repeated_lifecycle": [
+            first,
+            first_trace[-1],
+            second,
+            second_trace[-1],
+            guard.empty(),
+        ],
+        "dependency_closure": {
+            "key_width": 4,
+            "key_types": ["str", "int", "int", "int"],
+            "imports": "none",
+        },
+        "bounded_work": {
+            "max_ply": 4,
+            "active_depth": 4,
+            "operations": 4,
+            "overflow": overflow,
+        },
+    }
+
+
+if __name__ == "__main__":
+    print(json.dumps(fixtures(), separators=(",", ":")))
+```
+
+Execution command:
+
+```text
+python seam_component.py
+```
+
+Deterministic expected traces:
+
+- Repeated path `A,B,A,B,A`: result `0`; third `A` enters with `occurrences=3`, then all five frames unwind.
+- Null path `A,B,C,B`: result `1`; no draw.
+- Boundary lifecycle: depths `0→1→2→1→0`; reset is empty.
+- Repeated reuse: both lifecycles close cleanly.
+- Dependency closure: four-field immutable anchor-shaped key; no engine dependencies.
+- Bound: fourth entry succeeds; fifth raises `OverflowError`.
+
+The managed read-only arm rejected Python process execution, so these traces were not falsely reported as runtime observations.
+
+Causal falsifier: reject if any non-repeating path changes result, a third occurrence fails to return `0`, cleanup leaks state, or the guard exceeds its declared bound.
+
+Graft invariants: preserve the anchor key verbatim; route each recursive position through exactly one guard entry; pop in `finally`; reset between root searches; leave move generation, `make`, evaluation, TT contents, UCI, and timing behavior unchanged.

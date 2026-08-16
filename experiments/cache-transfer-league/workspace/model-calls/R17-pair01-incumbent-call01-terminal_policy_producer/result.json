@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.recent_ghost = OrderedDict()\n        self.frequent_ghost = OrderedDict()\n        self.used_bytes = 0\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.recent_ghost_bytes = 0\n        self.frequent_ghost_bytes = 0\n        self.recent_target = self.capacity_bytes // 2\n\n    def _remove_ghost(self, key):\n        if key in self.recent_ghost:\n            self.recent_ghost_bytes -= self.recent_ghost.pop(key)\n        if key in self.frequent_ghost:\n            self.frequent_ghost_bytes -= self.frequent_ghost.pop(key)\n\n    def _add_ghost(self, kind, key, size):\n        self._remove_ghost(key)\n        if kind == 'recent':\n            self.recent_ghost[key] = size\n            self.recent_ghost_bytes += size\n        else:\n            self.frequent_ghost[key] = size\n            self.frequent_ghost_bytes += size\n        while self.recent_ghost_bytes + self.frequent_ghost_bytes > self.capacity_bytes:\n            if self.recent_ghost and (not self.frequent_ghost or self.recent_ghost_bytes >= self.frequent_ghost_bytes):\n                _, old_size = self.recent_ghost.popitem(last=False)\n                self.recent_ghost_bytes -= old_size\n            elif self.frequent_ghost:\n                _, old_size = self.frequent_ghost.popitem(last=False)\n                self.frequent_ghost_bytes -= old_size\n            else:\n                break\n\n    def _demote_protected(self):\n        target = max(0, self.capacity_bytes - self.recent_target)\n        while self.protected and self.protected_bytes > target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n            self.probation_bytes += size\n\n    def _replace(self, incoming_size, from_frequent_ghost):\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes:\n            choose_probation = bool(self.probation) and (\n                self.probation_bytes > self.recent_target\n                or (from_frequent_ghost and self.probation_bytes == self.recent_target)\n            )\n            if choose_probation or not self.protected:\n                if not self.probation:\n                    break\n                old_key, old_size = self.probation.popitem(last=False)\n                self.probation_bytes -= old_size\n                self.used_bytes -= old_size\n                self._add_ghost('recent', old_key, old_size)\n            else:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n                self.used_bytes -= old_size\n                self._add_ghost('frequent', old_key, old_size)\n            evicted.append(old_key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.probation_bytes -= stored_size\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._demote_protected()\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            self._remove_ghost(key)\n            return []\n\n        from_frequent_ghost = False\n        if key in self.recent_ghost:\n            own = max(1, self.recent_ghost_bytes)\n            delta = max(1, self.frequent_ghost_bytes // own)\n            self.recent_target = min(self.capacity_bytes, self.recent_target + delta)\n            self._remove_ghost(key)\n            self._demote_protected()\n        elif key in self.frequent_ghost:\n            own = max(1, self.frequent_ghost_bytes)\n            delta = max(1, self.recent_ghost_bytes // own)\n            self.recent_target = max(0, self.recent_target - delta)\n            self._remove_ghost(key)\n            self._demote_protected()\n            from_frequent_ghost = True\n\n        evicted = self._replace(size, from_frequent_ghost)\n        self.probation[key] = size\n        self.probation_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R17-pair01-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 55.554,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:09:16Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "1dce6d34a9f5d9ad66d1f82570b09a157c027c0a6fe6f752720ecff2727c9fd2",
+    "raw_events_path": "workspace\\model-calls\\R17-pair01-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "644d50752b7a2d9e6f79dd414e449daa9e9b34f8b51e5844ccae288f9263a64c",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "9ebf0fcecdb9ca395c3c2976630db4c63a21efbf8d42457b2caf5a16f6ad7671",
+    "returncode": 0,
+    "role": "R17 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:08:21Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13597,
+      "output_tokens": 4236,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,33 @@
+{
+  "stage": "single_backward_causal_preimage",
+  "stage_mode": "sequential",
+  "call_id": "causal_preimage_backchainer",
+  "role": "single implementation-neutral causal-preimage backchainer under gpt-5.6-luna/high Fast-priority runtime",
+  "output_type": "analysis",
+  "prompt_sha256": "1fe77ea65b495fe35867ac8561dff79f7490f567530d85faffb3153c1e7fdbfc",
+  "response_sha256": "c57e1e0ae70b76b8595ecec8070f2a41dfc0f4b4ece408b8af917acfdcb026cf",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "high",
+  "service_tier": "fast",
+  "request_tier": "priority",
+  "tier_contract": "fast_priority_required",
+  "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+  "usage": {
+    "input_tokens": 60093,
+    "cached_input_tokens": 35328,
+    "output_tokens": 7440,
+    "reasoning_output_tokens": 6227,
+    "model_calls": 1
+  },
+  "trace_refs": [
+    "thread.started",
+    "turn.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.completed",
+    "item.completed",
+    "turn.completed",
+    "codex-subscription-home-slot:0"
+  ]
+}

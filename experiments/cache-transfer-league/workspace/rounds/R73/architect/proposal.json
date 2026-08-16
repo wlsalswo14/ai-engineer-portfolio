@@ -1,0 +1,112 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R73-structure-architect\\final-receipt.json",
+    "sha256": "b2507e1230a2a631b9f9e5211c268bf03b87018f8554232b59cf8726f1e97420"
+  },
+  "architect_response": {
+    "architect_scope": "one-R73-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "construct_with_open_visibility",
+      "information_flow": "The first call receives every common input and emits an analysis containing a binding admissibility boundary without producing a policy artifact. The final call consumes that analysis, directly receives every common input, may construct within the admissible space, may not reinstate vetoed commitments, and emits one complete policy.",
+      "name": "Negative-Authority Open Aperture",
+      "organization": "two-call sequential lineage whose sole edge substitutes binding negative authority for source-class gating",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "establish_admissibility_boundary",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile all visible evidence with normative obligations, identify unsupported commitments as binding exclusions, and preserve admissible conflicts in one analysis without constructing a policy.",
+              "output_type": "analysis",
+              "role": "negative-authority evidence adjudicator"
+            },
+            {
+              "id": "construct_with_open_visibility",
+              "inputs": [
+                "establish_admissibility_boundary",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume establish_admissibility_boundary, directly examine all common evidence, honor its binding exclusions, reconcile remaining admissible claims, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "bounded constructive policy authority"
+            }
+          ],
+          "id": "negative_authority_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "terminal evidence visibility",
+        "distribution of semantic authority",
+        "conflict-resolution direction"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "unconditional terminal generative-source cut",
+      "independent_replacement_principle": "Use full terminal source visibility under an upstream binding negative-authority boundary that excludes unsupported commitments while reserving constructive policy authority for the terminal.",
+      "rejected_assumptions": [
+        "Permanent terminal source withholding is necessary for disciplined policy emission.",
+        "Upstream analysis must remain advisory while the terminal holds unilateral semantic authority."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace source withholding with a binding negative-authority edge: restore every common source to terminal visibility while allowing the upstream analysis to veto unsupported commitments without constructing the policy.",
+      "expected_effect": "The terminal can reconcile source interactions directly without reviving vetoed commitments, changing both evidence access and conflict authority.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion uses terminal source withholding as its control mechanism, making upstream omissions irrecoverable while leaving the terminal with unilateral semantic authority."
+    },
+    "structural_mutation": {
+      "after": "The analysis edge carries binding negative authority, the terminal directly sees all common sources, and its constructive authority applies only within the surviving admissible space.",
+      "before": "An advisory analysis crosses the sole edge, selected generative sources remain permanently hidden from the terminal, and the terminal retains unilateral policy authority.",
+      "change_count": 1,
+      "factor": "negative-authority substitution for terminal source gating",
+      "why_structural": "One mechanism substitution changes concrete edge control and terminal visibility rather than renaming or splitting roles."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 73,
+  "incumbent_structure_sha256": "048bd7f7978a9edc6cce1abb46639026e00145b8afa355da2f0c45cd85e10f88",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R73\\qualitative-error-notebook.json",
+    "sha256": "63f0cc8622b460148195eac84ea4985a9bbb362eeef94551cb0bd723bdc90b67"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R73\\source-manifest.json",
+    "sha256": "1c685746fb47f3fa42a39e098f466694aa67cba7d6c3dc168a6ab8e80b44ba75"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "negative-authority substitution for terminal source gating",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "4921419267d18871cc2558ecd4d62d105872b0ef1c93987ea6e7f35584177aab",
+    "topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c"
+  }
+}

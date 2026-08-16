@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "display_round": 1,
+  "stop_after_display_round": 1,
+  "cache_r2_permitted": false,
+  "starting_champion": {
+    "display_round": 0,
+    "source_topology": "fixed-R20-bootstrap-topology",
+    "policy_path": "workspace/champion-r0/policy.py",
+    "policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "structure_path": "workspace/champion-r0/structure.json",
+    "structure_file_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+    "selection_receipt_sha256": "406d3c1f3db2f0b9246262919490d7e76b46fed60851305e22c0285a0e94b1f8",
+    "r0_atomic_commit_sha256": "c426f4e658ddcfcd77a17e8d56d14220ef845fa0004c94dc50b79ee4c3b65cce"
+  },
+  "models": {
+    "structure_architect": {
+      "calls": 1,
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "allowed_output": "one qualitative hypothesis plus exactly one structural mutation and its topology",
+      "forbidden_output": "policy code, benchmark scores, trace contents, hardcoding, variants, or sampling"
+    },
+    "all_inner_roles": {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "service_tier": "default"
+    }
+  },
+  "duel": {
+    "pair_count": 3,
+    "arms": ["incumbent", "candidate"],
+    "incumbent_structure": "immutable R0 champion structure",
+    "candidate_structure": "single Sol-architected mutation",
+    "common_inputs_within_every_pair": [
+      "immutable R0 champion policy anchor",
+      "authoritative task contract",
+      "one immutable score-blind improvement hypothesis",
+      "generic task constraints"
+    ],
+    "independence": "six arm pipelines receive no other pair artifact or result",
+    "routing": {
+      "pair_1": {"incumbent_home_slot": 0, "candidate_home_slot": 2},
+      "pair_2": {"incumbent_home_slot": 2, "candidate_home_slot": 0},
+      "pair_3": {"incumbent_home_slot": 0, "candidate_home_slot": 2}
+    },
+    "seal_rule": "all six final policies and every model receipt sealed before first frozen evaluation"
+  },
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "seed": 20260605,
+    "scale": 3,
+    "trace_count": 9,
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "replays": 2,
+    "generation_visibility": "task-and-qualitative-hypothesis-only-no-scores-no-fixtures"
+  },
+  "pair_rule": {
+    "candidate_win": "both arms valid and candidate score strictly greater than incumbent score",
+    "incumbent_win": "both arms valid and incumbent score strictly greater than candidate score",
+    "tie": "both arms valid and scores exactly equal",
+    "invalid_pair": "either arm invalid or replay2 nondeterministic"
+  },
+  "promotion": {
+    "required": [
+      "all six arms valid and replay2 deterministic",
+      "all three candidate arms valid",
+      "candidate wins at least two of three pairs and strictly exceed incumbent pair wins",
+      "candidate median strictly exceeds incumbent median",
+      "any triggered close confirmation passes"
+    ],
+    "candidate_representative": "candidate artifact at the candidate median score; if multiple, lexicographically smallest artifact SHA256",
+    "failure_action": "retain immutable R0 champion structure and policy"
+  },
+  "close_confirmation": {
+    "absolute_threshold": 0.25,
+    "trigger": "absolute median gap <= 0.25 or any valid non-tied pair absolute gap <= 0.25",
+    "action": "frozen replay3 for all six sealed arms",
+    "pass": "every replay3 normalized result equals both corresponding replay2 normalized results",
+    "effect": "confirmation only; no regeneration or policy change",
+    "rationale": "The 0.25 absolute band was fixed before reveal as a conservative near-tie boundary for decisions that could reverse through evaluator or transcription drift while remaining materially indistinguishable."
+  },
+  "tie_breaks": {
+    "pair_scores": "exact equality is a tie and never a candidate win",
+    "representative": "median score then lexicographically smallest artifact SHA256",
+    "promotion": "no topology tie-break can override the strict majority and strict median requirements"
+  },
+  "spend": {
+    "billing_mode": "ChatGPT subscription via Codex login",
+    "paid_api_permitted": false,
+    "paid_api_spend_usd": 0.0,
+    "estimated_api_spend_usd": null,
+    "token_accounting": "input, cached input, output, reasoning output, total, and effective tokens"
+  },
+  "coordination": {
+    "heavy_lock": "experiments/.heavy-evaluation.lock.json",
+    "require_fresh_chess_go_before_scorer": true,
+    "scorer_must_not_overlap_stockfish": true
+  }
+}

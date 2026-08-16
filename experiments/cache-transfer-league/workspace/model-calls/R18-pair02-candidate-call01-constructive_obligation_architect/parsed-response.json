@@ -1,0 +1,55 @@
+{
+  "analysis_packet": {
+    "certificate": "Committed constructive-obligation state derived solely from the supplied task, immutable anchor contract, constraints, hypothesis, and relay structure; provenance anchor_sha256=294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60.",
+    "exact_actions": [
+      "Forward this single committed obligation state unchanged to forward_policy_materializer.",
+      "Require one complete policy materialization satisfying all obligations simultaneously.",
+      "Reject any materialization that introduces alternatives, anchor-local repair logic, postconstruction pruning, forbidden information sources, illegal evictions, or capacity overflow."
+    ],
+    "obligations": [
+      {
+        "commitment": "Materialize exactly one standard-library policy implementing the required constructor and access interface with the required return type.",
+        "id": "contract_legality"
+      },
+      {
+        "commitment": "After every access, tracked resident bytes must be nonnegative and at most capacity_bytes; objects larger than capacity must not become resident.",
+        "id": "capacity_invariant"
+      },
+      {
+        "commitment": "Every returned eviction must identify one unique integer key resident immediately before that request's eviction transition.",
+        "id": "eviction_legality"
+      },
+      {
+        "commitment": "Use only constructor state and the current request history observed online; do not use traces, oracle decisions, benchmark paths, external libraries, networking, or subprocesses.",
+        "id": "online_visibility"
+      },
+      {
+        "commitment": "Use one coherent resident-state transition that jointly balances object hits and byte hits while distinguishing scan pollution from reusable recency and adapting online when access phases change.",
+        "id": "coupled_adaptation"
+      },
+      {
+        "commitment": "Treat this obligation set as immutable controlling evidence for the immediately following materialization; do not reopen, rank, roll back, prune, or replace it.",
+        "id": "provenance_lock"
+      }
+    ],
+    "witnesses": [
+      {
+        "evidence": "Policy exposes Policy(capacity_bytes) and access(key, size, now) -> list[int], using only the Python standard library.",
+        "source": "task"
+      },
+      {
+        "evidence": "Interface legality, capacity safety, and online-only visibility must be preserved.",
+        "source": "anchor_contract"
+      },
+      {
+        "evidence": "Each access is processed online; returned keys must be unique integer keys currently cached; capacity must never be exceeded; forbidden evaluator knowledge and external dependencies are excluded.",
+        "source": "task_constraints"
+      },
+      {
+        "evidence": "One immutable constructive typestate edge must couple object-hit, byte-hit, scan-resistance, and phase-shift commitments before materialization.",
+        "source": "candidate_hypothesis"
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

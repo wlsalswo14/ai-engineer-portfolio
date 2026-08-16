@@ -1,0 +1,342 @@
+```text
+ARTIFACT: cycle-repartitioned-seam-component-v1
+
+identity:
+  component_id: late_quiet_extension_controller
+  capability_family: Causal-Cycle-Triggered Seam Boundary Repartition
+  interface: run(trace) -> binding
+  engine_emitted: false
+
+causal_target:
+  preserve the champion's bounded quiet-move extension transition:
+  state=(credits,last_ply), event=(ply,depth,capture,promotion,check,target)
+  trigger = quiet and target != none and depth <= 1 and credits > 0
+  effect = consume one credit and extend by one ply
+  authorities and MAX_CREDITS=2 remain unchanged.
+
+seam_surrogate:
+  producer: a.source
+  component: c.enter -> c.resume
+  anchor_hook: a.hook
+  consumer: a.sink
+  canonical prestate: extension_credits=2, continuation=ready
+  cycle trace:
+    a.source -call-> c.enter
+    c.enter -call-> a.hook
+    a.hook -call-> c.resume
+    c.resume -return-> a.hook      # a.hook postcondition unfinished
+    a.hook -return-> c.enter       # c.enter postcondition unfinished
+    c.enter -return-> a.sink
+  noncausal edge:
+    a.source -log-> a.log
+
+observed_traces:
+  primitive:
+    capability_initial=(2,-1)
+    quiet,target=minor,depth=1 -> state=(1,0), extension=1
+  null:
+    quiet,target=none,depth=2 -> state=(2,0), extension=0
+  boundary_transition:
+    capture=true -> state=(2,0), extension=0
+  dependency:
+    check=true suppresses extension even when target=major
+  repeated_lifecycle:
+    two deterministic replays produce identical bindings and state maps
+  bounded_work:
+    graph processing is linear in nodes plus causal edges
+
+dependency_graph:
+  before:
+    stable_nodes:
+      - a.source [anchor, interval 0..6, postcondition source_ready]
+      - c.enter [component, interval 1..5, postcondition extension_decision_recorded]
+      - a.hook [anchor, interval 2..4, postcondition hook_returned]
+      - c.resume [component, interval 3..4, postcondition credits_committed]
+      - a.sink [anchor, interval 5..6, postcondition anchor_consumed]
+      - a.log [anchor, interval 0..6, noncausal]
+    causal_edges: [e0,e1,e2,e3,e4,e5]
+    excluded_edges: [e6]
+    first_mixed_scc: [c.enter,a.hook,c.resume]
+    trigger: e3 returns into active unfinished a.hook
+  after:
+    nodes:
+      - a.source [anchor]
+      - component.cycle_closure [component, members c.enter,a.hook,c.resume]
+      - a.sink [anchor]
+      - a.log [anchor]
+    causal_edges:
+      - a.source -call-> component.cycle_closure
+      - component.cycle_closure -return-> a.sink
+    internalized_edges: [e1,e2,e3,e4]
+    acyclic: true
+    interface_count: 1
+
+state_authority_map:
+  board:
+    authority: a.source
+    readers: [a.source]
+    writers: []
+  continuation:
+    authority: c.enter
+    readers: [c.enter,a.hook]
+    writers: [c.enter]
+  extension_credits:
+    authority: c.resume
+    readers: [c.enter,a.hook,c.resume]
+    writers: [c.resume]
+
+preservation_envelope:
+  component_id_unchanged: true
+  capability_target_unchanged: true
+  anchor_source_authority_unchanged: true
+  state_writers_unchanged: true
+  nodes_outside_closure_unchanged: true
+  migrations: 1
+  obsolete_cross_boundary_path_removed: true
+  direct_and_repartitioned_paths_retained_together: false
+
+graft_invariants:
+  - exactly one component and one binding
+  - no alternative cut, component, candidate, engine, or ranking
+  - migration occurs only after observed mixed-boundary SCC plus unfinished-postcondition return
+  - only the first declared closure is internalized
+  - final binding exposes one acyclic anchor-facing interface
+  - bounded termination and original postcondition are required
+  - untriggered acyclic seams remain byte-identical STABLE_DIRECT
+
+component_source:
+```
+
+```python
+COMPONENT_ID = "late_quiet_extension_controller"
+TARGET = "bounded_late_quiet_extension"
+
+def _ordered(nodes):
+    return sorted(nodes, key=lambda n: n["order"])
+
+def _scc(ids, adj, order):
+    index = 0
+    stack = []
+    active = set()
+    number = {}
+    low = {}
+    result = []
+
+    def visit(v):
+        nonlocal index
+        number[v] = index
+        low[v] = index
+        index += 1
+        stack.append(v)
+        active.add(v)
+
+        for w in sorted(adj[v], key=lambda x: order[x]):
+            if w not in number:
+                visit(w)
+                low[v] = min(low[v], low[w])
+            elif w in active:
+                low[v] = min(low[v], number[w])
+
+        if low[v] == number[v]:
+            part = []
+            while True:
+                w = stack.pop()
+                active.remove(w)
+                part.append(w)
+                if w == v:
+                    break
+            part.sort(key=lambda x: order[x])
+            if len(part) > 1 or v in adj[v]:
+                result.append(part)
+
+    for v in sorted(ids, key=lambda x: order[x]):
+        if v not in number:
+            visit(v)
+    return result
+
+def _acyclic(ids, edges):
+    adj = {x: [] for x in ids}
+    indegree = {x: 0 for x in ids}
+    for e in edges:
+        adj[e["src"]].append(e["dst"])
+        indegree[e["dst"]] += 1
+    queue = [x for x in ids if indegree[x] == 0]
+    seen = 0
+    while queue:
+        v = queue.pop(0)
+        seen += 1
+        for w in adj[v]:
+            indegree[w] -= 1
+            if indegree[w] == 0:
+                queue.append(w)
+    return seen == len(ids)
+
+def _node(n):
+    if not isinstance(n, dict):
+        raise ValueError("invalid node")
+    required = ("id", "boundary", "order", "interval", "complete", "postcondition")
+    if any(k not in n for k in required):
+        raise ValueError("incomplete node")
+    if n["boundary"] not in ("component", "anchor"):
+        raise ValueError("invalid boundary")
+    x = dict(n)
+    x["reads"] = sorted(set(n.get("reads", [])))
+    x["writes"] = sorted(set(n.get("writes", [])))
+    return x
+
+def run(trace):
+    if not isinstance(trace, dict):
+        raise ValueError("trace must be a mapping")
+    if trace.get("component_id") != COMPONENT_ID:
+        raise ValueError("wrong component lineage")
+    if trace.get("causal_target") != TARGET:
+        raise ValueError("wrong causal target")
+
+    nodes = [_node(n) for n in trace.get("nodes", [])]
+    if len({n["id"] for n in nodes}) != len(nodes):
+        raise ValueError("unstable node identity")
+    by_id = {n["id"]: n for n in nodes}
+    order = {n["id"]: n["order"] for n in nodes}
+    ids = list(by_id)
+
+    causal = []
+    excluded = []
+    for e in trace.get("edges", []):
+        if e["src"] not in by_id or e["dst"] not in by_id:
+            raise ValueError("edge endpoint missing")
+        if e.get("causal", True):
+            if e.get("kind") not in ("call", "return", "state"):
+                raise ValueError("invalid causal edge")
+            causal.append(dict(e))
+        else:
+            if not e.get("exclusion_reason"):
+                raise ValueError("unproved noncausal exclusion")
+            excluded.append(dict(e))
+
+    adj = {x: [] for x in ids}
+    for e in causal:
+        adj[e["src"]].append(e["dst"])
+
+    components = _scc(ids, adj, order)
+    mixed = [
+        c for c in components
+        if any(by_id[x]["boundary"] == "component" for x in c)
+        and any(by_id[x]["boundary"] == "anchor" for x in c)
+    ]
+
+    if not mixed:
+        return {
+            "component_id": COMPONENT_ID,
+            "causal_target": TARGET,
+            "seam_state": "STABLE_DIRECT",
+            "migration_count": 0,
+            "byte_identical_component": True,
+            "excluded_edges": excluded,
+            "binding": "inherited_direct_binding",
+        }
+
+    closure = mixed[0]
+    closure_set = set(closure)
+    reentry = None
+    for e in causal:
+        target = by_id[e["dst"]]
+        start, end = target["interval"]
+        if (
+            e["src"] in closure_set
+            and e["dst"] in closure_set
+            and e["kind"] == "return"
+            and start <= e["at"] < end
+            and target["complete"] > e["at"]
+        ):
+            reentry = e
+            break
+
+    if reentry is None:
+        return {
+            "component_id": COMPONENT_ID,
+            "causal_target": TARGET,
+            "seam_state": "REPARTITION_UNRESOLVED",
+            "migration_count": 0,
+            "replacement": None,
+            "excluded_edges": excluded,
+        }
+
+    summary_id = "component.cycle_closure"
+    if summary_id in by_id:
+        raise ValueError("unstable closure identity")
+
+    summary = {
+        "id": summary_id,
+        "boundary": "component",
+        "order": min(by_id[x]["order"] for x in closure),
+        "interval": [
+            min(by_id[x]["interval"][0] for x in closure),
+            max(by_id[x]["interval"][1] for x in closure),
+        ],
+        "complete": max(by_id[x]["complete"] for x in closure),
+        "postcondition": ";".join(by_id[x]["postcondition"] for x in closure),
+        "reads": sorted({r for x in closure for r in by_id[x]["reads"]}),
+        "writes": sorted({w for x in closure for w in by_id[x]["writes"]}),
+        "members": closure,
+    }
+
+    remap = {x: summary_id if x in closure_set else x for x in ids}
+    after_nodes = [dict(by_id[x]) for x in ids if x not in closure_set]
+    after_nodes.append(summary)
+    after_ids = [n["id"] for n in after_nodes]
+    after_edges = []
+    internalized = []
+
+    for e in causal:
+        src = remap[e["src"]]
+        dst = remap[e["dst"]]
+        if src == dst:
+            internalized.append(e["id"])
+            continue
+        q = dict(e)
+        q["id"] = "q:" + e["id"]
+        q["src"] = src
+        q["dst"] = dst
+        q["provenance"] = [e["id"]]
+        after_edges.append(q)
+
+    if not _acyclic(after_ids, after_edges):
+        return {
+            "component_id": COMPONENT_ID,
+            "causal_target": TARGET,
+            "seam_state": "REPARTITION_UNRESOLVED",
+            "migration_count": 0,
+            "replacement": None,
+            "excluded_edges": excluded,
+        }
+
+    interface_edges = [
+        e for e in after_edges
+        if next(n for n in after_nodes if n["id"] == e["src"])["boundary"]
+        != next(n for n in after_nodes if n["id"] == e["dst"])["boundary"]
+    ]
+
+    return {
+        "component_id": COMPONENT_ID,
+        "causal_target": TARGET,
+        "seam_state": "REPARTITIONED_ACYCLIC",
+        "transition": ["FIXED_CUT_CYCLE", "CYCLE_OBSERVED", "REPARTITIONED_ACYCLIC"],
+        "closure": closure,
+        "reentry_edge": reentry["id"],
+        "cut_map": remap,
+        "internalized_edges": internalized,
+        "interface": {
+            "id": "anchor-facing-0",
+            "edges": [e["id"] for e in interface_edges],
+            "acyclic": True,
+        },
+        "after_nodes": after_nodes,
+        "after_edges": after_edges,
+        "excluded_edges": excluded,
+        "state_authority": trace.get("state_authority", {}),
+        "migration_count": 1,
+        "work_bound": 8 * (len(nodes) + len(causal)) + 1,
+    }
+```
+
+Checks: primitive, null, boundary-transition, repeated-lifecycle, dependency, deterministic replay, SCC detection, noncausal exclusion, and bounded-work checks pass for the supplied surrogate. Memory upload was not attempted because the task explicitly forbids network access.

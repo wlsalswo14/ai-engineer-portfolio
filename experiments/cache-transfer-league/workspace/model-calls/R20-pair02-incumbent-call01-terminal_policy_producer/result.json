@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.protected_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n\n    def _discard_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _record_ghost(self, key, size, frequent):\n        self._discard_ghost(key)\n        target = self.ghost_frequent if frequent else self.ghost_recent\n        target[key] = size\n        while sum(self.ghost_recent.values()) + sum(self.ghost_frequent.values()) > self.capacity_bytes:\n            if self.ghost_recent:\n                self.ghost_recent.popitem(last=False)\n            elif self.ghost_frequent:\n                self.ghost_frequent.popitem(last=False)\n            else:\n                break\n\n    def _demote_frequent(self):\n        while self.frequent and sum(self.frequent.values()) > self.protected_target:\n            key, size = self.frequent.popitem(last=False)\n            self.recent[key] = size\n\n    def _evict_one(self):\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self._record_ghost(key, size, False)\n        elif self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self._record_ghost(key, size, True)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.frequent[key] = stored_size\n            self._demote_frequent()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            self._discard_ghost(key)\n            return []\n\n        if key in self.ghost_recent:\n            self.ghost_recent.pop(key)\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(1, min(size, self.capacity_bytes)),\n            )\n            destination = self.frequent\n        elif key in self.ghost_frequent:\n            self.ghost_frequent.pop(key)\n            self.protected_target = max(\n                0,\n                self.protected_target - max(1, min(size, self.capacity_bytes)),\n            )\n            destination = self.frequent\n        else:\n            destination = self.recent\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                break\n            evicted.append(victim)\n\n        destination[key] = size\n        self.used_bytes += size\n        self._demote_frequent()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R20-pair02-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 58.956,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:41:57Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "454ccfca804a70582ba495a04ef198a16c4ef2857d8cfca53fb94b198ad2ffa6",
+    "raw_events_path": "workspace\\model-calls\\R20-pair02-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "94c1da7bf73b761f3ae639255a36e7a35b4a2aecbf447f1636c4ec6b4f1c658f",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "ca6b796070c172504e6bd3ddd8cfb1d7c3178a9352a08ac06b78f5251eaf4655",
+    "returncode": 0,
+    "role": "R20 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:40:58Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14208,
+      "output_tokens": 4407,
+      "reasoning_output_tokens": 3624
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

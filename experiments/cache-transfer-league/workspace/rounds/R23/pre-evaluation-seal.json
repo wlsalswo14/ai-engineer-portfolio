@@ -1,0 +1,144 @@
+{
+  "aggregate_sha256": "a81e597d89b05fc685220f699602acc68fbffb8f70b230462ef5a0557b8244c8",
+  "architect": {
+    "calls": 1,
+    "model": "gpt-5.6-sol",
+    "policy_code_emitted": false,
+    "proposal_path": "workspace\\rounds\\R23\\architect\\proposal.json",
+    "proposal_sha256": "66d2f9a0662d9dcb46d0a1b07e35dd73da9a4a4ea8d94e580fe04286de3caa2a",
+    "reasoning_effort": "max",
+    "receipt_path": "workspace\\model-calls\\R23-structure-architect\\final-receipt.json",
+    "receipt_sha256": "6baa3ffbba8008861d516875a1846cae3c83f126b9f2219419e4392807be32d8",
+    "request_tier": "priority",
+    "service_tier": "fast"
+  },
+  "arm_count": 6,
+  "benchmark_identity": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "cache_r101_opened": false,
+  "common_inputs": {
+    "anchor_policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "hypothesis_sha256": "8aad203758864cd0ec3c34a35526e4f221ff2eccf51a387374219677d6d378fa",
+    "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb"
+  },
+  "discarded_pre_fast_executor_epoch": null,
+  "display_round": 23,
+  "entries": [
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R23\\pairs\\pair-01\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "49455d3e2ee16a9d2e57b87936d5d6a274f9d06bcd20c5e5d4054b6257337322",
+      "generic_valid": false,
+      "label": "pair-01-incumbent",
+      "pair": 1,
+      "seal_path": "workspace\\rounds\\R23\\pairs\\pair-01\\incumbent\\seal.json",
+      "seal_sha256": "594790aa958fe3a81631499005697fc3f95a8bcf633a61b6195a3a6a000bd37d"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R23\\pairs\\pair-01\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "8683ec47a6f4078d7656a3ce96ed9b16e5b5f6d4913960133e6b1ffa5a53758d",
+      "generic_valid": true,
+      "label": "pair-01-candidate",
+      "pair": 1,
+      "seal_path": "workspace\\rounds\\R23\\pairs\\pair-01\\candidate\\seal.json",
+      "seal_sha256": "8750b588d590dcc45000d1c09a2d7c2849ff505ab2c3ed6058225226d5846ada"
+    },
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R23\\pairs\\pair-02\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "0e4473919fbe89dff029f71a2d7e4f514e261729cf0cda3cbcd96f4c513594ff",
+      "generic_valid": true,
+      "label": "pair-02-incumbent",
+      "pair": 2,
+      "seal_path": "workspace\\rounds\\R23\\pairs\\pair-02\\incumbent\\seal.json",
+      "seal_sha256": "a9f92465929c3df6a83988319c020595dfe433e728d4f9315f3d0b9ef4a50e71"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R23\\pairs\\pair-02\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "e82793d31a895de2097d30b7901ad1d7379e600e3c3dc7afa6fd3d0091f08d5b",
+      "generic_valid": false,
+      "label": "pair-02-candidate",
+      "pair": 2,
+      "seal_path": "workspace\\rounds\\R23\\pairs\\pair-02\\candidate\\seal.json",
+      "seal_sha256": "45082059126eb5ac08e2b10ba88506e22f523b58c2a158d8dec0a6df3ad0030a"
+    },
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R23\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "dad10e56b70148cd689b7b6fb94a09b0312877df18373371e26e83264d2ddcf7",
+      "generic_valid": true,
+      "label": "pair-03-incumbent",
+      "pair": 3,
+      "seal_path": "workspace\\rounds\\R23\\pairs\\pair-03\\incumbent\\seal.json",
+      "seal_sha256": "f417aa0a76ebed2f5b647410292dd679d9a3eb0af52a4abd3ed5d5a11f73e6c8"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R23\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "c6fc115799d345ad67a5c33244dd2cfb6825d4d0d7410d5eda4107c397982acb",
+      "generic_valid": true,
+      "label": "pair-03-candidate",
+      "pair": 3,
+      "seal_path": "workspace\\rounds\\R23\\pairs\\pair-03\\candidate\\seal.json",
+      "seal_sha256": "623de6180fd5b69639a64b10dc828f93694bc97d902cd89148a258ed95f7d9ea"
+    }
+  ],
+  "executor_epoch_binding": {
+    "path": "workspace\\rounds\\R23\\executor-epoch-binding.json",
+    "sha256": "28a2eb9cfcb1f243d4487d63bff3e1813eb07253ad6863d10112cb42c1ecb9d5"
+  },
+  "inner_roles": {
+    "calls": 9,
+    "direct_substitution": false,
+    "executor_epoch_id": "luna-fast-priority-e1",
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "service_tier": "fast"
+  },
+  "pair_count": 3,
+  "proposal_mode": "counter_hypothesis",
+  "schema_version": 1,
+  "score_blind_generation": true,
+  "sealed_at": "2026-08-09T17:13:41Z",
+  "sealed_before_any_frozen_evaluation": true,
+  "selection_contract": {
+    "close_confirmation": {
+      "absolute_threshold": 0.25,
+      "action": "frozen replay3 for all six sealed arms",
+      "pass": "each replay3 normalized result equals both corresponding replay1 and replay2 results",
+      "trigger": "absolute median gap <= 0.25 or any valid non-tied pair gap <= 0.25"
+    },
+    "pair_ties": "exact equality is a tie and never a candidate win",
+    "predeclared_before_score_reveal": true,
+    "promotion": {
+      "all_six_valid_and_replay2_deterministic": true,
+      "candidate_median": "strictly greater than incumbent median",
+      "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+      "failure_action": "retain current champion policy and structure",
+      "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+    }
+  },
+  "selection_contract_sha256": "08b263329c42ee69020ab1d71df14448ec473eb3bae599c7891207c7992f4a7b",
+  "structures": {
+    "candidate": {
+      "call_count": 2,
+      "path": "workspace\\rounds\\R23\\architect\\proposed-structure.json",
+      "sha256": "dc71573cb615ce3ef13966fe8388b4ddb7a8531d1b1fe24f1e6ceb044ec34c3a",
+      "topology_fingerprint": "f1e759b7b03f0e4cc9fbf08d002249d278a161740427e7b46d06767caccc2c77"
+    },
+    "incumbent": {
+      "call_count": 1,
+      "path": "workspace\\champion-r22\\structure.json",
+      "sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+      "topology_fingerprint": "5ba36af5c6cac26efd3050e9284c760ec7c35dda00673d521acf69fac95a5c31"
+    }
+  }
+}

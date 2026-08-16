@@ -1,0 +1,37 @@
+{
+  "final_call_id": "release_from_closed_custody",
+  "information_flow": "The first call alone receives all common inputs, reconciles their evidence and obligations, and emits one complete executable policy closure. The final call consumes only that closure, receives no common external input directly, applies its self-contained custody transition, and emits its single enclosed policy.",
+  "name": "Epistemically Closed Executable Custody",
+  "organization": "two-call sequential lineage whose sole edge transfers exclusive custody of one complete executable policy closure",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_executable_custody",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile all visible evidence and obligations into one complete executable policy closure whose carried basis is sufficient for downstream custody, without issuing binding exclusions.",
+          "output_type": "executable_policy_closure",
+          "role": "atomic evidence-to-artifact custodian"
+        },
+        {
+          "id": "release_from_closed_custody",
+          "inputs": [
+            "form_executable_custody"
+          ],
+          "objective": "Consume form_executable_custody as the sole visible evidence, preserve the complete artifact under its self-contained custody semantics, and emit its one policy.",
+          "output_type": "policy",
+          "role": "closure-governed policy release authority"
+        }
+      ],
+      "id": "closed_custody_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

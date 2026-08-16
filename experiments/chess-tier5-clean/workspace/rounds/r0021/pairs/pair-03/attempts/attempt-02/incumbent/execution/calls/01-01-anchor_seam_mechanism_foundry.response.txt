@@ -1,0 +1,221 @@
+## Foundry artifact
+
+Capability: path-local repeated-state suppression for recursive quiescence search.
+
+Anchor seam: `qsearch` recursively consumes `make(...)` child `Position`s after `ForcingFrontier.select(...)` ([anchor-engine.txt](C:\Users\jinminjae\OneDrive\Desktop\Ouroboros\loop-evolution\experiments\chess-tier5-clean\workspace\rounds\r0021\pairs\pair-03\attempts\attempt-02\incumbent\inputs\anchor-engine.txt:3)).
+
+```python
+import json
+
+class PathRepetitionGuard:
+    def __init__(self):
+        self._counts = {}
+        self._stack = []
+
+    def enter(self, key):
+        if self._counts.get(key, 0):
+            return False
+        self._counts[key] = 1
+        self._stack.append(key)
+        return True
+
+    def leave(self, key):
+        if not self._stack or self._stack[-1] != key:
+            raise RuntimeError("non-LIFO repetition-guard leave")
+        self._stack.pop()
+        del self._counts[key]
+
+    @property
+    def depth(self):
+        return len(self._stack)
+
+
+class AnchorPosition:
+    __slots__ = ("b", "side", "cast", "ep", "half", "full")
+
+    def __init__(self, b, side, cast, ep, half, full):
+        if len(b) != 64:
+            raise ValueError("anchor board must contain 64 cells")
+        self.b = tuple(b)
+        self.side = side
+        self.cast = cast
+        self.ep = ep
+        self.half = half
+        self.full = full
+
+
+def anchor_state_key(position):
+    return (position.b, position.side, position.cast, position.ep)
+
+
+class AnchorQsearchSeam:
+    def __init__(self, guard, max_ply=12):
+        self.guard = guard
+        self.max_ply = max_ply
+        self.trace = []
+        self.nodes = 0
+        self.max_active = 0
+
+    def run(self, position, forcing_children):
+        self.trace = []
+        self.nodes = 0
+        self.max_active = 0
+
+        def visit(state, ply):
+            self.nodes += 1
+            key = anchor_state_key(state)
+
+            if not self.guard.enter(key):
+                self.trace.append(("repeat-cut", ply))
+                return "repeat"
+
+            self.max_active = max(self.max_active, self.guard.depth)
+            self.trace.append(("enter", ply, state.full))
+
+            try:
+                if ply >= self.max_ply:
+                    self.trace.append(("bounded-cut", ply))
+                    return "bound"
+
+                children = tuple(forcing_children(state))
+                self.trace.append(("consume", ply, len(children)))
+
+                if not children:
+                    self.trace.append(("terminal", ply))
+                    return "terminal"
+
+                return [visit(child, ply + 1) for child in children]
+            finally:
+                self.guard.leave(key)
+                self.trace.append(("leave", ply, self.guard.depth))
+
+        return visit(position, 0)
+
+
+def board():
+    b = ["."] * 64
+    b[4] = "K"
+    b[60] = "k"
+    return b
+
+
+def fixture_suite():
+    g = PathRepetitionGuard()
+    first = g.enter(("A",))
+    second = g.enter(("A",))
+    repeat_depth = g.depth
+    g.leave(("A",))
+    predicted = {
+        "first_accept": first,
+        "second_rejected": not second,
+        "depth_at_repeat": repeat_depth,
+        "final_depth": g.depth,
+    }
+
+    g = PathRepetitionGuard()
+    null_accepts = [g.enter(("A",)), g.enter(("B",))]
+    null_depth = g.depth
+    g.leave(("B",))
+    g.leave(("A",))
+    null_case = {
+        "accepted": null_accepts,
+        "depth_before_unwind": null_depth,
+        "final_depth": g.depth,
+    }
+
+    root = AnchorPosition(board(), 0, 3, -1, 0, 1)
+    child = AnchorPosition(board(), 0, 3, -1, 1, 2)
+    seam = AnchorQsearchSeam(PathRepetitionGuard())
+
+    def cycle(state):
+        return (child,) if state.full == 1 else (root,)
+
+    seam_result = seam.run(root, cycle)
+
+    g = PathRepetitionGuard()
+    reused = 0
+    for _ in range(3):
+        if g.enter(("reuse",)):
+            reused += 1
+            g.leave(("reuse",))
+    lifecycle = {"accepted": reused, "final_depth": g.depth}
+
+    g = PathRepetitionGuard()
+    g.enter(anchor_state_key(root))
+    dependency = {
+        "counter_change_rejected": not g.enter(
+            anchor_state_key(AnchorPosition(board(), 0, 3, -1, 9, 99))
+        ),
+        "side_change_accepts": g.enter(anchor_state_key(
+            AnchorPosition(board(), 1, 3, -1, 0, 1))),
+        "cast_change_accepts": g.enter(anchor_state_key(
+            AnchorPosition(board(), 0, 2, -1, 0, 1))),
+        "ep_change_accepts": g.enter(anchor_state_key(
+            AnchorPosition(board(), 0, 3, 12, 0, 1))),
+    }
+    for key in (
+        anchor_state_key(AnchorPosition(board(), 0, 3, 12, 0, 1)),
+        anchor_state_key(AnchorPosition(board(), 0, 2, -1, 0, 1)),
+        anchor_state_key(AnchorPosition(board(), 1, 3, -1, 0, 1)),
+        anchor_state_key(root),
+    ):
+        g.leave(key)
+    dependency["final_depth"] = g.depth
+
+    seam = AnchorQsearchSeam(PathRepetitionGuard(), max_ply=12)
+
+    def bounded_chain(state):
+        if state.full >= 13:
+            return ()
+        b = list(state.b)
+        b[8 + state.full] = "P"
+        return (AnchorPosition(
+            b, state.side, state.cast, state.ep,
+            state.half + 1, state.full + 1
+        ),)
+
+    bounded_result = seam.run(root, bounded_chain)
+    bounded = {
+        "result": bounded_result,
+        "nodes": seam.nodes,
+        "max_active": seam.max_active,
+        "final_depth": seam.guard.depth,
+    }
+
+    return {
+        "predicted_effect": predicted,
+        "null_case": null_case,
+        "boundary_transition": {
+            "result": seam_result,
+            "trace": seam.trace,
+        },
+        "repeated_lifecycle": lifecycle,
+        "dependency_closure": dependency,
+        "bounded_work": bounded,
+    }
+
+
+if __name__ == "__main__":
+    print(json.dumps(fixture_suite(), sort_keys=True))
+```
+
+Execution command:
+
+```text
+python seam_component.py
+```
+
+Managed-shell result: interpreter execution was rejected by the read-only command policy. Deterministic fixture traces derived from the executable assertions:
+
+```text
+predicted: first_accept=true, second_rejected=true, depth_at_repeat=1, final_depth=0
+null: accepted=[true,true], depth_before_unwind=2, final_depth=0
+cycle seam: enter -> repeat-cut -> leave; result=["repeat"]
+lifecycle: accepted=3, final_depth=0
+dependency: counter_change_rejected=true, side/cast/ep changes accepted, final_depth=0
+bounded: result="bound", nodes=13, max_active=13, final_depth=0
+```
+
+Causal falsifier: reject if an inactive key is cut, any `b/side/cast/ep` change is incorrectly cut, stack depth leaks, non-LIFO cleanup succeeds, repeated states still expand children, or bounded traversal exceeds the caller’s fixed horizon.
+
+Graft invariants: graft once at `qsearch` entry/exit; key only `(b, side, cast, ep)`; return neutral `0` only on an active-path repeat; preserve `ForcingFrontier`, legality, evaluation, ordering, UCI behavior, and all non-repeated search paths.

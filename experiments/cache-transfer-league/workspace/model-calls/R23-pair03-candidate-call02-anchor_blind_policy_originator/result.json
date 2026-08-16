@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass _Entry:\n    __slots__ = ('key', 'size', 'last', 'segment', 'hits')\n\n    def __init__(self, key, size, last):\n        self.key = key\n        self.size = size\n        self.last = last\n        self.segment = 0\n        self.hits = 1\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity = int(capacity_bytes)\n        except (TypeError, ValueError):\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self._entries = {}\n        self._probationary = OrderedDict()\n        self._protected = OrderedDict()\n        self._frequency = {}\n        self._ghost = OrderedDict()\n        self._bytes = 0\n        self._protected_bytes = 0\n        self._protected_target = (self.capacity_bytes * 3) // 5\n        if self.capacity_bytes > 0 and self._protected_target == 0:\n            self._protected_target = 1\n        self._ghost_bytes = 0\n        self._ghost_byte_limit = max(4096, min(max(1, self.capacity_bytes) * 2, 16777216))\n        self._ghost_entry_limit = 8192\n        self._tick = 0\n        self._touches = 0\n\n    def access(self, key, size, now):\n        try:\n            requested = int(size)\n        except (TypeError, ValueError):\n            requested = 1\n        requested = max(1, requested)\n        self._tick += 1\n        self._touches += 1\n        self._touch_frequency(key)\n        _ = now\n\n        ghost = self._discard_ghost(key)\n        if ghost is not None:\n            ghost_segment, ghost_size = ghost\n            step = max(1, min(max(1, self.capacity_bytes // 8), max(1, ghost_size)))\n            if ghost_segment == 0:\n                self._protected_target = min(self.capacity_bytes, self._protected_target + step)\n            else:\n                self._protected_target = max(0, self._protected_target - step)\n\n        entry = self._entries.get(key)\n        if entry is not None:\n            if requested > self.capacity_bytes:\n                return [self._remove_key(key)]\n            self._bytes += requested - entry.size\n            entry.size = requested\n            entry.last = self._tick\n            entry.hits = min(3, entry.hits + 1)\n            if entry.segment == 0:\n                self._probationary.move_to_end(key)\n                if entry.hits >= 2:\n                    self._promote(entry)\n            else:\n                self._protected.move_to_end(key)\n            return self._make_room(0, key)\n\n        if requested > self.capacity_bytes:\n            evicted = []\n            for cached_key in list(self._entries):\n                evicted.append(self._remove_key(cached_key))\n            return evicted\n\n        evicted = self._make_room(requested, None)\n        entry = _Entry(key, requested, self._tick)\n        if ghost is not None and ghost[0] == 1:\n            entry.hits = 2\n        self._entries[key] = entry\n        self._probationary[key] = entry\n        self._bytes += requested\n        if entry.hits >= 2:\n            self._promote(entry)\n        return evicted\n\n    def _touch_frequency(self, key):\n        self._frequency[key] = min((1 << 30), self._frequency.get(key, 0) + 1)\n        if self._touches % 4096 == 0:\n            for cached_key, value in list(self._frequency.items()):\n                value //= 2\n                if value:\n                    self._frequency[cached_key] = value\n                else:\n                    del self._frequency[cached_key]\n\n    def _retention_score(self, entry):\n        frequency = self._frequency.get(entry.key, 1)\n        age = max(0, self._tick - entry.last)\n        recency = 1025 // (age + 1)\n        return (frequency + entry.hits) * recency * 1024 // max(1, entry.size)\n\n    def _victim_key(self, exclude):\n        victim = None\n        victim_score = None\n        for key in self._probationary:\n            if exclude is not None and key == exclude:\n                continue\n            score = self._retention_score(self._entries[key])\n            if victim is None or score < victim_score:\n                victim = key\n                victim_score = score\n        return victim\n\n    def _make_room(self, extra, exclude):\n        evicted = []\n        while self._bytes + extra > self.capacity_bytes:\n            victim = self._victim_key(exclude)\n            if victim is None:\n                moved = False\n                for protected_key in self._protected:\n                    if exclude is None or protected_key != exclude:\n                        self._demote(protected_key)\n                        moved = True\n                        break\n                if not moved:\n                    break\n                victim = self._victim_key(exclude)\n                if victim is None:\n                    break\n            evicted.append(self._remove_key(victim))\n        return evicted\n\n    def _promote(self, entry):\n        if entry.segment != 0:\n            return\n        self._probationary.pop(entry.key, None)\n        entry.segment = 1\n        self._protected[entry.key] = entry\n        self._protected_bytes += entry.size\n        while self._protected_bytes > self._protected_target and self._protected:\n            oldest = next(iter(self._protected))\n            self._demote(oldest)\n\n    def _demote(self, key):\n        entry = self._protected.pop(key, None)\n        if entry is None:\n            return\n        entry.segment = 0\n        self._protected_bytes -= entry.size\n        self._probationary[key] = entry\n\n    def _remove_key(self, key):\n        entry = self._entries.pop(key)\n        if entry.segment == 0:\n            self._probationary.pop(key, None)\n        else:\n            self._protected.pop(key, None)\n            self._protected_bytes -= entry.size\n        self._bytes -= entry.size\n        self._remember(entry)\n        return key\n\n    def _remember(self, entry):\n        self._discard_ghost(entry.key)\n        self._ghost[entry.key] = (entry.segment, entry.size)\n        self._ghost_bytes += entry.size\n        while self._ghost and (self._ghost_bytes > self._ghost_byte_limit or len(self._ghost) > self._ghost_entry_limit):\n            key, item = self._ghost.popitem(last=False)\n            self._ghost_bytes -= item[1]\n\n    def _discard_ghost(self, key):\n        item = self._ghost.pop(key, None)\n        if item is not None:\n            self._ghost_bytes -= item[1]\n        return item"
+  },
+  "receipt": {
+    "call_id": "R23-pair03-candidate-call02-anchor_blind_policy_originator",
+    "duration_seconds": 115.43,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:13:36Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "39cad17392024117f3e411a3dd25417baf3091852d761dec6c441f83572531f6",
+    "raw_events_path": "workspace\\model-calls\\R23-pair03-candidate-call02-anchor_blind_policy_originator\\raw-events.jsonl",
+    "raw_events_sha256": "367246c9f011a1547496a5b23bb820c4271149a091aa554be1c11d45a0197be8",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "22763c5f91e92bbce23027085de36810419af08802897fea06a6020ec180471c",
+    "returncode": 0,
+    "role": "R23 candidate topology role clean-room whole-policy originator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:11:41Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12947,
+      "output_tokens": 8948,
+      "reasoning_output_tokens": 7301
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,36 @@
+{
+  "evidence_scope": "bounded qualitative outcomes only",
+  "explicitly_forbidden_repetition": [
+    "serial terminal-call role fission",
+    "mere producer-reviewer-finalizer split or role rename",
+    "best-of-N, voting, replicated candidates, or parameter sweep"
+  ],
+  "factor_frontier": [
+    {
+      "display_round": 1,
+      "factor": "serial terminal-call role fission",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "9d8233fd047dcdab31f88ce388605a432898ae940e9229cee39de576486994ac"
+    }
+  ],
+  "for_display_round": 2,
+  "official_numeric_scores_included": false,
+  "recent_outcomes": [
+    {
+      "aggregate_relation": "medians_equal",
+      "bounded_lesson": "The tested factor did not satisfy the full matched promotion contract; do not merely rename, split, or repeat it.",
+      "display_round": 1,
+      "paired_pattern": [
+        "equal",
+        "candidate_better",
+        "incumbent_better"
+      ],
+      "promotion_outcome": "not_promoted",
+      "proposal_mode": "local_refinement",
+      "structural_factor": "serial terminal-call role fission",
+      "validity": "all_arms_valid_and_deterministic"
+    }
+  ],
+  "schema_version": 1,
+  "trace_contents_included": false
+}

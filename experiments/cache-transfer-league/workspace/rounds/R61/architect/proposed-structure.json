@@ -1,0 +1,39 @@
+{
+  "final_call_id": "contract_scoped_transform",
+  "information_flow": "The first call receives every common input and emits a policy_capsule carrying one complete executable policy artifact. The final call consumes that capsule together with anchor_contract and task_constraints, has no direct visibility of task, anchor_policy, candidate_hypothesis, or loop_structure, transforms the carried artifact under the visible obligations, and emits one policy.",
+  "name": "Contract-Scoped Mutable Executable Baton",
+  "organization": "two-call sequential lineage with upstream executable origination and one mutable policy-bearing handoff",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_executable_baton",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Settle the supplied evidence into one complete executable policy artifact and carry that artifact in a single policy capsule.",
+          "output_type": "policy_capsule",
+          "role": "upstream executable-state originator"
+        },
+        {
+          "id": "contract_scoped_transform",
+          "inputs": [
+            "originate_executable_baton",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "objective": "Consume originate_executable_baton, apply transformation authority using only the visible contract and constraints, preserve one continuous executable lineage, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "contract-scoped executable-state transformer"
+        }
+      ],
+      "id": "executable_baton_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

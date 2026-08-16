@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n        self.frequency = OrderedDict()\n\n    def _touch_frequency(self, key):\n        count = self.frequency.pop(key, 0)\n        self.frequency[key] = min((1 << 20), count + 1)\n        while len(self.frequency) > 8192:\n            self.frequency.popitem(last=False)\n\n    def _remember(self, key, segment):\n        self.ghost.pop(key, None)\n        self.ghost[key] = segment\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n\n    def _rebalance(self):\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n            protected_bytes -= size\n\n    def _peek_victim(self):\n        if self.probation:\n            return next(iter(self.probation.items()))\n        if self.protected:\n            return next(iter(self.protected.items()))\n        return None\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            segment = 0\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            segment = 1\n        else:\n            return None\n        self.used_bytes -= size\n        self._remember(key, segment)\n        return key\n\n    def _admit(self, key, size, ghost_hit):\n        if ghost_hit or self.used_bytes + size <= self.capacity_bytes:\n            return True\n        victim = self._peek_victim()\n        if victim is None:\n            return True\n        victim_key, victim_size = victim\n        candidate_frequency = self.frequency.get(key, 1)\n        victim_frequency = self.frequency.get(victim_key, 1)\n        return candidate_frequency * victim_size >= victim_frequency * size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._touch_frequency(key)\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        ghost_hit = key in self.ghost\n        if ghost_hit:\n            segment = self.ghost.pop(key)\n            step = max(1, self.capacity_bytes // 16)\n            adjustment = max(step, min(size, self.capacity_bytes))\n            if segment == 0:\n                self.protected_target = min(\n                    self.capacity_bytes, self.protected_target + adjustment\n                )\n            else:\n                self.protected_target = max(0, self.protected_target - adjustment)\n\n        self._rebalance()\n        if not self._admit(key, size, ghost_hit):\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                return evicted\n            evicted.append(victim)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-pair03-incumbent-call02-provenance_blind_policy_authority",
+    "duration_seconds": 65.921,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:11:52Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "60469d1b2c75f0fa6878fe0450d3f2ade98013bc0815196bf13e7ff9baec26d4",
+    "raw_events_path": "workspace\\model-calls\\R30-pair03-incumbent-call02-provenance_blind_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "26bf204ad028e541a3c0bc9558f63c7dcc2170a5658c68f9f74a5fe8e2fedaba",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "e4c71cf53053e0174acddd94ae9c76410d4c09ab18ac761a7067a432e65885e5",
+    "returncode": 0,
+    "role": "R30 incumbent topology role provenance-blind final semantic authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:10:46Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13728,
+      "output_tokens": 5131,
+      "reasoning_output_tokens": 4200
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

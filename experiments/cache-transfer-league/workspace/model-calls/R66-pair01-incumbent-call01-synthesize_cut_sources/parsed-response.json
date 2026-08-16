@@ -1,0 +1,29 @@
+{
+  "analysis_packet": {
+    "certificate": "The inherited anchor is an online, standard-library-only cache policy with an OrderedDict-based recent/frequent split and ghost history. Its evidence is usable only where consistent with interface legality, capacity safety, evaluator-owned current residency, and the prohibition on hidden traces, oracle adaptation, benchmark access, and score claims. The proposed permanent source-class cut is normatively justified: generative claims contradicted by obligations or unsupported by visible evidence must lose causal authority, while compatible synthesized distinctions may remain advisory. No score-based conclusion is available.",
+    "exact_actions": [
+      "Pass forward only the supported interface, safety, visibility, and constraint conclusions; do not pass unsupported performance conclusions as facts.",
+      "Mark any generative claim that conflicts with the listed obligations as deauthorized for causal use, while retaining it as a labeled conflict if needed for reconciliation.",
+      "Treat the anchor's implementation details as inherited evidence and preserve only behavior that can be justified under the visible contract.",
+      "Require the downstream authority to construct one complete policy from the analysis plus task, anchor_contract, and task_constraints, without reacquiring cut sources.",
+      "Before emission, verify standard-library legality, online-only operation, capacity non-overflow, and that every returned eviction key is unique and currently cached."
+    ],
+    "obligations": [
+      "Keep all reasoning online and limited to the visible inputs.",
+      "Preserve interface legality, capacity safety, and evaluator-visible residency semantics.",
+      "Use only Python standard-library-compatible concepts in any downstream artifact.",
+      "Reject benchmark paths, hidden traces, reference implementations, oracle decisions, external libraries, networking, subprocesses, and score-based adaptation.",
+      "Preserve conflicts and distinguish normative obligations from empirical or generative performance claims.",
+      "Apply irreversible deauthorization to claims contradicted by the visible obligations; do not silently restore their causal authority through the synthesis handoff.",
+      "Emit exactly one final policy downstream, without alternatives, voting, ranking, retrying, or best-of-N selection."
+    ],
+    "witnesses": [
+      "The anchor exposes only access(key, size, now) and returns eviction keys; any downstream design must preserve that interface and return only currently cached unique integer keys.",
+      "The anchor maintains byte accounting, bounded ghost metadata, and a capacity target, but its behavioral mechanisms are inherited evidence rather than guarantees of optimality, scan resistance, phase adaptation, or regret.",
+      "Oversized incoming objects are not admitted; oversized resident updates are removed and reported. This is compatible with capacity safety only if returned keys are interpreted against the evaluator's current cache state.",
+      "The candidate hypothesis identifies a sole-handoff risk: an unqualified synthesis could allow contradicted generative claims to remain causally authoritative.",
+      "The falsifier supplies no score or majority evidence; therefore no performance superiority, matched-pair outcome, or official ranking may be asserted."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

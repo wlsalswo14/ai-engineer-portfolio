@@ -1,0 +1,119 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R22-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "post_commit_evidence_reconstitution",
+      "information_flow": "The first call receives all six common inputs and emits one complete executable policy before forming anchor-relative causal evidence. The final call consumes that exact policy plus the common inputs, forms allowed task-and-contract evidence only after commitment, and reconstitutes the same single lineage as one final policy. The handoff carries executable state rather than analysis alone and introduces no branch or competing candidate.",
+      "name": "Hypothesis-First Executable Commitment with Post-Commit Evidence",
+      "organization": "two-call sequential lineage separated by one evidence-timing boundary",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "pre_evidence_policy_commitment",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Commit exactly one complete contract-compliant executable policy hypothesis from the common inputs before forming any anchor-relative causal audit. Materialize one whole-policy state rather than provisionally accepted edits, and emit no alternatives, scores, traces, or evaluation artifacts.",
+              "output_type": "policy",
+              "role": "whole-policy conjecture committer"
+            },
+            {
+              "id": "post_commit_evidence_reconstitution",
+              "inputs": [
+                "pre_evidence_policy_commitment",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding executable policy and only then form allowed task-and-contract evidence about the committed whole. Reconstitute that single lineage as a complete contract-compliant policy without terminal causal compression, a review-only verdict, or a competing candidate.",
+              "output_type": "policy",
+              "role": "post-commit evidence reconstitution producer"
+            }
+          ],
+          "id": "commit_then_evidence",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "scan resistance",
+        "phase-shift adaptation"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "terminal causal compression of a reversible repair-delta stack",
+      "independent_replacement_principle": "Hypothesis-first executable commitment: materialize one whole policy before causal audit, then form evidence about that committed whole and reconstitute the same single lineage in the next and final call.",
+      "rejected_assumptions": [
+        "Causal evidence must precede every executable departure from the anchor.",
+        "Global coherence is best obtained by accumulating reversible local repairs and deleting redundant deltas at the terminal call."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Reverse that causal order through one executable commitment-before-evidence boundary: materialize a complete policy first, then let the final call form evidence about that committed whole.",
+      "expected_effect": "Whole-policy commitment before causal audit should permit scan resistance and phase-shift adaptation to change coherently, while the policy-bearing handoff preserves a concrete executable lineage for final validity reasoning.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion assumes causal evidence must precede every executable departure, constraining construction to anchor-local reversible repairs whose terminal compression cannot replace the behavioral frame that generated them."
+    },
+    "structural_mutation": {
+      "after": "Two sequential calls are separated by one policy-bearing evidence-timing boundary: the first emits a complete executable policy before causal audit, and the final call consumes that exact state before forming evidence and reconstituting the same lineage.",
+      "before": "One call audits before divergence, accumulates reversible local repairs, and performs terminal causal compression while anchor, evidence, and policy state remain co-resident.",
+      "change_count": 1,
+      "factor": "executable whole-policy commitment preceding causal evidence formation",
+      "why_structural": "The mutation reverses evidence timing across a new executable-state edge rather than renaming or fissioning terminal roles. It does not reuse anchor-capability inversion, subtractive authority, constructive typestate, writer transfer, history erasure, or behavioral arbitration."
+    }
+  },
+  "receipt": {
+    "call_id": "R22-structure-architect",
+    "duration_seconds": 318.958,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:59:13Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "348ba0c82d84ca135e6ae3a53e3a95c8ebd86d37949b974ff673ad11fab1fb6e",
+    "raw_events_path": "workspace\\model-calls\\R22-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "d390a05c643297ade2f2d7cd85c6b4380087304e3d14ea91f58a423ca4a91c12",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "aa866a79a2afa30e940ef7fac70e78773db60d8f6161ef2fdf7aac35284f4cd5",
+    "returncode": 0,
+    "role": "score-blind R22 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:53:54Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14487,
+      "output_tokens": 16409,
+      "reasoning_output_tokens": 15392
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

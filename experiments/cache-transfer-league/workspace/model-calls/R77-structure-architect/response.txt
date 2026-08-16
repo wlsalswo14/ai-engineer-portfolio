@@ -1,0 +1,75 @@
+{
+  "architect_scope": "one-R77-structural-factor-only",
+  "proposal_mode": "emergent_exploration",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The champion can exclude unsupported commitments before construction but cannot authorize the emitted policy to create causally attributable evidence when later observations leave a decision-relevant cause unresolved.",
+    "causal_change": "Add evidence-triggered causal-intervention authority to the sole analysis-to-policy edge so the single emitted policy can transition from observation-conditioned control to intervention-attributed control while retaining the champion's exclusions and open visibility.",
+    "expected_effect": "Decision-relevant uncertainty can be resolved through causally attributable evidence instead of prolonged passive observation, enabling task-general adaptation within one valid policy lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "evidence-triggered causal-intervention authority on the sole analysis-to-policy edge",
+    "before": "The edge carries binding negative exclusions, and the emitted policy can react only to evidence arriving independently of its own control choices.",
+    "after": "The edge retains those exclusions while binding an evidence condition that transfers the emitted policy into intervention-attributed control, where an obligation-preserving action can make subsequent admissible evidence causally informative.",
+    "why_structural": "The mutation changes edge authority, evidence timing, and runtime control-state semantics without adding calls, parallel paths, or terminal role fission."
+  },
+  "mode_certificate": {
+    "capability_family": "active causal disambiguation",
+    "champion_limitation": "The champion passively interprets inherited and arriving evidence but has no authority for an action to become an identifiable causal intervention.",
+    "trigger": "Post-deployment admissible observations expose decision-relevant causal ambiguity while the current task state permits an obligation-preserving action with an observable discriminating consequence.",
+    "state_transition": "The single emitted policy moves from observation-conditioned control to intervention-attributed control, treating an admissible action as the cause under test and its ensuing relevant observation as authoritative causal evidence.",
+    "observable_effect": "When the trigger occurs, control changes despite unchanged inherited evidence, and subsequent behavior changes only through the observable consequence attributable to the intervention.",
+    "not_local_refinement": "This introduces active evidence creation and a runtime causal-control transition absent from the static champion edge and tested frontier, rather than refining review, serialization, exclusion, or causal-basis reset."
+  },
+  "candidate_structure": {
+    "name": "Intervention-Attributed Aperture",
+    "organization": "two-call sequential nonbranching lineage whose sole edge adds evidence-triggered causal-intervention authority to the champion's negative-authority aperture",
+    "information_flow": "The first call receives every common input, preserves binding unsupported-commitment exclusions, and emits an analysis defining the admissible trigger and intervention-attributed state transition. The final call consumes that analysis, directly receives every common input, retains full evidence visibility, and emits one complete policy embodying the transition.",
+    "stages": [
+      {
+        "id": "causal_intervention_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "bind_intervention_transition",
+            "role": "causal-intervention authority",
+            "objective": "Reconcile all visible evidence and obligations, preserve unsupported-commitment exclusions, and express in one analysis the admissible evidence condition and causal-control transition required for active disambiguation.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          },
+          {
+            "id": "construct_intervention_attributed_policy",
+            "role": "single-policy causal controller",
+            "objective": "Consume bind_intervention_transition, directly reconcile all common evidence, honor its exclusions, and emit one complete policy that remains observation-conditioned until the bound trigger and then enters intervention-attributed control while preserving all task and contract obligations.",
+            "inputs": [
+              "bind_intervention_transition",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "construct_intervention_attributed_policy"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

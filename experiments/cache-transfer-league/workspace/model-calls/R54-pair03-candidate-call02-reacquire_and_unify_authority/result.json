@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.p = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _replace(self, incoming):\n        evicted = None\n        if self.t1 and (self.t1_bytes > self.p or (incoming in self.b2 and self.t1_bytes == self.p)):\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n            evicted = key\n        elif self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._remember(self.b2, key)\n            evicted = key\n        elif self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n            evicted = key\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored = self.t1.pop(key)\n            self.t1_bytes -= stored\n            self.t2[key] = stored\n            self.t2_bytes += stored\n            return []\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] = stored\n            return []\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            delta = max(1, self.capacity_bytes // 16)\n            self.p = min(self.capacity_bytes, self.p + delta)\n        elif in_b2:\n            delta = max(1, self.capacity_bytes // 16)\n            self.p = max(0, self.p - delta)\n\n        self._forget(key)\n        evicted = []\n        while self.t1_bytes + self.t2_bytes + size > self.capacity_bytes:\n            old = self._replace(key)\n            if old is None:\n                break\n            evicted.append(old)\n\n        if in_b1 or in_b2:\n            self.t2[key] = size\n            self.t2_bytes += size\n        else:\n            self.t1[key] = size\n            self.t1_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R54-pair03-candidate-call02-reacquire_and_unify_authority",
+    "duration_seconds": 24.627,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:52:38Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "bd8d8ce1f75a7d316010083d218bcd8a69ab18ae537e42b379cabe6abe800647",
+    "raw_events_path": "workspace\\model-calls\\R54-pair03-candidate-call02-reacquire_and_unify_authority\\raw-events.jsonl",
+    "raw_events_sha256": "298d90ed414e70614c1afa93aa0a8b5d298d72d18ee34b9319d0151a5283b018",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "38774fa1a02f3331a6cb187243821046643344b153d1f88c8aece925e79b15d2",
+    "returncode": 0,
+    "role": "R54 candidate topology role raw-evidence-reacquiring unitary policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:52:14Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14942,
+      "output_tokens": 1776,
+      "reasoning_output_tokens": 1034
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

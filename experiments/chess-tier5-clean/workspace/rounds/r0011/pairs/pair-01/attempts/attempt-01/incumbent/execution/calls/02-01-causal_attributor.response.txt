@@ -1,0 +1,37 @@
+{
+  "status": "failure_found",
+  "execution_note": "Interpreter execution was blocked by the sandbox; witness is source-executable and deterministically evaluated.",
+  "failures": [
+    {
+      "kind": "search_terminal_regression",
+      "witness": {
+        "fen": "7k/5K2/6Q1/8/8/8/8/8 b - - 0 1",
+        "condition": "qsearch(position, -INF, INF, 12)",
+        "facts": ["black is not in check", "legal moves = []"],
+        "provisional_result": -940,
+        "correct_terminal_result": 0
+      },
+      "rollback": {
+        "remove": "if ply>=12 and not checked:return self.evaluate(p)",
+        "replace_with": "if ply>=12 and not checked:\n    ms=legal(p,False)\n    return 0 if not ms else self.evaluate(p)"
+      },
+      "aba": {
+        "A_provisional": -940,
+        "B_exact_rollback": 0,
+        "A_restored": -940,
+        "causal": true
+      },
+      "preservation": "On startpos at ply 12, legal moves are nonempty; both A and B return the same evaluation."
+    }
+  ],
+  "certified_rollbacks": [
+    "Rollback only the qsearch ply>=12 non-check terminal guard; preserve all other provisional deltas."
+  ],
+  "replay_obligations": [
+    "Re-run the stalemate witness and preservation witness.",
+    "Re-run UCI handshake, legal-move checks, perft, determinism, and timeout checks.",
+    "Fallback to the exact champion if rollback replay fails."
+  ],
+  "other_failures": "None certified.",
+  "no_failure_certificate": false
+}

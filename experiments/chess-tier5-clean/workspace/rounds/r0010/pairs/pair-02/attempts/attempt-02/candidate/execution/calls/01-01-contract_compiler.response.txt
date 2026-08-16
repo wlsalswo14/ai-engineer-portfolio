@@ -1,0 +1,125 @@
+{
+  "artifact": "frozen_behavioral_contract",
+  "anchor_evidence": {
+    "source": "inputs/anchor-engine.txt",
+    "execution": "not_run: Python process execution was blocked by workspace policy",
+    "observed_strengths": [
+      "UCI handshake and flushing",
+      "startpos/FEN parsing",
+      "legal filtering through king-safety checks",
+      "castling, en-passant, promotion, and clocks",
+      "iterative deadline-aware search",
+      "deterministic move encoding"
+    ],
+    "risks_to_probe": [
+      "unmatched position moves are silently ignored",
+      "broad search exception fallback can mask defects",
+      "mutable search state must not affect position semantics",
+      "terminal positions return 0000"
+    ]
+  },
+  "obligations": [
+    {
+      "priority": "P0",
+      "requirement": "Use only Python standard-library facilities and one complete engine.py artifact."
+    },
+    {
+      "priority": "P0",
+      "requirement": "Support uci, isready, ucinewgame, position startpos, position fen with six fields, position moves, go movetime, and quit."
+    },
+    {
+      "priority": "P0",
+      "requirement": "For every nonterminal go movetime, emit exactly one legal bestmove before the deadline; emit 0000 only when no legal move exists."
+    },
+    {
+      "priority": "P0",
+      "requirement": "Never leave the moving side's king in check; reject or avoid illegal castling, en-passant, promotion, captures, and check evasions."
+    },
+    {
+      "priority": "P0",
+      "requirement": "Preserve board, side, castling rights, en-passant target, halfmove clock, and fullmove number across state transitions."
+    },
+    {
+      "priority": "P1",
+      "requirement": "Maintain deterministic behavior for identical transcripts and deterministic tie-breaking."
+    },
+    {
+      "priority": "P1",
+      "requirement": "Search interruption must preserve a legal fallback and never produce malformed or duplicated protocol output."
+    },
+    {
+      "priority": "P1",
+      "requirement": "Retain general search/evaluation quality without benchmark-position, opening, evaluator, or opponent-specific logic."
+    }
+  ],
+  "executable_probes": [
+    {
+      "id": "uci_protocol",
+      "procedure": "Run uci, isready, ucinewgame, position startpos, go movetime 20, quit.",
+      "pass": "uciok and readyok appear, exactly one bestmove appears, it is syntactically valid, and output is flushed."
+    },
+    {
+      "id": "start_perft",
+      "procedure": "Enumerate legal moves from startpos and recursively count depths 1 through 4.",
+      "pass": "Counts are 20, 400, 8902, and 197281."
+    },
+    {
+      "id": "move_legality",
+      "procedure": "For generated legal moves, apply each move and independently verify king safety and coordinate validity.",
+      "pass": "Every returned move is legal; no generated move captures a king or leaves own king attacked."
+    },
+    {
+      "id": "special_moves",
+      "procedure": "Exercise ordinary castling, attacked-transit castling rejection, rook-right updates, en-passant capture and discovered-check rejection, and all four promotion choices.",
+      "pass": "State and legal-move results match chess rules in every case."
+    },
+    {
+      "id": "state_replay",
+      "procedure": "Replay equivalent move transcripts through startpos and six-field FEN, including ucinewgame boundaries.",
+      "pass": "Equivalent positions produce equivalent legal moves and no stale search-state effects."
+    },
+    {
+      "id": "terminal_behavior",
+      "procedure": "Submit general checkmate and stalemate positions, then go movetime.",
+      "pass": "Exactly one bestmove 0000 is returned only when the legal move set is empty."
+    },
+    {
+      "id": "deadline",
+      "procedure": "Run repeated go movetime commands at the minimum and small budgets.",
+      "pass": "Each command returns before its deadline with one legal result and no timeout-induced traceback."
+    },
+    {
+      "id": "determinism",
+      "procedure": "Run identical low-budget transcripts repeatedly under a fixed interpreter seed.",
+      "pass": "Protocol output and selected moves are repeatable."
+    },
+    {
+      "id": "dependency_audit",
+      "procedure": "Compile/import the artifact and inspect imports and filesystem/network access.",
+      "pass": "Syntax succeeds; only standard-library imports are used; no external engine, library, repository, evaluator, or opening data is accessed."
+    }
+  ],
+  "preservation_invariants": [
+    "Every emitted move belongs to the current position's legal move set.",
+    "Applying a legal move changes only the intended pieces and state fields.",
+    "Castling, en-passant, promotion, and check status agree between generation and application.",
+    "Search heuristics, transposition data, and prior commands cannot alter board truth.",
+    "A timeout cannot replace a legal fallback with an illegal or stale move.",
+    "Protocol output contains no debug text and exactly one bestmove per go command."
+  ],
+  "interacting_failure_cases": [
+    "En-passant removal plus a newly exposed rook or bishop line to the moving king.",
+    "Castling rights plus rook movement/capture plus attacked transit squares.",
+    "Promotion plus check evasion or check delivery, including underpromotions.",
+    "Side already in check plus quiet-only evasions, where capture-only search is insufficient.",
+    "Timeout during partial search plus stale transposition/history state after a new position.",
+    "FEN replay plus clocks, castling rights, en-passant state, and subsequent ucinewgame reset."
+  ],
+  "pass_criteria": {
+    "hard_gate": "All P0 obligations pass with zero illegal moves, malformed responses, duplicate bestmoves, or deadline misses.",
+    "correctness_gate": "All special-move, terminal, replay, and start-perft probes pass.",
+    "stability_gate": "Determinism and timeout probes pass across repeated runs.",
+    "scope_gate": "No benchmark-specific data, source-template reuse, candidate comparison, rollback, or external dependency is present.",
+    "quality_gate": "The implementation remains a general-purpose legal UCI engine; hidden match strength is not used as a construction or selection signal."
+  }
+}

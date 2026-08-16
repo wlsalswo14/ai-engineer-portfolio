@@ -1,0 +1,152 @@
+Role: R62 incumbent topology role raw-evidence-reacquiring unitary policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R62,
+matched pair 1, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: reacquire_and_unify_authority
+Role: raw-evidence-reacquiring unitary policy authority
+Objective: Consume map_counter_assumptions together with every common input, treat the analysis as defeasible rather than binding, resolve disagreements through direct evidence comparison, and emit one complete policy under undivided authority.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "map_counter_assumptions": {
+    "analysis_packet": {
+      "certificate": "Nonbinding, source-distinguished analysis only; no policy authority, score evidence, trace evidence, or settlement authority is present.",
+      "witnesses": [
+        {
+          "source": "anchor_policy",
+          "observation": "The inherited artifact is a byte-aware ARC-like policy with T1/T2 resident segments, B1/B2 ghost histories, adaptive target, and recency ordering."
+        },
+        {
+          "source": "anchor_contract",
+          "observation": "Interface legality, capacity safety, and online-only visibility must be preserved; score information is withheld."
+        },
+        {
+          "source": "task_constraints",
+          "observation": "The evaluator owns authoritative state; returns must contain only currently cached unique integer keys, capacity must not be exceeded, and hidden traces, oracles, benchmark paths, and non-stdlib dependencies are prohibited."
+        },
+        {
+          "source": "candidate_hypothesis",
+          "observation": "The proposed counter-only terminal aperture seeks greater responsiveness to changed evidence regimes by reducing inherited-rationale anchoring, but provides no empirical score or trace evidence."
+        },
+        {
+          "source": "loop_structure",
+          "observation": "This call may emit only defeasible analysis; the terminal call independently reacquires all common inputs and retains undivided policy authority."
+        }
+      ],
+      "obligations": [
+        {
+          "obligation": "Preserve source distinctions: inherited anchor behavior, explicit contract constraints, candidate hypothesis, and topology instructions are not interchangeable evidence."
+        },
+        {
+          "obligation": "Treat the candidate hypothesis as testable but unverified; no score-free falsifier can establish superiority or regression."
+        },
+        {
+          "obligation": "Identify the tension between preserving executable continuity and allowing terminal behavior to depart from inherited rationale without converting that tension into authorization."
+        },
+        {
+          "obligation": "Flag that the anchor's resident-byte accounting and eviction decisions must remain capacity-safe under size changes, oversized objects, nonpositive sizes, and repeated accesses if considered by the terminal authority."
+        },
+        {
+          "obligation": "Maintain online-only visibility and avoid any inference from hidden evaluator state, traces, oracle decisions, benchmark content, or withheld scores."
+        },
+        {
+          "obligation": "Keep this handoff nonbinding and do not emit, modify, rank, select, or authorize a policy artifact."
+        }
+      ],
+      "exact_actions": [
+        "Record the anchor as inherited evidence, not as an automatically controlling rationale.",
+        "Record the candidate hypothesis as defeasible counter-evidence whose causal claim is unvalidated.",
+        "Preserve the unresolved tension between anchor continuity, changed-regime responsiveness, and contract legality for direct comparison by the terminal authority.",
+        "Pass no policy source, implementation instruction, score claim, trace claim, or settlement decision.",
+        "Defer all policy synthesis and final authority to reacquire_and_unify_authority."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "ec1ccb464a5e08c51726868594c64fb5e3c6de895d8e852c00ea7d4c5741dc6c",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.ghost_limit = 4096\n        self.target = self.capacity_bytes // 2\n        self.bytes1 = 0\n        self.bytes2 = 0\n\n    def _forget_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._forget_ghost(key)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _take(self, key):\n        if key in self.t1:\n            size = self.t1.pop(key)\n            self.bytes1 -= size\n            return size, 1\n        if key in self.t2:\n            size = self.t2.pop(key)\n            self.bytes2 -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, b2_hit):\n        use_t1 = bool(self.t1) and (\n            self.bytes1 > self.target\n            or (b2_hit and self.bytes1 == self.target)\n        )\n        if use_t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.bytes2 -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, b2_hit):\n        evicted = []\n        while self.bytes1 + self.bytes2 + size > self.capacity_bytes:\n            key = self._evict_one(b2_hit)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n\n        if requested <= 0:\n            if key in self.t1:\n                self.t1.move_to_end(key)\n            elif key in self.t2:\n                self.t2.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._take(key)\n            if segment == 1:\n                self._remember(self.b1, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.b2, key, old_size)\n                return [key]\n            return []\n\n        if key in self.t1:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        if key in self.t2:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        b1_hit = key in self.b1\n        b2_hit = key in self.b2\n        if b1_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(step, min(requested, self.capacity_bytes)),\n            )\n        elif b2_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = max(\n                0,\n                self.target - max(step, min(requested, self.capacity_bytes)),\n            )\n\n        self._forget_ghost(key)\n        evicted = self._make_room(requested, b2_hit)\n        if b1_hit or b2_hit:\n            self.t2[key] = requested\n            self.bytes2 += requested\n        else:\n            self.t1[key] = requested\n            self.bytes1 += requested\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R61 champion policy anchor",
+    "artifact_sha256": "ec1ccb464a5e08c51726868594c64fb5e3c6de895d8e852c00ea7d4c5741dc6c",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Apply a counter-only terminal aperture: all common inputs influence one complete executable origin artifact, while only candidate_hypothesis receives direct terminal re-exposure.",
+    "expected_effect": "Executable continuity remains visible while terminal behavior becomes less anchored to inherited rationale and more responsive to changed evidence regimes.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "Source-neutral terminal reacquisition lets inherited anchor evidence regain equal standing precisely when policy authority is exercised, allowing the counter-hypothesis to be absorbed by reconciliation."
+  },
+  "loop_structure": {
+    "final_call_id": "reacquire_and_unify_authority",
+    "information_flow": "The first call receives every common input and emits only a source-distinguished counter-assumption analysis carrying no policy or settlement authority. The final call consumes that analysis while independently receiving every common input, treats the analysis as defeasible evidence, reconciles both views under undivided authority, and emits one policy.",
+    "name": "Defeasible Dual-View Reacquisition",
+    "organization": "two-call sequential lineage with one nonbinding analysis handoff and terminal lossless evidence reacquisition",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "map_counter_assumptions",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+            "output_type": "analysis",
+            "role": "defeasible counter-assumption mapper"
+          },
+          {
+            "id": "reacquire_and_unify_authority",
+            "inputs": [
+              "map_counter_assumptions",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume map_counter_assumptions together with every common input, treat the analysis as defeasible rather than binding, resolve disagreements through direct evidence comparison, and emit one complete policy under undivided authority.",
+            "output_type": "policy",
+            "role": "raw-evidence-reacquiring unitary policy authority"
+          }
+        ],
+        "id": "dual_view_reacquisition_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

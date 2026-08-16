@@ -1,0 +1,74 @@
+{
+  "architect_scope": "one-R27-structural-factor-only",
+  "proposal_mode": "emergent_exploration",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The champion grants the inherited executable closure continuing semantic authority even when its represented commitments are incompatible with explicit public obligations.",
+    "causal_change": "Make the predecessor-to-final authority edge defeasible: a public-obligation contradiction revokes inherited semantic authority and transfers control to obligation-grounded reconstitution.",
+    "expected_effect": "The lineage can escape a causally binding but contradicted closure while preserving a single complete executable lineage and one final policy.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "public-obligation contradiction-triggered revocation of predecessor semantic authority",
+    "before": "The final call receives a provenance-blind executable closure whose current semantics remain the mandatory frame for reconciliation and emission.",
+    "after": "The final call treats closure authority as defeasible and revokes it only upon deriving a concrete incompatibility with an explicit public obligation, then reconstitutes the single policy artifact under obligation authority.",
+    "why_structural": "This changes the causal authority and state-transition semantics of the predecessor edge from unconditional inheritance to evidence-triggered revocation without adding a role, gate, reviewer, or parallel path."
+  },
+  "mode_certificate": {
+    "capability_family": "evidence-triggered semantic-authority revocation and reconstitution",
+    "champion_limitation": "The champion cannot withdraw causal authority from an inherited closure whose represented semantics contradict an explicit public obligation.",
+    "trigger": "A concrete incompatibility derivable between a represented semantic commitment in the predecessor closure and an explicit public obligation visible to the final call.",
+    "state_transition": "The final call moves from closure-authoritative state to closure-revoked state and reconstitutes the single executable artifact under public-obligation authority before emission.",
+    "observable_effect": "Upon qualifying contradiction evidence, the final policy is no longer constrained by the conflicting inherited commitment; otherwise the closure retains semantic authority.",
+    "not_local_refinement": "The mutation introduces defeasible causal inheritance and an evidence-triggered authority transition, a control capability absent from unconditional closure reconciliation and distinct from pre-construction frame changes."
+  },
+  "candidate_structure": {
+    "name": "Contradiction-Triggered Semantic Revocation Relay",
+    "organization": "two-call sequential lineage with a provenance firewall and one defeasible semantic-authority edge",
+    "information_flow": "The first call forms one self-contained executable closure and removes construction provenance from its handoff. The final call consumes that complete closure with public obligations but without anchor-policy visibility. A derivable contradiction with those obligations triggers revocation of predecessor semantic authority and obligation-grounded reconstitution within the same single lineage; the final call emits one policy.",
+    "stages": [
+      {
+        "id": "defeasible_closure_relay",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "form_executable_closure",
+            "role": "executable semantic closure former",
+            "objective": "Form exactly one self-contained executable policy closure from the supplied evidence and public obligations, remove anchor-relative construction provenance from the handoff, and pass the complete executable artifact forward.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_closure"
+          },
+          {
+            "id": "contradiction_triggered_policy_authority",
+            "role": "defeasible-closure final semantic authority",
+            "objective": "Compare represented predecessor commitments with explicit public obligations, retain closure authority absent a derivable incompatibility, or revoke that authority upon such evidence and reconstitute the single artifact under obligation authority, then emit one complete policy.",
+            "inputs": [
+              "form_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "contradiction_triggered_policy_authority"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

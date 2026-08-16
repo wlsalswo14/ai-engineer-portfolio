@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.entries = OrderedDict()\n        self.used_bytes = 0\n        self.tick = 0\n        self.phase = 0\n        self.window_hits = 0\n        self.window_misses = 0\n        self.window_hot_evictions = 0\n\n    def _pick_victim(self):\n        victim_key = None\n        victim_rank = None\n        for key, entry in self.entries.items():\n            size, hits, last = entry\n            if self.phase == 0:\n                rank = (hits, last, -size)\n            else:\n                age = self.tick - last\n                value = ((hits + 1) * 1024) // max(1, size)\n                value -= min(1024, age)\n                rank = (value, last, -size)\n            if victim_rank is None or rank < victim_rank:\n                victim_key = key\n                victim_rank = rank\n        return victim_key\n\n    def _observe_window(self):\n        if self.tick % 64 == 0:\n            if (not self.phase and self.window_hot_evictions > 0 and\n                    self.window_misses >= self.window_hits):\n                self.phase = 1\n            self.window_hits = 0\n            self.window_misses = 0\n            self.window_hot_evictions = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.tick += 1\n\n        if key in self.entries:\n            entry = self.entries.pop(key)\n            entry[1] = min(15, entry[1] + 1)\n            entry[2] = self.tick\n            self.entries[key] = entry\n            self.window_hits += 1\n            self._observe_window()\n            return []\n\n        self.window_misses += 1\n        size = max(0, size)\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            self._observe_window()\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._pick_victim()\n            if victim is None:\n                break\n            entry = self.entries.pop(victim)\n            self.used_bytes -= entry[0]\n            if entry[1] > 0:\n                self.window_hot_evictions += 1\n            evicted.append(victim)\n\n        self.entries[key] = [size, 0, self.tick]\n        self.used_bytes += size\n        self._observe_window()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R4-pair01-candidate-call02-transduce_causal_representation",
+    "duration_seconds": 87.096,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:04:26Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "f86c89a38dfea49b4d95898c9f55859a914be0e566002d815548e44487c10ab1",
+    "raw_events_path": "workspace\\model-calls\\R4-pair01-candidate-call02-transduce_causal_representation\\raw-events.jsonl",
+    "raw_events_sha256": "03e986537b0d028a162a7fd92cc74eb6aa7ddb2fe10bec16bf38ccbed4b926e3",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 2,
+    "response_sha256": "b5f5568f7092385ed2e94093334a5523d1c46191708347e1789135c5a081066b",
+    "returncode": 0,
+    "role": "R4 candidate topology role evidence-triggered causal-representation transducer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:02:58Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14635,
+      "output_tokens": 4615,
+      "reasoning_output_tokens": 3986
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

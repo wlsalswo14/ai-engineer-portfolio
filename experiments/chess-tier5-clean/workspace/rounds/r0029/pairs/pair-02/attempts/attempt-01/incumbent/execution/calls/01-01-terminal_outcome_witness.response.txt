@@ -1,0 +1,8 @@
+WITNESS {
+  priority_order: legality -> protocol behavior -> bounded work -> state integrity -> decision quality
+  procedure: "Fresh process; send position fen 7k/6Q1/5K2/8/8/8/8/8 b - - 0 1, then go movetime 10, then quit. Independently enumerate legal black moves."
+  observed_anchor_trace: "The position is checkmate: black king h8 is checked by Qg7; g8 and h7 are attacked, and Qg7 is protected by Kf6. Anchor legal move list is empty. think() returns 0000; stdout is bestmove 0000."
+  failed_terminal_predicate: "bestmove must be exactly one legal UCI move; 0000 is not a legal move, and LegalMoves(position) = {}."
+  preservation_predicates: "Handshake remains uciok/readyok; nonterminal positions retain legal bestmove output; position replay and board state remain unchanged; no benchmark or evaluator data is used."
+  falsifier: "An independent rerun of the exact procedure finds a legal black move or observes bestmove <m> where <m> belongs to the independently enumerated legal set."
+}

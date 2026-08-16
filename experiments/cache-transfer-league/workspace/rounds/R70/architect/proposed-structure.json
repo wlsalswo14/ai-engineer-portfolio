@@ -1,0 +1,40 @@
+{
+  "final_call_id": "succeed_transferred_state",
+  "information_flow": "The first call receives every common input and originates one complete executable policy state. That single artifact moves across the sole edge to the final call, which also receives task, anchor_contract, and task_constraints, assumes exclusive successor authority, and emits one policy from the inherited state.",
+  "name": "Move-Only State Succession",
+  "organization": "two-call sequential lineage with exclusive successor ownership of a complete executable policy state",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_transferable_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile all visible evidence and normative obligations into one complete executable policy state whose action authority is transferable as a single lineage artifact.",
+          "output_type": "executable_policy_state",
+          "role": "fully informed executable-state originator"
+        },
+        {
+          "id": "succeed_transferred_state",
+          "inputs": [
+            "originate_transferable_state",
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "objective": "Consume originate_transferable_state as the transferred complete artifact, reconcile directly visible normative evidence with its embodied action commitments, exercise the sole successor transition, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "exclusive successor policy authority"
+        }
+      ],
+      "id": "move_only_state_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+Role: R85 candidate topology role co-visible terminal policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R85,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: co_visible_terminal_emit
+Role: co-visible terminal policy authority
+Objective: Consume anchor_window_transition, expose the inherited complete artifact simultaneously to the reentered constraints, structural evidence, task, and hypothesis, reconcile their joint obligations in that artifact, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "anchor_window_transition": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probationary = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.probationary_bytes = 0\n        self.protected_bytes = 0\n        self.used = 0\n        self.target_probationary = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _forget_ghost(self, key):\n        value = self.ghost_probationary.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_protected.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._forget_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if kind == 1:\n            self.ghost_probationary[key] = value\n        else:\n            self.ghost_protected[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_probationary) + len(self.ghost_protected) > self.ghost_count_limit):\n            oldest_key = None\n            oldest_bucket = None\n            oldest_stamp = None\n            for bucket in (self.ghost_probationary, self.ghost_protected):\n                if bucket:\n                    key = next(iter(bucket))\n                    stamp = bucket[key][1]\n                    if oldest_stamp is None or stamp < oldest_stamp:\n                        oldest_key = key\n                        oldest_bucket = bucket\n                        oldest_stamp = stamp\n            if oldest_bucket is None:\n                break\n            value = oldest_bucket.pop(oldest_key)\n            self.ghost_bytes -= value[0]\n\n    def _adapt(self, kind):\n        if self.capacity <= 0:\n            return\n        b1 = sum(value[0] for value in self.ghost_probationary.values())\n        b2 = sum(value[0] for value in self.ghost_protected.values())\n        if kind == 1:\n            delta = self.capacity if b1 == 0 else max(1, min(self.capacity, b2 // b1 or 1))\n            self.target_probationary = min(self.capacity, self.target_probationary + delta)\n        else:\n            delta = self.capacity if b2 == 0 else max(1, min(self.capacity, b1 // b2 or 1))\n            self.target_probationary = max(0, self.target_probationary - delta)\n\n    def _remove_resident(self, key):\n        value = self.probationary.pop(key, None)\n        if value is not None:\n            self.probationary_bytes -= value\n            self.used -= value\n            return value\n        value = self.protected.pop(key, None)\n        if value is not None:\n            self.protected_bytes -= value\n            self.used -= value\n            return value\n        return None\n\n    def _evict_one(self, prefer_probationary):\n        if prefer_probationary and self.probationary:\n            key, size = self.probationary.popitem(last=False)\n            self.probationary_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        if self.probationary:\n            key, size = self.probationary.popitem(last=False)\n            self.probationary_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        return None\n\n    def _make_room(self, incoming, ghost_kind):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            prefer_probationary = self.probationary_bytes > self.target_probationary\n            if ghost_kind == 2 and self.probationary_bytes == self.target_probationary:\n                prefer_probationary = True\n            key = self._evict_one(prefer_probationary)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.probationary or key in self.protected:\n            self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._forget_ghost(key)\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used += size\n            return evicted\n\n        ghost_kind = 1 if key in self.ghost_probationary else 2 if key in self.ghost_protected else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if ghost_kind:\n            self._adapt(ghost_kind)\n            self._forget_ghost(key)\n\n        evicted = self._make_room(size, ghost_kind)\n        if self.used + size > self.capacity:\n            return evicted\n        if ghost_kind == 2 or ghost_kind == 1:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.probationary[key] = size\n            self.probationary_bytes += size\n        self.used += size\n        return evicted\n",
+    "sha256": "965bd58af576e494d2f402bfb2bd5a93c0aff0018fb5598165b8aa2efcec8992"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "loop_structure": {
+    "final_call_id": "co_visible_terminal_emit",
+    "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The second consumes that capsule, reopens only anchor_policy and anchor_contract, and emits one complete executable policy state. The final call consumes that state, simultaneously reopens task_constraints, loop_structure, task, and candidate_hypothesis, reconciles their joint implications in the inherited artifact, and emits one policy.",
+    "name": "Terminally Contracted Reentry Relay",
+    "organization": "three-call sequential lineage preserving one complete executable artifact while contracting the two terminal evidence windows into one co-visible transition",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "originate_executable_capsule",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile the initially visible evidence and obligations into one complete executable policy artifact.",
+            "output_type": "policy_capsule",
+            "role": "integrated executable originator"
+          },
+          {
+            "id": "anchor_window_transition",
+            "inputs": [
+              "originate_executable_capsule",
+              "anchor_policy",
+              "anchor_contract"
+            ],
+            "objective": "Consume originate_executable_capsule, expose the inherited artifact to the reentered anchor evidence and contract obligations, reconcile visible conflicts directly in that artifact, and emit one complete executable policy state.",
+            "output_type": "executable_policy_state",
+            "role": "anchor-window executable custodian"
+          },
+          {
+            "id": "co_visible_terminal_emit",
+            "inputs": [
+              "anchor_window_transition",
+              "task_constraints",
+              "loop_structure",
+              "task",
+              "candidate_hypothesis"
+            ],
+            "objective": "Consume anchor_window_transition, expose the inherited complete artifact simultaneously to the reentered constraints, structural evidence, task, and hypothesis, reconcile their joint obligations in that artifact, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "co-visible terminal policy authority"
+          }
+        ],
+        "id": "contracted_executable_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "candidate_hypothesis": {
+    "causal_change": "Contract the terminal lineage edge by fusing the constraint window and task-hypothesis window into one terminal transition with simultaneous visibility of both evidence groups.",
+    "expected_effect": "A single causally authoritative terminal reconciliation should reduce avoidable artifact churn while preserving a complete executable lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion fixes constraint and structural reconciliation before task and hypothesis evidence reenter, so cross-window conflicts can trigger consecutive revisions of the same executable artifact."
+  }
+}

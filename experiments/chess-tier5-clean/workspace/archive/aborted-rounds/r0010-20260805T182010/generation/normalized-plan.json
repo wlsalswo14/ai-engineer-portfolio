@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "counter_hypothesis",
+  "hypothesis": {
+    "observed_bottleneck": "The champion discovers quality constraints only after a provisional engine exists. Its verifier can remove causally implicated deltas, but rollback cannot guide interacting design choices before they become coupled in the artifact, and the two tested post-hoc escape mechanisms both failed.",
+    "evidence_refs": [
+      "STATE_CAPSULE.current_champion",
+      "STATE_CAPSULE.hypothesis_frontier round 7",
+      "STATE_CAPSULE.recent_outcomes rounds 8 and 9"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Temporal direction of executable evidence in engine construction",
+      "before": "Construct a provisional engine first, then derive failure evidence from that artifact and use exact delta attribution to preserve or roll back its changes.",
+      "after": "Before any candidate engine exists, compile anchor observations into a frozen executable construction contract; then synthesize exactly one complete clean-room engine whose interacting design decisions are jointly constrained by that contract.",
+      "why_causal": "Moving evidence from post-artifact correction to pre-artifact constraint changes which implementations are reachable. Requirements can shape coupled architecture choices before they harden into source deltas, rather than merely deciding which realized deltas survive."
+    },
+    "expected_effect": "The candidate should produce more coherent cross-component improvements because legality, UCI behavior, state integrity, tactical correctness, and preservation obligations constrain construction together. It should avoid both the champion's tendency to discard inseparable useful behavior and the invalidity risk of post-hoc strategy substitution.",
+    "falsifier": "After three valid matched pairs with zero invalid arms, falsify the hypothesis if candidate pair wins are not greater than candidate pair losses or if the candidate median Elo is not strictly greater than the official champion median Elo.",
+    "behavioral_novelty": "The loop can establish executable obligations before candidate code exists and use a failure of one obligation to redesign interacting components within the single synthesis trajectory. It can therefore reach a coordinated implementation that is not obtainable by preserving or rolling back deltas from a provisional artifact.",
+    "family_break": {
+      "champion_family": "Artifact-first causal pruning: author one provisional engine, experimentally attribute its failures to exact source deltas, then emit the artifact with certified rollbacks.",
+      "alternative_family": "Contract-First Clean-Room Synthesis",
+      "rejected_core_assumptions": [
+        "A strong candidate is best reached by first committing to a provisional implementation and subsequently pruning harmful deltas.",
+        "Failures should be represented primarily as causal responsibility of realized source changes rather than as construction obligations fixed before implementation."
+      ],
+      "forbidden_champion_mechanisms": [
+        "A provisional candidate engine reviewed by a later call",
+        "Champion-to-provisional delta attribution or reversible delta rollback",
+        "A terminal integrator choosing between preservation and rollback of an earlier candidate artifact"
+      ],
+      "alternative_causal_principle": "Compile bounded executable evidence into an immutable behavioral contract before implementation, then let one synthesis call construct a coherent engine from that contract without inheriting, reviewing, selecting, or repairing another call's candidate engine.",
+      "changed_dimensions": [
+        "information_flow",
+        "error_detection",
+        "final_decision",
+        "failure_recovery"
+      ],
+      "difference_from_champion": {
+        "information_flow": "Evidence flows from anchor diagnosis into a frozen preconstruction contract and then into one producer; no candidate artifact flows into an independent verifier or integrator.",
+        "error_detection": "Potential failures are expressed as executable properties and preservation checks before implementation, rather than discovered by comparing a provisional engine with its source parent.",
+        "final_decision": "The sole engine-producing call emits one contract-constrained clean-room implementation; no later call selects, preserves, rolls back, or merges candidate semantics.",
+        "failure_recovery": "A failed contract check triggers bounded redesign inside the same construction trajectory while all obligations remain visible, rather than deleting an attributed delta or reverting to champion behavior."
+      },
+      "non_derivative_probe": "Give both structures the same anchor evidence containing two interacting defects for which repairing either component independently breaks the other. Before any candidate source exists, the alternative must emit executable obligations covering both interactions and its final trace must show joint construction against them. The champion instead must first create a provisional artifact and can react only through artifact-relative attribution and rollback. Contract creation before candidate existence, absence of candidate-source review, and coordinated satisfaction without rollback distinguish the families regardless of benchmark score."
+    },
+    "strengths": [
+      "Makes preservation and correctness evidence influential before architectural commitments are made.",
+      "Allows coordinated redesign of interacting engine components without candidate replication or best-of-N selection.",
+      "Eliminates cross-call mutation of candidate source and the associated attribution, merge, and invalid-emission risks.",
+      "Uses the official champion only as executable evidence and promotion opponent, not as a source template or design parent."
+    ],
+    "risks": [
+      "An incomplete or incorrectly prioritized contract can constrain the producer away from unmeasured playing strength.",
+      "Because no independent call inspects the final artifact, defects introduced during synthesis may escape the precommitted checks.",
+      "Clean-room construction may lose useful undocumented behavior present in the anchor evidence.",
+      "The final producer may spend too much effort satisfying visible obligations and underinvest in general search quality."
+    ],
+    "dominant_assumption": "The champion assumes that generating a promising artifact first and causally pruning its harmful deltas is more productive than constraining implementation before any candidate code exists.",
+    "inversion": "Treat the preimplementation evidence contract, not a provisional artifact, as the persistent object: freeze what the engine must demonstrate first, then synthesize one coherent engine without post-hoc candidate verification, delta attribution, rollback, or integration."
+  },
+  "structure": {
+    "name": "Contract-First Clean-Room Synthesis",
+    "organization": "collaboration",
+    "information_flow": "A non-producing contract compiler converts task, anchor behavior, metrics, and capsule evidence into one frozen executable construction contract. A single downstream producer uses that contract and the anchor only as behavioral evidence to construct and internally check one complete clean-room engine.",
+    "stages": [
+      {
+        "id": "contract_stage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "contract_compiler",
+            "role": "executable behavioral contract compiler",
+            "objective": "Inspect and, where possible, execute the supplied anchor as evidence without treating its source as a template. Produce a bounded frozen contract containing prioritized general-purpose chess and UCI obligations, executable probes, preservation invariants, interacting-failure cases, and explicit pass criteria. Do not produce candidate engine source, propose multiple implementations, encode ChessBench positions, or perform candidate selection.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "synthesis_stage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "contract_constrained_engine_producer",
+            "role": "clean-room contract-constrained engine producer",
+            "objective": "Produce exactly one complete legal UCI engine from a fresh implementation, using champion_engine only as executable behavioral evidence and never as a source template or parent. Jointly design the engine around the frozen contract, execute its probes during construction, and perform bounded in-trajectory repair when a probe fails while preserving all other obligations. Do not create provisional alternatives, compare multiple candidates, use best-of-N selection, attribute source deltas, or invoke rollback semantics. Emit the complete engine as the only candidate artifact.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "candidate_hypothesis",
+              "loop_structure",
+              "contract_compiler"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "contract_constrained_engine_producer"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  },
+  "structure_id": "loop_2bf4a2c1e32c3f7f"
+}

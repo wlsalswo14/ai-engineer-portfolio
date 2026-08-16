@@ -1,0 +1,64 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Scan resistance, phase-shift adaptation, and hit-rate objectives interact causally through recency evidence: immediate reuse rewards retention, while one-pass scans create misleading evidence that can displace reusable objects. Byte hit rate adds a size-weighted displacement effect, so large objects can amplify regret even when object-level behavior appears favorable. Adaptation requires responsiveness to changed reuse patterns, but excessive responsiveness destroys stability and increases scan pollution. Capacity safety and legal eviction reporting are hard invariants that constrain every objective tradeoff; online-only visibility prevents using future or oracle information to resolve them. The anchor is contextual evidence of this inherited interaction structure, not an edit substrate.",
+      "exact_actions": [
+        "Model reuse value, scan pollution, object size, and phase change as interacting causal factors.",
+        "Keep behavioral objectives distinct from hard contract invariants when reasoning about tradeoffs.",
+        "Treat the anchor as contextual evidence and exclude inherited repair state from the causal account.",
+        "Pass one unified causal frame to direct synthesis without generating alternatives or vetoes."
+      ],
+      "obligations": [
+        "Preserve the declared Policy constructor and access interface.",
+        "Use only standard-library and current-request information available online one access at a time.",
+        "Never exceed capacity_bytes, including zero-capacity and oversized-object cases.",
+        "Return only unique integer keys that are currently cached and evicted by the current request.",
+        "Avoid benchmark paths, trace hardcoding, oracle adaptation, external libraries, networking, and subprocesses."
+      ],
+      "witnesses": [
+        "A repeated-hot object can lose protection when a scan supplies more recent but non-repeating accesses.",
+        "A large scanned object can reduce byte hit rate disproportionately by consuming capacity before its reuse value is established.",
+        "A phase transition can make stale historical preference harmful, while immediate wholesale adaptation can discard still-useful incumbents.",
+        "An eviction is contract-valid only when its key is currently cached, unique in the returned list, and accompanied by state that remains within capacity."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R14-pair01-candidate-call01-causal_countermodel",
+    "duration_seconds": 21.364,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:37:59Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "bbf920d83482e71b94f798c87d1f0cd58a96365eb286b2ad4db597b09bb359a0",
+    "raw_events_path": "workspace\\model-calls\\R14-pair01-candidate-call01-causal_countermodel\\raw-events.jsonl",
+    "raw_events_sha256": "78e544ab0024c4894347c450eacbb0145d7146cea84e856284c4a38e106d76ef",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "c2e245aafaa651d914542c43d6283a58f9c69fe0e776039fed9ce57966386951",
+    "returncode": 0,
+    "role": "R14 candidate topology role policy-independent causal countermodel architect",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:37:38Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14017,
+      "output_tokens": 837,
+      "reasoning_output_tokens": 445
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

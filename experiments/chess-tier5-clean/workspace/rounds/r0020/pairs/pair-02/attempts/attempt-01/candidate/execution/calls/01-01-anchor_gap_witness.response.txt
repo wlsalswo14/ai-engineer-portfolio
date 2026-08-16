@@ -1,0 +1,29 @@
+{
+  "ANCHOR_FACTS": {
+    "anchor_sha256": "578a4d95f81d0f2c11171e55e72b71c2b4613c06a80381b0a03ffbebf228d3d6",
+    "observed_behavior": "Engine.think returns the first legal move whenever movetime <= 4, bypassing search.",
+    "seam": "main.go -> Engine.think(ms) -> legal(self.pos), best=moves[0], early return"
+  },
+  "ONE_CAPABILITY_GAP": "Bounded-budget immediate tactical win recognition",
+  "BASELINE_WITNESS": "@'\nuci\nisready\nucinewgame\nposition fen 7k/5Q2/5K2/8/8/8/8/8 w - - 0 1\ngo movetime 1\nquit\n'@ | python .\\engine.py",
+  "BASELINE_TRACE": [
+    "id name PythonScratch",
+    "id author Codex",
+    "uciok",
+    "readyok",
+    "bestmove f6e5"
+  ],
+  "POSTCONDITION": {
+    "required": "bestmove f7g7, the legal mate-in-one",
+    "observed": "f6e5",
+    "failure": "Capability failure only: handshake, command parsing, move legality, single-bestmove emission, and bounded return all pass."
+  },
+  "REQUIRED_POSITIVE_TRANSITION": "The identical witness must return bestmove f7g7 under movetime 1.",
+  "PRESERVATION_ENVELOPE": "Preserve UCI responses, FEN and move-state handling, legal-move guarantees, deterministic output, and deadline-safe behavior outside this witnessed tactical distinction.",
+  "BOUNDED_WORK": "One fixed six-field FEN, one go command, one legal bestmove, no benchmark data or repeated sampling.",
+  "PRODUCER_CONSUMER_SEAM_COORDINATES": {
+    "consumer": "main(): go handler parses movetime and calls e.think(ms)",
+    "gap_site": "Engine.think(): moves=legal(self.pos); best=moves[0]; if millis<=4:return notation(best)",
+    "required_input": "A task-general immediate-win discriminator at the existing think-to-bestmove seam"
+  }
+}

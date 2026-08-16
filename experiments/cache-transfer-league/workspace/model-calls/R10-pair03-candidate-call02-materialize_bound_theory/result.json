@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.entries = {}\n        self.history = OrderedDict()\n        self.used_bytes = 0\n        self.history_limit = 2048\n        self.history_window = 4096\n        self.minimum_ttl = 16\n        self.maximum_ttl = 4096\n\n    def _ttl(self, entry):\n        gap = max(1, entry[3])\n        return max(self.minimum_ttl, min(self.maximum_ttl, gap * 4 + 16))\n\n    def _remember(self, key, now, reuse):\n        self.history.pop(key, None)\n        self.history[key] = (now, max(0, reuse))\n        while len(self.history) > self.history_limit:\n            self.history.popitem(last=False)\n\n    def _expire_stale(self, now, keep):\n        evicted = []\n        for cached_key, entry in list(self.entries.items()):\n            if cached_key == keep:\n                continue\n            age = max(0, now - entry[1])\n            if age > self._ttl(entry):\n                del self.entries[cached_key]\n                self.used_bytes -= entry[0]\n                self._remember(cached_key, now, 0)\n                evicted.append(cached_key)\n        return evicted\n\n    def _victim_order(self, now):\n        return sorted(\n            self.entries,\n            key=lambda cached_key: (\n                self.entries[cached_key][2],\n                self.entries[cached_key][1],\n                cached_key,\n            ),\n        )\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        now = int(now)\n        size = max(0, int(size))\n        evicted = self._expire_stale(now, key)\n\n        entry = self.entries.get(key)\n        if entry is not None:\n            age = max(0, now - entry[1])\n            if age > 0:\n                if entry[3] <= 0:\n                    entry[3] = age\n                else:\n                    entry[3] = (entry[3] * 3 + age + 1) // 4\n            entry[1] = now\n            entry[2] += 1\n            return evicted\n\n        prior = self.history.pop(key, None)\n        if prior is None or now - prior[0] > self.history_window:\n            reuse = 0\n        else:\n            reuse = min(255, prior[1] + 1)\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            self._remember(key, now, reuse)\n            return evicted\n\n        while self.used_bytes + size > self.capacity_bytes:\n            order = self._victim_order(now)\n            if not order:\n                break\n            victim = order[0]\n            victim_entry = self.entries.pop(victim)\n            self.used_bytes -= victim_entry[0]\n            self._remember(victim, now, victim_entry[2])\n            evicted.append(victim)\n\n        self.entries[key] = [size, now, reuse, 0]\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R10-pair03-candidate-call02-materialize_bound_theory",
+    "duration_seconds": 101.179,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:55:52Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "4b0b48b80654c23943bf1ca5a46cf1879f1c18f917eb965a83fca26e37a58100",
+    "raw_events_path": "workspace\\model-calls\\R10-pair03-candidate-call02-materialize_bound_theory\\raw-events.jsonl",
+    "raw_events_sha256": "a988272f38a76c256615142d146d5d6e2757de440a628a7c14b9e154981da9d8",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "2a41e47f8ea03cd7b4a43533b64b0174b2f83c61379ba54ce36595729bf63d15",
+    "returncode": 0,
+    "role": "R10 candidate topology role exclusive realization authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:54:11Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14402,
+      "output_tokens": 8097,
+      "reasoning_output_tokens": 7308
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

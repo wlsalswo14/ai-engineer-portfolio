@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "amendment_id": "cache-stop-after-active-display-r96",
+  "issued_at": "2026-08-10T03:45:00Z",
+  "reason": "User-issued STOP-AFTER-CURRENT-ROUND while display R96 generation was active",
+  "authoritative_start": {
+    "display_round": 95,
+    "atomic_state_path": "workspace\\rounds\\R95\\R95-ATOMIC-COMMIT.json",
+    "atomic_state_sha256": "cffd4c4601adc022789b007344b629d8812725e7909c4e646142fa36ac0c8776",
+    "state_path": "workspace\\rounds\\R95\\state.json",
+    "state_sha256": "14824f53f5741d60b93a990b41f6ae12bac576ab4a73af12d40fec926f50e5ff",
+    "champion_policy_path": "workspace\\champion-r95\\policy.py",
+    "champion_policy_sha256": "23a2eb77605a9dd21f7083e42d8d0d441cc1a7a53267bc45ff286239fa9c6832",
+    "champion_structure_path": "workspace\\champion-r95\\structure.json",
+    "champion_structure_sha256": "c907cfebd2011c00c4a17d4a12a8f25f0f76ab7dbda9b969287a07383677fcb7",
+    "selection_receipt_path": "workspace\\champion-r95\\selection-receipt.json",
+    "selection_receipt_sha256": "56f16a5c4cc325fd407e6510eb580c25023013365369a591850d817f555e407b"
+  },
+  "active_round_at_directive": {
+    "display_round": 96,
+    "status": "generation-active",
+    "completion_authorized": true,
+    "must_complete_generation_seal_score_atomic_audit": true
+  },
+  "stop_after_display_round": 96,
+  "cache_r97_permitted": false,
+  "required_terminal_state": {
+    "next_round_permitted": false,
+    "cache_r97_opened": false,
+    "round_r97_absent": true,
+    "champion_r97_absent": true,
+    "process_and_shared_lock_clean": true,
+    "git_commit_created": false
+  },
+  "preserved_immutable_contracts": [
+    {
+      "path": "EVOLUTION-R9-R100-AMENDMENT.json",
+      "sha256": "326f942c5b12b26e1a23a57d4b3f285b9bf160060867fcd6cf115a2a9ae3ecef",
+      "status": "historical authorization retained; terminal target superseded only by this later user amendment"
+    },
+    {
+      "path": "LUNA-FAST-EXECUTOR-EPOCH.json",
+      "sha256": "8d51e00f387074d75fdd814d659a0a76c9991092f594b3482a2e390ced8425b3",
+      "status": "model boundary unchanged"
+    }
+  ],
+  "effective_model_boundary": {
+    "structure_architect": {
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "calls": 1,
+      "policy_code_permitted": false
+    },
+    "all_inner_roles": {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "direct_model_substitution": false
+    }
+  },
+  "validity_semantics": {
+    "preseal_generic_validity": "diagnostic only",
+    "promotion_gate": "official replay validity AND generation-contract validity for all six arms, replay determinism, candidate pairwise majority, strict candidate median, and any triggered close confirmation"
+  }
+}

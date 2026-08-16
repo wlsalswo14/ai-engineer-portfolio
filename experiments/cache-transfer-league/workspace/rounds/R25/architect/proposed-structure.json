@@ -1,0 +1,37 @@
+{
+  "final_call_id": "predecessor_exclusive_policy_emitter",
+  "information_flow": "The first call forms one self-contained executable closure from all common inputs and removes construction provenance from the handoff. The final call receives only that closure, treats it as the sole causal state, and emits its complete policy artifact.",
+  "name": "Predecessor-Exclusive Closure Relay",
+  "organization": "two-call sequential lineage with the incumbent provenance firewall followed by a predecessor-exclusive emission edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_executable_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form exactly one self-contained executable policy closure from the supplied evidence and public obligations, establish its semantics within that complete state, remove construction provenance from the handoff, and pass the complete executable artifact forward.",
+          "output_type": "executable_policy_closure",
+          "role": "executable semantic closure former"
+        },
+        {
+          "id": "predecessor_exclusive_policy_emitter",
+          "inputs": [
+            "form_executable_closure"
+          ],
+          "objective": "Consume the preceding complete executable closure as the sole causal input and emit its single policy artifact without introducing external evidence or reopening its established semantics.",
+          "output_type": "policy",
+          "role": "predecessor-exclusive policy emitter"
+        }
+      ],
+      "id": "exclusive_closure_relay",
+      "mode": "sequential"
+    }
+  ]
+}

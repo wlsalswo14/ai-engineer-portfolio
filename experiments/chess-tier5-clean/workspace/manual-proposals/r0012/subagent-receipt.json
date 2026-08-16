@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-08-05T14:23:55.080405+00:00",
+  "agent_role": "structural_architect",
+  "provenance": {
+    "canonical_label": "independent gpt-5.6-sol/max structural-architect subagent",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "delegation_task_path": "/root/r31_architect_max"
+  },
+  "round": {
+    "display_round": 31,
+    "internal_round": "r0012",
+    "proposal_mode": "general",
+    "architect_mode": "LOCAL-REFINEMENT"
+  },
+  "design_context": {
+    "champion_package_id": "package_a9dd70e3fc84f08d",
+    "champion_structure_id": "loop_b51c38b8268a6c22",
+    "preserved_macro_family": "Single-Lineage Executable Semantic-Normal-Form Transduction",
+    "single_causal_factor": "Boundary-selection policy for the representation-only normalization pass",
+    "local_refinement_count": 0,
+    "local_refinement_limit": 2
+  },
+  "inputs": {
+    "architect_contract_path": "src/loop_evolution/agents.py",
+    "architect_contract_file_sha256": "42abcc33c9e9e4139b0f13099a466f47afaf8493a0c55cc85c4f7005082c801d",
+    "state_capsule_path": "experiments/chess-tier5-clean/workspace/state-capsule.json",
+    "state_capsule_file_sha256": "7077df066f73c25cff268666ca7715dc3b6b9ced2a6c1c586a412f44fd746c11",
+    "state_capsule_declared_content_sha256": "9ccde816d9127db70afa32f46f7b2de3209fbe1eeee74137edfad864fe44aede",
+    "champion_structure_path": "experiments/chess-tier5-clean/workspace/champions/p0011/loop-structure.json"
+  },
+  "output": {
+    "normalized_plan_path": "experiments/chess-tier5-clean/workspace/manual-proposals/r0012/normalized-plan.json",
+    "normalized_plan_file_sha256": "4ead150ad37356ca07bd98b7b7c0e169f125379dae80df0d4dece084bdfbd304",
+    "structure_id": "loop_cdcaefbbca20d711"
+  },
+  "validation": {
+    "passed": true,
+    "loader": "LoopPlan.from_payload(payload, expected_mode='general')",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "validated_capsule_file_sha256": "7077df066f73c25cff268666ca7715dc3b6b9ced2a6c1c586a412f44fd746c11",
+    "normalized_payload_matches_file": true,
+    "validated_structure_id": "loop_cdcaefbbca20d711",
+    "validated_call_count": 2
+  },
+  "constraint_attestation": {
+    "exactly_one_causal_structural_factor": true,
+    "champion_macro_family_preserved": true,
+    "replicated_candidates_or_best_of_n": false,
+    "engine_hyperparameter_tuning_as_structure": false,
+    "benchmark_hardcoding": false,
+    "active_round_generation_modified": false,
+    "writes_limited_to_manual_staging_files": true
+  },
+  "write_scope": [
+    "experiments/chess-tier5-clean/workspace/manual-proposals/r0012/normalized-plan.json",
+    "experiments/chess-tier5-clean/workspace/manual-proposals/r0012/subagent-receipt.json"
+  ]
+}

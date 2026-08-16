@@ -1,0 +1,42 @@
+{
+  "parsed_response": {
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.clock = 0\n        self.operations = 0\n        self.protected_hits = 0\n        self.probation_hits = 0\n        self.protected_ratio = 50\n        self.ghost_limit = 4096\n\n    def _protected_target(self):\n        if self.capacity_bytes == 0:\n            return 0\n        target = self.capacity_bytes * self.protected_ratio // 100\n        return max(1, min(self.capacity_bytes, target))\n\n    def _rebalance(self):\n        target = self._protected_target()\n        while self.protected and self.protected_bytes > target:\n            key, record = self.protected.popitem(last=False)\n            size, stamp = record\n            self.protected_bytes -= size\n            self.probation[key] = (size, stamp)\n\n    def _remember(self, key):\n        self.ghost.pop(key, None)\n        self.ghost[key] = None\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n\n    def _observe(self, key):\n        del key\n        self.clock += 1\n        self.operations += 1\n        if self.operations % 256 == 0:\n            if self.protected_hits > self.probation_hits * 2:\n                self.protected_ratio = min(80, self.protected_ratio + 5)\n            elif self.probation_hits > self.protected_hits * 2:\n                self.protected_ratio = max(25, self.protected_ratio - 5)\n            self.protected_hits = 0\n            self.probation_hits = 0\n\n    def _evict_probation(self):\n        key, record = self.probation.popitem(last=False)\n        size, _ = record\n        self.used_bytes -= size\n        self._remember(key)\n        return key\n\n    def _make_room(self, required_bytes):\n        evicted = []\n        self._rebalance()\n        while self.used_bytes + required_bytes > self.capacity_bytes:\n            if self.probation:\n                evicted.append(self._evict_probation())\n            elif self.protected:\n                key, record = self.protected.popitem(last=False)\n                size, stamp = record\n                self.protected_bytes -= size\n                self.probation[key] = (size, stamp)\n            else:\n                break\n        return evicted\n\n    def _remove_protected(self, key):\n        size, _ = self.protected.pop(key)\n        self.protected_bytes -= size\n        self.used_bytes -= size\n\n    def _remove_probation(self, key):\n        size, _ = self.probation.pop(key)\n        self.used_bytes -= size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        size = max(0, int(size))\n        self._observe(key)\n\n        if key in self.protected:\n            old_size, _ = self.protected.pop(key)\n            if size > self.capacity_bytes:\n                self.protected_bytes -= old_size\n                self.used_bytes -= old_size\n                self._remember(key)\n                return [key]\n            self.protected[key] = (size, self.clock)\n            self.protected_bytes += size - old_size\n            self.used_bytes += size - old_size\n            self.protected_hits += 1\n            return self._make_room(0)\n\n        if key in self.probation:\n            old_size, _ = self.probation.pop(key)\n            if size > self.capacity_bytes:\n                self.used_bytes -= old_size\n                self._remember(key)\n                return [key]\n            self.probation[key] = (size, self.clock)\n            self.used_bytes += size - old_size\n            self.probation_hits += 1\n            moved_size, moved_stamp = self.probation.pop(key)\n            self.protected[key] = (moved_size, moved_stamp)\n            self.protected_bytes += moved_size\n            self._rebalance()\n            return self._make_room(0)\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        ghost_hit = key in self.ghost\n        if ghost_hit:\n            self.ghost.pop(key, None)\n\n        evicted = self._make_room(size)\n        record = (size, self.clock)\n        if ghost_hit:\n            self.protected[key] = record\n            self.protected_bytes += size\n        else:\n            self.probation[key] = record\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R1-pair02-candidate-call02-independent_terminal_finalizer",
+    "duration_seconds": 71.464,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T08:19:53Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "3fc91c2aec732d6f3ac1d1a54555a5ed56c23eda67db5e43918b22664707b080",
+    "raw_events_path": "workspace\\model-calls\\R1-pair02-candidate-call02-independent_terminal_finalizer\\raw-events.jsonl",
+    "raw_events_sha256": "59cdebd8793e6fc971275f71b3d4b7bad35d638202f157b5886922c31ce6d690",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 0,
+    "response_sha256": "8de82bd7cdf5c77d6271aca7c193cd6ab085da85d8a4e332c6f94024cf09c720",
+    "returncode": 0,
+    "role": "R1 candidate topology role independent causal falsifier and terminal finalizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T08:18:41Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14726,
+      "output_tokens": 3741,
+      "reasoning_output_tokens": 2588
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

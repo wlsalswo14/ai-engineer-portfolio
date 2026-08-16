@@ -1,0 +1,193 @@
+artifact:
+  component_identity: "cycle-mapped-seam.v1"
+  interface: "execute(request: dict) -> dict"
+  capability: "bounded causal tracing of a component/anchor callback seam with deterministic re-entry evidence"
+  source: |
+    COMPONENT_ID = "cycle-mapped-seam.v1"
+    MAX_TICKS = 24
+
+    _NODES = {
+        "anchor.source": {"boundary": "anchor", "postcondition": "source_available", "reads": [], "writes": ["anchor.source_value"]},
+        "anchor.hook": {"boundary": "anchor", "postcondition": "hook_returned", "reads": ["anchor.source_value"], "writes": ["anchor.hook_count"]},
+        "component.entry": {"boundary": "component", "postcondition": "result_ready", "reads": ["anchor.source_value"], "writes": []},
+        "component.feedback": {"boundary": "component", "postcondition": "feedback_applied", "reads": ["anchor.hook_count"], "writes": ["component.feedback_count"]},
+        "component.commit": {"boundary": "component", "postcondition": "result_ready", "reads": ["anchor.source_value", "component.feedback_count"], "writes": ["component.result"]},
+    }
+
+    _POST = {name: meta["postcondition"] for name, meta in _NODES.items()}
+    _AUTHORITIES = {
+        "anchor.source_value": {"authority": "anchor.producer", "readers": ["component.entry", "component.commit"], "writers": ["anchor.producer"]},
+        "anchor.hook_count": {"authority": "anchor.hook", "readers": ["component.feedback"], "writers": ["anchor.hook"]},
+        "component.feedback_count": {"authority": "component.feedback", "readers": ["component.commit"], "writers": ["component.feedback"]},
+        "component.result": {"authority": "component.commit", "readers": [], "writers": ["component.commit"]},
+    }
+
+    def execute(request):
+        if not isinstance(request, dict):
+            raise TypeError("request must be a dict")
+        mode = request.get("seam", "cycle")
+        if mode not in ("cycle", "direct"):
+            raise ValueError("seam must be cycle or direct")
+        source = request.get("source", 3)
+        if type(source) is not int:
+            raise TypeError("source must be an int")
+        limit = request.get("budget", MAX_TICKS)
+        if type(limit) is not int or not 1 <= limit <= MAX_TICKS:
+            raise ValueError("budget outside bounded-work envelope")
+
+        state = {
+            "anchor.source_value": source,
+            "anchor.hook_count": 0,
+            "component.feedback_count": 0,
+            "component.result": None,
+        }
+        trace, edges, intervals, active = [], [], [], {}
+        ticks = 0
+
+        def mark(event):
+            nonlocal ticks
+            ticks += 1
+            if ticks > limit:
+                raise RuntimeError("bounded-work limit exceeded")
+            trace.append({"step": ticks, "event": event})
+
+        def enter(node):
+            mark("enter:" + node)
+            rec = {
+                "node": node,
+                "start": ticks,
+                "end": None,
+                "declared_postcondition": _POST[node],
+                "postcondition_complete_at": None,
+                "reads": list(_NODES[node]["reads"]),
+                "writes": list(_NODES[node]["writes"]),
+            }
+            intervals.append(rec)
+            active[node] = rec
+
+        def leave(node):
+            mark("leave:" + node)
+            rec = active.pop(node)
+            rec["end"] = ticks
+            rec["postcondition_complete_at"] = ticks
+
+        def edge(src, dst, kind, causal, reason):
+            mark("edge:" + src + "->" + dst + ":" + kind)
+            edges.append({
+                "id": "e%02d" % len(edges),
+                "from": src,
+                "to": dst,
+                "kind": kind,
+                "causal": causal,
+                "reason": reason,
+            })
+
+        enter("component.entry")
+        edge("component.entry", "anchor.hook", "call", True, "component entry requests the anchor-derived seam")
+        enter("anchor.hook")
+        state["anchor.hook_count"] += 1
+        edge("anchor.hook", "component.feedback", "call", True, "anchor hook requests component feedback")
+        enter("component.feedback")
+        state["component.feedback_count"] = state["anchor.hook_count"]
+
+        if mode == "cycle":
+            edge("component.feedback", "component.entry", "return", True, "feedback re-enters active entry before result_ready")
+            active["component.entry"]["reentered_at"] = ticks
+
+        leave("component.feedback")
+        edge("component.feedback", "anchor.hook", "return", False, "ordinary stack unwind carries no new dependency")
+        leave("anchor.hook")
+        edge("anchor.hook", "component.entry", "return", False, "ordinary stack unwind carries no new dependency")
+        enter("component.commit")
+        state["component.result"] = state["anchor.source_value"] + state["component.feedback_count"]
+        leave("component.commit")
+        leave("component.entry")
+
+        excluded = [
+            {
+                "edge_id": e["id"],
+                "from": e["from"],
+                "to": e["to"],
+                "kind": e["kind"],
+                "reason": e["reason"],
+            }
+            for e in edges if not e["causal"]
+        ]
+        excluded.append({
+            "edge_id": "excluded.trace-observer",
+            "from": "trace.observer",
+            "to": "*",
+            "kind": "observation",
+            "reason": "instrumentation cannot affect state or control",
+        })
+
+        return {
+            "component_id": COMPONENT_ID,
+            "interface": "execute(request: dict) -> dict",
+            "seam_fixture": mode,
+            "output": state["component.result"],
+            "state": state,
+            "trace": trace,
+            "graph": {
+                "node_id_policy": "fixed dotted identities; no dynamic IDs",
+                "nodes": {k: dict(v) for k, v in _NODES.items()},
+                "edges": edges,
+                "causal_edges": [e["id"] for e in edges if e["causal"]],
+                "active_invocation_intervals": intervals,
+                "declared_postconditions": dict(_POST),
+                "state_reader_writer_provenance": dict(_AUTHORITIES),
+                "noncausal_edge_exclusions": excluded,
+            },
+            "work": {"steps": ticks, "budget": limit, "bounded": ticks <= limit},
+            "causal_target": "source_value plus one anchor-hook acknowledgement",
+            "preservation": {
+                "anchor_source_authority": "anchor.producer",
+                "component_state_authority": "component.feedback and component.commit",
+                "postcondition": "result_ready",
+                "engine_construction": False,
+            },
+        }
+
+  seam_surrogate:
+    prestate: "anchor.source_value=3; all counters zero"
+    cycle_trace: ["entry", "anchor hook", "component feedback", "causal re-entry to active entry", "commit"]
+    direct_trace: ["entry", "anchor hook", "component feedback", "ordinary returns", "commit"]
+    causal_cycle: "component.entry -> anchor.hook -> component.feedback -> component.entry"
+    noncausal_exclusions: ["ordinary stack-unwind returns", "trace observer edges"]
+
+  observed_traces:
+    cycle: {output: 4, steps: 13, reentry_step: 6, entry_postcondition_complete_step: 13}
+    direct: {output: 4, steps: 12, causal_cycle: false}
+    null: {input_source: 0, output: 1}
+    repeated_lifecycle: "identical serialized result on repeated cycle execution"
+
+  state_authority_map:
+    anchor.source_value: "anchor.producer writes; component.entry and component.commit read"
+    anchor.hook_count: "anchor.hook writes; component.feedback reads"
+    component.feedback_count: "component.feedback writes; component.commit reads"
+    component.result: "component.commit writes"
+
+  preservation_envelope:
+    capability_target: "source value plus one acknowledgement"
+    anchor_source_authority: "unchanged"
+    mutation_authorities: "unchanged"
+    postcondition: "result_ready"
+    engine_or_engine_patch: false
+    cut_migration: "not performed by this component"
+
+  checks:
+    primitive: "supported"
+    null: "supported"
+    boundary_transition: "cycle graph contains the mixed-boundary causal cycle; direct graph does not; output and authorities match"
+    repeated_lifecycle: "supported"
+    dependency_provenance: "all declared readers resolve to an authority"
+    bounded_work: "13/24 cycle steps; budget exhaustion raises RuntimeError"
+    execution_note: "Inline Python execution was blocked by the arm shell policy; traces and checks were statically reviewed from the deterministic source."
+
+  graft_invariants:
+    - "Use the component identity exactly once."
+    - "Move the seam only after the emitted mixed-boundary causal cycle is independently observed."
+    - "Preserve anchor and component state authorities."
+    - "Internalize only the cited causal closure."
+    - "Remove the obsolete crossing path."
+    - "Do not emit an engine from this artifact."

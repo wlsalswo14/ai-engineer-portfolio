@@ -1,0 +1,21 @@
+{
+  "STATUS": "BLOCKED_BEFORE_COMMIT",
+  "ANCHOR_FACTS": [
+    "engine.py is not materialized in the workspace.",
+    "Available command execution rejects Python/interpreter invocations.",
+    "The supplied source has no game-position repetition ledger; Engine.history is only move-ordering data."
+  ],
+  "ONE_CAPABILITY_GAP": "Threefold-repetition state is neither retained during setpos replay nor consumed by search.",
+  "BASELINE_WITNESS": "python -c \"from engine import *; e=Engine(); e.setpos('position startpos moves g1f3 g8f6 f3g1 f6g8 g1f3 g8f6 f3g1 f6g8'.split()); print(e.pos.side,e.pos.half,e.pos.full,len(e.history),hasattr(e,'repetition'),e.think(1))\"",
+  "ACTUAL_BASELINE_TRACE": null,
+  "FAILED_POSTCONDITION": "The third occurrence of the initial position must be represented as repetition-draw state consumed by search.",
+  "REQUIRED_POSITIVE_TRANSITION": "The identical eight-ply witness must yield occurrence count 3 and draw-aware search state.",
+  "PRESERVATION_ENVELOPE": "UCI handshake, legal moves, state transitions, determinism, and deadline behavior.",
+  "BOUNDED_WORK": "Exactly eight reversible plies and one 1 ms search request.",
+  "SEAM_COORDINATES": [
+    "Engine.setpos: replay loop ending in p=make(p,m)",
+    "make: Position(b,side,cast,ep,half,full) has no history field",
+    "Engine.search: TT key and terminal branch omit repetition context"
+  ],
+  "BLOCKER": "No gap may be committed because the required baseline witness could not actually execute."
+}

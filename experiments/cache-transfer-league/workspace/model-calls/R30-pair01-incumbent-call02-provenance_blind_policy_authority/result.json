@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.target = 0\n        self.used_bytes = 0\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.ghost_limit = 4096\n\n    def _remember(self, ghost, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _drop(self, table, key):\n        size = table.pop(key)\n        self.used_bytes -= size\n        if table is self.t1:\n            self.t1_bytes -= size\n        else:\n            self.t2_bytes -= size\n        return size\n\n    def _evict(self, table, ghost):\n        key, size = table.popitem(last=False)\n        self.used_bytes -= size\n        if table is self.t1:\n            self.t1_bytes -= size\n        else:\n            self.t2_bytes -= size\n        self._remember(ghost, key)\n        return key\n\n    def _make_room(self, key, size, from_b2):\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.t1 and (\n                self.t1_bytes > self.target\n                or (from_b2 and self.t1_bytes == self.target)\n            ):\n                evicted.append(self._evict(self.t1, self.b1))\n            elif self.t2:\n                evicted.append(self._evict(self.t2, self.b2))\n            elif self.t1:\n                evicted.append(self._evict(self.t1, self.b1))\n            else:\n                break\n        return evicted\n\n    def _insert(self, table, key, size):\n        table[key] = size\n        self.used_bytes += size\n        if table is self.t1:\n            self.t1_bytes += size\n        else:\n            self.t2_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if size <= 0:\n            return []\n\n        if key in self.t1:\n            old_size = self._drop(self.t1, key)\n            if size > self.capacity_bytes:\n                return [key]\n            evicted = self._make_room(key, size, False)\n            self._insert(self.t2, key, size)\n            return evicted\n\n        if key in self.t2:\n            self._drop(self.t2, key)\n            if size > self.capacity_bytes:\n                return [key]\n            evicted = self._make_room(key, size, False)\n            self._insert(self.t2, key, size)\n            return evicted\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        step = max(1, self.capacity_bytes // 16)\n        if in_b1:\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(step, size),\n            )\n        elif in_b2:\n            self.target = max(\n                0,\n                self.target - max(step, size),\n            )\n\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n        evicted = self._make_room(key, size, in_b2)\n        self._insert(self.t2 if (in_b1 or in_b2) else self.t1, key, size)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-pair01-incumbent-call02-provenance_blind_policy_authority",
+    "duration_seconds": 55.558,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:06:52Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "978add12034212c898b751c7e7aac61691e6bbdb9d5c1e52b7be9673a9f42a56",
+    "raw_events_path": "workspace\\model-calls\\R30-pair01-incumbent-call02-provenance_blind_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "483e117435de99b0990072c2c571f2903e8242557a8f2f2e7d476b1f28def00d",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "6c464f238b309eca710b2c78c9d150bceac33604aefecb3d47d2fca660bf6215",
+    "returncode": 0,
+    "role": "R30 incumbent topology role provenance-blind final semantic authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:05:57Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14138,
+      "output_tokens": 3514,
+      "reasoning_output_tokens": 2588
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

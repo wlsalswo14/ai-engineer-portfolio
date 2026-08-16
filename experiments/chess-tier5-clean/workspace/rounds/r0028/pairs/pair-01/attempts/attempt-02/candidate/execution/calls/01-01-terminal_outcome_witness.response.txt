@@ -1,0 +1,12 @@
+WITNESS {
+  "procedure": "Launch one fresh anchor process; send UCI, isready, then position fen 7k/8/6Q1/8/8/8/P7/4K1R1 w - - 0 1 and go movetime 5. Independently verify legal moves and mate status.",
+  "observed_anchor_trace": "The position has legal mate-in-one g6g7#. The anchor generates e1d1 first, assigns equal quiet-move scores, and returns immediately because movetime <= 5.",
+  "failed_terminal_predicate": "When a legal checkmate in one exists, bestmove must be g6g7. The anchor terminates with bestmove e1d1.",
+  "preservation_predicates": [
+    "The response is one UCI bestmove.",
+    "e1d1 is legal in the supplied position.",
+    "The supplied FEN and engine state are otherwise unchanged.",
+    "No benchmark, evaluator, or external information is used."
+  ],
+  "falsifier": "Falsify if replay produces bestmove g6g7, or independent verification fails to establish g6g7 as legal checkmate and e1d1 as legal non-mate."
+}

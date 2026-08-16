@@ -1,0 +1,45 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 5646,
+  "artifact_path": "workspace\\rounds\\R72\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "ed008ce41722aee5d83ff2c48e9c40159d002a69feac6d0dc1b8160b98bbe1c5",
+  "display_round": 72,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "none",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R72\\pairs\\pair-03\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "871c709b875a2ffa707c1f79fc7ac4ba32126b1de903f828d0c08ccc84dcc645",
+  "label": "pair-03-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R72-pair03-candidate-call01-map_provenance_obligations\\final-receipt.json",
+      "sha256": "d0e230219892a1a847a472d7adac09a9cc5eedb5ede25043797bf65eecffccef"
+    },
+    {
+      "path": "workspace\\model-calls\\R72-pair03-candidate-call02-bind_defeasible_commitment\\final-receipt.json",
+      "sha256": "d0c12544e61a6d09d4363a107531da38ae45931668dffa2996122b35659ab9fb"
+    },
+    {
+      "path": "workspace\\model-calls\\R72-pair03-candidate-call03-adjudicate_commitment\\final-receipt.json",
+      "sha256": "726285aa8597e17a42e565ec3396068e13f67cefc23a797964d98e6881247a3d"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5646,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T23:45:23Z"
+}

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self._items = {}\n        self._probation = OrderedDict()\n        self._protected = OrderedDict()\n        self._ghost_probation = OrderedDict()\n        self._ghost_protected = OrderedDict()\n        self._used = 0\n        self._protected_bytes = 0\n        self._protected_target = (self.capacity_bytes * 3) // 5\n        self._ghost_limit = 4096\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self._ghost_limit:\n            ghost.popitem(last=False)\n\n    def _remove(self, key, ghost_segment=None):\n        item = self._items.pop(key, None)\n        if item is None:\n            return\n        size, segment = item\n        if segment == 1:\n            self._protected.pop(key, None)\n            self._protected_bytes -= size\n        else:\n            self._probation.pop(key, None)\n        self._used -= size\n        if ghost_segment == 0:\n            self._remember(self._ghost_probation, key)\n        elif ghost_segment == 1:\n            self._remember(self._ghost_protected, key)\n\n    def _rebalance_protected(self):\n        while self._protected and self._protected_bytes > self._protected_target:\n            key, _ = self._protected.popitem(last=False)\n            item = self._items.get(key)\n            if item is None:\n                continue\n            size, _ = item\n            item[1] = 0\n            self._probation[key] = None\n            self._protected_bytes -= size\n\n    def _evict_until(self, incoming_size, evicted):\n        while self._items and self._used + incoming_size > self.capacity_bytes:\n            if self._probation:\n                key = next(iter(self._probation))\n                self._remove(key, 0)\n            else:\n                key = next(iter(self._protected))\n                self._remove(key, 1)\n            evicted.append(key)\n\n    def _adjust_from_ghost(self, key):\n        step = max(1, self.capacity_bytes // 16)\n        if key in self._ghost_probation:\n            self._ghost_probation.pop(key, None)\n            self._ghost_protected.pop(key, None)\n            self._protected_target = min(self.capacity_bytes, self._protected_target + step)\n        elif key in self._ghost_protected:\n            self._ghost_protected.pop(key, None)\n            self._ghost_probation.pop(key, None)\n            self._protected_target = max(0, self._protected_target - step)\n        self._rebalance_protected()\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        size = max(0, int(size))\n        item = self._items.get(key)\n        if item is not None:\n            if item[1] == 1:\n                self._protected.move_to_end(key)\n            else:\n                self._probation.pop(key, None)\n                item[1] = 1\n                self._protected[key] = None\n                self._protected_bytes += item[0]\n                self._rebalance_protected()\n            return []\n\n        self._adjust_from_ghost(key)\n        evicted = []\n        self._evict_until(size, evicted)\n        if size > self.capacity_bytes:\n            return evicted\n\n        self._ghost_probation.pop(key, None)\n        self._ghost_protected.pop(key, None)\n        self._items[key] = [size, 0]\n        self._probation[key] = None\n        self._used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R35-pair03-candidate-call03-release_accountable_policy",
+    "duration_seconds": 21.448,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:42:20Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fa6c8c12970cc0089d94245d0e9600dd83936475eee22bf5cb2202279739f32f",
+    "raw_events_path": "workspace\\model-calls\\R35-pair03-candidate-call03-release_accountable_policy\\raw-events.jsonl",
+    "raw_events_sha256": "0cc626fce3e6f2904c3308fda7fc1c90e663deeb400803238b63e6c84dbe21ba",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "6bc816aceed4209dcfcaa410c55d64612107b9a284bb60bfd6e6b72d7669c027",
+    "returncode": 0,
+    "role": "R35 candidate topology role provenance-visible contract release authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:41:59Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14780,
+      "output_tokens": 1434,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

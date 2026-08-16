@@ -23,8 +23,10 @@ EvolutionPipeline
 - `pipeline.py`: 한 라운드의 오케스트레이션만 담당한다.
 - `plan.py`: 루프 구조 스키마와 금지 구조를 검증한다.
 - `batch.py`: 3-pair 승격 규칙을 순수 함수로 계산한다.
-- `state.py`: 챔피언, local→emergent→counter 탐색 상태, bounded capsule, append-only archive를 관리한다.
-- `agents.py`: 구조 제안과 구조 실행을 모델 백엔드에 연결한다.
+- `state.py`: 정식 챔피언, 별도 육성 후보, general→emergent→counter 탐색 상태, bounded capsule,
+  append-only archive를 관리한다.
+- `agents.py`: 독립 Sol max 구조 설계자 서브에이전트와 Luna high 구조 실행을 각각 별도 모델
+  백엔드 호출에 연결한다.
 - `evaluator.py`: 산출물을 동결된 평가 계약에 연결한다.
 - `platform/`: Codex 실행과 ChessBench 계약의 로컬 어댑터다. 핵심 진화 정책을 넣지 않는다.
 
@@ -53,3 +55,5 @@ ChessBench 케이스의 `metadata.result_dir`은 기존 contract hash를 유지�
 4. 벤치마크·정책·최초 챔피언 자료는 해시가 바뀌지 않게 동결한다.
 5. `workspace`를 삭제하거나 초기화하기 전에 별도 체크포인트를 검증한다.
 6. 창발성은 호출 수나 토폴로지가 아니라 새 trigger 기반 상태전이와 관찰 가능한 행동으로 검증한다.
+7. 육성 자격은 음수 Elo 백분율이 아니라 동일 3-pair의 candidate/champion 중앙값 `score_rate` 비율로
+   계산하며, 정식 승격 계약과 섞지 않는다.

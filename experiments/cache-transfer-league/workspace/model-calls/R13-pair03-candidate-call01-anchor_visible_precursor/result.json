@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n\n    def _rebalance(self):\n        while (len(self.frequent) > 1 and\n               self.frequent_bytes > self.protected_target):\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.recent[key] = size\n            self.recent_bytes += size\n\n    def _evict_one(self):\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            return key\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            step = max(1, self.capacity_bytes // 32)\n            self.protected_target = min(\n                self.capacity_bytes, self.protected_target + step\n            )\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size < 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 64)\n        self.protected_target = max(self.capacity_bytes // 4,\n                                    self.protected_target - step)\n\n        evicted = []\n        while self.recent_bytes + self.frequent_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R13-pair03-candidate-call01-anchor_visible_precursor",
+    "duration_seconds": 33.51,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:33:06Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "949375008a1853692aece25967a9da0c031935bca6749d278819963efee014b1",
+    "raw_events_path": "workspace\\model-calls\\R13-pair03-candidate-call01-anchor_visible_precursor\\raw-events.jsonl",
+    "raw_events_sha256": "bb035198486fc0bc847e22f5be09066eb3391c35bb654d3cfd8b9853892d23ac",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "13efda7eaad14ec95dda1fa1366472e308c94b3d6a3ebd5597f92ea9fb74bf81",
+    "returncode": 0,
+    "role": "R13 candidate topology role contract-grounded executable precursor author",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:32:32Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13968,
+      "output_tokens": 2457,
+      "reasoning_output_tokens": 1882
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

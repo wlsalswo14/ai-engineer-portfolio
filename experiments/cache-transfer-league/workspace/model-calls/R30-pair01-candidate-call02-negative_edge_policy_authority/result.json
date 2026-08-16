@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.target_t2 = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _drop_ghost(self, key):\n        size = self.b1.pop(key, None)\n        if size is not None:\n            self.b1_bytes -= size\n        size = self.b2.pop(key, None)\n        if size is not None:\n            self.b2_bytes -= size\n\n    def _remember(self, ghost, key, size):\n        self._drop_ghost(key)\n        ghost[key] = size\n        if ghost is self.b1:\n            self.b1_bytes += size\n        else:\n            self.b2_bytes += size\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.b1_bytes + self.b2_bytes > self.capacity_bytes or\n               len(self.b1) + len(self.b2) > self.ghost_limit):\n            if self.b1 and (not self.b2 or self.b1_bytes >= self.b2_bytes):\n                self.b1.popitem(last=False)\n                key, size = next(reversed(self.b1.items()), (None, None))\n                if key is not None:\n                    pass\n                self.b1_bytes = sum(self.b1.values())\n            elif self.b2:\n                self.b2.popitem(last=False)\n                self.b2_bytes = sum(self.b2.values())\n            else:\n                break\n\n    def _adaptation(self, own_bytes, other_bytes, size):\n        base = max(1, min(self.capacity_bytes, max(size, self.capacity_bytes // 32)))\n        if own_bytes <= 0:\n            return base\n        ratio = max(1, other_bytes // own_bytes)\n        return min(self.capacity_bytes, base * ratio)\n\n    def _replace(self, incoming_size, from_b2):\n        evicted = []\n        while self.t1_bytes + self.t2_bytes + incoming_size > self.capacity_bytes:\n            choose_t1 = self.t1 and (self.t1_bytes > self.target_t2 or\n                                     (from_b2 and self.t1_bytes == self.target_t2))\n            if choose_t1 or not self.t2:\n                if not self.t1:\n                    break\n                key, size = self.t1.popitem(last=False)\n                self.t1_bytes -= size\n                self._remember(self.b1, key, size)\n            else:\n                key, size = self.t2.popitem(last=False)\n                self.t2_bytes -= size\n                self._remember(self.b2, key, size)\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored = self.t1.pop(key)\n            self.t1_bytes -= stored\n            self.t2[key] = stored\n            self.t2_bytes += stored\n            return []\n\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] = stored\n            return []\n\n        if self.capacity_bytes <= 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        if key in self.b1:\n            self.target_t2 = min(\n                self.capacity_bytes,\n                self.target_t2 + self._adaptation(self.b1_bytes, self.b2_bytes, size),\n            )\n            self._drop_ghost(key)\n            evicted = self._replace(size, False)\n            self.t2[key] = size\n            self.t2_bytes += size\n            return evicted\n\n        if key in self.b2:\n            self.target_t2 = max(\n                0,\n                self.target_t2 - self._adaptation(self.b2_bytes, self.b1_bytes, size),\n            )\n            self._drop_ghost(key)\n            evicted = self._replace(size, True)\n            self.t2[key] = size\n            self.t2_bytes += size\n            return evicted\n\n        evicted = self._replace(size, False)\n        self.t1[key] = size\n        self.t1_bytes += size\n        self._trim_ghosts()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-pair01-candidate-call02-negative_edge_policy_authority",
+    "duration_seconds": 51.03,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:06:08Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "bffc8a688b1df8ac8908696fec592a76364e6fe1d55de5be6d1a29b6679f8e73",
+    "raw_events_path": "workspace\\model-calls\\R30-pair01-candidate-call02-negative_edge_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "03569863443ea37b56b58d1d809d7538887e58643841ac9b24478ba0c3545e51",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "07d622247b91388d75015dee7e5c273fefbd5b0dad24a7f3fe6ad5e57e40626d",
+    "returncode": 0,
+    "role": "R30 candidate topology role negative-edge independent policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:05:17Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14416,
+      "output_tokens": 3688,
+      "reasoning_output_tokens": 2588
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

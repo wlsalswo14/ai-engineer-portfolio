@@ -11,8 +11,8 @@
     "label": "last-uncontaminated-pre-r8-bootstrap"
   },
   "lineage_policy": "fresh lineage: pre-R8 baseline versus fixed R20 challenger under valid-pair protocol v4",
-  "proposal_policy_path": "..\\..\\resources\\policies\\sol-xhigh-structural-proposer-1800s.json",
-  "execution_policy_path": "..\\..\\resources\\policies\\luna-high-slot1-chessbench100-v1.json",
+  "proposal_policy_path": "..\\..\\resources\\policies\\sol-max-independent-structural-architect-1800s.json",
+  "execution_policy_path": "..\\..\\resources\\policies\\luna-high-fast-slot1-chessbench100-v2.json",
   "benchmark_case_dir": "..\\..\\resources\\benchmarks\\chessbench100-tier5",
   "benchmark_result_dir": "workspace\\benchmark-results",
   "goal": "Evolve a general-purpose agent harness and loop system, lightly specialized for building stronger legal UCI chess engines on the existing ChessBench.",
@@ -26,7 +26,9 @@
   "search_cycle": {
     "local_round_limit": 2,
     "emergent_failure_limit": 2,
-    "legacy_local_rounds_completed": 2
+    "legacy_local_rounds_completed": 2,
+    "development_performance_ratio": 0.9,
+    "counter_family_history_limit": 8
   },
   "proposal_validation_max_attempts": 2,
   "invalid_pair_max_attempts": 3,
@@ -35,7 +37,7 @@
     "anchor_policy": "current champion + frozen lineage baseline + recent promotion alternate; freeze per round and refresh promotion-derived slots only after promotion",
     "common_anchor_within_pair": true,
     "diverse_anchor_panel": true,
-    "irreversible_rejection_early_stop": true,
+    "irreversible_rejection_early_stop": "ordinary search stops when promotion is impossible; counter/development search then stops only if score-rate bounds make qualification or lineage improvement decisive, otherwise it runs pair 3",
     "pair_rule": "candidate_elo_strictly_exceeds_incumbent_elo",
     "batch_rule": "wins_gt_losses_and_candidate_median_gt_incumbent_median_and_zero_invalid_candidate_arms",
     "representative_rule": "median_ranked_candidate_artifact"

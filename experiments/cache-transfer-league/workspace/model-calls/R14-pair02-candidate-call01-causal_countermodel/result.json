@@ -1,0 +1,60 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "The objectives are coupled through retention exposure: protecting repeatedly reused objects improves object and byte hit rate when reuse is stable, but consumes capacity and can amplify regret when reuse phases shift. Scan resistance requires preventing one-pass demand from displacing reusable state, while phase-shift adaptation requires sufficient turnover to replace obsolete state. These pressures conflict most sharply under heterogeneous object sizes, where byte hit rate and object hit rate favor different retention choices. Online visibility permits only causal decisions from the current request and maintained history; therefore no strategy can guarantee offline-optimal behavior across indistinguishable future traces. Validity is a prerequisite: returned keys must be unique integer keys currently cached, and retained bytes must remain within capacity. The causal frame is thus a balance between reuse evidence, admission exposure, protected-state occupancy, size-weighted capacity pressure, and controlled turnover, with contract legality constraining every behavioral tradeoff.",
+      "exact_actions": [],
+      "obligations": [
+        "Use only standard-library capabilities and one-access-at-a-time online information.",
+        "Preserve the required Policy constructor and access interface.",
+        "Return only unique integer keys that are currently cached.",
+        "Never retain more bytes than capacity_bytes.",
+        "Do not use traces, benchmark paths, oracle decisions, reference implementations, networking, subprocesses, or external packages."
+      ],
+      "witnesses": [
+        "Stable reuse rewards continued retention, linking recency evidence to object and byte hit rate.",
+        "One-pass scans create displacement pressure, linking admission exposure to scan resistance.",
+        "A phase change makes prior reuse evidence stale, linking turnover to adaptation and regret.",
+        "Heterogeneous sizes separate object-count benefit from byte-weight benefit.",
+        "Indistinguishable online prefixes demonstrate that offline-optimal future decisions cannot be guaranteed from current visibility alone."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R14-pair02-candidate-call01-causal_countermodel",
+    "duration_seconds": 12.74,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:38:43Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "3c822a1d87e6de41af5c610674966c3c9d868f1cc756ed7dc1a1d2dee7edffa8",
+    "raw_events_path": "workspace\\model-calls\\R14-pair02-candidate-call01-causal_countermodel\\raw-events.jsonl",
+    "raw_events_sha256": "26fef71cedd93ebfc9247a0599a5b025988884cd875db3984010a54db7eef201",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "e11c47bb6cb66a8eea0e86af4328e02d0e8535fceb582fbb3ae197c6bb60dec7",
+    "returncode": 0,
+    "role": "R14 candidate topology role policy-independent causal countermodel architect",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:38:31Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13378,
+      "output_tokens": 729,
+      "reasoning_output_tokens": 374
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

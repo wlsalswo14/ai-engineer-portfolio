@@ -1,0 +1,536 @@
+{
+  "schema_version": 4,
+  "pair": 2,
+  "attempt": 2,
+  "execution_order": [
+    "candidate",
+    "incumbent"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "frozen_lineage_baseline",
+    "anchor_id": "anchor_eaba2e9ff3e678c1",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\final-output.json",
+    "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+    "metrics": {
+      "draws": 65,
+      "elo": -94.211,
+      "losses": 31,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\benchmark-result-receipt.json",
+      "score_rate": 0.365,
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+      "wins": 4
+    },
+    "origin": "bootstrap:package_ebdecd200797a81e"
+  },
+  "incumbent_structure_id": "loop_475a200662f8c6b8",
+  "candidate_structure_id": "loop_a9c48886eb3b8abd",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0028\\pairs\\pair-02\\attempts\\attempt-02\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0028\\pairs\\pair-02\\attempts\\attempt-02\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:4b142a700ce04070ddb7c9e8f2469e4937ca22376888c1c60be8740f32c17edd",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.27,
+    "wins": 2,
+    "draws": 50,
+    "losses": 48,
+    "elo": -168.829,
+    "elo_error_95": 110.724,
+    "los": 0.000154,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0028\\pairs\\pair-02\\attempts\\attempt-02\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4b142a700ce04070.json",
+    "benchmark_receipt_sha256": "ed0b3863cce8a70537dea22e56b0c32be65304bcef6886c85e1ca0bedb89acac",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4b142a700ce04070.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:4b142a700ce04070ddb7c9e8f2469e4937ca22376888c1c60be8740f32c17edd",
+      "chessbench-wdl:2-50-48"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:4678594f10379ca42c4b310bad377c1fe7f2a36a60bdc39c3445ecfa9a76ce16",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.335,
+    "wins": 5,
+    "draws": 57,
+    "losses": 38,
+    "elo": -116.594,
+    "elo_error_95": 103.122,
+    "los": 0.007307,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0028\\pairs\\pair-02\\attempts\\attempt-02\\candidate\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4678594f10379ca4.json",
+    "benchmark_receipt_sha256": "429d2dc3acf7c2db81c6040c084523f7baa24a9601ac3c4943f55531b9806bb4",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4678594f10379ca4.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:4678594f10379ca42c4b310bad377c1fe7f2a36a60bdc39c3445ecfa9a76ce16",
+      "chessbench-wdl:5-57-38"
+    ]
+  },
+  "verdict": {
+    "verdict": "candidate_win",
+    "incumbent_elo": -168.829,
+    "candidate_elo": -116.594
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "single_terminal_outcome_commitment",
+        "stage_mode": "sequential",
+        "call_id": "terminal_outcome_witness",
+        "role": "single terminal-outcome witness committer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "376bbd5b01d0b56ec806eaf1bcaba7bebbf604fdf10c45fe6cc0270fcaf46736",
+        "response_sha256": "e75fd6c863a40e7815e18780255e0bc2e9500be6d33151896213cb9d4104b558",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 153010,
+          "cached_input_tokens": 133632,
+          "output_tokens": 9043,
+          "reasoning_output_tokens": 8147,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_backward_causal_preimage",
+        "stage_mode": "sequential",
+        "call_id": "causal_preimage_backchainer",
+        "role": "single implementation-neutral causal-preimage backchainer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "9372cbfc30fc7bcac401241adb54aef459a2413bfb5f0e65ed6deeb8c8f58deb",
+        "response_sha256": "ab4c5154562dcaea6c4dd6583d0b5e87539b8091080cd17bbcc572590c972f99",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 25026,
+          "cached_input_tokens": 8960,
+          "output_tokens": 3286,
+          "reasoning_output_tokens": 3012,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_custody_composed_preimage_binding",
+        "stage_mode": "sequential",
+        "call_id": "causal_edge_custody_binder",
+        "role": "single non-authoring causal-edge custody binder under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "92831b49eaed96b9db6eda7dad7a6579122d5d5846753faba36acd7413bcbcd7",
+        "response_sha256": "73ef3848d42b9825e073cd3debf42411e4f9ceab963a3ef15f309d8cde0458df",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 24437,
+          "cached_input_tokens": 0,
+          "output_tokens": 2508,
+          "reasoning_output_tokens": 1928,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_custody_composed_preimage_realization",
+        "stage_mode": "sequential",
+        "call_id": "custody_composed_preimage_engine_producer",
+        "role": "single custody-composed outcome-preimage whole-engine producer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "engine",
+        "prompt_sha256": "b2c8ca8f5efd699eb728d31e1397266b8ea65534b67df3e0daa26fc2417ecaa0",
+        "response_sha256": "42c4dadf4f941e63bd9047680158bd375cf0ff3893f0af6597b672b3f131f235",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 25786,
+          "cached_input_tokens": 8960,
+          "output_tokens": 6086,
+          "reasoning_output_tokens": 1530,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "single_terminal_outcome_commitment",
+        "stage_mode": "sequential",
+        "call_id": "terminal_outcome_witness",
+        "role": "single terminal-outcome witness committer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "c05ea7e652e6bc10a4953118066954e7ec82ead303461bde8b9ca58f0f6d3ff6",
+        "response_sha256": "6875e232c25dda1069341a7e7038526643b29b05b06bb62d1338efb6db637d2c",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 262267,
+          "cached_input_tokens": 225024,
+          "output_tokens": 11391,
+          "reasoning_output_tokens": 10200,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_backward_causal_preimage",
+        "stage_mode": "sequential",
+        "call_id": "causal_preimage_backchainer",
+        "role": "single implementation-neutral causal-preimage backchainer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "32bec411a68c5e56d6153d213dbb24b53d1859cbee19c2664aa41e82cd2cb400",
+        "response_sha256": "5771785fa69c05dd21e291529663c2887c7585462ccb3602825c9ef5d41c6c9e",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 24722,
+          "cached_input_tokens": 8960,
+          "output_tokens": 4222,
+          "reasoning_output_tokens": 3388,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_representation_discontinuity_transport",
+        "stage_mode": "sequential",
+        "call_id": "representation_discontinuity_transport_compiler",
+        "role": "single non-authoring representation-discontinuity predicate-transport compiler under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "dc43187bbd5ac26686ed1c9077efbb0856da24726c3be88790837104c051a377",
+        "response_sha256": "450b726f68ddb187d27cfec92005afc5617933d2d557fc586fe6f5ca5b4a19cd",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 52638,
+          "cached_input_tokens": 34304,
+          "output_tokens": 6704,
+          "reasoning_output_tokens": 1957,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_predicate_transport_realization",
+        "stage_mode": "sequential",
+        "call_id": "predicate_transport_preimage_engine_producer",
+        "role": "single predicate-transport outcome-preimage whole-engine producer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "engine",
+        "prompt_sha256": "6e968eae8c68c4c2094e1f834510471bae3473536a2ff7807c02f069be68e661",
+        "response_sha256": "450b726f68ddb187d27cfec92005afc5617933d2d557fc586fe6f5ca5b4a19cd",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 29793,
+          "cached_input_tokens": 8960,
+          "output_tokens": 5073,
+          "reasoning_output_tokens": 516,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false,
+  "attempts_used": 2,
+  "max_attempts": 3,
+  "attempt_summary_paths": [
+    "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0028\\pairs\\pair-02\\attempts\\attempt-01\\attempt-summary.json",
+    "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0028\\pairs\\pair-02\\attempts\\attempt-02\\attempt-summary.json"
+  ],
+  "invalid_attempts_exhausted": false,
+  "token_usage": {
+    "all_attempts": {
+      "incumbent": {
+        "input_tokens": 413487,
+        "cached_input_tokens": 256512,
+        "output_tokens": 42331,
+        "reasoning_output_tokens": 28479,
+        "model_calls": 8,
+        "uncached_input_tokens": 156975,
+        "total_tokens": 455818,
+        "effective_tokens": 199306
+      },
+      "candidate": {
+        "input_tokens": 705359,
+        "cached_input_tokens": 522240,
+        "output_tokens": 54514,
+        "reasoning_output_tokens": 32286,
+        "model_calls": 8,
+        "uncached_input_tokens": 183119,
+        "total_tokens": 759873,
+        "effective_tokens": 237633
+      },
+      "combined": {
+        "input_tokens": 1118846,
+        "cached_input_tokens": 778752,
+        "output_tokens": 96845,
+        "reasoning_output_tokens": 60765,
+        "model_calls": 16,
+        "uncached_input_tokens": 340094,
+        "total_tokens": 1215691,
+        "effective_tokens": 436939
+      }
+    },
+    "decision_attempt": {
+      "incumbent": {
+        "input_tokens": 228259,
+        "cached_input_tokens": 151552,
+        "output_tokens": 20923,
+        "reasoning_output_tokens": 14617,
+        "model_calls": 4,
+        "uncached_input_tokens": 76707,
+        "total_tokens": 249182,
+        "effective_tokens": 97630
+      },
+      "candidate": {
+        "input_tokens": 369420,
+        "cached_input_tokens": 277248,
+        "output_tokens": 27390,
+        "reasoning_output_tokens": 16061,
+        "model_calls": 4,
+        "uncached_input_tokens": 92172,
+        "total_tokens": 396810,
+        "effective_tokens": 119562
+      },
+      "combined": {
+        "input_tokens": 597679,
+        "cached_input_tokens": 428800,
+        "output_tokens": 48313,
+        "reasoning_output_tokens": 30678,
+        "model_calls": 8,
+        "uncached_input_tokens": 168879,
+        "total_tokens": 645992,
+        "effective_tokens": 217192
+      }
+    },
+    "decision_attempt_valid": true,
+    "invalid_attempts": {
+      "count": 1,
+      "incumbent": {
+        "input_tokens": 185228,
+        "cached_input_tokens": 104960,
+        "output_tokens": 21408,
+        "reasoning_output_tokens": 13862,
+        "model_calls": 4,
+        "uncached_input_tokens": 80268,
+        "total_tokens": 206636,
+        "effective_tokens": 101676
+      },
+      "candidate": {
+        "input_tokens": 335939,
+        "cached_input_tokens": 244992,
+        "output_tokens": 27124,
+        "reasoning_output_tokens": 16225,
+        "model_calls": 4,
+        "uncached_input_tokens": 90947,
+        "total_tokens": 363063,
+        "effective_tokens": 118071
+      },
+      "combined": {
+        "input_tokens": 521167,
+        "cached_input_tokens": 349952,
+        "output_tokens": 48532,
+        "reasoning_output_tokens": 30087,
+        "model_calls": 8,
+        "uncached_input_tokens": 171215,
+        "total_tokens": 569699,
+        "effective_tokens": 219747
+      }
+    },
+    "per_attempt": [
+      {
+        "attempt": 1,
+        "incumbent": {
+          "input_tokens": 185228,
+          "cached_input_tokens": 104960,
+          "output_tokens": 21408,
+          "reasoning_output_tokens": 13862,
+          "model_calls": 4,
+          "uncached_input_tokens": 80268,
+          "total_tokens": 206636,
+          "effective_tokens": 101676
+        },
+        "candidate": {
+          "input_tokens": 335939,
+          "cached_input_tokens": 244992,
+          "output_tokens": 27124,
+          "reasoning_output_tokens": 16225,
+          "model_calls": 4,
+          "uncached_input_tokens": 90947,
+          "total_tokens": 363063,
+          "effective_tokens": 118071
+        },
+        "combined": {
+          "input_tokens": 521167,
+          "cached_input_tokens": 349952,
+          "output_tokens": 48532,
+          "reasoning_output_tokens": 30087,
+          "model_calls": 8,
+          "uncached_input_tokens": 171215,
+          "total_tokens": 569699,
+          "effective_tokens": 219747
+        }
+      },
+      {
+        "attempt": 2,
+        "incumbent": {
+          "input_tokens": 228259,
+          "cached_input_tokens": 151552,
+          "output_tokens": 20923,
+          "reasoning_output_tokens": 14617,
+          "model_calls": 4,
+          "uncached_input_tokens": 76707,
+          "total_tokens": 249182,
+          "effective_tokens": 97630
+        },
+        "candidate": {
+          "input_tokens": 369420,
+          "cached_input_tokens": 277248,
+          "output_tokens": 27390,
+          "reasoning_output_tokens": 16061,
+          "model_calls": 4,
+          "uncached_input_tokens": 92172,
+          "total_tokens": 396810,
+          "effective_tokens": 119562
+        },
+        "combined": {
+          "input_tokens": 597679,
+          "cached_input_tokens": 428800,
+          "output_tokens": 48313,
+          "reasoning_output_tokens": 30678,
+          "model_calls": 8,
+          "uncached_input_tokens": 168879,
+          "total_tokens": 645992,
+          "effective_tokens": 217192
+        }
+      }
+    ]
+  }
+}

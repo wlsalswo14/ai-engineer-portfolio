@@ -1,0 +1,42 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 3027,
+  "artifact_path": "workspace\\rounds\\R91\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "2fcef246680c8d5978fd028c843b7b4fbf21551cd1f97e5d595b1d4e384a253c",
+  "display_round": 91,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R91\\pairs\\pair-03\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "ef624c624d597c5c1a9fa87afb58291936a3b2519d5265148c27eb59788cdffb",
+  "label": "pair-03-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R91-pair03-candidate-call01-constitute_policy_free_charter\\final-receipt.json",
+      "sha256": "e2a35ab838fa0c84fa4d27eec297c55cb8aff94f55ace7a0519f8615fbe31493"
+    },
+    {
+      "path": "workspace\\model-calls\\R91-pair03-candidate-call02-materialize_from_charter\\final-receipt.json",
+      "sha256": "b51e7928beffb83a4c5d01c8c988588fd243201dbeddacf363b37522643c8f0b"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 34, in replay\n    raise AssertionError(\"evicted nonresident key\")\nAssertionError: evicted nonresident key\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 3027,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-10T03:25:04Z",
+  "transport_resumes": []
+}

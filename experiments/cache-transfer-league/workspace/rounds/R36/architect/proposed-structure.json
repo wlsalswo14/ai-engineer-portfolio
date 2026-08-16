@@ -1,0 +1,42 @@
+{
+  "final_call_id": "contract_bounded_behavior_authority",
+  "information_flow": "The first call receives all common evidence, creates one complete executable closure, and binds its public-contract conformance as immutable. The terminal call consumes that closure with public non-anchor evidence, retains no authority to alter the locked conformance boundary, revises only behavior-bearing semantics, and emits one policy.",
+  "name": "Contract-Locked Behavioral Authority Relay",
+  "organization": "two-call sequential lineage with one contract-locked executable handoff",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "lock_contract_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form exactly one complete executable policy closure from the supplied evidence, bind public-contract conformance as an immutable authority boundary, delegate only behavior-semantic revision, and pass the complete artifact forward.",
+          "output_type": "executable_policy_closure",
+          "role": "contract-lock authority"
+        },
+        {
+          "id": "contract_bounded_behavior_authority",
+          "inputs": [
+            "lock_contract_closure",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume lock_contract_closure and the supplied public evidence, preserve its locked contract conformance, exercise authority only over behavior-bearing semantics within that boundary, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "contract-bounded behavioral authority"
+        }
+      ],
+      "id": "contract_locked_relay",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+You are one call inside an evolved chess-engine construction loop.
+
+ROLE: single-component engine grafting producer
+OBJECTIVE: Treat champion_engine as the untouched supplied source authority and isolated_mechanism_foundry as the sole authorized strength-bearing capability. Emit exactly one complete legal production engine by embedding the component's demonstrated semantics through one coherent interface into one working copy of the anchor. Preserve behavior outside the necessary dependency closure; adapt representation and coupling only as required to make the same component behavior native to the engine. Re-run the component's deterministic fixtures through the integrated interface plus bounded syntax, UCI, legal-move, state-integrity, perft where applicable, determinism, timing-safety, and focused consequence checks. If a check fails, repair only this same graft in place. Do not rediagnose or substitute another mechanism, emit or compare provisional engines, retain a standalone alternative, invoke a reviewer or selector, use preserve-versus-rollback arbitration, globally normalize or clean-room rewrite the engine, follow an anchor-relative edit program, tune engine hyperparameters as the structural hypothesis, or use benchmark-specific knowledge. Return exactly one complete engine as the sole engine artifact.
+
+Follow only the declared information flow. You may use the isolated arm workspace and command tools to develop and
+check scratch code. Use only general development evidence such as parsing, UCI handshake, legal-move behavior, perft,
+determinism, timeouts, and task-general regression checks. The official ChessBench openings, match results, evaluator
+internals, other repositories, and external files are unavailable and must not be sought. Do not use web search. Work
+from the supplied inputs and isolated workspace. Preserve working anchor behavior unless concrete evidence justifies a
+change. Repair or roll back a locally failing edit before returning. Return exactly one JSON object and no prose: {"files":{"engine.py":"<complete Python source>"}}. Return a complete file, not a patch. The engine must obey the supplied task boundary.
+
+===== INPUT task =====
+# Task: build and improve a chess engine from scratch
+
+Create a single Python file named `engine.py`. It must use only the Python standard library and speak enough UCI to play:
+
+```text
+uci
+isready
+ucinewgame
+position startpos [moves ...]
+position fen <six-field-fen> [moves ...]
+go movetime <ms>
+quit
+```
+
+For every `go movetime` command, return exactly one legal `bestmove <uci_move>` before the deadline. Implement the board,
+legal move generation, state transitions, search, and evaluation yourself. Do not import or inspect `python-chess`, Stockfish,
+Sunfish, TSCP, Fairy-Stockfish, LC0, or any other chess engine or chess library.
+
+This is an offline closed-book task. Do not use web/search, network access, package installation, apps, MCP, plugins,
+subagents, other repositories, system documentation, or files outside the supplied benchmark workspace. The evaluator's
+Stockfish binary, opening list, hidden match output, and other candidates are not visible to you. In a plateau entry you may
+inspect and modify only the explicitly supplied previous `engine.py` and public feedback.
+
+The official match uses 50 fixed opening positions with colors exchanged for exactly 100 games at each immutable Stockfish
+node tier. Candidate move time, maximum plies, Stockfish binary, opening bytes, and statistics are evaluator-side frozen
+contracts. Do not hard-code a supplied opening list or attempt to identify individual evaluation games.
+
+Leave only `engine.py` as the final engine artifact.
+
+
+# V3 Lite complete-file response boundary
+
+This adapted research track evaluates the engine produced by the active V3 Lite harness. The engine itself remains offline, standard-library-only, and unable to use tools or other files. Return exactly one JSON object and no prose: {"files":{"engine.py":"<the complete Python source, JSON escaped>"}}. Do not return a patch or Markdown fence. The evaluator plays 50 fixed openings with colors exchanged, for exactly 100 games. The evaluation stage and opponent tier are hidden control-plane conditions. Public suite label: screening.
+
+===== INPUT champion_engine =====
+{
+  "files": {
+    "engine.py": "import sys,time\nINF=100000000\nMATE=100000\nVAL={'p':100,'n':320,'b':330,'r':500,'q':900,'k':20000}\nPROM={1:'n',2:'b',3:'r',4:'q'}\nMAX_CREDITS=2\nTARGET_CLASSES=('none','minor','major')\n\ndef attacked(p,sq,by):\n    if sq<0 or sq>=64:return False\n    b=p.b;r,f=divmod(sq,8)\n    rr=r-1 if by==0 else r+1\n    pawn='P' if by==0 else 'p'\n    if 0<=rr<8:\n        for ff in (f-1,f+1):\n            if 0<=ff<8 and b[rr*8+ff]==pawn:return True\n    knight='N' if by==0 else 'n'\n    for dr,df in ((2,1),(2,-1),(-2,1),(-2,-1),(1,2),(1,-2),(-1,2),(-1,-2)):\n        x,y=r+dr,f+df\n        if 0<=x<8 and 0<=y<8 and b[x*8+y]==knight:return True\n    king='K' if by==0 else 'k'\n    for dr in (-1,0,1):\n        for df in (-1,0,1):\n            if dr or df:\n                x,y=r+dr,f+df\n                if 0<=x<8 and 0<=y<8 and b[x*8+y]==king:return True\n    for dr,df,chars in ((1,0,'rq'),(-1,0,'rq'),(0,1,'rq'),(0,-1,'rq'),(1,1,'bq'),(1,-1,'bq'),(-1,1,'bq'),(-1,-1,'bq')):\n        x,y=r+dr,f+df\n        while 0<=x<8 and 0<=y<8:\n            z=b[x*8+y]\n            if z!='.':\n                if z.isupper()==(by==0) and z.lower() in chars:return True\n                break\n            x+=dr;y+=df\n    return False\n\ndef king(p,side):\n    k='K' if side==0 else 'k'\n    for i,x in enumerate(p.b):\n        if x==k:return i\n    return -1\n\nclass Position:\n    def __init__(self,b,side,cast,ep,half,full):\n        self.b=b;self.side=side;self.cast=cast;self.ep=ep;self.half=half;self.full=full\n    @classmethod\n    def fen(cls,s):\n        a=s.split();b=['.']*64\n        for ri,row in enumerate(a[0].split('/')):\n            sq=(7-ri)*8\n            for x in row:\n                if x.isdigit():sq+=int(x)\n                else:b[sq]=x;sq+=1\n        c=0\n        for i,x in enumerate('KQkq'):\n            if x in a[2]:c|=1<<i\n        ep=-1\n        if a[3]!='-':ep=ord(a[3][0])-97+8*(int(a[3][1])-1)\n        return cls(b,0 if a[1]=='w' else 1,c,ep,int(a[4]),int(a[5]))\n    @classmethod\n    def start(cls):\n        return cls.fen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')\n\ndef enc(a,z,pr=0,fl=0):return a|(z<<6)|(pr<<12)|(fl<<16)\n\ndef pseudo(p,captures=False):\n    b=p.b;side=p.side;out=[];white=side==0\n    def add(a,z,pr=0,fl=0,cap=False):\n        if not captures or cap or pr:out.append(enc(a,z,pr,fl))\n    for s,pc in enumerate(b):\n        if pc=='.' or pc.isupper()!=white:continue\n        r,f=divmod(s,8);t=pc.lower()\n        if t=='p':\n            d=8 if white else -8;z=s+d\n            prom=0<=z<64 and z//8==(7 if white else 0)\n            if 0<=z<64 and b[z]=='.':\n                if prom:\n                    for q in (4,3,2,1):add(s,z,q)\n                else:add(s,z)\n                if not captures and r==(1 if white else 6) and b[s+2*d]=='.':add(s,s+2*d,0,4)\n            for df in (-1,1):\n                if 0<=f+df<8:\n                    z=s+d+df\n                    if 0<=z<64:\n                        x=b[z];enemy=x!='.' and x.isupper()!=white\n                        if enemy:\n                            if z//8==(7 if white else 0):\n                                for q in (4,3,2,1):add(s,z,q,0,True)\n                            else:add(s,z,0,0,True)\n                        elif z==p.ep:add(s,z,0,2,True)\n        elif t=='n':\n            for dr,df in ((2,1),(2,-1),(-2,1),(-2,-1),(1,2),(1,-2),(-1,2),(-1,-2)):\n                x,y=r+dr,f+df\n                if 0<=x<8 and 0<=y<8:\n                    z=x*8+y\n                    if b[z]=='.' or b[z].isupper()!=white:add(s,z,0,0,b[z]!='.')\n        elif t in 'brq':\n            ds=[]\n            if t in 'bq':ds += ((1,1),(1,-1),(-1,1),(-1,-1))\n            if t in 'rq':ds += ((1,0),(-1,0),(0,1),(0,-1))\n            for dr,df in ds:\n                x,y=r+dr,f+df\n                while 0<=x<8 and 0<=y<8:\n                    z=x*8+y\n                    if b[z]=='.':add(s,z)\n                    else:\n                        if b[z].isupper()!=white:add(s,z,0,0,True)\n                        break\n                    x+=dr;y+=df\n        else:\n            for dr in (-1,0,1):\n                for df in (-1,0,1):\n                    if dr or df:\n                        x,y=r+dr,f+df\n                        if 0<=x<8 and 0<=y<8:\n                            z=x*8+y\n                            if b[z]=='.' or b[z].isupper()!=white:add(s,z,0,0,b[z]!='.')\n            if not captures and s==(4 if white else 60) and not attacked(p,s,side^1):\n                if white and p.cast&1 and b[5]==b[6]=='.' and b[7]=='R' and not attacked(p,5,1) and not attacked(p,6,1):add(s,6,0,1)\n                if white and p.cast&2 and b[1]==b[2]==b[3]=='.' and b[0]=='R' and not attacked(p,3,1) and not attacked(p,2,1):add(s,2,0,1)\n                if not white and p.cast&4 and b[61]==b[62]=='.' and b[63]=='r' and not attacked(p,61,0) and not attacked(p,62,0):add(s,62,0,1)\n                if not white and p.cast&8 and b[57]==b[58]==b[59]=='.' and b[56]=='r' and not attacked(p,59,0) and not attacked(p,58,0):add(s,58,0,1)\n    return out\n\ndef make(p,m):\n    a=m&63;z=(m>>6)&63;pr=(m>>12)&15;fl=m>>16;b=p.b[:];pc=b[a];cap=b[z]\n    b[a]='.'\n    if fl&2:\n        b[z+(-8 if pc.isupper() else 8)]='.';cap='p'\n    b[z]=pc\n    if fl&1:\n        if z==6:b[5]=b[7];b[7]='.'\n        elif z==2:b[3]=b[0];b[0]='.'\n        elif z==62:b[61]=b[63];b[63]='.'\n        elif z==58:b[59]=b[56];b[56]='.'\n    if pr:b[z]=('NBRQ'[pr-1] if pc.isupper() else 'nbrq'[pr-1])\n    c=p.cast\n    if pc=='K':c&=12\n    elif pc=='k':c&=3\n    if a==0 or z==0:c&=~2\n    if a==7 or z==7:c&=~1\n    if a==56 or z==56:c&=~8\n    if a==63 or z==63:c&=~4\n    ep=(a+z)//2 if pc.lower()=='p' and abs(z-a)==16 else -1\n    return Position(b,p.side^1,c,ep,0 if pc.lower()=='p' or cap!='.' else p.half+1,p.full+(1 if p.side else 0))\n\ndef legal(p,captures=False):\n    out=[];side=p.side\n    for m in pseudo(p,captures):\n        q=make(p,m)\n        if not attacked(q,king(q,side),side^1):out.append(m)\n    return out\n\ndef notation(m):\n    a=m&63;z=(m>>6)&63;pr=(m>>12)&15\n    s='abcdefgh'[a&7]+str(a//8+1)+'abcdefgh'[z&7]+str(z//8+1)\n    return s+(PROM[pr] if pr else '')\n\ndef newly_attacked(p,q,side):\n    minor=False\n    for s,x in enumerate(q.b):\n        if x!='.' and x.isupper()!=(side==0) and x.lower() in 'nbrq':\n            if attacked(q,s,side) and not attacked(p,s,side):\n                if x.lower() in 'rq':return 'major'\n                minor=True\n    return 'minor' if minor else 'none'\n\ndef capability_initial():return (MAX_CREDITS,-1)\n\ndef capability_advance(state,event):\n    credits,last=state\n    ply,depth_left,capture,promotion,gives_check,target=event\n    if ply!=last+1 or target not in TARGET_CLASSES:raise ValueError('invalid capability transition')\n    quiet=not capture and not promotion and not gives_check\n    trigger=quiet and target!='none'\n    if trigger and depth_left<=1 and credits:\n        return (credits-1,ply),1\n    if quiet:\n        return (MAX_CREDITS,ply),0\n    return (credits,ply),0\n\ndef capability_event(p,q,m,depth_left,ply):\n    a=m&63;z=(m>>6)&63;pr=(m>>12)&15;fl=m>>16\n    capture=p.b[z]!='.' or bool(fl&2)\n    promotion=bool(pr)\n    gives_check=attacked(q,king(q,q.side),p.side)\n    target='none'\n    if not capture and not promotion and not gives_check:\n        target=newly_attacked(p,q,p.side)\n    return (ply,depth_left,capture,promotion,gives_check,target)\n\nclass Engine:\n    def __init__(self):\n        self.pos=Position.start();self.tt={};self.history={};self.killers={};self.nodes=0;self.deadline=0\n    def evaluate(self,p):\n        score=0;phase=0;wp=[0]*8;bp=[0]*8;wb=bb=0;pawns=0\n        for pc in p.b:\n            if pc!='.' and pc.lower() not in ('p','k'):phase+=VAL[pc.lower()]\n        for s,pc in enumerate(p.b):\n            if pc=='.':continue\n            typ=pc.lower();sg=1 if pc.isupper() else -1;v=VAL[typ];score+=sg*v\n            r,f=divmod(s,8);rr=r if sg==1 else 7-r\n            center=7-abs(2*f-7)-abs(2*rr-7)\n            if typ=='p':\n                pawns+=1\n                (wp if sg==1 else bp)[f]+=1\n                score+=sg*(rr*10+center*2)\n                passed=True\n                ranks=range(r+1,8) if sg==1 else range(r-1,-1,-1)\n                for r2 in ranks:\n                    for f2 in (f-1,f,f+1):\n                        if 0<=f2<8 and p.b[r2*8+f2]==('p' if sg==1 else 'P'):passed=False\n                if passed:score+=sg*(18+rr*8)\n            elif typ=='n':score+=sg*(center*10)\n            elif typ=='b':score+=sg*(center*5);wb+=sg==1;bb+=sg==-1\n            elif typ=='r':\n                score+=sg*(rr*3+(5 if f in (3,4) else 0))\n                if (wp if sg==1 else bp)[f]==0:score+=sg*12\n            elif typ=='q':score+=sg*(center*2)\n            else:\n                if phase>2600:score+=sg*(-center*3)\n                else:score+=sg*(center*10)\n        if wb>=2:score+=30\n        if bb>=2:score-=30\n        for n in wp:score-=max(0,n-1)*10\n        for n in bp:score+=max(0,n-1)*10\n        for f,n in enumerate(wp):\n            if n and (f==0 or wp[f-1]==0) and (f==7 or wp[f+1]==0):score-=10*n\n        for f,n in enumerate(bp):\n            if n and (f==0 or bp[f-1]==0) and (f==7 or bp[f+1]==0):score+=10*n\n        if pawns==0 and (phase==0 or phase==320 or (phase==330 and wb+bb==1)):return 0\n        return score if p.side==0 else -score\n    def check_time(self):\n        self.nodes+=1\n        if (self.nodes&31)==0 and time.perf_counter()>=self.deadline:raise TimeoutError\n    def mscore(self,p,m,tt,ply):\n        a=m&63;z=(m>>6)&63;pr=(m>>12)&15;fl=m>>16\n        sc=10000000 if m==tt else 0\n        cap=p.b[z]\n        if fl&2:cap='p'\n        if cap!='.':sc+=1000000+VAL[cap.lower()]*10-VAL[p.b[a].lower()]\n        if pr:sc+=800000+pr*10000\n        if self.killers.get(ply)==m:sc+=500000\n        sc+=self.history.get((p.side,a,z),0)\n        if fl&1:sc+=100\n        return sc\n    def qsearch(self,p,alpha,beta,ply):\n        self.check_time();checked=attacked(p,king(p,p.side),p.side^1)\n        if ply>=12:\n            ms=legal(p,False)\n            if not ms:return -MATE+ply if checked else 0\n            return self.evaluate(p)\n        stand=-INF\n        if not checked:\n            stand=self.evaluate(p)\n            if stand>=beta:return stand\n            if stand>alpha:alpha=stand\n        ms=legal(p,False if checked else True)\n        if not ms:return -MATE+ply if checked else stand\n        ms.sort(key=lambda m:self.mscore(p,m,-1,ply),reverse=True)\n        for m in ms:\n            sc=-self.qsearch(make(p,m),-beta,-alpha,ply+1)\n            if sc>=beta:return sc\n            if sc>alpha:alpha=sc\n        return alpha\n    def search(self,p,depth,alpha,beta,ply,cap_state):\n        self.check_time()\n        if depth<=0:return self.qsearch(p,alpha,beta,ply)\n        key=(''.join(p.b),p.side,p.cast,p.ep,cap_state[0]);orig=alpha;oldbeta=beta;ent=self.tt.get(key);tt=-1\n        if ent:\n            tt=ent[4]\n            if ent[0]>=depth:\n                sc=ent[1]\n                if ent[2]==0:return sc\n                if ent[2]==1:alpha=max(alpha,sc)\n                elif ent[2]==2:beta=min(beta,sc)\n                if alpha>=beta:return sc\n        ms=legal(p)\n        if not ms:return -MATE+ply if attacked(p,king(p,p.side),p.side^1) else 0\n        ms.sort(key=lambda m:self.mscore(p,m,tt,ply),reverse=True);best=-INF;bestm=ms[0]\n        for m in ms:\n            q=make(p,m);nd=depth-1\n            next_state,extension=capability_advance(cap_state,capability_event(p,q,m,nd,ply))\n            nd+=extension\n            if depth<=2 and attacked(q,king(q,q.side),q.side^1):nd+=1\n            sc=-self.search(q,nd,-beta,-alpha,ply+1,next_state)\n            if sc>best:best=sc;bestm=m\n            if sc>alpha:alpha=sc\n            if alpha>=beta:\n                if p.b[m&63].lower()!='p' and p.b[(m>>6)&63]=='.' and not (m>>12)&15:\n                    self.killers[ply]=m;keyh=(p.side,m&63,(m>>6)&63);self.history[keyh]=min(10000,self.history.get(keyh,0)+depth*depth)\n                break\n        flag=2 if best<=orig else 1 if best>=oldbeta else 0\n        self.tt[key]=(depth,best,flag,ply,bestm)\n        if len(self.tt)>180000:self.tt.clear()\n        return best\n    def root(self,p,ms,depth):\n        ms=ms[:];ms.sort(key=lambda m:self.mscore(p,m,-1,0),reverse=True)\n        alpha=-INF;best=-INF;bm=ms[0]\n        for m in ms:\n            self.check_time();q=make(p,m);nd=depth-1\n            cap_state,extension=capability_advance(capability_initial(),capability_event(p,q,m,nd,0))\n            nd+=extension\n            sc=-self.search(q,nd,-INF,-alpha,1,cap_state)\n            if sc>best:best=sc;bm=m\n            if sc>alpha:alpha=sc\n        return best,bm\n    def think(self,millis):\n        moves=legal(self.pos)\n        if not moves:return '0000'\n        best=moves[0]\n        if millis<=4:return notation(best)\n        self.nodes=0;self.deadline=time.perf_counter()+max(0.001,millis/1000.0*0.82)\n        for depth in range(1,64):\n            try:score,m=self.root(self.pos,moves,depth)\n            except TimeoutError:break\n            best=m\n            if abs(score)>MATE-1000:break\n        return notation(best)\n    def setpos(self,a):\n        if len(a)>1 and a[1]=='startpos':p=Position.start();i=2\n        elif len(a)>7 and a[1]=='fen':p=Position.fen(' '.join(a[2:8]));i=8\n        else:return\n        if i<len(a) and a[i]=='moves':\n            for u in a[i+1:]:\n                for m in legal(p):\n                    if notation(m)==u:p=make(p,m);break\n        self.pos=p\n\ndef main():\n    e=Engine()\n    for line in sys.stdin:\n        a=line.strip().split()\n        if not a:continue\n        if a[0]=='uci':\n            print('id name PythonScratch');print('id author Codex');print('uciok');sys.stdout.flush()\n        elif a[0]=='isready':print('readyok');sys.stdout.flush()\n        elif a[0]=='ucinewgame':e.tt.clear();e.history.clear();e.killers.clear()\n        elif a[0]=='position':e.setpos(a)\n        elif a[0]=='go':\n            ms=1000\n            if 'movetime' in a:\n                try:ms=max(1,int(a[a.index('movetime')+1]))\n                except:pass\n            try:mv=e.think(ms)\n            except Exception:\n                lm=legal(e.pos);mv=notation(lm[0]) if lm else '0000'\n            print('bestmove '+mv);sys.stdout.flush()\n        elif a[0]=='quit':break\nif __name__=='__main__':main()\n"
+  }
+}
+
+
+===== INPUT champion_metrics =====
+{"draws":44,"elo":-204.753,"losses":55,"receipt_path":"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0018\\benchmark-result-receipt.json","score_rate":0.23,"source_receipt_path":"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-578a4d95f81d0f2c.json","wins":1}
+
+===== INPUT candidate_hypothesis =====
+{"behavioral_novelty":"The loop can make one strength-bearing capability executable, observe its predicted and edge behavior, and repair its implementation before any full candidate engine exists. It then transports demonstrated code and traces rather than rewritten whole-engine semantics or instructions about code, allowing the final call to graft a behavior that has already run into one untouched anchor. The champion cannot execute strength-bearing work before its final whole engine, R16 has no independently observable pre-final artifact, and R17's intermediate program is descriptive rather than executable.","causal_change":{"after":"Before any candidate engine or source edit exists, one mechanism foundry implements and executes exactly one strength-bearing capability as a bounded standalone non-UCI component with an explicit interface; one final grafting call embeds that same demonstrated component behavior into the untouched supplied anchor and emits the sole engine.","before":"A complete engine is the first executable construction substrate: the champion emits a representation-only whole engine and implements the strength mechanism only inside the final whole-engine transduction, while R17 transmits non-executable edit instructions and likewise defers strength-bearing execution to the final engine.","change_count":1,"factor":"Construction locus at which the sole strength-bearing mechanism first becomes executable","why_causal":"The first execution substrate determines which failures can be observed before engine coupling obscures them. Making the mechanism itself runnable exposes its state assumptions, determinism, edge behavior, and bounded work cost while they are still locally repairable; whole-engine integration then becomes an interface-grafting problem rather than the first implementation of an abstract diagnosis. The two asymmetric calls, analysis output, and untouched-anchor handoff are necessary consequences of changing this locus, not additional experimental factors."},"dominant_assumption":"The champion assumes that meaningful executable construction must remain at whole-engine granularity: first canonicalize a complete engine, then let the final owner create and test strength only inside another complete engine.","evidence_refs":["STATE_CAPSULE.current_champion and workspace/champions/p0011/loop-structure.json: the incumbent emits a complete semantic-normal-form engine before the sole strength-bearing transduction","workspace/rounds/r0015/round-summary.json and pair summaries: probe-synthesizing semantic transduction produced valid engines but was rejected after 0W/2L","workspace/rounds/r0016/round-summary.json and pair summaries: Persistent Single-Actor Experimental Construction produced valid engines but was rejected at a decisive 0.285/0.330 = 0.863636 score-rate ratio after 0W/2L","workspace/rounds/r0017/round-summary.json and pair summaries: Anchor-Relative Transformation-Program Compilation finished 0W/3L with zero invalid arms, median delta -42.387, and score-rate ratio 0.823529","workspace/rounds/r0017 pairs 02 and 03 causal_transformation_programmer responses plus pair summaries: independently authored quiet-check quiescence programs compiled into engines that passed public and focused development checks but lost their matched comparisons"],"expected_effect":"The final producer should receive a realized capability and execution evidence instead of a normalized engine, private rationale, probe alone, or declarative edit program. It can spend its construction effort preserving the anchor while resolving actual interface and state coupling, reducing underspecified compilation and coherent-but-unexercised mechanisms. Under the frozen matched protocol this predicts zero invalid arms, more candidate pair wins than losses, and candidate-median Elo strictly above incumbent-median Elo; only a non-promoting exact or decisively bounded score-rate ratio of at least 0.90 warrants development.","falsifier":"Falsify formal promotion unless the frozen batch completes the required valid matched evidence with zero invalid arms, candidate wins strictly exceeding losses, and candidate-median Elo strictly exceeding incumbent-median Elo. Reject this counter family rather than develop it if the exact three-pair ratio or decisive two-pair bound is below 0.90. Mechanistically falsify it if the first call emits a complete UCI engine, a normalized anchor, a prose contract, or an anchor-relative edit program instead of one independently runnable component; if it creates or compares multiple components; if no component execution trace precedes integration; or if the final call ignores, replaces, or selects an alternative to the demonstrated capability.","family_break":{"alternative_causal_principle":"De-risk construction by making the smallest complete strength-bearing capability, rather than a whole engine or edit description, the first executable artifact. Demonstrate and repair one portable component against task-general interface fixtures, then graft exactly that behavior once into the original source authority and emit one engine.","alternative_family":"Isolated Executable Mechanism Grafting","champion_family":"Executable Semantic-Normal-Form Transduction: a representation-only role emits a complete canonical engine, after which a separate final role first implements and executes the strength-bearing change in that whole-engine substrate.","changed_dimensions":["information_flow","error_detection","final_decision","failure_recovery"],"difference_from_champion":{"error_detection":"The champion can observe mechanism defects only after the strength change is coupled into the final whole engine. The candidate first exercises the component's predicted effect, determinism, state boundaries, edge cases, and bounded work behavior outside engine integration, so component faults are distinguished from adapter faults.","failure_recovery":"The champion repairs an unfinished whole-engine transformation after mechanism and integration failures are entangled. The candidate repairs the same isolated component before transfer, then repairs only the single graft's interface or coupling in the final call; it cannot switch mechanisms, compare candidates, or use preserve-versus-rollback arbitration.","final_decision":"The champion's final owner chooses and realizes the strength mechanism. In the candidate, the foundry commits by producing one working capability; the final owner may only embed that demonstrated behavior through a conforming adapter and decide when the resulting single engine satisfies general validity obligations.","information_flow":"The champion passes an entire representation-only engine to a role that must invent the strength implementation. The candidate passes one runnable strength-bearing component, its explicit interface, and its execution trace while sending the untouched anchor separately to the sole engine producer."},"forbidden_champion_mechanisms":["A behavior-preserving semantic-normal-form engine emitted as an intermediate artifact","A complete-engine handoff from a representation owner to a later strength transducer","A final strength owner that receives no already executed strength-bearing implementation","A provisional candidate engine followed by review, delta attribution, preservation, rollback, or selection","A declarative anchor-relative transformation program used as the sole inter-call construction carrier","A persistent single actor that privately owns diagnosis through final engine emission","Replicated components, engines, agents, samples, variants, or best-of-N selection"],"non_derivative_probe":"Give the champion, R17, and this candidate the same anchor plus a task-general capability whose core behavior can run over primitive state records. This family is present only if the first response contains source for exactly one runnable non-UCI component and a real deterministic execution trace showing the predicted behavior before any engine source is emitted, and the second call receives the byte-identical anchor plus that component and is the only engine producer. A complete normalized engine identifies the champion, a private one-call work lineage identifies R16, an ordered source-edit program without runnable capability code identifies R17, and a prose or probe-only artifact fails the candidate family.","rejected_core_assumptions":["A strength-bearing mechanism must be embedded in a complete engine before executable feedback about its implementation is useful.","The useful construction object crossing a specialist boundary must be either complete engine source or instructions for changing that source."]},"inversion":"Make the sole strength-bearing mechanism executable before any candidate engine exists, carry that demonstrated component across the reasoning boundary, and defer only its one-time graft into the untouched anchor to the final engine-producing call.","observed_bottleneck":"The champion first spends a complete-engine emission on behavior-preserving semantic normalization, so its later owner must still choose, implement, couple, and exercise the entire strength mechanism inside the final engine. The recent alternatives changed when evidence is acquired, kept all causal state private to one actor, or transmitted a declarative source-relative edit program, yet their outputs were valid without being robustly stronger. R15 lost both completed pairs after its synthesized probe; R16 lost both completed pairs and had a decisive 0.863636 score-rate ratio; R17 lost all three pairs with a 0.823529 median ratio. In R17's two native Luna executions, the program authors independently selected quiet-check quiescence changes, and the resulting engines passed syntax, UCI, legality, perft or focused checks while still losing their pairs. This bounded evidence does not condemn that chess mechanism. It shows that a plausible diagnosis, precise instructions, and whole-engine checks can all succeed without ever making the strength-bearing capability an executable object before it is coupled to the full engine.","risks":["A component that succeeds on primitive fixtures may fail to capture timing, recursion, or shared-state interactions present only in the full engine.","The grafting adapter may distort the demonstrated behavior or require broader source changes than the component interface anticipated.","Task-general isolated correctness and bounded work evidence may still correlate weakly with playing strength.","Constructing the component may consume context that the final call needs for careful integration, and the committed capability may still be strategically weak."],"strengths":["Turns one causal idea into executable evidence before whole-engine coupling, exposing implementation and interface errors earlier than source-wide construction.","Preserves undocumented anchor behavior because the original supplied source remains authoritative until one bounded graft.","Gives the final producer concrete working code and traces while retaining freedom to adapt the interface without rediagnosing the mechanism.","Contains exactly one component and one final engine, with no replicated candidates, agents, samples, variants, ranking, or best-of-N selection."]}
+
+===== INPUT loop_structure =====
+{"final_call_id":"component_grafting_engine","information_flow":"The task, one supplied anchor, aggregate metrics, bounded capsule, hypothesis, and loop contract enter a non-engine mechanism foundry. It emits exactly one independently runnable strength-bearing component with an explicit primitive interface and deterministic execution evidence, never a UCI engine or source-edit program. The byte-identical supplied anchor and that sole component artifact enter one final grafting producer, which embeds the demonstrated behavior once and emits exactly one complete engine.","name":"Isolated Capability Foundry and Single Graft","organization":"collaboration","stages":[{"calls":[{"id":"isolated_mechanism_foundry","inputs":["task","champion_engine","champion_metrics","state_capsule","candidate_hypothesis","loop_structure"],"objective":"Inspect exactly one supplied anchor and the bounded task evidence without modifying or reproducing the engine. Commit to exactly one highest-leverage task-general causal capability, then implement it as exactly one standalone executable Python component over an explicit primitive input/output and state interface. The component must contain real strength-bearing behavior, not a UCI loop, complete engine, patch, ordered anchor edits, prose contract, menu, or probe alone. Create one bounded deterministic synthetic fixture set covering the predicted effect, a null case, state-boundary cases, and work-safety; execute the same component, record observed traces, and repair that one component in place until its declared behavior, determinism, interface, and bounded-work obligations hold. Return one compact artifact containing the component source, interface, causal prediction, falsifier, execution commands and traces, and integration invariants. Do not create, sample, compare, rank, or select alternative components or engines; do not use benchmark positions, evaluator internals, benchmark-specific logic, or engine-hyperparameter tuning as the structural change.","output_type":"analysis","role":"isolated executable capability foundry"}],"id":"isolated_mechanism_construction","mode":"sequential"},{"calls":[{"id":"component_grafting_engine","inputs":["task","champion_engine","champion_metrics","candidate_hypothesis","loop_structure","isolated_mechanism_foundry"],"objective":"Treat champion_engine as the untouched supplied source authority and isolated_mechanism_foundry as the sole authorized strength-bearing capability. Emit exactly one complete legal production engine by embedding the component's demonstrated semantics through one coherent interface into one working copy of the anchor. Preserve behavior outside the necessary dependency closure; adapt representation and coupling only as required to make the same component behavior native to the engine. Re-run the component's deterministic fixtures through the integrated interface plus bounded syntax, UCI, legal-move, state-integrity, perft where applicable, determinism, timing-safety, and focused consequence checks. If a check fails, repair only this same graft in place. Do not rediagnose or substitute another mechanism, emit or compare provisional engines, retain a standalone alternative, invoke a reviewer or selector, use preserve-versus-rollback arbitration, globally normalize or clean-room rewrite the engine, follow an anchor-relative edit program, tune engine hyperparameters as the structural hypothesis, or use benchmark-specific knowledge. Return exactly one complete engine as the sole engine artifact.","output_type":"engine","role":"single-component engine grafting producer"}],"id":"single_component_graft","mode":"sequential"}]}
+
+===== INPUT isolated_mechanism_foundry =====
+Artifact: `isolated_capability.py`
+
+Capability: bounded quiet-threat frontier extension with monotonic branch-local credits and one-ply forcing resolution.
+
+```python
+import json
+
+MAX_CREDITS = 2
+MAX_TARGETS = 32
+VALID_TARGETS = frozenset(("minor", "major"))
+
+State = tuple[int, int, bool]
+Event = tuple[int, int, bool, bool, bool, tuple[str, ...]]
+
+
+def initial_state() -> State:
+    return (MAX_CREDITS, -1, False)
+
+
+def _validate(state: State, event: Event) -> None:
+    if not isinstance(state, tuple) or len(state) != 3:
+        raise ValueError("state-shape")
+    credits, last_ply, armed = state
+    if not isinstance(credits, int) or not 0 <= credits <= MAX_CREDITS:
+        raise ValueError("state-credits")
+    if not isinstance(last_ply, int) or last_ply < -1:
+        raise ValueError("state-ply")
+    if type(armed) is not bool:
+        raise ValueError("state-armed")
+
+    if not isinstance(event, tuple) or len(event) != 6:
+        raise ValueError("event-shape")
+    ply, depth_left, capture, promotion, gives_check, targets = event
+    if not isinstance(ply, int) or ply != last_ply + 1:
+        raise ValueError("non-contiguous-ply")
+    if not isinstance(depth_left, int) or depth_left < 0:
+        raise ValueError("depth-left")
+    if any(type(x) is not bool for x in
+           (capture, promotion, gives_check)):
+        raise ValueError("event-flags")
+    if not isinstance(targets, tuple) or len(targets) > MAX_TARGETS:
+        raise ValueError("target-bound")
+    if any(x not in VALID_TARGETS for x in targets):
+        raise ValueError("target-class")
+
+
+def advance(state: State, event: Event) -> tuple[State, int, str]:
+    _validate(state, event)
+    credits, _, armed = state
+    ply, depth_left, capture, promotion, gives_check, targets = event
+    quiet = not (capture or promotion or gives_check)
+    quiet_threat = quiet and bool(targets)
+    frontier = depth_left <= 1
+
+    if quiet_threat and credits:
+        if frontier:
+            return (credits - 1, ply, False), 1, "direct-frontier-threat"
+        return (credits, ply, True), 0, "arm-quiet-threat"
+
+    if armed and (capture or promotion or gives_check):
+        if frontier and credits:
+            return (credits - 1, ply, False), 1, \
+                   "armed-forcing-resolution"
+
+    return (credits, ply, False), 0, "none"
+
+
+def _event(ply, depth, capture=False, promotion=False,
+           check=False, targets=()):
+    return (ply, depth, capture, promotion, check, tuple(targets))
+
+
+def fixture_suite():
+    cases = [
+        ("predicted_direct", initial_state(),
+         [_event(0, 1, targets=("major",))]),
+        ("predicted_armed_resolution", initial_state(),
+         [_event(0, 2, targets=("minor",)),
+          _event(1, 1, capture=True)]),
+        ("null_quiet", initial_state(), [_event(0, 1)]),
+        ("state_boundary_clears_arm", initial_state(),
+         [_event(0, 2, targets=("major",)), _event(1, 1)]),
+        ("state_boundary_nonquiet", initial_state(),
+         [_event(0, 1, check=True)]),
+        ("budget_exhaustion", initial_state(),
+         [_event(0, 1, targets=("major",)),
+          _event(1, 1, targets=("minor",)),
+          _event(2, 1, targets=("major",))]),
+        ("work_safety_reject", initial_state(),
+         [_event(0, 1, targets=("minor",) * (MAX_TARGETS + 1))]),
+    ]
+
+    traces = []
+    for name, state, events in cases:
+        rows = []
+        try:
+            for event in events:
+                before = state
+                state, extension, reason = advance(state, event)
+                rows.append((before, event, state, extension, reason))
+            traces.append((name, "ok", rows))
+        except ValueError as exc:
+            traces.append((name, "rejected", str(exc),
+                           state == initial_state()))
+    return traces
+
+
+if __name__ == "__main__":
+    first = fixture_suite()
+    assert first == fixture_suite()
+    print(json.dumps({"deterministic": True, "traces": first}))
+```
+
+Causal prediction: preserve tactical search budget across harmless quiet moves, detect delayed quiet-threat resolutions, and prevent repeated credit refills.
+
+Falsifier: reject if direct threats fail to extend, delayed forcing resolutions fail, null/nonquiet moves extend, credits refill, invalid target lists exceed bounded work, or repeated runs differ.
+
+Trace summary:
+
+- Direct frontier threat: extension `1`, credits `2→1`.
+- Delayed quiet threat then forcing resolution: extensions `0→1`, credits `2→1`.
+- Null quiet move: extension `0`, credits unchanged.
+- Armed state followed by null/nonquiet move: arm cleared, extension `0`.
+- Budget exhaustion: extensions `1,1,0`.
+- 33 targets: rejected with `target-bound`; state unchanged.
+- Determinism: `True`.
+
+Execution command:
+
+```text
+python isolated_capability.py
+```
+
+The managed sandbox blocked Python process execution, so the transition logic was additionally checked deterministically in the available execution host; no workspace files were modified.
+
+Integration invariants:
+
+- Pass immutable branch-local state; never reset credits on quiet null moves.
+- Include `credits` and `armed` in transposition-table keys.
+- Add the returned extension exactly once to remaining depth.
+- Start every sibling branch with `initial_state()`.
+- Adapter supplies only primitive capture, promotion, check, and newly-attacked target facts; move legality remains unchanged.

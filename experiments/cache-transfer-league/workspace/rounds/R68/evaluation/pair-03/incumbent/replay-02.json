@@ -1,0 +1,35 @@
+{
+  "arm": "incumbent",
+  "artifact_path": "workspace\\rounds\\R68\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "d2338ba66e081797a0da656a9bb3c67830a179f76b1d152f6b49c6459cd3e6dc",
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "runner_sha256": "636304977bc178f9e675f59c39d9b24c32874c964b944a3c0275e13f6408efbc",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "display_round": 68,
+  "duration_seconds": 0.162027,
+  "finished_at": "2026-08-09T23:04:58Z",
+  "label": "pair-03-incumbent",
+  "normalized_result_sha256": "7def1878d25a549ed7809647cf014615921fe4e3038a353c5c7e2842e0a17a2d",
+  "pair": 3,
+  "replay": 2,
+  "result": {
+    "candidate": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R68\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+    "details": {
+      "runtime_error": "returncode:1",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 635, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 630, in main\n    return _run_candidate_worker(args.candidate)\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 485, in _run_candidate_worker\n    trace_evictions.append(policy.access(int(access[\"key\"]), int(access[\"size\"]), int(access[\"now\"])))\n                           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R68\\pairs\\pair-03\\incumbent\\artifact\\policy.py\", line 149, in access\n    self.t1_bytes += size\n    ^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 't1_bytes'\n",
+      "stdout": ""
+    },
+    "invalid_operation_count": 0,
+    "score": 0.0,
+    "timeout_count": 0,
+    "trace_count": 9
+  },
+  "schema_version": 1,
+  "started_at": "2026-08-09T23:04:58Z",
+  "valid": false
+}

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity = int(capacity_bytes)\n        except Exception:\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self.used_bytes = 0\n        self._items = {}\n        self._probation = OrderedDict()\n        self._protected = OrderedDict()\n        self._ghost = OrderedDict()\n        self._ghost_limit = 1024\n        self._seq = 0\n\n    def access(self, key, size, now):\n        self._seq += 1\n        if isinstance(key, bool) or not isinstance(key, int):\n            return []\n        if isinstance(size, bool) or not isinstance(size, int) or size <= 0:\n            return []\n\n        evicted = []\n        if size > self.capacity_bytes:\n            if key in self._items:\n                self._remove(key, evicted, remember=True)\n            return evicted\n\n        item = self._items.get(key)\n        if item is not None:\n            self.used_bytes += size - item[\"size\"]\n            item[\"size\"] = size\n            item[\"freq\"] = min(64, item[\"freq\"] + 1)\n            item[\"last\"] = self._seq\n            if item[\"protected\"]:\n                self._protected.move_to_end(key)\n            else:\n                self._probation.pop(key, None)\n                item[\"protected\"] = True\n                self._protected[key] = None\n            self._ghost.pop(key, None)\n            self._rebalance_protected()\n            self._trim(evicted, exclude=key)\n            return evicted\n\n        protected = key in self._ghost\n        self._ghost.pop(key, None)\n        item = {\n            \"size\": size,\n            \"freq\": 1,\n            \"last\": self._seq,\n            \"protected\": protected,\n        }\n        self._items[key] = item\n        self.used_bytes += size\n        if protected:\n            self._protected[key] = None\n        else:\n            self._probation[key] = None\n        self._rebalance_protected()\n        self._trim(evicted)\n        return evicted\n\n    def _rebalance_protected(self):\n        target = (self.capacity_bytes * 3) // 4\n        protected_bytes = sum(\n            self._items[key][\"size\"]\n            for key in self._protected\n            if key in self._items\n        )\n        while protected_bytes > target and self._protected:\n            key = next(iter(self._protected))\n            item = self._items.get(key)\n            self._protected.pop(key, None)\n            if item is None:\n                continue\n            item[\"protected\"] = False\n            self._probation[key] = None\n            protected_bytes -= item[\"size\"]\n\n    def _trim(self, evicted, exclude=None):\n        seen = set(evicted)\n        while self.used_bytes > self.capacity_bytes:\n            key = self._victim(exclude)\n            if key is None:\n                break\n            if key in seen:\n                break\n            self._remove(key, evicted, remember=True)\n            seen.add(key)\n\n    def _victim(self, exclude=None):\n        pool = self._probation if self._probation else self._protected\n        best_key = None\n        best_rank = None\n        for key in pool:\n            if key == exclude:\n                continue\n            item = self._items.get(key)\n            if item is None:\n                continue\n            age = self._seq - item[\"last\"]\n            utility = 8 * min(64, item[\"freq\"]) + max(0, 32 - age)\n            ratio = (utility * 1048576) // max(1, item[\"size\"])\n            rank = (ratio, utility, -age, -item[\"size\"], -item[\"last\"])\n            if best_rank is None or rank < best_rank:\n                best_rank = rank\n                best_key = key\n        return best_key\n\n    def _remove(self, key, evicted, remember):\n        item = self._items.pop(key, None)\n        if item is None:\n            return\n        self._probation.pop(key, None)\n        self._protected.pop(key, None)\n        self.used_bytes -= item[\"size\"]\n        if self.used_bytes < 0:\n            self.used_bytes = 0\n        if key not in evicted:\n            evicted.append(key)\n        if remember:\n            self._ghost[key] = None\n            self._ghost.move_to_end(key)\n            while len(self._ghost) > self._ghost_limit:\n                self._ghost.popitem(last=False)\n"
+  },
+  "receipt": {
+    "call_id": "R41-pair02-candidate-call02-instantiate_unitary_policy",
+    "duration_seconds": 54.564,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:23:05Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fe6b82dd8ec6c7bba207c81b74a2ab095aabba1216d861a6f0fac81e0aedab2b",
+    "raw_events_path": "workspace\\model-calls\\R41-pair02-candidate-call02-instantiate_unitary_policy\\raw-events.jsonl",
+    "raw_events_sha256": "b7eec019a521d4c28b2518aeffdc1d8df70e4ce3ac99be76fe71a754e48bfe38",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "af9ff971f7385532cb28848c5dd9413eaa9714e8f04bee7a978a809c8eb5e128",
+    "returncode": 0,
+    "role": "R41 candidate topology role sole policy author with predecessor-only visibility",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:22:11Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12531,
+      "output_tokens": 4228,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

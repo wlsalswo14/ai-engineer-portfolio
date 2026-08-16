@@ -1,0 +1,89 @@
+Role: R93 candidate topology role proposal-opaque retract-only terminal authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R93,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: proposal_opaque_retract_emit
+Role: proposal-opaque retract-only terminal authority
+Objective: Consume originate_reconciled_executable, assess its commitments using the complete artifact and directly visible obligations and structural context, retract only unsupported commitments without adding or substituting policy semantics, preserve executable completeness, and emit one policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "originate_reconciled_executable": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.recent_bytes = 0\n        self.protected_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n\n    def _drop_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value\n        value = self.ghost_protected.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value\n\n    def _remember_ghost(self, key, size, protected):\n        self._drop_ghost(key)\n        value = max(1, int(size))\n        if protected:\n            self.ghost_protected[key] = value\n        else:\n            self.ghost_recent[key] = value\n        self.ghost_bytes += value\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_recent) + len(self.ghost_protected) > self.ghost_count_limit):\n            source = self.ghost_recent\n            if not source or (self.ghost_protected and\n                              next(iter(self.ghost_protected)) < next(iter(source))):\n                source = self.ghost_protected\n            if not source:\n                source = self.ghost_recent\n            _, value = source.popitem(last=False)\n            self.ghost_bytes -= value\n\n    def _adapt(self, mode):\n        if self.capacity <= 0:\n            return\n        recent = sum(self.ghost_recent.values())\n        protected = sum(self.ghost_protected.values())\n        if mode == 1:\n            delta = self.capacity if recent == 0 else max(1, min(self.capacity, protected // recent or 1))\n            self.target = min(self.capacity, self.target + delta)\n        elif mode == 2:\n            delta = self.capacity if protected == 0 else max(1, min(self.capacity, recent // protected or 1))\n            self.target = max(0, self.target - delta)\n\n    def _remove(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.recent_bytes -= value\n            self.used -= value\n            return False, value\n        value = self.protected.pop(key, None)\n        if value is not None:\n            self.protected_bytes -= value\n            self.used -= value\n            return True, value\n        return None, None\n\n    def _evict_one(self, mode):\n        choose_recent = False\n        if mode == 1 and self.recent and self.recent_bytes >= self.target:\n            choose_recent = True\n        elif mode == 2 and self.protected and self.recent_bytes <= self.target:\n            choose_recent = False\n        elif self.recent and self.recent_bytes > self.target:\n            choose_recent = True\n        elif self.recent and not self.protected:\n            choose_recent = True\n\n        if choose_recent and self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, False)\n            return key\n        if self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, True)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, False)\n            return key\n        return None\n\n    def _make_room(self, incoming, mode):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one(mode)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = int(size)\n\n        in_recent = key in self.recent\n        in_protected = key in self.protected\n        if in_recent or in_protected:\n            was_protected, old_size = self._remove(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            if was_protected:\n                self.protected[key] = size\n                self.protected_bytes += size\n            else:\n                self.protected[key] = size\n                self.protected_bytes += size\n            self.used += size\n            return evicted\n\n        mode = 1 if key in self.ghost_recent else 2 if key in self.ghost_protected else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if mode:\n            self._adapt(mode)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size, mode)\n        if self.used + size > self.capacity:\n            return evicted\n        if mode:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used += size\n        return evicted\n",
+    "sha256": "fb53410bb0cac0c1fe1ff90bb4a3334b1a020125668b7ada73fb7a6fddbc0c15"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R92 champion policy anchor",
+    "artifact_sha256": "23a2eb77605a9dd21f7083e42d8d0d441cc1a7a53267bc45ff286239fa9c6832",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "loop_structure": {
+    "final_call_id": "proposal_opaque_retract_emit",
+    "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule and directly sees task, anchor_contract, task_constraints, and loop_structure, while anchor_policy and candidate_hypothesis remain visible only through their already-reconciled capsule effects; it may retract unsupported commitments and emits one policy.",
+    "name": "Proposal-Opaque Retraction Dyad",
+    "organization": "two-call sequential lineage with full-evidence executable origination and proposal-opaque retract-only terminal authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "originate_reconciled_executable",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile the visible evidence and obligations into one complete executable policy capsule while retaining semantic authorship over every included commitment.",
+            "output_type": "policy_capsule",
+            "role": "full-evidence executable origin authority"
+          },
+          {
+            "id": "proposal_opaque_retract_emit",
+            "inputs": [
+              "originate_reconciled_executable",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "loop_structure"
+            ],
+            "objective": "Consume originate_reconciled_executable, assess its commitments using the complete artifact and directly visible obligations and structural context, retract only unsupported commitments without adding or substituting policy semantics, preserve executable completeness, and emit one policy.",
+            "output_type": "policy",
+            "role": "proposal-opaque retract-only terminal authority"
+          }
+        ],
+        "id": "proposal_opaque_authority_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

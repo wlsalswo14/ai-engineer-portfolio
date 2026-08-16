@@ -1,0 +1,21 @@
+{
+  "analysis_packet": {
+    "certificate": "The objectives are coupled through retention exposure: protecting repeatedly reused objects improves object and byte hit rate when reuse is stable, but consumes capacity and can amplify regret when reuse phases shift. Scan resistance requires preventing one-pass demand from displacing reusable state, while phase-shift adaptation requires sufficient turnover to replace obsolete state. These pressures conflict most sharply under heterogeneous object sizes, where byte hit rate and object hit rate favor different retention choices. Online visibility permits only causal decisions from the current request and maintained history; therefore no strategy can guarantee offline-optimal behavior across indistinguishable future traces. Validity is a prerequisite: returned keys must be unique integer keys currently cached, and retained bytes must remain within capacity. The causal frame is thus a balance between reuse evidence, admission exposure, protected-state occupancy, size-weighted capacity pressure, and controlled turnover, with contract legality constraining every behavioral tradeoff.",
+    "exact_actions": [],
+    "obligations": [
+      "Use only standard-library capabilities and one-access-at-a-time online information.",
+      "Preserve the required Policy constructor and access interface.",
+      "Return only unique integer keys that are currently cached.",
+      "Never retain more bytes than capacity_bytes.",
+      "Do not use traces, benchmark paths, oracle decisions, reference implementations, networking, subprocesses, or external packages."
+    ],
+    "witnesses": [
+      "Stable reuse rewards continued retention, linking recency evidence to object and byte hit rate.",
+      "One-pass scans create displacement pressure, linking admission exposure to scan resistance.",
+      "A phase change makes prior reuse evidence stale, linking turnover to adaptation and regret.",
+      "Heterogeneous sizes separate object-count benefit from byte-weight benefit.",
+      "Indistinguishable online prefixes demonstrate that offline-optimal future decisions cannot be guaranteed from current visibility alone."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

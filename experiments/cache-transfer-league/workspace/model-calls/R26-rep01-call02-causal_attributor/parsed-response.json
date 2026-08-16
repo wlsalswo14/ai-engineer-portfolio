@@ -1,0 +1,96 @@
+{
+  "analysis_packet": {
+    "certificate": "One bounded replacement-decision regression was reproduced. No eviction-validity or interface-protocol failure was reproduced; all emitted eviction keys were unique integer keys currently represented in the policy state, and byte usage stayed within capacity.",
+    "exact_actions": [
+      {
+        "A_restored_result": "Evictions return to [1] and [2]; the regression reopens.",
+        "A_result": "Evictions at accesses 5 and 6 are [1] and [2].",
+        "B_result": "Evictions at accesses 5 and 6 are [2] and []; the W1 regression closes and key 1 hits at access 6.",
+        "certification": "D4 is causally certified as implicated in W1 and is the exact rollback eligible for integrator replay.",
+        "delta": "D4: changed _make_room victim-selection preference that chooses the resident t2 queue before t1 when t1_bytes is at or below capacity_bytes minus target_bytes.",
+        "intervention": "A-B-A rollback: A is the realized provisional policy; B removes D4 and restores oldest-resident anchor ordering for the eviction decision; then restore D4 and rerun the identical trace."
+      }
+    ],
+    "obligations": [
+      {
+        "id": "O1",
+        "statement": "Every returned eviction must be a unique integer key currently cached by the evaluator."
+      },
+      {
+        "id": "O2",
+        "statement": "After every access, tracked resident bytes must not exceed capacity_bytes."
+      },
+      {
+        "id": "O3",
+        "statement": "The rollback must preserve the required constructor and access interface and online one-access-at-a-time visibility."
+      },
+      {
+        "id": "O4",
+        "statement": "Replay W1 after rollback and verify that key 2 is evicted at access 5 and key 1 hits at access 6."
+      }
+    ],
+    "witnesses": [
+      {
+        "anchor_evictions": [
+          [],
+          [],
+          [],
+          [],
+          [
+            2
+          ],
+          []
+        ],
+        "capacity_bytes": 3,
+        "class": "replacement_decision_regression",
+        "failure": "The provisional policy evicts recently reused key 1 instead of the anchor's least-recently-used key 2, causing the subsequent request for key 1 to miss.",
+        "id": "W1",
+        "provisional_evictions": [
+          [],
+          [],
+          [],
+          [],
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "trace": [
+          {
+            "key": 1,
+            "now": 1,
+            "size": 1
+          },
+          {
+            "key": 2,
+            "now": 2,
+            "size": 1
+          },
+          {
+            "key": 3,
+            "now": 3,
+            "size": 1
+          },
+          {
+            "key": 1,
+            "now": 4,
+            "size": 1
+          },
+          {
+            "key": 4,
+            "now": 5,
+            "size": 1
+          },
+          {
+            "key": 1,
+            "now": 6,
+            "size": 1
+          }
+        ]
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

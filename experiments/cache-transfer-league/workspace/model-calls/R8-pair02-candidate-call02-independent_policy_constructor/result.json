@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.items = OrderedDict()\n        self.history = {}\n        self.used_bytes = 0\n        self.tick = 0\n\n    def _observe(self, key):\n        record = self.history.get(key)\n        if record is None:\n            self.history[key] = [1, self.tick]\n        else:\n            record[0] += 1\n            record[1] = self.tick\n\n        if self.tick % 128 == 0:\n            stale = []\n            for old_key, old_record in self.history.items():\n                old_record[0] = max(1, (old_record[0] + 1) // 2)\n                if (\n                    old_record[0] == 1\n                    and self.tick - old_record[1] > 512\n                    and old_key not in self.items\n                ):\n                    stale.append(old_key)\n            for old_key in stale:\n                del self.history[old_key]\n\n    def _score(self, key, size, last_touch):\n        record = self.history.get(key)\n        frequency = 1 if record is None else min(64, record[0])\n        age = max(0, self.tick - last_touch)\n        freshness = 1 + max(0, 32 - age)\n        return ((frequency + 1) * freshness * 1024) // max(1, size)\n\n    def _victim(self, exclude=None):\n        selected = None\n        selected_score = None\n        for key, record in self.items.items():\n            if key == exclude:\n                continue\n            score = self._score(key, record[0], record[1])\n            if selected_score is None or score < selected_score:\n                selected = key\n                selected_score = score\n        return selected\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        self.tick += 1\n        size = max(0, int(size))\n        self._observe(key)\n\n        if key in self.items:\n            record = self.items.pop(key)\n            self.used_bytes -= record[0]\n\n            if size > self.capacity_bytes:\n                return [key]\n\n            record[0] = size\n            record[1] = self.tick\n            self.items[key] = record\n            self.used_bytes += size\n\n            evicted = []\n            while self.used_bytes > self.capacity_bytes:\n                victim = self._victim(exclude=key)\n                if victim is None:\n                    self.items.pop(key, None)\n                    self.used_bytes -= size\n                    evicted.append(key)\n                    break\n                victim_record = self.items.pop(victim)\n                self.used_bytes -= victim_record[0]\n                evicted.append(victim)\n            return evicted\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._victim()\n            if victim is None:\n                break\n            victim_record = self.items.pop(victim)\n            self.used_bytes -= victim_record[0]\n            evicted.append(victim)\n\n        self.items[key] = [size, self.tick]\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R8-pair02-candidate-call02-independent_policy_constructor",
+    "duration_seconds": 79.172,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:27:24Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "b5fd03a544b42f1abc42c9e902f2f6dff7480f23ff0cd96436bdb10f82806452",
+    "raw_events_path": "workspace\\model-calls\\R8-pair02-candidate-call02-independent_policy_constructor\\raw-events.jsonl",
+    "raw_events_sha256": "3dd601c46dd05f31e45f62ebcf78479bfd2b208ed4bb098b82b3842d8ed53a07",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "837723a7e6e78ba9fa8689fb53d1c44d20ae0ff81a00af70ff6aecbcff8dc054",
+    "returncode": 0,
+    "role": "R8 candidate topology role exclusive whole-policy constructor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:26:05Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13723,
+      "output_tokens": 5541,
+      "reasoning_output_tokens": 4728
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

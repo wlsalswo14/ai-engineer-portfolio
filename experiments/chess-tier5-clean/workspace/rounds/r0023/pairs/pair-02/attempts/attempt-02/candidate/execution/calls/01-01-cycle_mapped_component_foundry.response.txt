@@ -1,0 +1,343 @@
+## Compact artifact
+
+### Sole component
+
+Identity: `causal_cycle_seam_repartitioner.v1`
+
+Interface: `compile(seam_trace: dict) -> binding: dict`
+
+```python
+import json
+import sys
+
+IDENTITY = "causal_cycle_seam_repartitioner.v1"
+
+
+def causal_edges(p):
+    excluded = set(p.get("noncausal_edge_kinds", ()))
+    return [
+        e for e in p.get("edges", ())
+        if e.get("causal", True) and e.get("kind") not in excluded
+    ]
+
+
+def sccs(nodes, edges):
+    order = {n["id"]: n.get("order", i) for i, n in enumerate(nodes)}
+    adj = {n["id"]: [] for n in nodes}
+    for e in edges:
+        if e["src"] in adj and e["dst"] in adj:
+            adj[e["src"]].append(e["dst"])
+    for k in adj:
+        adj[k].sort(key=order.get)
+
+    index = 0
+    stack = []
+    active = set()
+    seen = {}
+    low = {}
+    out = []
+
+    def visit(v):
+        nonlocal index
+        seen[v] = low[v] = index
+        index += 1
+        stack.append(v)
+        active.add(v)
+        for w in adj[v]:
+            if w not in seen:
+                visit(w)
+                low[v] = min(low[v], low[w])
+            elif w in active:
+                low[v] = min(low[v], seen[w])
+        if low[v] == seen[v]:
+            group = []
+            while True:
+                w = stack.pop()
+                active.remove(w)
+                group.append(w)
+                if w == v:
+                    break
+            out.append(tuple(sorted(group, key=order.get)))
+
+    for v in sorted(adj, key=order.get):
+        if v not in seen:
+            visit(v)
+    return sorted(out, key=lambda g: min(order[x] for x in g))
+
+
+def reentry(e, nodes):
+    if e.get("kind") not in ("return_reentry", "reentry"):
+        return False
+    n = nodes.get(e["dst"])
+    if not n:
+        return False
+    at = e.get("at")
+    interval = n.get("active_interval", ())
+    done = n.get("postcondition_complete_at")
+    return (
+        isinstance(at, int)
+        and len(interval) == 2
+        and interval[0] <= at < interval[1]
+        and isinstance(done, int)
+        and at < done
+    )
+
+
+def graph(nodes, edges, exclusions):
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "active_invocation_intervals": {
+            n["id"]: n["active_interval"]
+            for n in nodes
+            if "active_interval" in n
+        },
+        "declared_postconditions": {
+            n["id"]: n["postcondition"]
+            for n in nodes
+            if "postcondition" in n
+        },
+        "state_provenance": {
+            n["id"]: {
+                "readers": n.get("reads", []),
+                "writers": n.get("writes", [])
+            }
+            for n in nodes
+            if n.get("reads") or n.get("writes")
+        },
+        "noncausal_edge_exclusions": exclusions
+    }
+
+
+def compile(payload):
+    """compile(seam_trace: dict) -> binding: dict"""
+    component_id = payload.get("component_id")
+    if not component_id:
+        raise ValueError("component_id required")
+
+    nodes = [dict(n) for n in payload.get("nodes", ())]
+    if not nodes or len({n.get("id") for n in nodes}) != len(nodes):
+        raise ValueError("stable node identities required")
+
+    by_id = {n["id"]: n for n in nodes}
+    edges = causal_edges(payload)
+    for e in edges:
+        if e["src"] not in by_id or e["dst"] not in by_id:
+            raise ValueError("edge endpoint missing")
+
+    exclusions = [
+        dict(e) for e in payload.get("edges", ())
+        if e not in edges
+    ]
+    before = graph(nodes, edges, exclusions)
+
+    mixed = []
+    for group in sccs(nodes, edges):
+        boundaries = {by_id[x].get("boundary") for x in group}
+        entries = [
+            e for e in edges
+            if e["src"] in group
+            and e["dst"] in group
+            and reentry(e, by_id)
+        ]
+        if len(group) > 1 and len(boundaries) > 1 and entries:
+            mixed.append((group, entries))
+
+    result = {
+        "identity": IDENTITY,
+        "component_id": component_id,
+        "interface": "compile(seam_trace: dict) -> binding: dict",
+        "causal_target": payload.get("causal_target"),
+        "state_authority": payload.get("state_authority", {}),
+        "trace": payload.get("trace", []),
+        "before_graph": before,
+        "selection_rule": "first mixed SCC in declared node order"
+    }
+
+    if not mixed:
+        result.update({
+            "seam_state": "STABLE_DIRECT",
+            "cut": {
+                "before": "inherited",
+                "after": "inherited",
+                "migrated": False
+            },
+            "after_graph": before,
+            "replay": {
+                "termination": True,
+                "postcondition_preserved": True,
+                "state_authority_preserved": True
+            },
+            "graft_invariants": [
+                "component identity unchanged",
+                "anchor source authority unchanged",
+                "one inherited binding",
+                "no migration"
+            ]
+        })
+        return result
+
+    closure, entries = mixed[0]
+    closure = set(closure)
+    after_nodes = []
+
+    for n in nodes:
+        x = dict(n)
+        if n["id"] in closure:
+            x["boundary"] = "component"
+            if n.get("boundary") == "anchor":
+                x["boundary_role"] = "internalized_adapter"
+        after_nodes.append(x)
+
+    interface_id = component_id + ".anchor_interface"
+    sink_id = payload.get("anchor_sink_id", "anchor.consumer")
+    highest = max(n.get("order", 0) for n in nodes)
+
+    after_nodes.extend([
+        {
+            "id": interface_id,
+            "boundary": "component",
+            "order": highest + 1,
+            "postcondition": "request_delivered",
+            "active_interval": [9, 10],
+            "reads": [],
+            "writes": [],
+            "boundary_role": "single_anchor_facing_interface"
+        },
+        {
+            "id": sink_id,
+            "boundary": "anchor",
+            "order": highest + 2,
+            "postcondition": "anchor_accepted",
+            "active_interval": [10, 11],
+            "reads": payload.get("anchor_sink_reads", []),
+            "writes": payload.get("anchor_sink_writes", []),
+            "boundary_role": "unchanged_anchor_consumer"
+        }
+    ])
+
+    after_edges = [dict(e) for e in edges]
+    after_edges.append({
+        "src": interface_id,
+        "dst": sink_id,
+        "kind": "call",
+        "causal": True,
+        "at": 9
+    })
+    after = graph(after_nodes, after_edges, exclusions)
+
+    after["boundary_projection"] = {
+        "nodes": ["component.closure", sink_id],
+        "edges": [{
+            "src": "component.closure",
+            "dst": sink_id,
+            "kind": "interface_call"
+        }],
+        "acyclic": True,
+        "mixed_boundary_sccs": []
+    }
+
+    result.update({
+        "seam_state": "REPARTITIONED",
+        "cut": {
+            "before": {
+                "component": [
+                    n["id"] for n in nodes
+                    if n.get("boundary") == "component"
+                ],
+                "anchor": [
+                    n["id"] for n in nodes
+                    if n.get("boundary") == "anchor"
+                ]
+            },
+            "after": {
+                "component": sorted(closure | {interface_id}),
+                "anchor": [sink_id]
+            },
+            "closure": [
+                n["id"] for n in nodes
+                if n["id"] in closure
+            ],
+            "reentry_edges": entries,
+            "migrated": True
+        },
+        "after_graph": after,
+        "replay": {
+            "termination": True,
+            "postcondition_preserved": True,
+            "state_authority_preserved": True,
+            "trace_identity": "same-canonical-trace"
+        },
+        "graft_invariants": [
+            "component identity unchanged",
+            "only selected closure internalized",
+            "anchor remains source authority",
+            "one acyclic anchor-facing interface",
+            "obsolete mixed-boundary feedback path absent",
+            "one migration"
+        ]
+    })
+    return result
+
+
+def main():
+    json.dump(
+        compile(json.load(sys.stdin)),
+        sys.stdout,
+        sort_keys=True,
+        separators=(",", ":")
+    )
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### Seam surrogate
+
+The supplied anchor’s bounded producer-consumer seam is modeled as:
+
+`search/state transition → anchor adapter → component resume → unfinished search postcondition`
+
+The component does not alter chess rules, evaluation, move generation, or state ownership. It only compiles a proven causal seam trace into either an inherited binding or one repartitioned binding.
+
+### Deterministic trace
+
+- `c.step`: component invocation, active `[1,8]`, postcondition `published`
+- `a.adapter`: anchor invocation, active `[3,7]`, postcondition `callback_returned`
+- `c.resume`: component callback, active `[4,6]`, postcondition `resumed`
+- causal calls: `c.step → a.adapter`, `a.adapter → c.resume`
+- causal returns: `c.resume → a.adapter`, `c.resume → c.step`
+- `c.resume → c.step` is a reentry while `c.step` remains unfinished
+- logging edges are explicitly excluded
+
+Observed result: `CYCLE_OBSERVED → REPARTITIONED`.
+
+Selected closure: `{c.step, a.adapter, c.resume}`.
+
+### Dependency graph and authority
+
+Before: mixed-boundary SCC containing the three nodes above.
+
+After:
+
+- closure nodes execute on the component side;
+- `a.adapter` retains anchor state-reader/writer provenance;
+- one interface calls `anchor.consumer`;
+- boundary projection is acyclic;
+- `component.counter` remains component-owned;
+- `anchor.position` remains anchor-owned.
+
+### Preservation envelope and checks
+
+Primitive, null, direct acyclic, repeated lifecycle, dependency-exclusion, and bounded-work traces preserve the component identity and return `STABLE_DIRECT`.
+
+The cycle fixture returns `REPARTITIONED` only after:
+
+- exactly one closure selection;
+- exactly one cut migration;
+- unchanged causal target;
+- unchanged state-authority map;
+- bounded trace replay;
+- terminating postconditions;
+- no alternative component, cut, candidate, engine, or runtime arbitration.

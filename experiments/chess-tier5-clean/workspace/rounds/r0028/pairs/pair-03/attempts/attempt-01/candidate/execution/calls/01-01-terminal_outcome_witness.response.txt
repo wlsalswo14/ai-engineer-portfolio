@@ -1,0 +1,7 @@
+WITNESS
+- obligation: legality of every `bestmove`
+- procedure: Send `position fen 7k/6Q1/5K2/8/8/8/8/8 b - - 0 1`, then `go movetime 1`.
+- observed_anchor_trace: The position is checkmate; `legal()` returns `[]`; `think()` returns `0000`; output is `bestmove 0000`.
+- failed_terminal_predicate: The reported move must be a legal UCI move. `0000` is not legal, and the legal-move set is empty.
+- preservation_predicates: Anchor source unchanged; no benchmark or evaluator data used; protocol emits one `bestmove` line; position state remains the supplied FEN.
+- falsifier: Rerun yields a legal move token for this position, or the task contract explicitly exempts terminal positions from the legal-bestmove requirement.

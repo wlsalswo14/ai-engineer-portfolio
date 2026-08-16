@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_limit = self.capacity_bytes // 2\n\n    def _demote_protected(self):\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > self.protected_limit:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n            protected_bytes -= size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._demote_protected()\n            return []\n\n        size = max(0, int(size))\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R19-pair02-candidate-call01-origin_policy_owner",
+    "duration_seconds": 16.235,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:27:53Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "70abfccf7d5bf52d95473171767228810810d7b42ce0f40401a2a7cefd4c0dfb",
+    "raw_events_path": "workspace\\model-calls\\R19-pair02-candidate-call01-origin_policy_owner\\raw-events.jsonl",
+    "raw_events_sha256": "c7e28e2e511e29b624a01e59c348f52bd78f7cd0974e41237b2c84649569a908",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "91413fb22b7fc6914a8677e4c754b0b85604c0245a5ee76956b07280c6c3ac57",
+    "returncode": 0,
+    "role": "R19 candidate topology role origin executable-state owner",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:27:36Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13334,
+      "output_tokens": 948,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

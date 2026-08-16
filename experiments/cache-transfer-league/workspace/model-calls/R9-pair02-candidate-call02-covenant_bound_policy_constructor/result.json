@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used_bytes = 0\n        self.recent_target = self.capacity_bytes // 2\n\n    def _remember(self, key, size, frequent):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n        target = self.ghost_frequent if frequent else self.ghost_recent\n        target[key] = size\n        limit = max(64, min(4096, 2 * (len(self.recent) + len(self.frequent) + 1)))\n        while len(self.ghost_recent) + len(self.ghost_frequent) > limit:\n            if self.ghost_recent and (not self.ghost_frequent or len(self.ghost_recent) >= len(self.ghost_frequent)):\n                self.ghost_recent.popitem(last=False)\n            elif self.ghost_frequent:\n                self.ghost_frequent.popitem(last=False)\n            else:\n                break\n\n    def _promote(self, key):\n        size = self.recent.pop(key)\n        self.recent_bytes -= size\n        self.frequent[key] = size\n        self.frequent_bytes += size\n\n    def _victim(self):\n        if self.recent and (self.recent_bytes > self.recent_target or not self.frequent):\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            return key, size, False\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            return key, size, True\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            return key, size, False\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            self._promote(key)\n            return []\n\n        size = max(0, int(size))\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        if key in self.ghost_recent:\n            old_size = self.ghost_recent.pop(key)\n            step = max(1, min(self.capacity_bytes, max(size, old_size)))\n            self.recent_target = min(self.capacity_bytes, self.recent_target + step)\n            self.ghost_frequent.pop(key, None)\n        elif key in self.ghost_frequent:\n            old_size = self.ghost_frequent.pop(key)\n            step = max(1, min(self.capacity_bytes, max(size, old_size)))\n            self.recent_target = max(0, self.recent_target - step)\n            self.ghost_recent.pop(key, None)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._victim()\n            if victim is None:\n                break\n            old_key, old_size, was_frequent = victim\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n            self._remember(old_key, old_size, was_frequent)\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R9-pair02-candidate-call02-covenant_bound_policy_constructor",
+    "duration_seconds": 50.747,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:38:56Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "284ecb9d2a73c01c366ea494e66f2d9638157922ca0cc981085fee7f8d27db95",
+    "raw_events_path": "workspace\\model-calls\\R9-pair02-candidate-call02-covenant_bound_policy_constructor\\raw-events.jsonl",
+    "raw_events_sha256": "abdfb51a6b64a4ff484023d146b6c7a38e68097db89dbb06875ee3489dc78eef",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "63cc97c745b90e19cce92401a47fa5cf3d72b73de7d98bc4225365a7b42096a9",
+    "returncode": 0,
+    "role": "R9 candidate topology role exclusive artifact-construction authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:38:05Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13840,
+      "output_tokens": 3745,
+      "reasoning_output_tokens": 2858
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,112 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R76-structure-architect\\final-receipt.json",
+    "sha256": "cce12d2e85e15807d669c73805c4cafca1087caa626f758496a3dc5e5ee7656d"
+  },
+  "architect_response": {
+    "architect_scope": "one-R76-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "exercise_triggered_regrounding",
+      "information_flow": "The first call receives every common input and emits exactly one complete executable policy state. The final call consumes that state, directly sees every common input, uses contradiction evidence as the transition trigger, re-grounds the same single artifact when triggered, and emits one policy.",
+      "name": "Triggered Causal Re-grounding Lineage",
+      "organization": "two-call sequential lineage with one complete executable policy state and terminal causal-reset authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "instantiate_causally_live_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Integrate all visible evidence into one complete executable policy state whose initial commitments have an inspectable causal relationship to the anchor, contract, constraints, hypothesis, and loop structure.",
+              "output_type": "executable_policy_state",
+              "role": "single-artifact executable-state originator"
+            },
+            {
+              "id": "exercise_triggered_regrounding",
+              "inputs": [
+                "instantiate_causally_live_state",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume instantiate_causally_live_state, reconcile its commitments against directly visible obligations, use contradiction of a shared inherited premise to transition the single artifact to contract-and-constraint grounding, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "causal-basis transition authority"
+            }
+          ],
+          "id": "causal_regrounding_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "post-construction evidence-triggered causal re-grounding",
+      "champion_limitation": "The champion can prohibit commitments but cannot reset the shared causal basis of an already complete executable artifact.",
+      "not_local_refinement": "This adds a post-construction causal-state reset absent from exclusion authority, ownership transfer, semantic closure, provenance defeasibility, serialization, and exclusion projection; it is not a reviewer, gate, role split, field, or rename.",
+      "observable_effect": "The emitted policy remains one complete artifact while commitments supported only by the contradicted shared premise cease to govern it.",
+      "state_transition": "The single artifact transitions from anchor-continuous grounding to contract-and-constraint grounding, with the contradicted premise losing causal authority before emission.",
+      "trigger": "A successor-visible contradiction between an explicit contract or constraint obligation and a shared anchor-derived premise supporting multiple commitments in the predecessor artifact."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the static exclusion-analysis edge with one executable causal-state edge whose successor can reset the artifact's governing basis when post-construction reconciliation exposes that contradiction.",
+      "expected_effect": "The lineage can coherently decommit from a stale premise family while retaining one directly executable artifact and preserving contract-grounded completeness.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Binding exclusions can remove isolated unsupported commitments, but correlated commitments may survive when their shared anchor-derived causal premise becomes contradicted only after a complete policy artifact exists."
+    },
+    "structural_mutation": {
+      "after": "The sole edge carries one complete executable policy state, and the terminal call may transition that artifact from anchor-continuous grounding to contract-and-constraint grounding when a shared inherited premise is contradicted.",
+      "before": "The sole edge carries binding negative analysis, and the terminal call constructs a policy within the remaining admissible space.",
+      "change_count": 1,
+      "factor": "evidence-triggered causal-basis reset authority on the sole executable policy-state edge",
+      "why_structural": "This replaces static constraint transmission with a causally live executable-state transition and gives the successor transformative authority over the governing basis of the single artifact."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 76,
+  "incumbent_structure_sha256": "a04bca9b442a9a31a6a6b1755e7a83938457cb78bd469535a7494a5b7852f6de",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "emergent_exploration",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R76\\qualitative-error-notebook.json",
+    "sha256": "7236b875af9b70a55b2a5f7fd8249c9b1696eabcfde626a0f19e3de11ed5a27a"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R76\\source-manifest.json",
+    "sha256": "0383499f44216b2084b10aec06be585ad5b68ee6544796c8bc94b6c27c7e19a0"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "evidence-triggered causal-basis reset authority on the sole executable policy-state edge",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "instantiate_causally_live_state",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      }
+    ],
+    "semantic_topology_fingerprint": "de203c3864f4a4b2fe0e9e8ffa7aaf62114a9cb1ec4e8f3a6cf9fc831e4af448",
+    "topology_fingerprint": "4a0fcf0b5ae0781281e30b3851f1b41adb1e15c63d4f1b54bc493afc17b52d11"
+  }
+}

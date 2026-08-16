@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = int(capacity_bytes)\n        if self.capacity < 0:\n            self.capacity = 0\n        self.t1 = {}\n        self.t2 = {}\n        self.b1 = {}\n        self.b2 = {}\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.resident_bytes = 0\n        self.p = self.capacity // 2\n\n    def _oldest(self, queue, exclude=None):\n        for key in queue:\n            if key != exclude:\n                return key\n        return None\n\n    def _trim_ghosts(self):\n        limit_bytes = self.capacity * 2\n        while (self.b1_bytes + self.b2_bytes > limit_bytes or\n               len(self.b1) + len(self.b2) > 8192):\n            if self.b1 and (not self.b2 or self.b1_bytes >= self.b2_bytes):\n                key, size = next(iter(self.b1.items()))\n                del self.b1[key]\n                self.b1_bytes -= size\n            elif self.b2:\n                key, size = next(iter(self.b2.items()))\n                del self.b2[key]\n                self.b2_bytes -= size\n            else:\n                break\n\n    def _add_ghost(self, which, key, size):\n        if which == 1:\n            if key in self.b1:\n                self.b1_bytes -= self.b1.pop(key)\n            self.b1[key] = size\n            self.b1_bytes += size\n        else:\n            if key in self.b2:\n                self.b2_bytes -= self.b2.pop(key)\n            self.b2[key] = size\n            self.b2_bytes += size\n        self._trim_ghosts()\n\n    def _evict(self, which, key):\n        if which == 1:\n            size = self.t1.pop(key)\n            self.t1_bytes -= size\n            self.resident_bytes -= size\n            self._add_ghost(1, key, size)\n        else:\n            size = self.t2.pop(key)\n            self.t2_bytes -= size\n            self.resident_bytes -= size\n            self._add_ghost(2, key, size)\n        return key\n\n    def _replace(self, needed, incoming_b2=False, exclude=None):\n        evicted = []\n        while self.resident_bytes + needed > self.capacity:\n            prefer_t1 = bool(self.t1) and (\n                self.t1_bytes > self.p or\n                (incoming_b2 and self.t1_bytes == self.p)\n            )\n            if prefer_t1:\n                key = self._oldest(self.t1, exclude)\n                if key is not None:\n                    evicted.append(self._evict(1, key))\n                    continue\n                key = self._oldest(self.t2, exclude)\n                if key is not None:\n                    evicted.append(self._evict(2, key))\n                    continue\n            else:\n                key = self._oldest(self.t2, exclude)\n                if key is not None:\n                    evicted.append(self._evict(2, key))\n                    continue\n                key = self._oldest(self.t1, exclude)\n                if key is not None:\n                    evicted.append(self._evict(1, key))\n                    continue\n            break\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = int(size)\n        if size < 1:\n            size = 1\n\n        if key in self.t1 or key in self.t2:\n            evicted = []\n            if key in self.t1:\n                old_size = self.t1[key]\n                queue = self.t1\n            else:\n                old_size = self.t2[key]\n                queue = self.t2\n\n            delta = size - old_size\n            if delta > 0:\n                evicted.extend(self._replace(delta, False, key))\n                if self.resident_bytes + delta > self.capacity:\n                    which = 1 if key in self.t1 else 2\n                    evicted.append(self._evict(which, key))\n                    return evicted\n\n            if delta:\n                queue[key] = size\n                if key in self.t1:\n                    self.t1_bytes += delta\n                else:\n                    self.t2_bytes += delta\n                self.resident_bytes += delta\n\n            if key in self.t1:\n                value = self.t1.pop(key)\n                self.t1_bytes -= value\n                self.t2[key] = value\n                self.t2_bytes += value\n            else:\n                value = self.t2.pop(key)\n                self.t2[key] = value\n            return evicted\n\n        if self.capacity == 0 or size > self.capacity:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        destination = 2 if (in_b1 or in_b2) else 1\n\n        if in_b1:\n            previous = self.b1_bytes\n            self.b1_bytes -= self.b1.pop(key)\n            delta = max(1, size, self.b2_bytes // max(1, previous))\n            self.p = min(self.capacity, self.p + delta)\n        elif in_b2:\n            previous = self.b2_bytes\n            self.b2_bytes -= self.b2.pop(key)\n            delta = max(1, size, self.b1_bytes // max(1, previous))\n            self.p = max(0, self.p - delta)\n\n        evicted = self._replace(size, in_b2)\n        if self.resident_bytes + size > self.capacity:\n            return evicted\n\n        if destination == 1:\n            self.t1[key] = size\n            self.t1_bytes += size\n        else:\n            self.t2[key] = size\n            self.t2_bytes += size\n        self.resident_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R66-pair01-candidate-call02-transition_authority_and_emit",
+    "duration_seconds": 126.328,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:35:45Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "24eb76f36b2a1d080a340e2c892f657470af066c54ac25905ba19c0bad924476",
+    "raw_events_path": "workspace\\model-calls\\R66-pair01-candidate-call02-transition_authority_and_emit\\raw-events.jsonl",
+    "raw_events_sha256": "be7932e8f08a551e15359aff258647b17eba2cd1f0268799929fd6bbb489d379",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "731fabdd79a3fbabf6989ceedc051af93264efbbbf30172c2c304084b534c856",
+    "returncode": 0,
+    "role": "R66 candidate topology role evidence-responsive normative policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:33:38Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13427,
+      "output_tokens": 9863,
+      "reasoning_output_tokens": 8439
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

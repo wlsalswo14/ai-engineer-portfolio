@@ -1,0 +1,72 @@
+Role: R66 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R66,
+matched pair 1, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "The inherited anchor is an online, standard-library-only cache policy with an OrderedDict-based recent/frequent split and ghost history. Its evidence is usable only where consistent with interface legality, capacity safety, evaluator-owned current residency, and the prohibition on hidden traces, oracle adaptation, benchmark access, and score claims. The proposed permanent source-class cut is normatively justified: generative claims contradicted by obligations or unsupported by visible evidence must lose causal authority, while compatible synthesized distinctions may remain advisory. No score-based conclusion is available.",
+      "witnesses": [
+        "The anchor exposes only access(key, size, now) and returns eviction keys; any downstream design must preserve that interface and return only currently cached unique integer keys.",
+        "The anchor maintains byte accounting, bounded ghost metadata, and a capacity target, but its behavioral mechanisms are inherited evidence rather than guarantees of optimality, scan resistance, phase adaptation, or regret.",
+        "Oversized incoming objects are not admitted; oversized resident updates are removed and reported. This is compatible with capacity safety only if returned keys are interpreted against the evaluator's current cache state.",
+        "The candidate hypothesis identifies a sole-handoff risk: an unqualified synthesis could allow contradicted generative claims to remain causally authoritative.",
+        "The falsifier supplies no score or majority evidence; therefore no performance superiority, matched-pair outcome, or official ranking may be asserted."
+      ],
+      "obligations": [
+        "Keep all reasoning online and limited to the visible inputs.",
+        "Preserve interface legality, capacity safety, and evaluator-visible residency semantics.",
+        "Use only Python standard-library-compatible concepts in any downstream artifact.",
+        "Reject benchmark paths, hidden traces, reference implementations, oracle decisions, external libraries, networking, subprocesses, and score-based adaptation.",
+        "Preserve conflicts and distinguish normative obligations from empirical or generative performance claims.",
+        "Apply irreversible deauthorization to claims contradicted by the visible obligations; do not silently restore their causal authority through the synthesis handoff.",
+        "Emit exactly one final policy downstream, without alternatives, voting, ranking, retrying, or best-of-N selection."
+      ],
+      "exact_actions": [
+        "Pass forward only the supported interface, safety, visibility, and constraint conclusions; do not pass unsupported performance conclusions as facts.",
+        "Mark any generative claim that conflicts with the listed obligations as deauthorized for causal use, while retaining it as a labeled conflict if needed for reconciliation.",
+        "Treat the anchor's implementation details as inherited evidence and preserve only behavior that can be justified under the visible contract.",
+        "Require the downstream authority to construct one complete policy from the analysis plus task, anchor_contract, and task_constraints, without reacquiring cut sources.",
+        "Before emission, verify standard-library legality, online-only operation, capacity non-overflow, and that every returned eviction key is unique and currently cached."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R65 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

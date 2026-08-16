@@ -1,0 +1,113 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R52-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "indivisible_state_authority",
+      "information_flow": "The first call alone receives all common external inputs and encapsulates their relevant evidence and provenance in one complete executable policy state without separating contract and behavior authority. The terminal call consumes only that state, exercises indivisible authority over the complete artifact, and emits one policy.",
+      "name": "Single-Ingress Indivisible State Authority",
+      "organization": "two-call sequential lineage with one exclusive executable-state handoff",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "encapsulate_complete_evidence_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Receive the supplied evidence once, form one complete executable policy state retaining the provenance needed for downstream judgment, avoid imposing an immutable contract-versus-behavior authority partition, and pass the state as the sole downstream evidence carrier.",
+              "output_type": "executable_policy_state",
+              "role": "single-ingress executable evidence custodian"
+            },
+            {
+              "id": "indivisible_state_authority",
+              "inputs": [
+                "encapsulate_complete_evidence_state"
+              ],
+              "objective": "Consume only encapsulate_complete_evidence_state, jointly adjudicate public-contract conformance and behavior-bearing semantics from its contained evidence, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "indivisible whole-state authority"
+            }
+          ],
+          "id": "exclusive_state_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "phase-shift adaptation responsiveness",
+        "scan-resistance stability"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "the contract-locked executable relay with supplemental terminal evidence access",
+      "independent_replacement_principle": "single-ingress executable encapsulation with indivisible terminal authority over the complete artifact",
+      "rejected_assumptions": [
+        "Public-contract conformance must be frozen before behavior-bearing judgment.",
+        "Terminal judgment requires supplemental common evidence alongside the inherited executable artifact."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the contract-locked dual-input relay with one atomic single-ingress evidence-authority encapsulation: all common evidence enters once, and one complete executable state becomes the terminal authority's sole input.",
+      "expected_effect": "Indivisible whole-state judgment should increase phase-shift adaptation responsiveness while preserving scan-resistance stability by resolving both dimensions within one evidence context.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Freezing contract authority upstream while restoring external evidence downstream fragments responsibility for behavior and may impose boundary-driven inertia across distinct behavioral objectives."
+    },
+    "structural_mutation": {
+      "after": "All common evidence is encapsulated once in one complete executable state, which is the terminal call's sole input and carries indivisible whole-artifact authority without an immutable contract partition.",
+      "before": "An upstream call freezes contract conformance in an executable closure, while a terminal call receives that closure plus supplemental external evidence and controls only behavior-bearing semantics.",
+      "change_count": 1,
+      "factor": "atomic single-ingress evidence-authority encapsulation",
+      "why_structural": "The mutation replaces the inherited split-authority, supplemental-fan-in edge with one exclusive evidence-and-authority edge, changing concrete visibility and control rather than renaming or dividing roles."
+    }
+  },
+  "receipt": {
+    "call_id": "R52-structure-architect",
+    "duration_seconds": 79.672,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:36:33Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "852812493866252ac62b9667d73f2514dc3177232d8f519a5663812db5dcdb83",
+    "raw_events_path": "workspace\\model-calls\\R52-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "200e7f229e7ab34b107e8056f463e60b96cf36f0886195cb8a6148d5ad95e0bf",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "0c805aca9b8fd3cb2751d5c4778280dbb47cc89faa1cb1263961a628764726ba",
+    "returncode": 0,
+    "role": "score-blind R52 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:35:14Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14544,
+      "output_tokens": 5330,
+      "reasoning_output_tokens": 4444
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

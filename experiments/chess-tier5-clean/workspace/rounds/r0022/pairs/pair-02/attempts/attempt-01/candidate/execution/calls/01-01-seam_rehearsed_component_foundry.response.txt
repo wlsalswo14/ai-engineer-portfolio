@@ -1,0 +1,151 @@
+ARTIFACT
+
+- Identity: `halfmove_clock_seam_v1`
+- File: `halfmove_seam_component.py`
+- Target: authoritative halfmove-clock lifecycle handling.
+- `PRIMARY_CAUSAL_STATE`: `halfmove_clock`; derived projection: `claimable`.
+
+```python
+#!/usr/bin/env python3
+import json
+import sys
+
+
+class HalfmoveSeam:
+    NAME = "halfmove_clock_seam_v1"
+    PRIMARY_CAUSAL_STATE = "halfmove_clock"
+
+    @classmethod
+    def _state(cls, value):
+        if not isinstance(value, dict) or set(value) != {"halfmove_clock"}:
+            raise ValueError("state must contain exactly halfmove_clock")
+        clock = value["halfmove_clock"]
+        if isinstance(clock, bool) or not isinstance(clock, int) or clock < 0:
+            raise ValueError("halfmove_clock must be a nonnegative integer")
+        return {"halfmove_clock": clock}
+
+    @staticmethod
+    def _event(event, expected_writer=None):
+        required = {"irreversible", "seq", "writer"}
+        if not isinstance(event, dict) or set(event) != required:
+            raise ValueError("event shape mismatch")
+        if not isinstance(event["irreversible"], bool):
+            raise ValueError("irreversible must be bool")
+        if (isinstance(event["seq"], bool) or
+                not isinstance(event["seq"], int) or
+                event["seq"] < 0):
+            raise ValueError("seq must be a nonnegative integer")
+        if event["writer"] not in {"anchor", "component"}:
+            raise ValueError("unknown writer")
+        if expected_writer is not None and event["writer"] != expected_writer:
+            raise ValueError("writer mismatch")
+        return event
+
+    @classmethod
+    def init(cls, clock=0):
+        return cls._state({"halfmove_clock": clock})
+
+    @classmethod
+    def _advance(cls, state, event):
+        state = cls._state(state)
+        event = cls._event(event)
+        clock = 0 if event["irreversible"] else state["halfmove_clock"] + 1
+        return cls._state({"halfmove_clock": clock})
+
+    @classmethod
+    def anchor_step(cls, state, event):
+        return cls._advance(state, cls._event(event, "anchor"))
+
+    @classmethod
+    def component_step(cls, state, event):
+        return cls._advance(state, cls._event(event, "component"))
+
+    @classmethod
+    def project(cls, state):
+        state = cls._state(state)
+        clock = state["halfmove_clock"]
+        return {"halfmove_clock": clock, "claimable": clock >= 100}
+
+    @classmethod
+    def owned_fold(cls, state, events):
+        if not isinstance(events, list) or len(events) > 2:
+            raise ValueError("owned_fold accepts at most two events")
+        events = [cls._event(event) for event in events]
+        if len({event["seq"] for event in events}) != len(events):
+            raise ValueError("duplicate event sequence")
+        state = cls._state(state)
+        for event in sorted(events, key=lambda item: item["seq"]):
+            state = cls._advance(state, event)
+        return state
+
+
+def dispatch(request):
+    if not isinstance(request, dict):
+        raise ValueError("request must be an object")
+    op = request.get("op")
+    if op == "init":
+        return {"state": HalfmoveSeam.init(request.get("halfmove_clock", 0))}
+    if op == "anchor_step":
+        return {"state": HalfmoveSeam.anchor_step(
+            request["state"], request["event"])}
+    if op == "component_step":
+        return {"state": HalfmoveSeam.component_step(
+            request["state"], request["event"])}
+    if op == "project":
+        return {"projection": HalfmoveSeam.project(request["state"])}
+    if op == "owned_fold":
+        state = HalfmoveSeam.owned_fold(
+            request["state"], request.get("events", []))
+        return {"state": state, "projection": HalfmoveSeam.project(state)}
+    raise ValueError("unknown operation")
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: halfmove_seam_component.py JSON_REQUEST")
+    try:
+        result = dispatch(json.loads(sys.argv[1]))
+    except Exception as exc:
+        print(json.dumps({"error": str(exc)}, sort_keys=True))
+        raise SystemExit(2)
+    print(json.dumps(result, sort_keys=True, separators=(",", ":")))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Seam provenance:
+
+- Anchor writer: `make`, which writes `Position.half` as `0` for pawn/capture transitions and otherwise `p.half + 1`.
+- Component writer: `component_step`, independently applying the same lifecycle semantics.
+- Consumer seam: the next recursive `make` reads the prior `Position.half`; `project` exposes only the deterministic claim projection.
+
+Independent writer commands:
+
+```text
+python halfmove_seam_component.py "{\"op\":\"anchor_step\",\"state\":{\"halfmove_clock\":99},\"event\":{\"irreversible\":false,\"seq\":1,\"writer\":\"anchor\"}}"
+python halfmove_seam_component.py "{\"op\":\"component_step\",\"state\":{\"halfmove_clock\":99},\"event\":{\"irreversible\":true,\"seq\":2,\"writer\":\"component\"}}"
+```
+
+Rehearsal traces:
+
+- Primitive: `0 --quiet--> 1` for either writer.
+- Null: `0 → 0`, projection `{claimable:false}`.
+- Boundary: `99 --quiet--> 100`, projection `{claimable:true}`.
+- Lifecycle: `0 → 1 → 2 → 0 → 1`.
+- Noncommutativity from `7`: anchor-quiet then component-reset gives `0`; reverse order gives `1`.
+- Ownership replay: `owned_fold` sorts by sequence, so both schedules converge to `0`.
+- Commuting fixture: two quiet events converge to `9`; state remains `STABLE`.
+- Work bound: each transition is constant-time; ownership replay accepts at most two events.
+
+Graft invariants:
+
+1. Exactly one owner for `halfmove_clock` after transfer.
+2. Anchor updates route through the component-owned fold.
+3. Existing consumers receive only `project(state)`.
+4. No duplicate anchor-side writer remains active.
+5. No board, move-generation, evaluation, UCI, or unrelated state changes.
+6. No engine artifact emitted.
+
+Runtime note: the managed command tool rejected inline Python execution, so traces are source-derived rather than runtime-claimed. Memory upload was not performed because the task forbids network access and command execution was unavailable.

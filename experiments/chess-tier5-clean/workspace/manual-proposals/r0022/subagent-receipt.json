@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-08-09T13:56:16.5445270Z",
+  "agent_role": "structural_architect",
+  "provenance": {
+    "canonical_label": "independent gpt-5.6-sol/max structural-architect subagent, max-fast service with priority request profile",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "latency_profile": "fast",
+    "latency_profile_label": "max-fast",
+    "latency_profile_combined": "fast/max-fast",
+    "delegation_task_path": "/root/chess_r40_campaign/r41_architect_max_fast",
+    "architect_identity": "this delegated subagent itself authored and validated the one proposal",
+    "secondary_architect_or_subdelegation_used": false,
+    "secondary_agents_spawned": 0
+  },
+  "round": {
+    "display_round": 41,
+    "internal_round": "r0022",
+    "display_round_offset": 19,
+    "proposal_mode": "emergent_exploration",
+    "architect_mode": "EMERGENT-EXPLORATION",
+    "search_phase": "champion",
+    "emergent_attempt_ordinal": 2,
+    "emergent_attempt_limit": 2,
+    "local_refinement_count_before": 2,
+    "local_refinement_limit": 2,
+    "emergent_failure_count_before": 1,
+    "development_candidate_before": null
+  },
+  "design_context": {
+    "goal": "Evolve a general-purpose agent harness and loop system, lightly specialized for building stronger legal UCI chess engines on the existing ChessBench.",
+    "champion_package_id": "package_faee07d6265127db",
+    "champion_structure_id": "loop_f7c2f8106612d495",
+    "champion_macro_family": "Isolated Executable Mechanism Grafting",
+    "preserved_macro_family": "Isolated Executable Mechanism Grafting",
+    "single_causal_factor": "Mutation-authority policy for a causally shared seam state when anchor and component transitions do not commute",
+    "emergent_capability_family": "Noncommutativity-Triggered State-Ownership Transfer",
+    "emergent_capability": "On one executable order-sensitive seam conflict, transfer mutation authority for exactly one minimal causal state cell from the anchor boundary to the same isolated component, expose only a deterministic anchor-facing projection, and resume the one graft with no second capability or candidate.",
+    "trigger": "One deterministic order exchange from the same canonical prestate proves that the anchor-native writer and component writer target the same minimal causal state cell and yield divergent canonical poststates by order.",
+    "state_transition": "SPLIT_AUTHORITY_CONFLICT -> COMPONENT_AUTHORITY_BOUND after one ownership transfer and convergent replay; a commuting witness records STABLE without fabricating a transfer.",
+    "organization": "collaboration",
+    "topology": "one foundry realizes and seam-rehearses the sole non-engine component; one transformer executes the single order-exchange intervention and conditionally migrates exactly one state cell's authority; one final producer performs the sole graft and emits the only engine",
+    "runtime_policy": {
+      "path": "resources/policies/luna-high-fast-slot1-chessbench100-v2.json",
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "tier_contract": "fast_priority_required",
+      "max_model_calls_per_arm": 4,
+      "planned_model_calls_per_arm": 3,
+      "all_internal_execution_roles_use_this_policy": true,
+      "policy_file_modified_by_this_subagent": false,
+      "supersedes_historical_v1_for_r41_execution": true,
+      "execution_performed": false
+    }
+  },
+  "inputs": {
+    "search_cycle_contract": {
+      "path": "SEARCH-CYCLE.md",
+      "sha256": "82a1ff7bcd87fd9e3340230224702cd76c8d14691bebbe86515f012589d5db55"
+    },
+    "experiment_config": {
+      "path": "experiments/chess-tier5-clean/config.json",
+      "sha256": "dffde6d19aac7da84235c5be40a9e7752929a8e395f36facc3205b018f325d0d"
+    },
+    "state": {
+      "path": "experiments/chess-tier5-clean/workspace/state.json",
+      "sha256": "5e068aa5d3e04b7f7da9933ddfe48ac3cce429895b4085eda241b2a6f78c43e2"
+    },
+    "state_capsule": {
+      "path": "experiments/chess-tier5-clean/workspace/state-capsule.json",
+      "sha256": "4e17cecdb2971f0c9f993d04846fbda2bb6fac0a39c0a79dabc61d59f79de15e",
+      "declared_content_sha256": "012d56eb347da79bc87ee4bb7132b9de534c32f14e275c18482457dc77c6cd52"
+    },
+    "champion_structure": {
+      "path": "experiments/chess-tier5-clean/workspace/champions/p0019/loop-structure.json",
+      "sha256": "6b4e454a4fe3f7f62bf222c61af5ae0d9e4172cb1b87ef2d70914311b005d6a3"
+    },
+    "champion_final_output": {
+      "path": "experiments/chess-tier5-clean/workspace/champions/p0019/final-output.json",
+      "sha256": "b46441b42f65d05e52b1411f3e9aab6a399cceffc3a34a776f948844261ab45b",
+      "engine_source_sha256_from_authoritative_state": "578a4d95f81d0f2c11171e55e72b71c2b4613c06a80381b0a03ffbebf228d3d6"
+    },
+    "recent_round_files": {
+      "r0019_normalized_plan": {
+        "path": "experiments/chess-tier5-clean/workspace/rounds/r0019/generation/normalized-plan.json",
+        "sha256": "6b4e454a4fe3f7f62bf222c61af5ae0d9e4172cb1b87ef2d70914311b005d6a3"
+      },
+      "r0019_round_summary": {
+        "path": "experiments/chess-tier5-clean/workspace/rounds/r0019/round-summary.json",
+        "sha256": "9fe177ef0f26ee45d968de2aa9a50283d46db33422730fb0e0462c00a7592ff5"
+      },
+      "r0020_normalized_plan": {
+        "path": "experiments/chess-tier5-clean/workspace/rounds/r0020/generation/normalized-plan.json",
+        "sha256": "53222da3afc3fefbe6cd75370d8167fc88c74b4f33db3982d8a3fcffa14a5491"
+      },
+      "r0020_round_summary": {
+        "path": "experiments/chess-tier5-clean/workspace/rounds/r0020/round-summary.json",
+        "sha256": "ee3b49b6862905c2be588c0c1170878bcc5bae08cb270b744ed231fb8a9fa6d4"
+      },
+      "r0021_normalized_plan": {
+        "path": "experiments/chess-tier5-clean/workspace/rounds/r0021/generation/normalized-plan.json",
+        "sha256": "784269b05d7f612d22956adc0d5699be1642dbaa88d7d21499eedb5290867b33"
+      },
+      "r0021_round_summary": {
+        "path": "experiments/chess-tier5-clean/workspace/rounds/r0021/round-summary.json",
+        "sha256": "30f06be4666b26bf8cc075ec5aaebf30cbffe4f120fc1be3a5fd503ed07e9f16"
+      }
+    },
+    "structure_history_archive": {
+      "path": "experiments/chess-tier5-clean/workspace/archive/rounds.jsonl",
+      "sha256": "1f938a2f80c8bc79e54f81f50b2615db1cb0cedc82c08d6137d55da6247a571c"
+    },
+    "active_architect_policy": {
+      "path": "resources/policies/sol-max-independent-structural-architect-1800s.json",
+      "sha256": "3933d060fa75630ed23f4c64acec99c8f63cbd8b786fd03287c8948f3af2673f"
+    },
+    "active_runtime_policy": {
+      "path": "resources/policies/luna-high-fast-slot1-chessbench100-v2.json",
+      "sha256": "f16dad23df696e8b0cbf89b8c9465482e11342579279f28f6e64d073083b3b5c",
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "tier_contract": "fast_priority_required"
+    },
+    "fast_tier_contract_amendment": {
+      "path": "experiments/chess-tier5-clean/workspace/continuations/display-r41-r43-fast-tier-amendment.json",
+      "file_sha256": "9d0346fd29de2d962c1471a0fea13eeedd36599c72a9318142ae5d15fec33732",
+      "content_sha256": "238cb63eacd718c5b0bc5bc543a063c045783ee0adaab3b4e9dfbd8fc3fb7126",
+      "amendment_id": "chess-display-r41-r43-all-subagents-fast-20260809",
+      "effective_before_any_r41_runtime_call": true,
+      "missing_or_default_tier_action": "fail_closed"
+    },
+    "plan_validator": {
+      "path": "src/loop_evolution/plan.py",
+      "sha256": "57cd80dbce707bd686166eab4c6d66b88336d8bb9502b8d7997fd641fe849857"
+    },
+    "architect_and_executor_contract": {
+      "path": "src/loop_evolution/agents.py",
+      "sha256": "4806bbe750dc5e80f18305f62602233d8a6eb32c3cdae2f08b6230bba6cd5cc1"
+    },
+    "input_hash_stability_check": {
+      "checked_file_count": 18,
+      "all_current_inputs_match_recorded_hashes_at_fast_tier_refresh": true,
+      "superseded_input_records_intentionally_replaced": [
+        "experiment_config",
+        "active_runtime_policy",
+        "architect_and_executor_contract"
+      ],
+      "fast_tier_contract_amendment_added": true
+    }
+  },
+  "history_scan": {
+    "scope": "all pre-r0022 workspace normalized-plan.json and loop-structure.json metadata across official rounds, champions, manual staging history, aborted rounds, and savepoints, plus exact-text search across experiments/chess-tier5-clean and the authoritative archive ledger",
+    "metadata_files_scanned_before_staging": 43,
+    "nonempty_structure_id_records_before_staging": 42,
+    "distinct_structure_ids_before_staging": 25,
+    "prior_emergent_capability_families": [
+      "causal-dead-end strategy substitution",
+      "evidence-conditioned semantic arbitration",
+      "Counterexample-Triggered Semantic Reentry",
+      "Evidence-Deficit-Triggered Probe Synthesis",
+      "Consumer-Triggered Causal Handoff Dialogue"
+    ],
+    "proposed_family_nonempty": true,
+    "proposed_family_casefold_match_count_before_staging": 0,
+    "proposed_family_exact_text_file_count_before_staging": 0,
+    "proposed_family_unseen": true,
+    "proposed_structure_id_match_count_before_staging": 0,
+    "proposed_structure_id_exact_text_file_count_before_staging": 0,
+    "proposed_structure_id_unseen": true
+  },
+  "output": {
+    "normalized_plan_path": "experiments/chess-tier5-clean/workspace/manual-proposals/r0022/normalized-plan.json",
+    "normalized_plan_file_sha256": "8cec94bbbcaaf866d4fc513c1b51dfc8dd6f90a3239df9bb2a4b8e827af9a5c2",
+    "plan_hash": "8cec94bbbcaaf866d4fc513c1b51dfc8dd6f90a3239df9bb2a4b8e827af9a5c2",
+    "normalized_plan_payload_content_sha256": "6fd226c6b8372ea4d2970ad085c6cf5d9416d56652d96347cad59cf659f3a1f6",
+    "structure_id": "loop_8390669a7b4309e5",
+    "structure_name": "Ownership-Migrating Seam-Rehearsed Mechanism Graft",
+    "structural_family": "Isolated Executable Mechanism Grafting",
+    "emergent_capability_family": "Noncommutativity-Triggered State-Ownership Transfer"
+  },
+  "validation": {
+    "passed": true,
+    "mode_source": "workspace/state.json proposal_mode and STATE_CAPSULE.search_control.proposal_mode",
+    "expected_mode": "emergent_exploration",
+    "state_mode": "emergent_exploration",
+    "capsule_mode": "emergent_exploration",
+    "loader": "LoopPlan.from_payload(payload, expected_mode='emergent_exploration')",
+    "loader_result": "passed",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "search_context_result": "passed",
+    "validated_capsule_file_sha256": "4e17cecdb2971f0c9f993d04846fbda2bb6fac0a39c0a79dabc61d59f79de15e",
+    "normalized_payload_matches_file": true,
+    "declared_structure_id_matches_recomputed": true,
+    "recomputed_structure_id": "loop_8390669a7b4309e5",
+    "validated_structure_id": "loop_8390669a7b4309e5",
+    "validated_call_count": 3,
+    "validated_organization": "collaboration",
+    "validated_stage_ids": [
+      "single_seam_rehearsed_component",
+      "triggered_state_ownership_compilation",
+      "single_ownership_native_graft"
+    ],
+    "validated_call_ids": [
+      "seam_rehearsed_component_foundry",
+      "noncommutative_ownership_compiler",
+      "ownership_native_grafting_engine"
+    ],
+    "validated_output_types": [
+      "analysis",
+      "analysis",
+      "engine"
+    ],
+    "validated_final_call_id": "ownership_native_grafting_engine",
+    "single_engine_producing_call": true,
+    "exactly_one_final_engine_artifact": true,
+    "runtime_call_budget_respected": true,
+    "active_development_lineage_required": false,
+    "emergent_schema_fields_complete": true,
+    "capability_family_nonempty": true,
+    "capability_family_unique_in_current_capsule": true,
+    "capability_family_unique_in_full_structure_metadata_history": true,
+    "previously_seen_structure_id": false,
+    "exact_two_target_files": true,
+    "normalized_plan_validated_in_memory_before_write": true,
+    "normalized_plan_revalidated_from_staged_file": true,
+    "active_config_points_to_fast_v2_runtime_policy": true,
+    "fast_tier_amendment_content_hash_verified": true,
+    "runtime_policy_profile_verified": "gpt-5.6-luna/high with service_tier=fast, request_tier=priority, tier_contract=fast_priority_required"
+  },
+  "emergent_extension": {
+    "preserves_champion_family": "Exactly one strength-bearing non-engine component still becomes executable before any complete candidate engine, is rehearsed through one anchor-derived seam, and is grafted once into the supplied anchor by the only engine producer.",
+    "one_factor_difference": "Only the mutation-authority policy changes when the anchor and component are proven to be noncommuting writers of one minimal causal state cell.",
+    "trigger_based_state_transition": "SPLIT_AUTHORITY_CONFLICT becomes COMPONENT_AUTHORITY_BOUND after exactly one state cell moves to component-only write authority and paired order replay converges; commuting transitions remain STABLE.",
+    "new_observable_behavior": "The harness can make an executable ordering conflict transfer who owns a shared state transition before engine construction, an action absent from the champion and from R40's fact-clarification dialogue.",
+    "not_prior_emergent_family": "It neither substitutes a strategy, arbitrates two runtime semantics, reenters an earlier construction pass, synthesizes missing evidence, nor opens a consumer query; it changes write authority using already known transitions.",
+    "not_local_refinement": "The action changes the reachable ownership state and source of truth rather than enlarging the seam surrogate, adding fields, moving an audit, or appending a reviewer or gate."
+  },
+  "constraint_attestation": {
+    "provenance_service_tier_fast": true,
+    "provenance_request_tier_priority": true,
+    "latency_profile_max_fast": true,
+    "runtime_model_gpt_5_6_luna": true,
+    "runtime_reasoning_effort_high": true,
+    "runtime_service_tier_fast": true,
+    "runtime_request_tier_priority": true,
+    "runtime_tier_contract_fast_priority_required": true,
+    "r41_runtime_missing_or_default_tier_fails_closed": true,
+    "exactly_one_proposal": true,
+    "exactly_one_causal_structural_factor": true,
+    "genuinely_new_trigger_based_emergent_capability": true,
+    "second_emergent_family_distinct_from_r40": true,
+    "preserves_supported_macro_family": true,
+    "general_purpose_harness_lightly_chess_specialized": true,
+    "single_executable_strength_component": true,
+    "single_candidate_lineage": true,
+    "single_final_engine_call": true,
+    "exactly_one_final_engine_artifact": true,
+    "distinct_information_transformations_only": true,
+    "replicated_candidates_agents_components_or_samples": false,
+    "best_of_n_or_generate_many": false,
+    "reviewer_verifier_selector_or_gate_role": false,
+    "engine_hyperparameter_tuning_as_structure": false,
+    "model_or_reasoning_effort_changed": false,
+    "benchmark_evaluator_elo_or_promotion_changed": false,
+    "benchmark_hardcoding": false,
+    "frozen_three_pair_contract_preserved": true,
+    "all_inner_roles_use_active_luna_high_fast_policy": true,
+    "active_round_generation_modified": false,
+    "campaign_control_modified": false,
+    "campaign_state_modified": false,
+    "champion_artifacts_modified": false,
+    "benchmark_executed": false,
+    "writes_performed_only_with_apply_patch": true,
+    "writes_limited_to_manual_staging_files": true
+  },
+  "immutability_audit": {
+    "r0022_staging_directory_preexisted": false,
+    "normalized_plan_created_once_via_apply_patch": true,
+    "receipt_created_once_via_apply_patch": true,
+    "target_file_count_after_staging": 2,
+    "target_files_are_exactly_normalized_plan_and_receipt": true,
+    "only_paths_written_by_this_subagent_are_the_two_declared_targets": true,
+    "protected_live_campaign_state_champion_round_and_benchmark_paths_written_by_this_subagent": false
+  },
+  "write_scope": [
+    "experiments/chess-tier5-clean/workspace/manual-proposals/r0022/normalized-plan.json",
+    "experiments/chess-tier5-clean/workspace/manual-proposals/r0022/subagent-receipt.json"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "final_call_id": "exercise_unlabelled_authority",
+  "information_flow": "The first call receives all common evidence and forms one complete executable policy capsule without separating contract and behavioral authority. The second call consumes only that capsule, preserves its complete artifact and substantive obligations, and irreversibly erases the source identity attached to those obligations. The final call consumes only the resulting executable state, exercises indivisible authority over the single artifact without external evidence re-entry, and emits one policy.",
+  "name": "Provenance-Neutral Custody Gate",
+  "organization": "three-call sequential lineage with one mandatory provenance-erasing executable custody transition",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "compose_sourced_capsule",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Resolve the supplied evidence into one complete executable policy capsule carrying its substantive obligations and evidence provenance without establishing separate contract and behavioral authority classes.",
+          "output_type": "policy_capsule",
+          "role": "whole-artifact origin authority"
+        },
+        {
+          "id": "erase_source_identity",
+          "inputs": [
+            "compose_sourced_capsule"
+          ],
+          "objective": "Consume compose_sourced_capsule, preserve its single complete executable artifact and substantive obligations, irreversibly remove which input supplied each obligation, and emit one provenance-neutral executable policy state.",
+          "output_type": "executable_policy_state",
+          "role": "provenance-erasing custody gate"
+        },
+        {
+          "id": "exercise_unlabelled_authority",
+          "inputs": [
+            "erase_source_identity"
+          ],
+          "objective": "Consume erase_source_identity without common external evidence re-entry, treat the visible obligations as one indivisible authority surface, reconcile the single complete artifact for joint coherence, and emit one policy.",
+          "output_type": "policy",
+          "role": "provenance-neutral terminal authority"
+        }
+      ],
+      "id": "provenance_neutral_custody",
+      "mode": "sequential"
+    }
+  ]
+}

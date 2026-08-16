@@ -1,0 +1,96 @@
+Role: obligation-preserving performance transducer
+
+Execute exactly one role in a fixed historical topology translated to Cache
+Policy vocabulary. This is representative 2 for topology R30.
+It is an independent run: no other representative, candidate, evaluation, or
+score is visible. Do not use tools or inspect the filesystem; use only the inline
+visible inputs below. Do not search, sample variants, or ask another agent.
+
+Role id: strength_transducer_policy
+Role: obligation-preserving performance transducer
+Objective: Consume the sole canonical policy and emit exactly one complete production-ready policy artifact. Diagnose one highest-leverage decision weakness using the supplied task, anchor contract, task constraints, and bounded evidence; realize one coherent cross-component improvement through the canonical seams; and run bounded eviction-validity, interface, state-integrity, and request-pattern sanity checks. Repair the same unfinished transformation in place if a check fails. Do not generate alternatives, compare candidate variants, reproduce the anchor workflow, invoke an external verifier, attribute exact source deltas, or perform preserve-versus-rollback selection.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and must define class Policy with __init__(capacity_bytes) and
+access(key, size, now). Do not return a diff, multiple variants, benchmark data,
+or evaluator-specific constants. You may reason internally, but return exactly
+one artifact.
+
+Visible inputs, exactly as fixed by the topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "semantic_normalizer_policy": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.key_index = self.cache\n        self.used_bytes = 0\n\n        self.repeated_access = {}\n        self.request_count = 0\n        self.hit_count = 0\n        self.miss_count = 0\n        self.requested_bytes = 0\n        self.hit_bytes = 0\n        self.last_key = None\n        self.last_now = None\n        self.last_eviction_decision = ()\n\n    def _transition(self, operation, key, size=None):\n        if operation == \"touch\":\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return stored_size\n        if operation == \"evict\":\n            stored_size = self.cache.pop(key)\n            self.used_bytes -= stored_size\n            return stored_size\n        if operation == \"insert\":\n            self.cache[key] = size\n            self.used_bytes += size\n            return size\n        raise ValueError(\"unknown cache transition\")\n\n    def _cache_state_is_valid(self):\n        return self.used_bytes == sum(self.cache.values())\n\n    def _reverse_cache(self, items, used_bytes):\n        self.cache.clear()\n        self.cache.update(items)\n        self.used_bytes = used_bytes\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.request_count += 1\n        self.requested_bytes += size\n        self.last_key = key\n        self.last_now = now\n        self.last_eviction_decision = ()\n        self.repeated_access[key] = self.repeated_access.get(key, 0) + 1\n\n        if key in self.key_index:\n            stored_size = self._transition(\"touch\", key)\n            self.hit_count += 1\n            self.hit_bytes += stored_size\n            return []\n\n        self.miss_count += 1\n\n        if size > self.capacity_bytes:\n            return []\n\n        before_items = tuple(self.cache.items())\n        before_used = self.used_bytes\n        evicted = []\n\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key = next(iter(self.key_index))\n            self._transition(\"evict\", old_key)\n            evicted.append(old_key)\n\n        self._transition(\"insert\", key, size)\n\n        if not self._cache_state_is_valid():\n            self._reverse_cache(before_items, before_used)\n            self.last_eviction_decision = ()\n            return []\n\n        self.last_eviction_decision = tuple(evicted)\n        return evicted\n",
+    "sha256": "e24071cfe7ef5fcf09f8dbba285c014835d5d686b2fb05965fe874afb3ef1a29"
+  },
+  "anchor_contract": {
+    "artifact_kind": "fresh mechanical byte-capacity LRU anchor",
+    "artifact_sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality and online-only access visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_or_trace_hardcoding": true,
+    "no_scores_available": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "A representation-only canonicalization precedes the sole cross-component performance transformation in one nonbranching lineage.",
+    "expected_effect": "The final transformation should remain coherent across components while preserving interface and state obligations.",
+    "falsifier": "Falsified unless the emitted policy artifact is all-valid and satisfies the median promotion contract.",
+    "observed_bottleneck": "Representational entanglement can make one performance-bearing transformation difficult to isolate and validate."
+  },
+  "loop_structure": {
+    "final_call_id": "strength_transducer_policy",
+    "information_flow": "One nonbranching executable lineage: anchor_policy to semantic_normalizer_policy to strength_transducer_policy. The first call changes representation only; the second performs the sole performance-bearing transformation and emits the final policy artifact.",
+    "name": "Single-Lineage Semantic Transduction",
+    "organization": "collaboration",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "semantic_normalizer_policy",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Transform exactly one supplied anchor policy into exactly one complete runnable canonical policy artifact. Expose interface handling, valid eviction-key production, cache-state update and reversal, key indexing, repeated-access state, objective-accounting state, and eviction-decision state through explicit single-source transitions. Use bounded in-call executable equivalence and invariant probes, repairing only this transduction until consistent. Preserve the anchor's replacement behavior and objective intent; do not introduce performance changes, alternative implementations, candidate variants, or selection.",
+            "output_type": "policy",
+            "role": "semantic-normal-form transducer"
+          }
+        ],
+        "id": "semantic_normalization",
+        "mode": "sequential"
+      },
+      {
+        "calls": [
+          {
+            "id": "strength_transducer_policy",
+            "inputs": [
+              "task",
+              "semantic_normalizer_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the sole canonical policy and emit exactly one complete production-ready policy artifact. Diagnose one highest-leverage decision weakness using the supplied task, anchor contract, task constraints, and bounded evidence; realize one coherent cross-component improvement through the canonical seams; and run bounded eviction-validity, interface, state-integrity, and request-pattern sanity checks. Repair the same unfinished transformation in place if a check fails. Do not generate alternatives, compare candidate variants, reproduce the anchor workflow, invoke an external verifier, attribute exact source deltas, or perform preserve-versus-rollback selection.",
+            "output_type": "policy",
+            "role": "obligation-preserving performance transducer"
+          }
+        ],
+        "id": "forward_strength_transduction",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

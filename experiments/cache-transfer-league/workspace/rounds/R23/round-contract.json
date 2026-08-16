@@ -1,0 +1,95 @@
+{
+  "architect_evidence": {
+    "best_of_n": false,
+    "hardcoding": false,
+    "official_numeric_scores": false,
+    "source": "bounded qualitative notebook only",
+    "trace_contents": false
+  },
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "replays": 2,
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "cache_r101_opened": false,
+  "close_confirmation": {
+    "absolute_threshold": 0.25,
+    "action": "frozen replay3 for all six sealed arms",
+    "pass": "each replay3 normalized result equals both corresponding replay1 and replay2 results",
+    "trigger": "absolute median gap <= 0.25 or any valid non-tied pair gap <= 0.25"
+  },
+  "current_champion": {
+    "policy_path": "workspace\\champion-r22\\policy.py",
+    "policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "selection_receipt_path": "workspace\\champion-r22\\selection-receipt.json",
+    "selection_receipt_sha256": "3a81b152f226b490d8a13af2e3c962a7f8437db0fb7fd5768aba97024cac2ec5",
+    "structure_path": "workspace\\champion-r22\\structure.json",
+    "structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+    "topology_fingerprint": "5ba36af5c6cac26efd3050e9284c760ec7c35dda00673d521acf69fac95a5c31"
+  },
+  "display_round": 23,
+  "duel": {
+    "arms": [
+      "incumbent",
+      "candidate"
+    ],
+    "independent_arm_execution": true,
+    "pair_count": 3,
+    "routing": {
+      "pair_1": {
+        "candidate_home_slot": 2,
+        "incumbent_home_slot": 0
+      },
+      "pair_2": {
+        "candidate_home_slot": 0,
+        "incumbent_home_slot": 2
+      },
+      "pair_3": {
+        "candidate_home_slot": 2,
+        "incumbent_home_slot": 0
+      }
+    },
+    "same_current_champion_anchor_and_hypothesis": true,
+    "seal_before_score": "all six policies and all model receipts"
+  },
+  "local_refinement_attempt": null,
+  "models": {
+    "all_inner_roles": {
+      "direct_model_substitution": false,
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "request_tier": "priority",
+      "service_tier": "fast"
+    },
+    "structure_architect_per_round": {
+      "completed_calls": 1,
+      "mass_sampling_or_hardcoding": false,
+      "model": "gpt-5.6-sol",
+      "official_numeric_scores_or_traces": false,
+      "policy_code": false,
+      "reasoning_effort": "max",
+      "request_tier": "priority",
+      "service_tier": "fast"
+    }
+  },
+  "promotion": {
+    "all_six_valid_and_replay2_deterministic": true,
+    "candidate_median": "strictly greater than incumbent median",
+    "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+    "failure_action": "retain current champion policy and structure",
+    "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+  },
+  "proposal_mode": "counter_hypothesis",
+  "schema_version": 1,
+  "search_control_before": {
+    "derived_from": "workspace\\rounds\\R22\\state.json",
+    "emergent_failure_count": 2,
+    "local_refinement_attempt": null,
+    "local_refinement_count": 2,
+    "proposal_mode": "counter_hypothesis"
+  },
+  "stop_after_display_round": 100
+}

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.used = 0\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.recent_target = self.capacity // 2\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_bytes = 0\n        self.serial = 0\n\n    def _remove_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_frequent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _add_ghost(self, key, size, frequent):\n        self._remove_ghost(key)\n        self.serial += 1\n        value = (size, self.serial)\n        target = self.ghost_frequent if frequent else self.ghost_recent\n        target[key] = value\n        self.ghost_bytes += size\n        while self.ghost_bytes > self.ghost_limit:\n            oldest_kind = None\n            oldest_serial = None\n            for kind, ghosts in ((0, self.ghost_recent), (1, self.ghost_frequent)):\n                if ghosts:\n                    serial = next(iter(ghosts.values()))[1]\n                    if oldest_serial is None or serial < oldest_serial:\n                        oldest_kind = kind\n                        oldest_serial = serial\n            ghosts = self.ghost_frequent if oldest_kind else self.ghost_recent\n            _, value = ghosts.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _remove_resident(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.recent_bytes -= value\n            self.used -= value\n            return value, False\n        value = self.frequent.pop(key, None)\n        if value is not None:\n            self.frequent_bytes -= value\n            self.used -= value\n            return value, True\n        return 0, False\n\n    def _evict_one(self, prefer_recent):\n        if prefer_recent and self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._add_ghost(key, size, False)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.used -= size\n            self._add_ghost(key, size, True)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._add_ghost(key, size, False)\n            return key\n        return None\n\n    def _make_room(self, incoming, ghost_kind):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            prefer_recent = self.recent_bytes > self.recent_target\n            if ghost_kind == 0 and self.recent_bytes >= self.recent_target:\n                prefer_recent = True\n            key = self._evict_one(prefer_recent)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def _adapt(self, ghost_kind):\n        if not self.capacity:\n            return\n        r = sum(v[0] for v in self.ghost_recent.values())\n        f = sum(v[0] for v in self.ghost_frequent.values())\n        if ghost_kind == 0:\n            delta = self.capacity if not r else max(1, min(self.capacity, f // r or 1))\n            self.recent_target = min(self.capacity, self.recent_target + delta)\n        else:\n            delta = self.capacity if not f else max(1, min(self.capacity, r // f or 1))\n            self.recent_target = max(0, self.recent_target - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.recent:\n            old = self.recent.pop(key)\n            self.recent_bytes -= old\n            self.used -= old\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 1)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.used += size\n            self._remove_ghost(key)\n            return evicted\n\n        if key in self.frequent:\n            old = self.frequent.pop(key)\n            self.frequent_bytes -= old\n            self.used -= old\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 1)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.used += size\n            return evicted\n\n        ghost_kind = 0\n        if key in self.ghost_recent:\n            ghost_kind = 0\n        elif key in self.ghost_frequent:\n            ghost_kind = 1\n\n        if size <= 0 or size > self.capacity:\n            return []\n\n        if ghost_kind:\n            self._adapt(ghost_kind)\n            self._remove_ghost(key)\n            evicted = self._make_room(size, ghost_kind)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n        else:\n            evicted = self._make_room(size, ghost_kind)\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R80-pair02-candidate-call02-exercise_unitary_policy_authority",
+    "duration_seconds": 33.105,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:58:20Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "9bfa2f578f7f516e3cfb9ac6f7acf6d1fc1d6a071b574b30ec0488599534dd19",
+    "raw_events_path": "workspace\\model-calls\\R80-pair02-candidate-call02-exercise_unitary_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "121eba853aea486e84d14b1dd0b8405b91bb2aa2b892aff2635e627bd8050334",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "a24a5ee4b4899049318c85b2112910b8757f5a1a1bd8c99e0ee43959683575ef",
+    "returncode": 0,
+    "role": "R80 candidate topology role unitary policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:57:47Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14896,
+      "output_tokens": 2450,
+      "reasoning_output_tokens": 1034
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

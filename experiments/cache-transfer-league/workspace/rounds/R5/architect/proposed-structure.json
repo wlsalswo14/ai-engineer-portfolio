@@ -1,0 +1,41 @@
+{
+  "final_call_id": "independent_policy_producer",
+  "information_flow": "The gateway receives all common inputs and emits one implementation-agnostic obligation-and-exclusion constitution. The final producer consumes that constitution plus direct task and contract context, but receives neither anchor_policy nor loop_structure, and emits one policy.",
+  "name": "Anchor-Quarantined Contract Synthesis",
+  "organization": "two-call sequential lineage with asymmetric implementation visibility",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "anchor_quarantine_gateway",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Derive one self-contained constitution containing interface obligations, admissibility boundaries, rejected inherited assumptions, and required behavioral evidence while excluding anchor implementation details and repair lineage.",
+          "output_type": "analysis",
+          "role": "inheritance firewall and obligation distiller"
+        },
+        {
+          "id": "independent_policy_producer",
+          "inputs": [
+            "anchor_quarantine_gateway",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis"
+          ],
+          "objective": "Consume the preceding constitution and visible contract context, then emit exactly one complete policy whose observable actions provide evidence for every retained obligation and behavioral commitment without reconstructing the quarantined inherited mechanism.",
+          "output_type": "policy",
+          "role": "contract-grounded policy producer"
+        }
+      ],
+      "id": "quarantine_and_synthesize",
+      "mode": "sequential"
+    }
+  ]
+}

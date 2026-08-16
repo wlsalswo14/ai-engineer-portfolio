@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self._items = {}\n        self._used = 0\n        self._tick = 0\n        self._credit_cap = 32\n        self._scale = 1000000\n\n    def _score(self, record):\n        size, credit, last, _ = record\n        age = max(0, self._tick - last)\n        return credit * self._scale // ((age + 1) * max(1, size))\n\n    def _victim(self):\n        selected_key = None\n        selected_rank = None\n        for candidate, record in self._items.items():\n            rank = (self._score(record), record[2], record[3], candidate)\n            if selected_rank is None or rank < selected_rank:\n                selected_key = candidate\n                selected_rank = rank\n        return selected_key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._tick += 1\n\n        record = self._items.get(key)\n        if record is not None:\n            stored_size, credit, _, born = record\n            self._items[key] = (\n                stored_size,\n                min(self._credit_cap, credit + 1),\n                self._tick,\n                born,\n            )\n            return []\n\n        item_size = max(0, int(size))\n        if self.capacity_bytes == 0 or item_size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self._used + item_size > self.capacity_bytes and self._items:\n            victim = self._victim()\n            victim_record = self._items.pop(victim)\n            self._used -= victim_record[0]\n            evicted.append(victim)\n\n        self._items[key] = (item_size, 1, self._tick, self._tick)\n        self._used += item_size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R9-pair01-candidate-call02-covenant_bound_policy_constructor",
+    "duration_seconds": 55.62,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:38:10Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "9d1f4f403742ea64d041c662d0b832356e06f2dcfdd9729914980d5847e5636a",
+    "raw_events_path": "workspace\\model-calls\\R9-pair01-candidate-call02-covenant_bound_policy_constructor\\raw-events.jsonl",
+    "raw_events_sha256": "61b7ccf8233942f0c64cef0fc037503dbfee08b527cc774fd84e9f9c9764f30c",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "b8971b2b5db41ecf7cac0eedead07fe08a6bc48f0bae9f5e0465013513c99d4d",
+    "returncode": 0,
+    "role": "R9 candidate topology role exclusive artifact-construction authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:37:14Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14464,
+      "output_tokens": 3839,
+      "reasoning_output_tokens": 3354
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

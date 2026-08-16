@@ -1,0 +1,89 @@
+Role: R23 candidate topology role contract-level evidence projector
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R23,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: anchor_erasure_boundary
+Role: contract-level evidence projector
+Objective: Project the supplied evidence into one contract-level causal tension map while preserving public interface, authoritative-state, capacity, determinism, and standard-library obligations. Exclude anchor implementation details, repair sequences, reversible deltas, policy fragments, cases, traces, scores, and alternative candidates.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output Python, policy source, a patch, a diff, alternative policies, or
+a ranked selection. Analyze or transform evidence only for the one lineage.
+
+Visible inputs fixed by this topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n\n    def _demote_protected(self):\n        target = self.capacity_bytes // 2\n        while self.protected and sum(self.protected.values()) > target:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._demote_protected()\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R22 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Insert one lossy anchor-implementation erasure edge before the sole policy-producing call so that only a contract-level behavioral tension map crosses into construction.",
+    "expected_effect": "The emitted policy should express a jointly coherent response across scan resistance and phase shifts without preserving anchor-local choices merely because they possess reversible edit evidence.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family binds causal evidence to anchor-relative reversible edits, so cross-objective behavior can remain path-dependent even after terminal compression."
+  },
+  "loop_structure": {
+    "final_call_id": "anchor_blind_policy_originator",
+    "information_flow": "The boundary call receives all common inputs and emits one implementation-erased map containing public interface obligations, validity obligations, and cross-objective behavioral tensions. The final call consumes only that immediately preceding map, preventing anchor implementation, reversible edit history, and terminal compression evidence from entering policy construction.",
+    "name": "Anchor-Erasure Clean-Room Relay",
+    "organization": "Two-call sequential relay separated by one lossy visibility edge; the first call is an abstraction boundary and the second is the sole policy producer.",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "anchor_erasure_boundary",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Project the supplied evidence into one contract-level causal tension map while preserving public interface, authoritative-state, capacity, determinism, and standard-library obligations. Exclude anchor implementation details, repair sequences, reversible deltas, policy fragments, cases, traces, scores, and alternative candidates.",
+            "output_type": "analysis",
+            "role": "contract-level evidence projector"
+          },
+          {
+            "id": "anchor_blind_policy_originator",
+            "inputs": [
+              "anchor_erasure_boundary"
+            ],
+            "objective": "Consume the immediately preceding implementation-erased map as the sole visible evidence and construct one complete, internally coherent, contract-compliant policy artifact addressing its behavioral tensions together. Do not reconstruct or edit the anchor, inherit reversible repair or compression, create alternatives, or perform review-based selection.",
+            "output_type": "policy",
+            "role": "clean-room whole-policy originator"
+          }
+        ],
+        "id": "erase_then_originate",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Nonbinding analysis only: inherited-policy evidence is source-distinguished from governing inputs, and no policy artifact is created or authorized.",
+      "exact_actions": [
+        "Classify anchor_policy as mediated inherited evidence.",
+        "Surface conflicts and unresolved validation limits without adjudicating them into a policy.",
+        "Pass forward only source-distinguished findings and obligations for terminal adjudication.",
+        "Emit no policy artifact, patch, alternative, ranking, or score claim."
+      ],
+      "obligations": [
+        {
+          "requirement": "Preserve the distinction between inherited anchor evidence and directly visible governing inputs."
+        },
+        {
+          "requirement": "Record unresolved tension between the hypothesis's claimed mediation effect and the absence of score evidence."
+        },
+        {
+          "requirement": "Do not infer majority, strict-median, or falsifier satisfaction without the unavailable matched results."
+        },
+        {
+          "requirement": "Keep this output nonbinding and analysis-only; do not specify, authorize, or emit policy source."
+        }
+      ],
+      "witnesses": [
+        {
+          "finding": "The anchor is an inherited implementation reference, not an evaluator score or oracle; its legality must remain subordinate to the task, contract, and constraints.",
+          "source": "anchor_policy"
+        },
+        {
+          "finding": "Interface legality, capacity safety, and online-only visibility are mandatory comparison conditions; score information is withheld.",
+          "source": "anchor_contract"
+        },
+        {
+          "finding": "Standard-library-only execution, current-cache unique integer eviction keys, capacity safety, and absence of trace or oracle adaptation remain binding.",
+          "source": "task_constraints"
+        },
+        {
+          "finding": "The proposed topology change removes only the direct anchor-to-terminal edge; its expected mediation effect cannot be score-validated because no scores are available.",
+          "source": "candidate_hypothesis"
+        },
+        {
+          "finding": "The mapper must emit source-preserving analysis, while the terminal call alone retains policy authority and receives inherited-policy evidence only through this analysis.",
+          "source": "loop_structure"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R55-pair02-candidate-call01-map_counter_assumptions",
+    "duration_seconds": 14.101,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:56:09Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "a1d33916c11960b796228f4e21e283e8490bfe1a369e4784c90f2133c01b84e7",
+    "raw_events_path": "workspace\\model-calls\\R55-pair02-candidate-call01-map_counter_assumptions\\raw-events.jsonl",
+    "raw_events_sha256": "b079fdc76417d6e713710941390cafa219e0c029417f7e5515139b8782ba830d",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "98f14acbb81452ebb46435543a9824aa66d33559ac78be55897998d9a94fe275",
+    "returncode": 0,
+    "role": "R55 candidate topology role defeasible counter-assumption mapper",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:55:55Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14015,
+      "output_tokens": 885,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

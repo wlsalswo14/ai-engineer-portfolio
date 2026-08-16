@@ -1,0 +1,18 @@
+{
+  "analysis_packet": {
+    "certificate": "No failure found under well-formed online requests with positive, stable object sizes. The draft hash exactly matches the anchor hash, so no realized differential change exists.",
+    "exact_actions": [
+      "Verify draft sha256 equals f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348.",
+      "With capacity 10, access (1,4,0), (2,4,1), (2,4,2), (3,11,3); expected evictions are [], [1], [], [].",
+      "With capacity 8, access (1,4,0), (2,4,1), (1,4,2), (3,4,3); expected evictions are [], [], [], [2]."
+    ],
+    "obligations": [
+      "Preserve the constructor and access signatures and return list[int].",
+      "Return only keys currently cached by the evaluator; maintain synchronized online metadata.",
+      "Never exceed capacity_bytes for valid positive-size requests.",
+      "Use only request-local online information and permitted standard-library behavior."
+    ],
+    "witnesses": []
+  },
+  "artifact_kind": "analysis_only"
+}

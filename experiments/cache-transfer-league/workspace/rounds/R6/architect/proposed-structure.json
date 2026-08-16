@@ -1,0 +1,43 @@
+{
+  "final_call_id": "close_and_emit_artifact",
+  "information_flow": "The first call sees all common inputs and originates one complete policy-and-obligation capsule. The second sees that immediately preceding capsule plus all common inputs, including the anchor policy, while treating only the capsule as the mutable lineage; it resolves obligation contradictions at whole-artifact level and emits one policy. There are no side paths or unconsumed outputs.",
+  "name": "Forward Whole-Artifact Obligation Relay",
+  "organization": "two-call sequential artifact custody",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_obligation_capsule",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Derive role evidence from the supplied task and contracts, then originate one complete obligation-bearing policy artifact. Keep the anchor visible as comparative evidence but do not use it as a repair substrate, rollback source, or ordered edit lineage.",
+          "output_type": "policy_capsule",
+          "role": "contract-origin whole-artifact custodian"
+        },
+        {
+          "id": "close_and_emit_artifact",
+          "inputs": [
+            "originate_obligation_capsule",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding complete artifact and its obligation evidence as one indivisible lineage, reconcile explicit contradictions against the visible task and contract evidence through whole-artifact custody, and emit exactly one complete contract-compliant policy.",
+          "output_type": "policy",
+          "role": "forward obligation-closure custodian"
+        }
+      ],
+      "id": "forward_artifact_custody",
+      "mode": "sequential"
+    }
+  ]
+}

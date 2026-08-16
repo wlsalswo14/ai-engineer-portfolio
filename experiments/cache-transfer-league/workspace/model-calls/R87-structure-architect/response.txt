@@ -1,0 +1,93 @@
+{
+  "architect_scope": "one-R87-structural-factor-only",
+  "proposal_mode": "emergent_exploration",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The champion always treats reentered anchor evidence as constructive precedent, so an anchor-contingent commitment can retain causal authority even when its supporting obligation is nontransferable.",
+    "causal_change": "Make the anchor reentry edge transition anchor_policy from constructive precedent to counterexample-only evidence when anchor_contract establishes that an inherited commitment depends solely on an anchor-contingent obligation.",
+    "expected_effect": "The continuously executable lineage can shed nontransferable anchor influence before later evidence windows act while preserving its existing artifact ancestry.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "anchor-contingency-triggered precedent-to-counterexample polarity transition",
+    "before": "The anchor reentry edge always grants anchor_policy constructive reconciliation authority over the inherited executable capsule.",
+    "after": "The anchor reentry edge conditionally reverses anchor_policy into counterexample-only evidence when anchor_contract identifies an anchor-contingent obligation as the sole support for a carried commitment; the edge still emits exactly one executable state on the same lineage.",
+    "why_structural": "The mutation changes the causal authority and state-transition semantics of a concrete edge without adding a call, side artifact, or alternate lineage."
+  },
+  "mode_certificate": {
+    "capability_family": "causal evidence-polarity control",
+    "champion_limitation": "The champion can reconcile anchor evidence but cannot reverse its constructive authority when that evidence is causally nontransferable.",
+    "trigger": "anchor_contract marks an obligation as anchor-contingent and comparison with anchor_policy shows that obligation is the sole visible support for a commitment carried by the inherited capsule",
+    "state_transition": "anchor_policy changes from constructive-precedent authority to counterexample-only authority while the inherited executable artifact remains the lineage root",
+    "observable_effect": "Downstream calls receive one executable state in which no commitment is retained solely because of the triggered anchor-contingent support.",
+    "not_local_refinement": "This introduces conditional evidence-polarity control on an existing edge rather than adding a reviewer, certificate, gate, field, role split, rename, or causal re-root."
+  },
+  "candidate_structure": {
+    "name": "Anchor Polarity Transition Relay",
+    "organization": "four-call sequential executable lineage with one evidence-triggered authority-state transition on the anchor reentry edge",
+    "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The second consumes that capsule with only anchor_policy and anchor_contract visible, conditionally changes the causal polarity of anchor_policy, and emits exactly one complete executable state. The third consumes only that state with task_constraints and loop_structure, and the final call consumes the resulting closure with task and candidate_hypothesis. Raw trigger evidence and side reports do not propagate beyond the transition.",
+    "stages": [
+      {
+        "id": "single_polarity_control_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "originate_executable_capsule",
+            "role": "integrated executable originator",
+            "objective": "Reconcile the visible evidence and obligations into one complete executable policy artifact.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy_capsule"
+          },
+          {
+            "id": "anchor_polarity_transition",
+            "role": "anchor evidence-polarity controller",
+            "objective": "Consume originate_executable_capsule and compare its carried commitments with reentered anchor_policy under anchor_contract. When an anchor-contingent obligation is the sole visible support for a carried commitment, reverse anchor_policy from constructive precedent to counterexample-only evidence and revise the same artifact accordingly. Regardless of transition, emit exactly one complete executable policy state.",
+            "inputs": [
+              "originate_executable_capsule",
+              "anchor_policy",
+              "anchor_contract"
+            ],
+            "output_type": "executable_policy_state"
+          },
+          {
+            "id": "constraint_structure_transition",
+            "role": "constraint-structure executable custodian",
+            "objective": "Consume anchor_polarity_transition, assess the single inherited executable state against only reentered task_constraints and loop_structure, reconcile visible obligations within its established evidence authority, and emit one complete executable policy closure.",
+            "inputs": [
+              "anchor_polarity_transition",
+              "task_constraints",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_closure"
+          },
+          {
+            "id": "task_hypothesis_emit",
+            "role": "task-hypothesis policy authority",
+            "objective": "Consume constraint_structure_transition, assess the inherited complete executable closure against only reentered task and candidate_hypothesis, reconcile remaining visible obligations in that same artifact, and emit one complete policy.",
+            "inputs": [
+              "constraint_structure_transition",
+              "task",
+              "candidate_hypothesis"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "task_hypothesis_emit"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

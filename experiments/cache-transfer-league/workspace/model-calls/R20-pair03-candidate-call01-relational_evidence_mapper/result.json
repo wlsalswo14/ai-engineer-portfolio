@@ -1,0 +1,63 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "The anchor couples two recency tiers with byte-bounded admission: probationary recency supplies scan resistance and first eviction priority, while protected recency preserves repeated hits and its half-capacity demotion boundary provides phase adaptation. These benefits trade off against delayed admission of newly recurring objects, possible churn under phase shifts, and byte/object hit-rate tension when object sizes differ. Capacity safety depends on exact alignment between internal byte accounting and authoritative cached membership; interface legality depends on returning only unique currently cached integer keys. Online-only visibility prevents oracle or trace-based optimization, and withheld scores leave validity obligations observable but objective superiority unverified. The history-free atomic hypothesis may improve whole-artifact coherence by avoiding anchor-relative path dependence, but its falsifier requires all-valid matched-majority and strict-median evidence, which is unavailable within this call.",
+      "exact_actions": [],
+      "obligations": [
+        "Preserve the declared Policy constructor and access interface.",
+        "Maintain authoritative-state compatibility so every returned key is currently cached, unique, and an integer.",
+        "Never cause cached usage to exceed capacity_bytes, including variable-size objects and multi-eviction requests.",
+        "Use only online information available through the current access and retained legal policy state.",
+        "Remain standard-library-only and avoid benchmark, trace, oracle, networking, subprocess, and external-library dependence.",
+        "Keep cross-objective behavior coherent across object hit rate, byte hit rate, scan resistance, phase-shift adaptation, and offline-regret considerations.",
+        "Evaluate validity on the complete candidate artifact rather than relying on self-justifying edit history.",
+        "Treat comparative superiority as unestablished because scores and matched-majority evidence are withheld."
+      ],
+      "witnesses": [
+        "The anchor uses probation and protected ordered states, promotes probation hits, refreshes protected hits, and demotes protected entries when protected bytes exceed half the capacity.",
+        "Insertion evicts probationary entries before protected entries, linking scan resistance and repeated-hit preservation to a direct recency tension.",
+        "Admission rejects objects larger than capacity or zero-capacity insertions, while byte accounting governs multi-object eviction.",
+        "The candidate hypothesis identifies path dependence in reversible local repair succession and proposes evaluating one complete artifact rather than an edit history.",
+        "No score, trace, oracle decision, benchmark path, or matched evaluation result is visible."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R20-pair03-candidate-call01-relational_evidence_mapper",
+    "duration_seconds": 14.506,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:42:11Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "bea082e814e7f3cb51885843889f6340ff32a74913da1ba48c7176d8cc2c5344",
+    "raw_events_path": "workspace\\model-calls\\R20-pair03-candidate-call01-relational_evidence_mapper\\raw-events.jsonl",
+    "raw_events_sha256": "b3c7704cec84fdda1033d65e435355c5221b331d37de303ad4a17e48136df786",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "541b9c3286c0aa1c2d47995e3b7c6eadbc8530c122de15362f1246ff0621dd8f",
+    "returncode": 0,
+    "role": "R20 candidate topology role nonconstructive cross-objective evidence mapper",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:41:57Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13995,
+      "output_tokens": 911,
+      "reasoning_output_tokens": 449
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

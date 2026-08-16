@@ -1,0 +1,98 @@
+Role: R1 candidate topology role evidence-exposing provisional policy producer
+
+Execute exactly one Luna-high inner-loop role in Cache display R1 matched pair
+1, candidate arm. This pipeline is independent: no other arm, pair, artifact,
+evaluation, benchmark result, or official score is visible. Use only the inline
+inputs below. Do not use tools, inspect files, search, sample, branch, retry a
+policy design, or ask another agent.
+
+Both arms in this pair are bound to the same immutable R0 champion anchor, task,
+task constraints, and score-blind improvement hypothesis. Execute the role and
+visibility graph exactly as supplied; do not redesign the topology.
+
+Role id: provisional_policy_producer
+Role: evidence-exposing provisional policy producer
+Objective: Produce exactly one provisional policy while keeping its causal claim and supporting audit evidence visible to the successor; do not own terminal acceptance or finalization.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, parameter sweep, or ranked selection.
+
+Visible inputs fixed by this arm's topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n\n    def _demote_protected(self):\n        target = self.capacity_bytes // 2\n        while self.protected and sum(self.protected.values()) > target:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._demote_protected()\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R0 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "structure_source": "fixed R20 topology champion",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Split the terminal producer into a provisional policy producer followed by an independent terminal falsifier and finalizer.",
+    "expected_effect": "The visible sequential handoff should prevent authorship from implicitly serving as acceptance, so final emission reflects an independent review of causal support and contract preservation.",
+    "falsifier": "Falsified unless every artifact in the precommitted matched R0-versus-R1 evaluation is contract-valid and R1 achieves both a strict majority of matched-pair wins and a strictly better median on the precommitted aggregate objective; any invalidity, non-majority, or non-improving median falsifies the claim.",
+    "observed_bottleneck": "The one-call graph makes provisional authorship and post-build causal adjudication inseparable, leaving no independently visible acceptance boundary."
+  },
+  "loop_structure": {
+    "final_call_id": "independent_terminal_finalizer",
+    "information_flow": "The first call receives the incumbent six external inputs in their original order and emits one provisional policy. The final call consumes that output together with permitted contract context, independently adjudicates its causal and contractual support, and emits one final policy.",
+    "name": "Provisional Policy Handoff to Independent Terminal Falsifier",
+    "organization": "two-role serial lineage",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "provisional_policy_producer",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Produce exactly one provisional policy while keeping its causal claim and supporting audit evidence visible to the successor; do not own terminal acceptance or finalization.",
+            "output_type": "policy",
+            "role": "evidence-exposing provisional policy producer"
+          },
+          {
+            "id": "independent_terminal_finalizer",
+            "inputs": [
+              "provisional_policy_producer",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Independently challenge the immediately preceding provisional policy against the supplied hypothesis, contract, constraints, and evidence flow, then emit exactly one contract-compliant final policy without alternatives, sampling, or repair retries.",
+            "output_type": "policy",
+            "role": "independent causal falsifier and terminal finalizer"
+          }
+        ],
+        "id": "produce_then_falsify",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

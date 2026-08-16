@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.frequency = OrderedDict()\n        self.frequency_limit = 8192\n        self.recent_bytes = 0\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _record(self, key):\n        count = self.frequency.pop(key, 0) + 1\n        self.frequency[key] = min(count, 255)\n        while len(self.frequency) > self.frequency_limit:\n            self.frequency.popitem(last=False)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self.recent[old_key] = old_size\n            self.recent_bytes += old_size\n\n    def _evict_one(self):\n        recent_target = self.capacity_bytes - self.protected_target\n        if self.recent and (self.recent_bytes > recent_target or not self.protected):\n            old_key, old_size = self.recent.popitem(last=False)\n            self.recent_bytes -= old_size\n            self._remember(self.ghost_recent, old_key)\n        elif self.protected:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self._remember(self.ghost_protected, old_key)\n        else:\n            return None\n        self.used_bytes -= old_size\n        return old_key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._record(key)\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        in_recent_ghost = key in self.ghost_recent\n        in_protected_ghost = key in self.ghost_protected\n        if in_recent_ghost:\n            delta = max(1, self.capacity_bytes // 16, min(size, self.capacity_bytes))\n            self.protected_target = min(self.capacity_bytes, self.protected_target + delta)\n        elif in_protected_ghost:\n            delta = max(1, self.capacity_bytes // 16, min(size, self.capacity_bytes))\n            self.protected_target = max(0, self.protected_target - delta)\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                return evicted\n            evicted.append(old_key)\n\n        if in_recent_ghost or in_protected_ghost or self.frequency.get(key, 0) >= 2:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R28-pair01-incumbent-call02-provenance_blind_policy_authority",
+    "duration_seconds": 18.722,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:49:03Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "9511898cd9a3cd1399b9caeafb6729ddc583f279005337f6169a5f63cd951138",
+    "raw_events_path": "workspace\\model-calls\\R28-pair01-incumbent-call02-provenance_blind_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "9101b111b61eacf84465620086801b713e4ceb88ce260ee75b36c4f2d1fef5d6",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "9309f0e4e3fc886fd4a6df1acb239ce341515540deae1581525b997e2d11151c",
+    "returncode": 0,
+    "role": "R28 incumbent topology role provenance-blind final semantic authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:48:44Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13958,
+      "output_tokens": 1246,
+      "reasoning_output_tokens": 286
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,104 @@
+{
+  "analysis_packet": {
+    "certificate": "Source-attributed analysis only: the anchor provides an online standard-library implementation with explicit byte accounting, unique resident keys, ghost provenance, and bounded eviction; the contract and constraints require interface legality, capacity safety, current-key-only evictions, and prohibition of oracle or trace visibility. The candidate hypothesis supports earlier executable commitment and bounded amendment, but no score or trace evidence establishes its expected effect. Preserve provenance, retain conflicts, and defer unresolved obligations to the commitment and adjudication calls.",
+    "exact_actions": [
+      "Record the anchor as inherited executable evidence, not as empirical proof of optimality.",
+      "Record contract and constraint requirements as normative obligations.",
+      "Record the hypothesis's expected effect and falsifier as unverified counter-generative evidence.",
+      "Preserve the absence of scores, traces, and oracle evidence as an explicit disagreement or uncertainty.",
+      "Pass settled obligations, unresolved obligations, provenance, and amendment boundaries to bind_defeasible_commitment.",
+      "Emit no policy artifact from this role."
+    ],
+    "obligations": [
+      {
+        "id": "interface_legality",
+        "provenance": [
+          "task",
+          "anchor_contract",
+          "task_constraints"
+        ],
+        "requirement": "Keep Policy initialization and access signatures and return a list of integer keys.",
+        "status": "settled"
+      },
+      {
+        "id": "capacity_safety",
+        "provenance": [
+          "anchor_policy",
+          "anchor_contract",
+          "task_constraints"
+        ],
+        "requirement": "Maintain resident byte usage at or below capacity, including oversized and resized requests.",
+        "status": "settled_with_verification"
+      },
+      {
+        "id": "current_unique_evictions",
+        "provenance": [
+          "anchor_policy",
+          "task_constraints"
+        ],
+        "requirement": "Return only unique keys that are resident before eviction and do not expose ghost-only keys.",
+        "status": "settled_with_verification"
+      },
+      {
+        "id": "online_visibility",
+        "provenance": [
+          "task",
+          "anchor_contract",
+          "task_constraints"
+        ],
+        "requirement": "Use only current access arguments and internal history; do not access traces, evaluator state, paths, or oracles.",
+        "status": "settled"
+      },
+      {
+        "id": "behavioral_tradeoffs",
+        "provenance": [
+          "task",
+          "candidate_hypothesis"
+        ],
+        "requirement": "Balance object hit rate, byte hit rate, scan resistance, phase adaptation, and regret without available scores or traces.",
+        "status": "unresolved"
+      },
+      {
+        "id": "provenance_preservation",
+        "provenance": [
+          "candidate_hypothesis",
+          "loop_structure"
+        ],
+        "requirement": "Carry source-specific evidence and disagreements into the executable commitment so later amendment remains obligation-keyed.",
+        "status": "unresolved"
+      },
+      {
+        "id": "amendment_scope",
+        "provenance": [
+          "candidate_hypothesis",
+          "loop_structure"
+        ],
+        "requirement": "Permit the terminal call to alter only explicitly unresolved obligations supported by visible provenance.",
+        "status": "unresolved"
+      }
+    ],
+    "witnesses": [
+      {
+        "evidence": "Uses only collections.OrderedDict, processes one access at a time, tracks resident byte totals, and returns keys removed from resident structures.",
+        "source": "anchor_policy"
+      },
+      {
+        "evidence": "Requires preservation of interface legality, capacity safety, and online-only visibility; score information is withheld.",
+        "source": "anchor_contract"
+      },
+      {
+        "evidence": "Requires standard-library-only execution, unique integer evictions drawn from current cache state, capacity compliance, and no benchmark or oracle adaptation.",
+        "source": "task_constraints"
+      },
+      {
+        "evidence": "Claims coherence benefit from a complete intermediate artifact and bounded terminal amendment; explicitly provides no score-based confirmation.",
+        "source": "candidate_hypothesis"
+      },
+      {
+        "evidence": "Defines sequential provenance flow from analysis to executable commitment to obligation-keyed adjudication.",
+        "source": "loop_structure"
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

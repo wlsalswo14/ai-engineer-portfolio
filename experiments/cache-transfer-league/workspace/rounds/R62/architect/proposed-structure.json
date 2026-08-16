@@ -1,0 +1,38 @@
+{
+  "final_call_id": "settle_through_counter_aperture",
+  "information_flow": "The first call receives every common input once and emits one complete policy capsule. The final call consumes that capsule as its immediate read-only predecessor, directly receives only candidate_hypothesis, has no direct visibility into the other common inputs, and emits one policy.",
+  "name": "Counter-Aperture Executable Handoff",
+  "organization": "two-call sequential lineage with one complete executable origin artifact and one counter-only terminal evidence aperture",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_executable_carrier",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Use the common evidence once to constitute one complete executable policy artifact that preserves governing obligations and counter-pressure for downstream settlement.",
+          "output_type": "policy_capsule",
+          "role": "one-pass full-context executable origin"
+        },
+        {
+          "id": "settle_through_counter_aperture",
+          "inputs": [
+            "originate_executable_carrier",
+            "candidate_hypothesis"
+          ],
+          "objective": "Consume originate_executable_carrier as a read-only, nonbinding complete predecessor, consider only candidate_hypothesis as late external evidence, preserve represented governing obligations, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "counter-visible terminal successor authority"
+        }
+      ],
+      "id": "counter_aperture_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity = int(capacity_bytes)\n        except (TypeError, ValueError, OverflowError):\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self.items = {}\n        self.ghost = {}\n        self.used = 0\n        self.protected_bytes = 0\n        self.protected_limit = (self.capacity_bytes * 7) // 10\n        self.tick = 0\n        self.last_now = None\n\n    def _size(self, value):\n        try:\n            value = int(value)\n        except (TypeError, ValueError, OverflowError):\n            value = 1\n        return max(1, value)\n\n    def _remember(self, key, frequency):\n        if type(key) is not int:\n            return\n        self.ghost[key] = (frequency, self.tick)\n        if len(self.ghost) > 4096:\n            oldest = min(self.ghost, key=lambda item: self.ghost[item][1])\n            del self.ghost[oldest]\n\n    def _remove(self, key):\n        item = self.items.pop(key, None)\n        if item is None:\n            return\n        size, frequency, last, protected = item\n        self.used -= size\n        if protected:\n            self.protected_bytes -= size\n        self._remember(key, frequency)\n\n    def _score(self, key):\n        size, frequency, last, protected = self.items[key]\n        age = max(0, self.tick - last)\n        recency = 100000 // (age + 1)\n        value = frequency * 10000 + recency\n        if protected:\n            value += 5000\n        return value / size\n\n    def _victims(self, required, exclude=None):\n        if required <= 0:\n            return []\n        ordered = sorted(\n            self.items,\n            key=lambda key: (self._score(key), self.items[key][2], self.items[key][1], key),\n        )\n        victims = []\n        remaining = required\n        for key in ordered:\n            if key == exclude:\n                continue\n            victims.append(key)\n            remaining -= self.items[key][0]\n            if remaining <= 0:\n                break\n        return victims\n\n    def _rebalance(self):\n        while self.protected_bytes > self.protected_limit:\n            protected = [key for key, item in self.items.items() if item[3]]\n            if not protected:\n                break\n            key = min(\n                protected,\n                key=lambda item: (self.items[item][2], self.items[item][1], item),\n            )\n            entry = self.items[key]\n            entry[3] = False\n            self.protected_bytes -= entry[0]\n\n    def _age(self):\n        if self.tick % 64 == 0:\n            for item in self.items.values():\n                item[1] = max(1, (item[1] + 1) // 2)\n\n        try:\n            current_now = int(self.last_now if self.last_now is None else self.last_now)\n        except (TypeError, ValueError, OverflowError):\n            current_now = None\n        return current_now\n\n    def access(self, key, size, now):\n        self.tick += 1\n        self._age()\n\n        try:\n            observed_now = int(now)\n        except (TypeError, ValueError, OverflowError):\n            observed_now = None\n        if observed_now is not None:\n            if self.last_now is not None and observed_now > self.last_now + 32:\n                decay = min(8, (observed_now - self.last_now) // 32)\n                for item in self.items.values():\n                    item[1] = max(1, item[1] - decay)\n            self.last_now = observed_now\n\n        if type(key) is not int:\n            return []\n\n        if self.capacity_bytes == 0:\n            evicted = list(self.items)\n            for item_key in evicted:\n                self._remove(item_key)\n            return evicted\n\n        requested = self._size(size)\n        if requested > self.capacity_bytes:\n            evicted = list(self.items)\n            for item_key in evicted:\n                self._remove(item_key)\n            return evicted\n\n        if key in self.items:\n            item = self.items[key]\n            old_size = item[0]\n            if requested < old_size:\n                difference = old_size - requested\n                item[0] = requested\n                self.used -= difference\n                if item[3]:\n                    self.protected_bytes -= difference\n            elif requested > old_size:\n                needed = requested - old_size\n                victims = self._victims(needed, exclude=key)\n                freed = sum(self.items[item_key][0] for item_key in victims)\n                if freed < needed:\n                    evicted = victims + [key]\n                    for item_key in evicted:\n                        self._remove(item_key)\n                    return evicted\n                for item_key in victims:\n                    self._remove(item_key)\n                item = self.items[key]\n                item[0] = requested\n                self.used += needed\n\n            item[1] = min(64, item[1] + 1)\n            item[2] = self.tick\n            if not item[3]:\n                item[3] = True\n                self.protected_bytes += item[0]\n            self._rebalance()\n            return []\n\n        record = self.ghost.pop(key, None)\n        frequency = 1 if record is None else min(32, record[0] + 1)\n        needed = requested - (self.capacity_bytes - self.used)\n        victims = self._victims(needed)\n        for item_key in victims:\n            self._remove(item_key)\n\n        if self.used + requested > self.capacity_bytes:\n            remainder = list(self.items)\n            for item_key in remainder:\n                self._remove(item_key)\n            victims.extend(remainder)\n\n        self.items[key] = [requested, frequency, self.tick, False]\n        self.used += requested\n        self._rebalance()\n        return victims\n"
+  },
+  "receipt": {
+    "call_id": "R45-pair03-candidate-call02-anchor_occluded_independent_author",
+    "duration_seconds": 95.19,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:53:39Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "75ba9335789a9e635808b65408df6f56ecac60e29cf6490414f91d72a9f23159",
+    "raw_events_path": "workspace\\model-calls\\R45-pair03-candidate-call02-anchor_occluded_independent_author\\raw-events.jsonl",
+    "raw_events_sha256": "b1dd095a79e963c885d0b4e1d6a0dcd69154100103c142282be6908d35e95a5e",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "ad5d92d8e0293a407a61309c9a3ba7ebc5861108b7b2e9ae36720992c0fb9160",
+    "returncode": 0,
+    "role": "R45 candidate topology role sole independent policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:52:04Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14042,
+      "output_tokens": 7655,
+      "reasoning_output_tokens": 6200
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

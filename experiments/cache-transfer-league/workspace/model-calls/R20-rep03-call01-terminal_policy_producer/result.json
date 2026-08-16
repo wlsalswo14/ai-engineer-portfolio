@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghosts = OrderedDict()\n        self.used_bytes = 0\n\n    def _remember(self, key):\n        self.ghosts.pop(key, None)\n        self.ghosts[key] = None\n\n    def _trim_ghosts(self):\n        limit = max(1, len(self.probation) + len(self.protected))\n        while len(self.ghosts) > limit:\n            self.ghosts.popitem(last=False)\n\n    def _make_room(self, size, evicted):\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                key, stored_size = self.probation.popitem(last=False)\n                self.used_bytes -= stored_size\n                self._remember(key)\n                evicted.append(key)\n            elif self.protected:\n                key, stored_size = self.protected.popitem(last=False)\n                self.probation[key] = stored_size\n            else:\n                break\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        promoted = key in self.ghosts\n        self.ghosts.pop(key, None)\n        evicted = []\n        self._make_room(size, evicted)\n\n        if promoted:\n            self.protected[key] = size\n        else:\n            self.probation[key] = size\n        self.used_bytes += size\n        self._trim_ghosts()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R20-rep03-call01-terminal_policy_producer",
+    "duration_seconds": 68.192,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:37:46Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "7a74c76cfe74d99cd7dedb7b29c7dcbd2c94448b705fa3736075aa6850640964",
+    "raw_events_sha256": "ef07c64b4911a00780234b9093b8858f7010186e82c5e610386d1ae4d14cd0d4",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "71a1f0f61128b998d167ed99bbbe085ab0caf75d8b8366659b969f904d7ec090",
+    "returncode": 0,
+    "role": "evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:36:38Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13929,
+      "output_tokens": 3466,
+      "reasoning_output_tokens": 2974
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

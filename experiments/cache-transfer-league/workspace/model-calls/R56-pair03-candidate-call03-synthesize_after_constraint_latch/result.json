@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.bytes1 = 0\n        self.bytes2 = 0\n        self.target = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _forget_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._forget_ghost(key)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _remove_resident(self, key):\n        if key in self.t1:\n            size = self.t1.pop(key)\n            self.bytes1 -= size\n            return size, 1\n        if key in self.t2:\n            size = self.t2.pop(key)\n            self.bytes2 -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, from_t2):\n        use_t1 = bool(self.t1) and (\n            self.bytes1 > self.target\n            or (from_t2 and self.bytes1 == self.target)\n        )\n        if use_t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.bytes2 -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, from_t2=False):\n        evicted = []\n        while self.bytes1 + self.bytes2 + size > self.capacity_bytes:\n            key = self._evict_one(from_t2)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def _adjust_target(self, b1_hit, requested):\n        if not self.capacity_bytes:\n            return\n        step = max(1, self.capacity_bytes // 16)\n        delta = max(step, min(requested, self.capacity_bytes))\n        if b1_hit:\n            self.target = min(self.capacity_bytes, self.target + delta)\n        else:\n            self.target = max(0, self.target - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n\n        if requested <= 0:\n            if key in self.t1:\n                self.t1.move_to_end(key)\n            elif key in self.t2:\n                self.t2.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._remove_resident(key)\n            if segment == 1:\n                self._remember(self.b1, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.b2, key, old_size)\n                return [key]\n            self._forget_ghost(key)\n            return []\n\n        if key in self.t1:\n            self._remove_resident(key)\n            evicted = self._make_room(requested)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        if key in self.t2:\n            self._remove_resident(key)\n            evicted = self._make_room(requested)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        b1_hit = key in self.b1\n        b2_hit = key in self.b2\n        if b1_hit:\n            self._adjust_target(True, requested)\n        elif b2_hit:\n            self._adjust_target(False, requested)\n\n        self._forget_ghost(key)\n        evicted = self._make_room(requested, b2_hit)\n        if b1_hit or b2_hit:\n            self.t2[key] = requested\n            self.bytes2 += requested\n        else:\n            self.t1[key] = requested\n            self.bytes1 += requested\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R56-pair03-candidate-call03-synthesize_after_constraint_latch",
+    "duration_seconds": 39.096,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T21:05:12Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "27e7fbb6a5c76beb4592d9d829608d798be13eb3919852d9ca85b3c1bcfdb840",
+    "raw_events_path": "workspace\\model-calls\\R56-pair03-candidate-call03-synthesize_after_constraint_latch\\raw-events.jsonl",
+    "raw_events_sha256": "04722c715a62c0e4a460b61f1d8c7a827c80736d242787e7b81e784527035514",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "2986b00edd1123c304f3aa942cdfba1370ac5f7241d8dfd8f9b671cdfe51ef7e",
+    "returncode": 0,
+    "role": "R56 candidate topology role unitary post-latch policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T21:04:32Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15413,
+      "output_tokens": 2778,
+      "reasoning_output_tokens": 1692
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

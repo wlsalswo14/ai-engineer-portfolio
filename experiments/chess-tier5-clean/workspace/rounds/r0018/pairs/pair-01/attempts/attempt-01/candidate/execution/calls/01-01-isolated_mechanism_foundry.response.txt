@@ -1,0 +1,136 @@
+Committed capability: bounded forcing-move search extension and ordering gate.
+
+Prediction: near the search horizon, legal checks, promotions, captures, and recaptures receive bounded tactical continuation; quiet, illegal, over-depth, exhausted-budget, and over-streak states receive no extension.
+
+```python
+#!/usr/bin/env python3
+import json
+import sys
+
+MAX_EXTENSION = 2
+MAX_STREAK = 2
+
+FIELDS = frozenset({
+    "depth", "extension_budget", "extension_streak", "is_legal",
+    "in_check", "gives_check", "is_capture", "is_promotion",
+    "is_recapture", "captured_value", "attacker_value",
+})
+
+def _validate(state):
+    if not isinstance(state, dict) or frozenset(state) != FIELDS:
+        raise ValueError("invalid primitive state")
+    for key in ("depth", "extension_budget", "extension_streak",
+                "captured_value", "attacker_value"):
+        if type(state[key]) is not int or state[key] < 0:
+            raise ValueError("invalid integer field")
+    for key in ("is_legal", "in_check", "gives_check", "is_capture",
+                "is_promotion", "is_recapture"):
+        if type(state[key]) is not bool:
+            raise ValueError("invalid boolean field")
+    if state["is_recapture"] and not state["is_capture"]:
+        raise ValueError("recapture must be a capture")
+
+def analyze(state):
+    _validate(state)
+
+    if not state["is_legal"]:
+        return {
+            "extension": 0,
+            "move_order_bonus": 0,
+            "tactical": False,
+            "work_units": 1,
+            "tags": ["illegal"],
+        }
+
+    tags = []
+    if state["in_check"]:
+        tags.append("check")
+    if state["gives_check"]:
+        tags.append("check")
+    if state["is_promotion"]:
+        tags.append("promotion")
+    if state["is_capture"]:
+        tags.append("capture")
+    if state["is_recapture"]:
+        tags.append("recapture")
+
+    high_capture = (
+        state["is_capture"]
+        and state["captured_value"] >= state["attacker_value"]
+    )
+    if high_capture:
+        tags.append("hvcapture")
+
+    forcing = bool(tags)
+
+    bonus = 0
+    if state["in_check"]:
+        bonus += 400
+    if state["gives_check"]:
+        bonus += 300
+    if state["is_promotion"]:
+        bonus += 250
+    if state["is_capture"]:
+        bonus += 100 + min(
+            900,
+            max(0, state["captured_value"] - state["attacker_value"]),
+        )
+    if state["is_recapture"]:
+        bonus += 150
+
+    extension = 0
+    if forcing and state["depth"] <= 2:
+        remaining = min(
+            MAX_EXTENSION,
+            state["extension_budget"],
+            max(0, MAX_STREAK - state["extension_streak"]),
+        )
+        if remaining:
+            extension = 1
+            if state["gives_check"] and (
+                state["in_check"] or state["is_promotion"]
+            ):
+                extension = min(2, remaining)
+
+    return {
+        "extension": extension,
+        "move_order_bonus": bonus,
+        "tactical": forcing,
+        "work_units": 1 + extension,
+        "tags": tags,
+    }
+
+def main():
+    for line in sys.stdin:
+        if line.strip():
+            print(json.dumps(
+                analyze(json.loads(line)),
+                sort_keys=True,
+                separators=(",", ":"),
+            ))
+
+if __name__ == "__main__":
+    main()
+```
+
+Fixture traces:
+
+```text
+{"extension":1,"move_order_bonus":300,"tags":["check"],"tactical":true,"work_units":2}
+{"extension":2,"move_order_bonus":1450,"tags":["check","promotion","capture","hvcapture"],"tactical":true,"work_units":3}
+{"extension":0,"move_order_bonus":0,"tags":[],"tactical":false,"work_units":1}
+{"extension":0,"move_order_bonus":400,"tags":["check"],"tactical":true,"work_units":1}
+{"extension":0,"move_order_bonus":300,"tags":["check"],"tactical":true,"work_units":1}
+{"extension":0,"move_order_bonus":900,"tags":["capture","hvcapture"],"tactical":true,"work_units":1}
+{"extension":0,"move_order_bonus":0,"tags":["illegal"],"tactical":false,"work_units":1}
+```
+
+Fixture coverage: checking move; promotion/check/capture with oversized budget; quiet null; exhausted budget; maximum extension streak; over-depth forcing move; illegal forcing move. Repeating every input produces identical output. `extension <= 2` and `work_units <= 3` are invariant.
+
+Execution command:
+
+```text
+python forcing_gate.py < fixtures.jsonl
+```
+
+The managed read-only shell rejected Python interpreter execution, so the traces above are deterministic expected traces rather than claimed runtime observations.

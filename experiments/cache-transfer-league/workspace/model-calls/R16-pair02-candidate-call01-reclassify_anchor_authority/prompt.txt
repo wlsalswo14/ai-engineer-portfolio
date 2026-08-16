@@ -1,0 +1,94 @@
+Role: R16 candidate topology role anchor-capability reclassifier
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R16,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: reclassify_anchor_authority
+Role: anchor-capability reclassifier
+Objective: Classify the anchor as a read-only conformance witness rather than a design substrate. Emit one binding authority deed containing the rejected assumptions, the single forbidden inherited mechanism, the independent replacement principle, and public contract obligations, without proposing policy behavior or edits.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output Python, policy source, a patch, a diff, alternative policies, or
+a ranked selection. Analyze or transform evidence only for the one lineage.
+
+Visible inputs fixed by this topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n\n    def _demote_protected(self):\n        target = self.capacity_bytes // 2\n        while self.protected and sum(self.protected.values()) > target:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._demote_protected()\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R15 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Invert the anchor input capability from mutable design substrate to read-only conformance witness through one binding authority deed consumed before terminal authorship.",
+    "expected_effect": "The terminal author can retain concrete validity evidence from the visible anchor while severing causal dependence on its repair trajectory, allowing scan-resistance behavior and phase-shift-adaptation behavior to be reorganized together from public obligations.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion grants the anchor positive causal authority as the editable design substrate, confining every behavioral change to reversible local deltas and terminal compression of the same inherited trajectory."
+  },
+  "loop_structure": {
+    "final_call_id": "obligation_origin_policy_author",
+    "information_flow": "The first call classifies the anchor as a witness and emits one binding authority deed. The second call consumes that deed, retains anchor visibility solely for conformance evidence, receives no positive behavioral authority from the anchor, and emits the lineage's only policy.",
+    "name": "Witness-Only Anchor Capability Inversion",
+    "organization": "two-call sequential nonbranching authority-transfer lineage",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "reclassify_anchor_authority",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Classify the anchor as a read-only conformance witness rather than a design substrate. Emit one binding authority deed containing the rejected assumptions, the single forbidden inherited mechanism, the independent replacement principle, and public contract obligations, without proposing policy behavior or edits.",
+            "output_type": "analysis",
+            "role": "anchor-capability reclassifier"
+          },
+          {
+            "id": "obligation_origin_policy_author",
+            "inputs": [
+              "reclassify_anchor_authority",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis"
+            ],
+            "objective": "Consume the authority deed before using the common evidence. Treat anchor_policy solely as evidence of interface and validity obligations, never as an editable starting state, source of behavioral commitments, or repair target. Under the public task, contract, constraints, and hypothesis, emit exactly one complete compliant policy.",
+            "output_type": "policy",
+            "role": "obligation-originated terminal policy author"
+          }
+        ],
+        "id": "reclassify_then_author",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R6-structure-architect\\final-receipt.json",
+    "sha256": "4948204e47b6ff11fe3cf1e6e02e0aaf25fab43b5fcec85123fc5c43c102b83e"
+  },
+  "architect_response": {
+    "architect_scope": "one-R6-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "close_and_emit_artifact",
+      "information_flow": "The first call sees all common inputs and originates one complete policy-and-obligation capsule. The second sees that immediately preceding capsule plus all common inputs, including the anchor policy, while treating only the capsule as the mutable lineage; it resolves obligation contradictions at whole-artifact level and emits one policy. There are no side paths or unconsumed outputs.",
+      "name": "Forward Whole-Artifact Obligation Relay",
+      "organization": "two-call sequential artifact custody",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "originate_obligation_capsule",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Derive role evidence from the supplied task and contracts, then originate one complete obligation-bearing policy artifact. Keep the anchor visible as comparative evidence but do not use it as a repair substrate, rollback source, or ordered edit lineage.",
+              "output_type": "policy_capsule",
+              "role": "contract-origin whole-artifact custodian"
+            },
+            {
+              "id": "close_and_emit_artifact",
+              "inputs": [
+                "originate_obligation_capsule",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding complete artifact and its obligation evidence as one indivisible lineage, reconcile explicit contradictions against the visible task and contract evidence through whole-artifact custody, and emit exactly one complete contract-compliant policy.",
+              "output_type": "policy",
+              "role": "forward obligation-closure custodian"
+            }
+          ],
+          "id": "forward_artifact_custody",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "decision basis shifts from anchor-relative repair evidence to contract-relative obligation evidence",
+        "revision granularity shifts from local reversible deltas to whole-artifact replacement",
+        "lineage direction shifts from rollback-and-compression to forward artifact custody"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "the anchor-relative reversible-delta repair stack with terminal causal compression",
+      "independent_replacement_principle": "contract-originated whole-artifact construction followed by forward obligation closure over the same executable artifact",
+      "rejected_assumptions": [
+        "Novelty must be expressed as anchor-relative local repair.",
+        "Validity requires a reversible checkpoint-and-delta history.",
+        "Redundancy must be resolved through terminal causal compression."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the repair-history structure with one forward whole-artifact obligation relay: an origin call creates a complete contract-grounded artifact without treating the anchor as a repair substrate, and a custody call consumes that exact artifact for whole-artifact obligation closure before emission.",
+      "expected_effect": "The lineage should become less anchor-coupled while preserving executable continuity, changing both the basis of structural decisions and the granularity and direction of revision while keeping contract evidence visible at emission.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The incumbent assumes useful novelty must remain an anchor-relative sequence of reversible local repairs and that correctness depends on retaining and compressing that history, which can preserve the anchor's structural commitments when an independent family is needed."
+    },
+    "structural_mutation": {
+      "after": "Two sequential custodians relay one complete obligation-bearing artifact forward, with the second consuming and closing the exact artifact originated by the first.",
+      "before": "One terminal producer maintains an anchor-relative reversible-delta repair stack and retrospectively compresses it.",
+      "change_count": 1,
+      "factor": "forward whole-artifact obligation relay",
+      "why_structural": "The mutation changes the lineage unit and direction from reversible local repair history to forward custody of a complete artifact; it does not divide the incumbent producer's existing duties among renamed roles."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 6,
+  "incumbent_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R6\\qualitative-error-notebook.json",
+    "sha256": "6bcfc48e88d233a49cbb394e527598ac4507b9d000a9a9833fdee8546c088052"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R6\\source-manifest.json",
+    "sha256": "b5b1d964ff4e1556566c65a0d977e0a52c2dd72df9a0dc664fdf382a2f64c264"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "factor": "forward whole-artifact obligation relay",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "originate_obligation_capsule",
+        "executor_semantics": "complete policy artifact plus obligation evidence on the same single lineage",
+        "output_type": "policy_capsule"
+      }
+    ],
+    "topology_fingerprint": "9e0eb29aa8ccfdd58ae7a937278e8fb876813f4e3a5f07ee266469e2b89434ae"
+  }
+}

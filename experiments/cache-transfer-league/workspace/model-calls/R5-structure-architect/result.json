@@ -1,0 +1,118 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R5-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "independent_policy_producer",
+      "information_flow": "The gateway receives all common inputs and emits one implementation-agnostic obligation-and-exclusion constitution. The final producer consumes that constitution plus direct task and contract context, but receives neither anchor_policy nor loop_structure, and emits one policy.",
+      "name": "Anchor-Quarantined Contract Synthesis",
+      "organization": "two-call sequential lineage with asymmetric implementation visibility",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "anchor_quarantine_gateway",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Derive one self-contained constitution containing interface obligations, admissibility boundaries, rejected inherited assumptions, and required behavioral evidence while excluding anchor implementation details and repair lineage.",
+              "output_type": "analysis",
+              "role": "inheritance firewall and obligation distiller"
+            },
+            {
+              "id": "independent_policy_producer",
+              "inputs": [
+                "anchor_quarantine_gateway",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis"
+              ],
+              "objective": "Consume the preceding constitution and visible contract context, then emit exactly one complete policy whose observable actions provide evidence for every retained obligation and behavioral commitment without reconstructing the quarantined inherited mechanism.",
+              "output_type": "policy",
+              "role": "contract-grounded policy producer"
+            }
+          ],
+          "id": "quarantine_and_synthesize",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "phase-shift adaptation posture",
+        "scan-resistance posture"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "ordered transactional checkpoint-patch repair with reversible-delta terminal causal compression",
+      "independent_replacement_principle": "contract-grounded synthesis behind an anchor-implementation visibility firewall",
+      "rejected_assumptions": [
+        "Effective candidates must be expressed as reversible deltas from anchor_policy.",
+        "The policy-emitting call requires direct visibility of the anchor implementation.",
+        "Post-construction causal compression is the appropriate source of structural novelty."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Introduce one anchor-implementation visibility firewall that converts inherited context into an implementation-agnostic obligation brief and withholds anchor_policy from the final producer.",
+      "expected_effect": "Independent contract-grounded construction should jointly change phase-shift adaptation posture and scan-resistance posture while retaining direct validity obligations.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active family assumes novelty must remain inside an anchor-derived reversible repair lineage, so terminal compression cannot escape the anchor's representational and behavioral couplings."
+    },
+    "structural_mutation": {
+      "after": "A gateway distills obligations and exclusions, then a final producer receives that artifact and contract context without visibility of anchor_policy.",
+      "before": "One terminal producer directly sees anchor_policy and performs anchor-derived transactional repair followed by causal compression.",
+      "change_count": 1,
+      "factor": "anchor-implementation visibility firewall",
+      "why_structural": "The factor changes the lineage's information boundary and removes anchor implementation visibility from the policy-emitting node."
+    }
+  },
+  "receipt": {
+    "call_id": "R5-structure-architect",
+    "duration_seconds": 63.559,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:12:19Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "2a1a86c804d658e66ebae4472983d8773382f8c9406d25bde19049fb2348a608",
+    "raw_events_path": "workspace\\model-calls\\R5-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "227c0ed3c4dbc0ac2d7712c298f4659a1650b14d50dceb3da2ed4a4d2cf36ab5",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "e50a469238875e0fa84855b66d1e63fca3d936b1707add1e8d7d361cb862f536",
+    "returncode": 0,
+    "role": "score-blind R5 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T09:11:15Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13978,
+      "output_tokens": 3326,
+      "reasoning_output_tokens": 2484
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

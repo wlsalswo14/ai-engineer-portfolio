@@ -1,0 +1,287 @@
+## Artifact: bounded exchange-safety capability
+
+### `exchange_safety.py`
+
+```python
+#!/usr/bin/env python3
+import json
+import sys
+
+class WorkLimit(Exception):
+    pass
+
+class ExchangeSafety:
+    """
+    Input:
+      {
+        "candidate": {"id": str, "delta": int},
+        "replies": [{"id": str, "delta": int}, ...],
+        "state": {"score": int, "reply_index": int, "side": 1|-1},
+        "max_replies": int,
+        "work_limit": int,
+        "threshold": int
+      }
+
+    Deltas are material/evaluation changes from the candidate side's
+    perspective. The candidate is mandatory; each reply is optional.
+    Side +1 maximizes continuation value, side -1 minimizes it.
+    """
+
+    def __init__(self, data):
+        self.validate(data)
+        self.candidate = data["candidate"]
+        self.replies = data["replies"]
+        self.state = data["state"]
+        self.max_replies = data["max_replies"]
+        self.work_limit = data["work_limit"]
+        self.threshold = data["threshold"]
+        self.work = 0
+
+    @staticmethod
+    def validate(data):
+        for key in ("candidate", "replies", "state",
+                    "max_replies", "work_limit", "threshold"):
+            if key not in data:
+                raise ValueError("missing field: " + key)
+
+        c = data["candidate"]
+        if not isinstance(c.get("id"), str) or not isinstance(c.get("delta"), int):
+            raise ValueError("invalid candidate")
+
+        if not isinstance(data["replies"], list):
+            raise ValueError("invalid replies")
+        for reply in data["replies"]:
+            if not isinstance(reply.get("id"), str):
+                raise ValueError("invalid reply id")
+            if not isinstance(reply.get("delta"), int):
+                raise ValueError("invalid reply delta")
+
+        state = data["state"]
+        if not isinstance(state.get("score"), int):
+            raise ValueError("invalid state score")
+        if not isinstance(state.get("reply_index"), int) or state["reply_index"] < 0:
+            raise ValueError("invalid state index")
+        if state.get("side") not in (-1, 1):
+            raise ValueError("invalid state side")
+
+        if not isinstance(data["max_replies"], int) or data["max_replies"] < 0:
+            raise ValueError("invalid max_replies")
+        if not isinstance(data["work_limit"], int) or data["work_limit"] < 1:
+            raise ValueError("invalid work_limit")
+        if not isinstance(data["threshold"], int):
+            raise ValueError("invalid threshold")
+
+    def visit(self):
+        if self.work >= self.work_limit:
+            raise WorkLimit
+        self.work += 1
+
+    def resolve(self, index, score, side):
+        self.visit()
+
+        limit = min(len(self.replies), self.max_replies)
+        if index >= limit:
+            return score, (), 0
+
+        reply = self.replies[index]
+        stop_score = score
+        continue_score, continuation, count = self.resolve(
+            index + 1,
+            score + reply["delta"],
+            -side,
+        )
+        continuation = (reply["id"],) + continuation
+        continue_count = count + 1
+
+        if side == 1 and continue_score > stop_score:
+            return continue_score, continuation, continue_count
+        if side == -1 and continue_score < stop_score:
+            return continue_score, continuation, continue_count
+
+        return stop_score, (), 0
+
+    def run(self):
+        start_score = self.state["score"] + self.candidate["delta"]
+        start_index = self.state["reply_index"]
+        start_side = self.state["side"]
+
+        try:
+            score, replies, count = self.resolve(
+                start_index,
+                start_score,
+                start_side,
+            )
+        except WorkLimit:
+            return {
+                "status": "work_limit",
+                "decision": "defer",
+                "score": None,
+                "plies": 1,
+                "pv": [self.candidate["id"]],
+                "work": self.work,
+            }
+
+        return {
+            "status": "ok",
+            "decision": "keep" if score >= self.threshold else "reject",
+            "score": score,
+            "plies": count + 1,
+            "pv": [self.candidate["id"]] + list(replies),
+            "work": self.work,
+        }
+
+
+def run(data):
+    return ExchangeSafety(data).run()
+
+
+def fixture(name, candidate, replies, state=None,
+            max_replies=16, work_limit=32, threshold=0,
+            expected=None):
+    return {
+        "name": name,
+        "candidate": candidate,
+        "replies": replies,
+        "state": state or {"score": 0, "reply_index": 0, "side": -1},
+        "max_replies": max_replies,
+        "work_limit": work_limit,
+        "threshold": threshold,
+        "expected": expected,
+    }
+
+
+def fixtures():
+    return [
+        fixture(
+            "poisoned_exchange",
+            {"id": "queen_grab", "delta": 800},
+            [
+                {"id": "recapture", "delta": -900},
+                {"id": "recovery", "delta": 50},
+            ],
+            expected={
+                "status": "ok",
+                "decision": "reject",
+                "score": -50,
+                "plies": 3,
+                "work": 3,
+                "pv": ["queen_grab", "recapture", "recovery"],
+            },
+        ),
+        fixture(
+            "quiet_null",
+            {"id": "quiet_capture", "delta": 40},
+            [],
+            expected={
+                "status": "ok",
+                "decision": "keep",
+                "score": 40,
+                "plies": 1,
+                "work": 1,
+                "pv": ["quiet_capture"],
+            },
+        ),
+        fixture(
+            "reply_boundary",
+            {"id": "boundary_capture", "delta": 40},
+            [{"id": "bad_reply", "delta": -100}],
+            max_replies=0,
+            expected={
+                "status": "ok",
+                "decision": "keep",
+                "score": 40,
+                "plies": 1,
+                "work": 1,
+                "pv": ["boundary_capture"],
+            },
+        ),
+        fixture(
+            "negative_terminal_boundary",
+            {"id": "losing_capture", "delta": -30},
+            [],
+            expected={
+                "status": "ok",
+                "decision": "reject",
+                "score": -30,
+                "plies": 1,
+                "work": 1,
+                "pv": ["losing_capture"],
+            },
+        ),
+        fixture(
+            "work_safety",
+            {"id": "long_capture", "delta": 10},
+            [{"id": "reply_" + str(i), "delta": -1} for i in range(20)],
+            max_replies=20,
+            work_limit=4,
+            expected={
+                "status": "work_limit",
+                "decision": "defer",
+                "score": None,
+                "plies": 1,
+                "work": 4,
+                "pv": ["long_capture"],
+            },
+        ),
+    ]
+
+
+def self_test():
+    traces = []
+
+    for case in fixtures():
+        expected = case.pop("expected")
+        first = run(case)
+        second = run(json.loads(json.dumps(case)))
+
+        checks = {
+            key: first.get(key) == value
+            for key, value in expected.items()
+        }
+        checks["deterministic"] = first == second
+        checks["bounded"] = first["work"] <= case["work_limit"]
+
+        if not all(checks.values()):
+            raise AssertionError({
+                "fixture": case["name"],
+                "expected": expected,
+                "observed": first,
+                "checks": checks,
+            })
+
+        traces.append({
+            "fixture": case["name"],
+            "observed": first,
+            "checks": checks,
+        })
+
+    return traces
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2 and sys.argv[1] == "--fixtures":
+        print(json.dumps(self_test(), sort_keys=True, separators=(",", ":")))
+    else:
+        print(json.dumps(run(json.load(sys.stdin)),
+                         sort_keys=True, separators=(",", ":")))
+```
+
+Causal prediction: resolving one capture through bounded adversarial recaptures rejects materially poisoned exchanges while preserving quiet and unresolved cases.
+
+Falsifier: reject the capability if a poisoned fixture is kept, a null fixture changes, state limits are ignored, repeated execution differs, or work exceeds `work_limit`.
+
+Execution command:
+
+```text
+python exchange_safety.py --fixtures
+```
+
+The managed read-only runner blocked Python execution before process start, so no runtime trace could be observed here. The source includes deterministic self-tests and the expected traces above.
+
+Integration invariants:
+
+- Keep the supplied anchor unchanged outside one capture-evaluation graft.
+- Adapt legal capture sequences into `candidate.delta` and bounded reply deltas.
+- Use `reject` only for resolved non-forcing captures; retain checks, promotions, mates, and `defer`.
+- Never embed fixture data, benchmark positions, or evaluator-specific logic.
+- Preserve UCI, legal move generation, state transitions, and timing behavior.

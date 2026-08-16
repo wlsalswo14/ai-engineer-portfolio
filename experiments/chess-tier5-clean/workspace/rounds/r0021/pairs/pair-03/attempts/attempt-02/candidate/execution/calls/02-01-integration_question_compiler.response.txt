@@ -1,0 +1,31 @@
+{
+  "HANDOFF_STATE": "QUERY_OPEN",
+  "component_identity": "reversible_cycle_boundary.v1",
+  "first_unknown_predicate": "single boundary instance lifecycle ownership and root scope",
+  "typed_question": "Which consumer-owned qsearch entry establishes the single ReversibleCycleBoundary root and guarantees pop in finally for every recursive child return?",
+  "anchor_facts_known": [
+    "Position key is (''.join(position.b), position.side, position.cast, position.ep).",
+    "make(position, move) returns a transitioned Position without mutating the input.",
+    "qsearch recursively calls itself after make(position, move).",
+    "The anchor has no boundary instance, lifecycle field, or boundary parameter."
+  ],
+  "consumer_context_trace": [
+    "qsearch(P0, ply=1)",
+    "make(P0, m1) -> P1",
+    "qsearch(P1, ply=2)",
+    "make(P1, m2) -> P2",
+    "qsearch(P2, ply=3)",
+    "boundary owner/start/pop = UNKNOWN"
+  ],
+  "known_bindings": {
+    "observe": "observe(position, move, make, key_of) before recursive qsearch",
+    "draw_mapping": "DRAW_REPETITION -> score 0 and skip recursion",
+    "cleanup": "pop every pushed child in finally",
+    "defaults": {
+      "repetition_limit": 3,
+      "max_depth": 128
+    }
+  },
+  "response_postcondition": "Resolver must identify one lifecycle owner and root-entry boundary for the same component identity, after which the consumer can produce one immutable binding.",
+  "engine_constructed": false
+}

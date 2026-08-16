@@ -1,0 +1,71 @@
+Role: R71 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R71,
+matched pair 2, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "The immutable anchor is an online, standard-library-only, byte-capacity policy with recent/frequent resident classes and ghost histories. Its observable contract is largely discharged by integer normalization, unique current-resident evictions, bounded occupancy, and explicit handling of oversized requests. The proposed semantic-closure relocation is only a generative hypothesis: no score or benchmark evidence validates it, and terminal reconstruction must not assume access to the cut sources.",
+      "witnesses": [
+        "Resident hits remove the prior entry before reinsertion and promote it to the frequent class.",
+        "Misses recalled from either ghost class adjust the recent target, remove the ghost record, and enter the frequent class.",
+        "Cold misses enter the recent class; eviction records retain size and recency-class distinctions in bounded ghost histories.",
+        "Oversized misses are not admitted; oversized resident hits are removed and returned as evicted.",
+        "Eviction order is derived solely from online resident ordering, byte totals, target state, and ghost metadata.",
+        "The anchor does not use now, external state, benchmark paths, oracle decisions, networking, subprocesses, or non-stdlib packages."
+      ],
+      "obligations": [
+        "Emit analysis only; do not reproduce policy source, pseudocode, a patch, a diff, alternatives, or a ranking.",
+        "Preserve the required Policy constructor and access interface and the evaluator-owned cache-state model.",
+        "Any eventual policy must return only unique integer keys that were currently cached immediately before eviction.",
+        "Maintain used bytes at or below nonnegative capacity, including zero-capacity, zero-size, and oversized requests.",
+        "Use only online information available through the current access and prior accesses; do not infer hidden traces, scores, or reference implementations.",
+        "Keep inherited behavior, counter-generative claims, conflicts, and uncertainty distinguishable rather than presenting the hypothesis as established evidence."
+      ],
+      "exact_actions": [
+        "Pass the downstream authority a requirements-level reconstruction of the anchor’s state distinctions and contract-sensitive edge cases.",
+        "Treat the candidate causal change as unverified evidence and preserve its expected effect and falsifier as separate claims.",
+        "Require the downstream authority to reconcile behavioral improvements with interface legality, capacity safety, unique-current-key eviction, standard-library-only execution, and online visibility.",
+        "Do not supply a complete implementation or any artifact-level commitment in this packet."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R70 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

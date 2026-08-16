@@ -1,0 +1,24 @@
+{
+  "status": "no_certified_rollback",
+  "runtime": "not_replayed: engine.py absent; process execution blocked",
+  "delta": [
+    "root_hint state and resets",
+    "root PVS null-window search and conditional re-search"
+  ],
+  "witness": {
+    "kind": "inherited_search_failure",
+    "fen": "7k/5Q2/6K1/8/8/8/8/8 b - - 0 1",
+    "condition": "qsearch(position, -INF, INF, ply=1)",
+    "expected": "0 for stalemate",
+    "observed_source_behavior": "stand-pat evaluation",
+    "rollback_ABA": "open/open/open; delta is not causal"
+  },
+  "preservation_obligations": [
+    "startpos perft 20/400/8902/197281",
+    "all emitted bestmoves legal and single before deadline",
+    "UCI handshake and position/FEN/move handling",
+    "castling, en-passant, promotion, determinism"
+  ],
+  "certified_rollbacks": [],
+  "memory_upload": "failed twice: network/tool policy blocked Wikia POST"
+}

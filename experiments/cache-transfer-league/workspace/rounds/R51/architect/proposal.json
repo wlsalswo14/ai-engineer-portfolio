@@ -1,0 +1,126 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R51-structure-architect\\final-receipt.json",
+    "sha256": "a594b7f10aba0a5afbfbe3155d51d1d86c48861e62364cdbf78c065015080679"
+  },
+  "architect_response": {
+    "architect_scope": "one-R51-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "exercise_unlabelled_authority",
+      "information_flow": "The first call receives all common evidence and forms one complete executable policy capsule without separating contract and behavioral authority. The second call consumes only that capsule, preserves its complete artifact and substantive obligations, and irreversibly erases the source identity attached to those obligations. The final call consumes only the resulting executable state, exercises indivisible authority over the single artifact without external evidence re-entry, and emits one policy.",
+      "name": "Provenance-Neutral Custody Gate",
+      "organization": "three-call sequential lineage with one mandatory provenance-erasing executable custody transition",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "compose_sourced_capsule",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Resolve the supplied evidence into one complete executable policy capsule carrying its substantive obligations and evidence provenance without establishing separate contract and behavioral authority classes.",
+              "output_type": "policy_capsule",
+              "role": "whole-artifact origin authority"
+            },
+            {
+              "id": "erase_source_identity",
+              "inputs": [
+                "compose_sourced_capsule"
+              ],
+              "objective": "Consume compose_sourced_capsule, preserve its single complete executable artifact and substantive obligations, irreversibly remove which input supplied each obligation, and emit one provenance-neutral executable policy state.",
+              "output_type": "executable_policy_state",
+              "role": "provenance-erasing custody gate"
+            },
+            {
+              "id": "exercise_unlabelled_authority",
+              "inputs": [
+                "erase_source_identity"
+              ],
+              "objective": "Consume erase_source_identity without common external evidence re-entry, treat the visible obligations as one indivisible authority surface, reconcile the single complete artifact for joint coherence, and emit one policy.",
+              "output_type": "policy",
+              "role": "provenance-neutral terminal authority"
+            }
+          ],
+          "id": "provenance_neutral_custody",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "phase-shift adaptation",
+        "scan resistance"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "immutable upstream contract locking followed by downstream behavior-only revision",
+      "independent_replacement_principle": "provenance-neutral indivisible custody: resolve evidence once into one complete executable capsule, erase source identity at a mandatory custody transition, and expose only the resulting obligation-bearing artifact to terminal authority",
+      "rejected_assumptions": [
+        "A source-labelled contract boundary must remain visible and immutable through the terminal call.",
+        "Conformance authority and behavioral authority should remain structurally separate.",
+        "Reintroducing common external evidence at the terminal call improves policy judgment."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Insert one mandatory provenance-erasing custody transition that preserves the complete executable artifact and its obligations while removing source identity before terminal authority.",
+      "expected_effect": "Provenance-neutral whole-artifact judgment should jointly improve phase-shift adaptation and scan resistance by reducing inherited framing pressure.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Source-labelled contract locking may cause inherited conformance framing to dominate terminal judgment and fragment behavioral coherence."
+    },
+    "structural_mutation": {
+      "after": "A complete policy capsule passes through an irreversible source-identity erasure transition, after which terminal authority sees only the resulting executable state and treats its obligations indivisibly.",
+      "before": "A source-labelled immutable contract boundary passes directly to terminal behavior-only authority alongside reintroduced common evidence.",
+      "change_count": 1,
+      "factor": "mandatory provenance-erasing custody transition on the sole executable lineage",
+      "why_structural": "The factor adds a mandatory state-transition node that changes evidence distinguishability, terminal visibility, and authority semantics; it is not role renaming, review fission, or candidate replication."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 51,
+  "incumbent_structure_sha256": "6d86bef367251508b3b25489be0cb4e54f42cc76ca7d557e842f23d6846c7696",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R51\\qualitative-error-notebook.json",
+    "sha256": "226cde763a9521bebdbda05094e06a6ebef126099421eb7edd7f74c6e52bbc88"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R51\\source-manifest.json",
+    "sha256": "ee00108fb18c201d5322c69926bbb87ab8f84af3b6acecb3d7396a7c63b7e2b2"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 3,
+    "coarse_topology_collision_override": null,
+    "factor": "mandatory provenance-erasing custody transition on the sole executable lineage",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "compose_sourced_capsule",
+        "executor_semantics": "complete policy artifact plus obligation evidence on the same single lineage",
+        "output_type": "policy_capsule"
+      },
+      {
+        "call_id": "erase_source_identity",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      }
+    ],
+    "semantic_topology_fingerprint": "c865a9979b6e7528b7da1fb42b76dc2f7d8900ba146fa8888c2e9f45f260243a",
+    "topology_fingerprint": "02fd8407c959a0b41fd6f091e5cbb0c8cc63a43ca059d85e249f53fec13d7c8d"
+  }
+}

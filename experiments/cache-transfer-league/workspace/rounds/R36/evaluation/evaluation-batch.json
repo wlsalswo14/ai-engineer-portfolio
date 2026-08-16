@@ -1,0 +1,143 @@
+{
+  "aggregate": {
+    "all_six_valid_and_deterministic": true,
+    "candidate_median": 82.9759,
+    "candidate_pairwise_majority": true,
+    "candidate_scores": [
+      82.9759,
+      86.4774,
+      82.9759
+    ],
+    "candidate_strict_median_win": true,
+    "candidate_wins": 2,
+    "incumbent_median": 81.3474,
+    "incumbent_scores": [
+      82.9759,
+      81.3474,
+      77.0691
+    ],
+    "incumbent_wins": 0,
+    "invalid_pairs": 0,
+    "ties": 1
+  },
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "runner_sha256": "636304977bc178f9e675f59c39d9b24c32874c964b944a3c0275e13f6408efbc",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "close_confirmation_triggered": false,
+  "close_threshold": 0.25,
+  "completed_at": "2026-08-09T18:52:44Z",
+  "confirmation_passed": true,
+  "confirmations": [],
+  "display_round": 36,
+  "pairs": [
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "352def21afdd93ee0294fb85cb8e92300a7f6791238f9a1ac2bbe2fa50b37184",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "2404805bb4ba6c5fbcec5573f144343ddfd28f013511615744f0e0eed7c7af10",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R36\\evaluation\\pair-01\\candidate\\replay-01.json",
+          "workspace\\rounds\\R36\\evaluation\\pair-01\\candidate\\replay-02.json"
+        ],
+        "score": 82.9759,
+        "valid": true
+      },
+      "candidate_minus_incumbent": 0.0,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "11436d5ccdf539f7e4b557ab129d572b1a2c84adc54af849ffcb8876f947cd94",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "2404805bb4ba6c5fbcec5573f144343ddfd28f013511615744f0e0eed7c7af10",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R36\\evaluation\\pair-01\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R36\\evaluation\\pair-01\\incumbent\\replay-02.json"
+        ],
+        "score": 82.9759,
+        "valid": true
+      },
+      "pair": 1,
+      "verdict": "tie"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "646f1b288050bdeb5fc26aec423b17d87e2422a228b4b784ebf3b0f34d404ef8",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "27c5156c05b3a06710d9fb65696313d140396dfccbe3df5c3a3216f0661a9ce6",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R36\\evaluation\\pair-02\\candidate\\replay-01.json",
+          "workspace\\rounds\\R36\\evaluation\\pair-02\\candidate\\replay-02.json"
+        ],
+        "score": 86.4774,
+        "valid": true
+      },
+      "candidate_minus_incumbent": 5.13000000000001,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "423988568058f25dab1b69bd2edfdfa3765f152f141f093451e0a012098a683b",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "8a56fc791033c576b39118286dca4b0a7f3e562fff92a01957fa93e93bb70264",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R36\\evaluation\\pair-02\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R36\\evaluation\\pair-02\\incumbent\\replay-02.json"
+        ],
+        "score": 81.3474,
+        "valid": true
+      },
+      "pair": 2,
+      "verdict": "candidate_win"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "ebbbb35b57bf169780b21ed791d1f6654ed00162a5c6e8e3e2246647e1dad2e0",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "2404805bb4ba6c5fbcec5573f144343ddfd28f013511615744f0e0eed7c7af10",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R36\\evaluation\\pair-03\\candidate\\replay-01.json",
+          "workspace\\rounds\\R36\\evaluation\\pair-03\\candidate\\replay-02.json"
+        ],
+        "score": 82.9759,
+        "valid": true
+      },
+      "candidate_minus_incumbent": 5.90679999999999,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "a221365b5a4c534ab06cd87426cc67c741375e3c916341dc94854ddea681bf08",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "e3b3116127e39c4247d8f72239ab31a3bf09c21a683068f3f4eb3b2734cc559a",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R36\\evaluation\\pair-03\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R36\\evaluation\\pair-03\\incumbent\\replay-02.json"
+        ],
+        "score": 77.0691,
+        "valid": true
+      },
+      "pair": 3,
+      "verdict": "candidate_win"
+    }
+  ],
+  "pre_evaluation_seal_path": "workspace\\rounds\\R36\\pre-evaluation-seal.json",
+  "pre_evaluation_seal_sha256": "e7fccd6d893d964808381ea8f5450bfa24fb5ddd46deae7a611398cbf4eb41cf",
+  "promotion_contract_passed": true,
+  "replay_count": 2,
+  "schema_version": 1
+}

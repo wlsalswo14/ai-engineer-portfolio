@@ -37,4 +37,5 @@ Invalid retry spend is a subset of Luna internal-loop spend and is not added aga
 ## Next state
 
 The two local rounds were consumed even though R26 promoted. Both distinct emergent attempts then failed to promote.
-The next official round is R29 in `counter_hypothesis` mode, which persists until a promotion occurs.
+The next official round is R29 in strengthened `counter_hypothesis` mode. Under the policy adopted after R28, that mode
+persists until a structurally independent family either promotes or reaches the 90% score-rate development threshold.

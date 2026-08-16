@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        try:\n            capacity_bytes = int(capacity_bytes)\n        except Exception:\n            capacity_bytes = 0\n        self.capacity = max(0, capacity_bytes)\n        self.resident = {}\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.used = 0\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.protected_target = self.capacity // 2\n        self.sequence = 0\n        self.operations = 0\n        self.entry_limit = 4096\n        self.ghost_limit = 4096\n\n    @staticmethod\n    def _size(value):\n        try:\n            value = int(value)\n        except Exception:\n            value = 0\n        return max(0, value)\n\n    def _remember_ghost(self, key, size, segment):\n        target = self.b1 if segment == 1 else self.b2\n        other = self.b2 if segment == 1 else self.b1\n        other.pop(key, None)\n        target[key] = (size, self.sequence)\n        target.move_to_end(key)\n        while len(target) > self.ghost_limit:\n            target.popitem(last=False)\n\n    def _remove(self, key, remember=True):\n        entry = self.resident.pop(key, None)\n        if entry is None:\n            return None\n        size, _, segment, _ = entry\n        if segment == 1:\n            self.t1.pop(key, None)\n            self.t1_bytes -= size\n        else:\n            self.t2.pop(key, None)\n            self.t2_bytes -= size\n        self.used -= size\n        if remember:\n            self._remember_ghost(key, size, segment)\n        return key\n\n    def _oldest_other(self, queue, avoid):\n        for key in queue:\n            if key != avoid:\n                return key\n        return None\n\n    def _protected_victim(self, avoid):\n        candidates = []\n        for key, entry in list(self.t2.items())[:64]:\n            if key != avoid:\n                candidates.append((entry[1], -entry[3], key))\n        if not candidates:\n            return None\n        candidates.sort()\n        return candidates[0][2]\n\n    def _victim(self, avoid=None):\n        recent_target = self.capacity - self.protected_target\n        if self.t1 and (self.t1_bytes > recent_target or not self.t2):\n            key = self._oldest_other(self.t1, avoid)\n            if key is not None:\n                return key\n        key = self._protected_victim(avoid)\n        if key is not None:\n            return key\n        key = self._oldest_other(self.t1, avoid)\n        if key is not None:\n            return key\n        return self._oldest_other(self.t2, avoid)\n\n    def _enforce(self, evicted, avoid=None):\n        while self.used > self.capacity or len(self.resident) > self.entry_limit:\n            victim = self._victim(avoid)\n            if victim is None:\n                break\n            removed = self._remove(victim, remember=True)\n            if removed is not None:\n                evicted.append(removed)\n\n    def _age_frequencies(self):\n        for entry in self.resident.values():\n            entry[1] = max(1, (entry[1] + 1) // 2)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = self._size(size)\n        self.sequence += 1\n        self.operations += 1\n        if self.operations % 1024 == 0:\n            self._age_frequencies()\n\n        evicted = []\n        entry = self.resident.get(key)\n\n        if entry is not None:\n            if size > self.capacity:\n                removed = self._remove(key, remember=True)\n                return [removed] if removed is not None else []\n\n            old_size = entry[0]\n            segment = entry[2]\n            if size != old_size:\n                entry[0] = size\n                delta = size - old_size\n                self.used += delta\n                if segment == 1:\n                    self.t1_bytes += delta\n                else:\n                    self.t2_bytes += delta\n\n            entry[1] = min(entry[1] + 1, 1000000000)\n            entry[3] = self.sequence\n\n            if segment == 1:\n                self.t1.pop(key, None)\n                self.t1_bytes -= size\n                entry[2] = 2\n                self.t2[key] = entry\n                self.t2_bytes += size\n            else:\n                self.t2.move_to_end(key)\n\n            self._enforce(evicted, avoid=key)\n            return evicted\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1 or in_b2:\n            if in_b1:\n                self.b1.pop(key, None)\n                step = max(1, min(self.capacity, size or 1) // 4)\n                self.protected_target = min(self.capacity, self.protected_target + step)\n                segment = 2\n            else:\n                self.b2.pop(key, None)\n                step = max(1, min(self.capacity, size or 1) // 4)\n                self.protected_target = max(0, self.protected_target - step)\n                segment = 2\n        else:\n            segment = 1\n\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n        if self.capacity == 0 or size > self.capacity:\n            return evicted\n\n        entry = [size, 1, segment, self.sequence]\n        self.resident[key] = entry\n        if segment == 1:\n            self.t1[key] = entry\n            self.t1_bytes += size\n        else:\n            self.t2[key] = entry\n            self.t2_bytes += size\n        self.used += size\n\n        self._enforce(evicted, avoid=key)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R64-pair01-candidate-call02-emit_from_provenance_sealed_evidence",
+    "duration_seconds": 68.897,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:19:42Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "d886a06a76e420e47f0ea0c3b541e910324f8b215308e01b80469c9263b03e23",
+    "raw_events_path": "workspace\\model-calls\\R64-pair01-candidate-call02-emit_from_provenance_sealed_evidence\\raw-events.jsonl",
+    "raw_events_sha256": "7de9dad9b3ed22f6ac882ebcb176669f02023ad1b60bd06c23d5e1b2b5ad5c0a",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "46eb6acf4687f2cb38a948522e6ebed89fb40528f6ef752f1f599014bcc7390b",
+    "returncode": 0,
+    "role": "R64 candidate topology role source-anonymous normative policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:18:34Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13630,
+      "output_tokens": 5474,
+      "reasoning_output_tokens": 3993
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,92 @@
+{
+  "type": "PREIMAGE_CLOSURE",
+  "terminal": {
+    "id": "T0",
+    "predicate": "For the supplied position, return exactly one legal bestmove g6g7, which is checkmate."
+  },
+  "nodes": [
+    {
+      "id": "P1",
+      "type": "state",
+      "predicate": "The active position equals FEN 7k/8/6Q1/8/8/8/P7/4K1R1 w - - 0 1."
+    },
+    {
+      "id": "P2",
+      "type": "legal_move",
+      "predicate": "g6g7 is generated, survives legality filtering, and has exact UCI notation g6g7."
+    },
+    {
+      "id": "P3",
+      "type": "state_transition",
+      "predicate": "Applying g6g7 produces the correct post-move state without corrupting unrelated state."
+    },
+    {
+      "id": "P4",
+      "type": "terminal_position",
+      "predicate": "The post-move black king is attacked and has no legal reply."
+    },
+    {
+      "id": "P5",
+      "type": "bounded_selection",
+      "predicate": "Within movetime 5, immediate legal checkmates are tested before any first-legal fallback, and g6g7 is selected."
+    },
+    {
+      "id": "P6",
+      "type": "uci_output",
+      "predicate": "Exactly one bestmove g6g7 is emitted before the deadline."
+    }
+  ],
+  "edges": [
+    {
+      "from": "P1",
+      "to": "P2",
+      "anchor_fact": "The anchor parses the supplied FEN and enumerates legal moves."
+    },
+    {
+      "from": "P1",
+      "to": "P3",
+      "anchor_fact": "The anchor's make transition consumes the active board and side state."
+    },
+    {
+      "from": "P2",
+      "to": "P3",
+      "anchor_fact": "g6g7 is a legal generated move."
+    },
+    {
+      "from": "P3",
+      "to": "P4",
+      "anchor_fact": "Independent verification establishes g6g7 as legal checkmate."
+    },
+    {
+      "from": "P2",
+      "to": "P5",
+      "anchor_fact": "The current movetime<=5 path returns the first legal move before search."
+    },
+    {
+      "from": "P4",
+      "to": "P5",
+      "anchor_fact": "The required selection target is the legal move satisfying immediate checkmate."
+    },
+    {
+      "from": "P5",
+      "to": "P6",
+      "anchor_fact": "The anchor serializes the selected move as one UCI bestmove."
+    }
+  ],
+  "dependency_order": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "T0"
+  ],
+  "preservation_boundary": [
+    "Preserve the supplied FEN and all unrelated engine state.",
+    "Preserve legal move generation, state transitions, and the one-response UCI contract.",
+    "Preserve the existing fallback when no immediate legal checkmate exists.",
+    "Use no benchmark, evaluator, or external information."
+  ],
+  "unresolved_assumptions": []
+}

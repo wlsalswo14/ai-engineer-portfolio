@@ -1,0 +1,42 @@
+{
+  "final_call_id": "obligation_origin_policy_author",
+  "information_flow": "The first call classifies the anchor as a witness and emits one binding authority deed. The second call consumes that deed, retains anchor visibility solely for conformance evidence, receives no positive behavioral authority from the anchor, and emits the lineage's only policy.",
+  "name": "Witness-Only Anchor Capability Inversion",
+  "organization": "two-call sequential nonbranching authority-transfer lineage",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "reclassify_anchor_authority",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Classify the anchor as a read-only conformance witness rather than a design substrate. Emit one binding authority deed containing the rejected assumptions, the single forbidden inherited mechanism, the independent replacement principle, and public contract obligations, without proposing policy behavior or edits.",
+          "output_type": "analysis",
+          "role": "anchor-capability reclassifier"
+        },
+        {
+          "id": "obligation_origin_policy_author",
+          "inputs": [
+            "reclassify_anchor_authority",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis"
+          ],
+          "objective": "Consume the authority deed before using the common evidence. Treat anchor_policy solely as evidence of interface and validity obligations, never as an editable starting state, source of behavioral commitments, or repair target. Under the public task, contract, constraints, and hypothesis, emit exactly one complete compliant policy.",
+          "output_type": "policy",
+          "role": "obligation-originated terminal policy author"
+        }
+      ],
+      "id": "reclassify_then_author",
+      "mode": "sequential"
+    }
+  ]
+}

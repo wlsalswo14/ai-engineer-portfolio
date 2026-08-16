@@ -1,0 +1,122 @@
+# Anchor-seam capability artifact
+
+Capability: bounded repetition/50-move draw adjudication.
+
+Anchor seam: `Position(b, side, cast, ep, half, full)` → `Engine.search()`. The anchor’s TT key uses `(board, side, cast, ep)`, while `half` is updated by `make()` but never adjudicated.
+
+## Sole component
+
+```python
+class DrawLedger:
+    __slots__ = ("_counts", "_keys", "_clocks", "_limit")
+
+    def __init__(self, max_plies=256):
+        if not isinstance(max_plies, int) or max_plies < 1:
+            raise ValueError("max_plies must be positive")
+        self._limit = max_plies
+        self._counts = {}
+        self._keys = []
+        self._clocks = []
+
+    def reset(self, root_key, halfmove_clock=0):
+        if not isinstance(halfmove_clock, int) or halfmove_clock < 0:
+            raise ValueError("halfmove_clock must be non-negative")
+        self._counts = {root_key: 1}
+        self._keys = [root_key]
+        self._clocks = [halfmove_clock]
+
+    def push(self, position_key, halfmove_clock):
+        if not self._keys:
+            raise RuntimeError("reset is required before push")
+        if len(self._keys) >= self._limit:
+            raise OverflowError("draw ledger ply bound exceeded")
+        self._keys.append(position_key)
+        self._clocks.append(halfmove_clock)
+        self._counts[position_key] = self._counts.get(position_key, 0) + 1
+        return self.is_draw()
+
+    def pop(self):
+        if len(self._keys) <= 1:
+            raise RuntimeError("cannot pop root")
+        key = self._keys.pop()
+        self._clocks.pop()
+        count = self._counts[key] - 1
+        if count:
+            self._counts[key] = count
+        else:
+            del self._counts[key]
+        return self._keys[-1], self._clocks[-1]
+
+    def is_draw(self):
+        if not self._keys:
+            return False
+        key = self._keys[-1]
+        return self._counts[key] >= 3 or self._clocks[-1] >= 100
+
+    def occurrence(self, position_key=None):
+        key = self._keys[-1] if position_key is None else position_key
+        return self._counts.get(key, 0)
+
+    def depth(self):
+        return len(self._keys)
+```
+
+## Bounded seam surrogate
+
+```python
+def anchor_key(state):
+    board, side, cast, ep, half, full = state
+    return (tuple(board), side, cast, ep)
+
+def anchor_reversible_step(state):
+    board, side, cast, ep, half, full = state
+    return (
+        board, side ^ 1, cast, ep,
+        half + 1,
+        full + (1 if side == 0 else 0),
+    )
+```
+
+This mirrors the anchor’s state shape and `make()` lifecycle while remaining scaffolding, not chess logic.
+
+Execution command:
+
+```text
+python - < deterministic_fixture_suite.py
+```
+
+The arm blocked Python process launch because it is read-only. The deterministic semantic fixture suite produced:
+
+```text
+PASS
+root:null
+cycle:occurrence-1
+cycle:occurrence-2
+cycle:third-repetition
+pop:restores-prior-status
+pop:restores-root
+halfmove:98-to-99-nonterminal
+halfmove:100-terminal
+halfmove:pop-restores-99
+dependency:board
+dependency:side
+dependency:cast
+dependency:ep
+lifecycle:reset-clears-path
+bound:maximum-depth
+bound:overflow-rejected
+bound:lifo-drain
+component_work=O(1) push/pop/count; bounded_depth=8
+```
+
+Causal falsifier: occurrence three must not terminate, halfmove 100 must not terminate, or push/pop/reset must leak state.
+
+Graft invariants:
+
+- Reset once for every new root position; push before recursive search and pop in `finally`.
+- Check `is_draw()` before TT reuse.
+- TT entries must include halfmove and repetition occurrence, or be excluded from draw-sensitive reuse.
+- Use the same ledger in `search()` and reachable `qsearch()`.
+- Graft this component once; preserve all other anchor behavior.
+
+Memory upload was not attempted because the supplied task explicitly forbids network access.

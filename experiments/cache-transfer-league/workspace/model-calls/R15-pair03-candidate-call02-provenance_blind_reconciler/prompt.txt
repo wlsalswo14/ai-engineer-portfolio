@@ -1,0 +1,102 @@
+Role: R15 candidate topology role whole-artifact reconciliation authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R15,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: provenance_blind_reconciler
+Role: whole-artifact reconciliation authority
+Objective: Consume the immediately preceding executable policy as the sole lineage state, assess it as an indivisible whole against the permitted external obligations, resolve any whole-artifact incoherence without reconstructing predecessor provenance, and emit one complete contract-compliant policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "independent_policy_constructor": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.window_target = max(1, self.capacity_bytes // 8) if self.capacity_bytes else 0\n        self.main_target = max(0, self.capacity_bytes - self.window_target)\n        self.protected_target = (self.main_target * 3) // 4\n        self.window = OrderedDict()\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.window_bytes = 0\n        self.main_bytes = 0\n        self.used_bytes = 0\n        self.frequency = {}\n        self.requests = 0\n\n    def _record(self, key):\n        self.requests += 1\n        self.frequency[key] = min(self.frequency.get(key, 0) + 1, 255)\n        if self.requests % 4096 == 0:\n            for stored_key in list(self.frequency):\n                value = self.frequency[stored_key] // 2\n                if value:\n                    self.frequency[stored_key] = value\n                else:\n                    del self.frequency[stored_key]\n\n    def _remove_window(self, key):\n        size = self.window.pop(key)\n        self.window_bytes -= size\n        self.used_bytes -= size\n        return size\n\n    def _remove_main(self, mapping, key):\n        size = mapping.pop(key)\n        self.main_bytes -= size\n        self.used_bytes -= size\n        return size\n\n    def _evict(self, mapping, key, evicted):\n        if mapping is self.window:\n            self._remove_window(key)\n        else:\n            self._remove_main(mapping, key)\n        evicted.append(key)\n\n    def _rebalance_protected(self, keep, evicted):\n        while self.protected and self.main_bytes > self.main_target:\n            key = next((k for k in self.protected if k != keep), None)\n            if key is None:\n                break\n            size = self.protected.pop(key)\n            self.protected[key] = size\n            self.protected_bytes = getattr(self, \"protected_bytes\", 0) - size\n            self.probation[key] = size\n            self.protected_bytes = getattr(self, \"protected_bytes\", 0)\n\n    def _enforce_protected(self, keep):\n        if not hasattr(self, \"protected_bytes\"):\n            self.protected_bytes = sum(self.protected.values())\n        while self.protected and self.protected_bytes > self.protected_target:\n            key = next((k for k in self.protected if k != keep), None)\n            if key is None:\n                break\n            size = self.protected.pop(key)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _enforce_main(self, candidate, keep, evicted):\n        while self.main_bytes > self.main_target:\n            victim = None\n            if candidate is not None and candidate in self.probation and candidate != keep:\n                victim = next((k for k in self.probation if k != candidate and k != keep), None)\n                if victim is not None:\n                    if self.frequency.get(candidate, 0) < self.frequency.get(victim, 0):\n                        self._evict(self.probation, candidate, evicted)\n                        candidate = None\n                    else:\n                        self._evict(self.probation, victim, evicted)\n                    continue\n            victim = next((k for k in self.probation if k != keep), None)\n            if victim is not None:\n                self._evict(self.probation, victim, evicted)\n                continue\n            key = next((k for k in self.protected if k != keep), None)\n            if key is not None:\n                size = self.protected.pop(key)\n                self.protected_bytes -= size\n                self.probation[key] = size\n                continue\n            if candidate is not None and candidate in self.probation and candidate != keep:\n                self._evict(self.probation, candidate, evicted)\n                candidate = None\n                continue\n            break\n\n    def _drain_window(self, keep, evicted):\n        while self.window and self.window_bytes > self.window_target:\n            key, size = self.window.popitem(last=False)\n            self.window_bytes -= size\n            self.probation[key] = size\n            self.main_bytes += size\n            self._enforce_main(key, keep, evicted)\n\n    def _make_room(self, keep, evicted):\n        while self.used_bytes > self.capacity_bytes:\n            key = next((k for k in self.probation if k != keep), None)\n            mapping = self.probation\n            if key is None:\n                key = next((k for k in self.window if k != keep), None)\n                mapping = self.window\n            if key is None:\n                key = next((k for k in self.protected if k != keep), None)\n                mapping = self.protected\n            if key is None:\n                break\n            self._evict(mapping, key, evicted)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = max(0, int(size))\n        self._record(key)\n        evicted = []\n\n        if key in self.window:\n            old_size = self.window.pop(key)\n            self.window_bytes += size - old_size\n            self.used_bytes += size - old_size\n            self.window[key] = size\n            if size > self.capacity_bytes:\n                self._remove_window(key)\n                evicted.append(key)\n                return evicted\n            self._drain_window(key, evicted)\n            self._make_room(key, evicted)\n            return evicted\n\n        if key in self.probation:\n            old_size = self.probation.pop(key)\n            self.probation[key] = size\n            self.used_bytes += size - old_size\n            self.main_bytes += size - old_size\n            if size > self.capacity_bytes:\n                self._remove_main(self.probation, key)\n                evicted.append(key)\n                return evicted\n            self.protected[key] = self.probation.pop(key)\n            self._enforce_protected(key)\n            self._enforce_main(None, key, evicted)\n            self._make_room(key, evicted)\n            return evicted\n\n        if key in self.protected:\n            old_size = self.protected.pop(key)\n            self.protected[key] = size\n            self.used_bytes += size - old_size\n            self.main_bytes += size - old_size\n            self.protected_bytes += size - old_size\n            if size > self.capacity_bytes:\n                self._remove_main(self.protected, key)\n                self.protected_bytes -= size\n                evicted.append(key)\n                return evicted\n            self._enforce_protected(key)\n            self._enforce_main(None, key, evicted)\n            self._make_room(key, evicted)\n            return evicted\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return evicted\n\n        if size <= self.window_target:\n            self.window[key] = size\n            self.window_bytes += size\n        else:\n            self.probation[key] = size\n            self.main_bytes += size\n        self.used_bytes += size\n        self.protected_bytes = getattr(self, \"protected_bytes\", sum(self.protected.values()))\n        self._drain_window(key, evicted)\n        self._enforce_protected(key)\n        self._enforce_main(key if key in self.probation else None, key, evicted)\n        self._make_room(key, evicted)\n        return evicted\n",
+    "sha256": "691ed65e809b98bdbf8506a02ffffafc8b729208ce5fd615136458851b130ff6"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n\n    def _demote_protected(self):\n        target = self.capacity_bytes // 2\n        while self.protected and sum(self.protected.values()) > target:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._demote_protected()\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R14 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Insert a provenance-erasing executable handoff: an upstream constructor emits one complete policy, while the final authority receives that executable artifact and the common external inputs but none of the upstream rationale, deltas, provisional states, or retained evidence.",
+    "expected_effect": "Independent whole-artifact reconciliation should jointly improve phase-transition response coherence and scan-disturbance containment without sacrificing executable lineage visibility.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family assumes retained edit provenance remains causally useful through finalization, but that history can entrench anchor-relative decomposition and make terminal judgment depend on edit order rather than whole-artifact coherence."
+  },
+  "loop_structure": {
+    "final_call_id": "provenance_blind_reconciler",
+    "information_flow": "The first authority receives all common inputs and emits one complete executable policy without accompanying construction provenance. The final authority consumes that policy and the common external inputs, receives no predecessor rationale or intermediate state, reconciles the artifact as an indivisible whole, and emits one policy.",
+    "name": "Provenance-Erased Executable Reconciliation Relay",
+    "organization": "two-authority sequential executable relay",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "independent_policy_constructor",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reject the inherited reversible-delta and terminal-compression family, construct one complete contract-compliant policy under the independent replacement principle, and transmit only the executable artifact without rationale, edit history, provisional states, or retained evidence.",
+            "output_type": "policy",
+            "role": "whole-policy constructor"
+          },
+          {
+            "id": "provenance_blind_reconciler",
+            "inputs": [
+              "independent_policy_constructor",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the immediately preceding executable policy as the sole lineage state, assess it as an indivisible whole against the permitted external obligations, resolve any whole-artifact incoherence without reconstructing predecessor provenance, and emit one complete contract-compliant policy.",
+            "output_type": "policy",
+            "role": "whole-artifact reconciliation authority"
+          }
+        ],
+        "id": "construct_then_reconcile",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

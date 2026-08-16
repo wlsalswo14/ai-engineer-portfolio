@@ -1,0 +1,57 @@
+{
+  "final_call_id": "provenance_blind_policy_authority",
+  "information_flow": "The first call forms one score-blind causal frame while all common evidence is visible. The second call consumes that frame together with the common evidence, forms one complete executable closure, and removes construction provenance only after completion. The final call consumes that policy-bearing predecessor with public obligations but without anchor-policy visibility and emits one policy.",
+  "name": "Causal-Frame-First Provenance-Blind Closure Relay",
+  "organization": "three-call sequential lineage with one pre-construction causal-frame transition and the incumbent post-construction provenance firewall",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_preconstruction_causal_frame",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Before any policy artifact exists, establish one score-blind causal frame relating the supplied hypothesis, task, anchor evidence, public contract, constraints, and loop structure. Materialize that frame as the causally prior evidence state without selecting an implementation, and pass the analysis forward.",
+          "output_type": "analysis",
+          "role": "preconstruction causal-frame former"
+        },
+        {
+          "id": "form_conditioned_executable_closure",
+          "inputs": [
+            "form_preconstruction_causal_frame",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding causal frame before forming one complete executable policy closure from the supplied evidence. Preserve the frame's causal commitments during construction, justify current semantics against public obligations, remove anchor-relative construction provenance only after closure completion, and pass the complete executable closure forward.",
+          "output_type": "executable_policy_closure",
+          "role": "causal-frame-conditioned executable closure former"
+        },
+        {
+          "id": "provenance_blind_policy_authority",
+          "inputs": [
+            "form_conditioned_executable_closure",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the preceding complete executable closure and exercise final semantic authority from its current semantics and supplied public obligations. Without anchor-implementation or construction-provenance visibility, reconcile contract validity within that single state and emit one complete policy.",
+          "output_type": "policy",
+          "role": "provenance-blind final semantic authority"
+        }
+      ],
+      "id": "causal_frame_closure_relay",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+Role: R73 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R73,
+matched pair 1, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "The anchor is an online, standard-library-only two-segment adaptive cache with byte accounting and ghost histories. Its legality and capacity invariants are stronger evidence than the score-blind hypothesis; the proposed change concerns authority and evidence visibility, not a demonstrated behavioral defect. Preserve uncertainty about performance because scores and traces are withheld.",
+      "witnesses": [
+        "The anchor exposes only the required Policy constructor and access interface, coercing key and size to integers and normalizing capacity and size.",
+        "Resident entries are tracked in disjoint recent and frequent ordered maps with explicit byte totals; eviction removes entries before admitting incoming bytes.",
+        "Oversized misses are not admitted, while oversized resident updates remove and return the updated key.",
+        "Ghost histories retain evicted source-class distinctions and adjust the recent target on ghost hits.",
+        "The candidate hypothesis identifies terminal source withholding as an information-flow bottleneck, but supplies no measured causal improvement or trace-level counterexample.",
+        "The topology requires this call to synthesize evidence only; the terminal call receives the resulting analysis plus normative inputs and must not reacquire the cut generative sources."
+      ],
+      "obligations": [
+        "Emit analysis only and do not construct, rewrite, rank, or select a policy artifact.",
+        "Preserve the required interface, online one-access-at-a-time visibility, standard-library restriction, and prohibition on benchmark, oracle, trace, path, or external-library adaptation.",
+        "Treat capacity safety, legal eviction reporting, currently cached membership, integer-key uniqueness, and one-final-policy discipline as binding normative constraints.",
+        "Keep inherited anchor behavior, counter-generative hypothesis, supporting distinctions, and unresolved conflicts visible to the terminal authority.",
+        "Do not infer score or benchmark superiority from the anchor, hypothesis, or falsifier because official scores are withheld.",
+        "Interpret the negative-authority edge as permission to veto unsupported commitments, not as permission to omit valid common evidence or invent unsupported behavior."
+      ],
+      "exact_actions": [
+        "Pass the terminal call a compact synthesis that distinguishes verified contract obligations from speculative performance claims.",
+        "Identify the anchor's observable mechanisms and invariants without prescribing replacement policy source.",
+        "Record the hypothesis as an unvalidated authority-and-visibility proposal, including its expected effect and absence of empirical confirmation.",
+        "Require the terminal authority to reconcile all retained evidence with task and contract constraints while preserving online-only legality.",
+        "Return no Python, patch, diff, alternative policy, ranked choice, score estimate, or benchmark conclusion."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R72 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

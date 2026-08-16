@@ -1,0 +1,38 @@
+Role: R62 candidate topology role counter-visible terminal successor authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R62,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: settle_through_counter_aperture
+Role: counter-visible terminal successor authority
+Objective: Consume originate_executable_carrier as a read-only, nonbinding complete predecessor, consider only candidate_hypothesis as late external evidence, preserve represented governing obligations, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "originate_executable_carrier": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.target = self.capacity_bytes // 2\n        self.bytes1 = 0\n        self.bytes2 = 0\n        self.ghost_limit = 4096\n\n    def _forget(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._forget(key)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _take(self, key):\n        if key in self.t1:\n            size = self.t1.pop(key)\n            self.bytes1 -= size\n            return size, 1\n        if key in self.t2:\n            size = self.t2.pop(key)\n            self.bytes2 -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, from_b2):\n        choose_t1 = bool(self.t1) and (\n            self.bytes1 > self.target\n            or (from_b2 and self.bytes1 == self.target)\n        )\n        if choose_t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.bytes2 -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, from_b2):\n        evicted = []\n        while self.bytes1 + self.bytes2 + size > self.capacity_bytes:\n            key = self._evict_one(from_b2)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n        if requested <= 0:\n            if key in self.t1:\n                self.t1.move_to_end(key)\n            elif key in self.t2:\n                self.t2.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._take(key)\n            if segment == 1:\n                self._remember(self.b1, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.b2, key, old_size)\n                return [key]\n            return []\n\n        if key in self.t1 or key in self.t2:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        adjustment = max(1, self.capacity_bytes // 16)\n        if in_b1:\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(adjustment, min(requested, self.capacity_bytes)),\n            )\n        elif in_b2:\n            self.target = max(\n                0,\n                self.target - max(adjustment, min(requested, self.capacity_bytes)),\n            )\n\n        self._forget(key)\n        evicted = self._make_room(requested, in_b2)\n        if in_b1 or in_b2:\n            self.t2[key] = requested\n            self.bytes2 += requested\n        else:\n            self.t1[key] = requested\n            self.bytes1 += requested\n        return evicted\n",
+    "sha256": "bd6820b613051e201470052b35a434ff36424d77b09cf86d227912ea1868068a"
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Apply a counter-only terminal aperture: all common inputs influence one complete executable origin artifact, while only candidate_hypothesis receives direct terminal re-exposure.",
+    "expected_effect": "Executable continuity remains visible while terminal behavior becomes less anchored to inherited rationale and more responsive to changed evidence regimes.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "Source-neutral terminal reacquisition lets inherited anchor evidence regain equal standing precisely when policy authority is exercised, allowing the counter-hypothesis to be absorbed by reconciliation."
+  }
+}

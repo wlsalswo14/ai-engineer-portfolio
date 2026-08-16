@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self._capacity = max(0, int(capacity_bytes))\n        self._recent = OrderedDict()\n        self._frequent = OrderedDict()\n        self._recent_ghost = OrderedDict()\n        self._frequent_ghost = OrderedDict()\n        self._recent_bytes = 0\n        self._frequent_bytes = 0\n        self._resident_bytes = 0\n        self._recent_target = self._capacity // 2\n        self._ghost_bytes = 0\n        self._ghost_serial = 0\n        self._ghost_limit = 4096\n\n    def _segment(self, kind):\n        return self._recent if kind == 0 else self._frequent\n\n    def _remove_resident(self, kind, key):\n        segment = self._segment(kind)\n        value = segment.pop(key)\n        if kind == 0:\n            self._recent_bytes -= value\n        else:\n            self._frequent_bytes -= value\n        self._resident_bytes -= value\n        return value\n\n    def _take_ghost(self, key):\n        for kind, segment in ((0, self._recent_ghost), (1, self._frequent_ghost)):\n            item = segment.pop(key, None)\n            if item is not None:\n                self._ghost_bytes -= item[0]\n                if self._ghost_bytes < 0:\n                    self._ghost_bytes = 0\n                return kind\n        return -1\n\n    def _trim_ghosts(self):\n        while (self._ghost_bytes > self._capacity or\n               len(self._recent_ghost) + len(self._frequent_ghost) > self._ghost_limit):\n            candidate = None\n            for kind, segment in ((0, self._recent_ghost), (1, self._frequent_ghost)):\n                if segment:\n                    key, item = next(iter(segment.items()))\n                    serial = item[1]\n                    if candidate is None or serial < candidate[0]:\n                        candidate = (serial, kind, key, item[0])\n            if candidate is None:\n                self._ghost_bytes = 0\n                break\n            _, kind, key, size = candidate\n            self._segment_ghost(kind).pop(key, None)\n            self._ghost_bytes -= size\n            if self._ghost_bytes < 0:\n                self._ghost_bytes = 0\n\n    def _segment_ghost(self, kind):\n        return self._recent_ghost if kind == 0 else self._frequent_ghost\n\n    def _record_ghost(self, kind, key, size):\n        self._take_ghost(key)\n        size = max(0, int(size))\n        self._ghost_serial += 1\n        self._segment_ghost(kind)[key] = (size, self._ghost_serial)\n        self._ghost_bytes += size\n        self._trim_ghosts()\n\n    def _adjust_target(self, ghost_kind):\n        if self._capacity == 0:\n            return\n        quantum = max(1, self._capacity // 16)\n        if ghost_kind == 0:\n            self._recent_target = min(self._capacity, self._recent_target + quantum)\n        else:\n            self._recent_target = max(0, self._recent_target - quantum)\n\n    def _make_room(self, needed, evicted):\n        while self._resident_bytes + needed > self._capacity:\n            if self._recent and (self._recent_bytes > self._recent_target or not self._frequent):\n                kind = 0\n            elif self._frequent:\n                kind = 1\n            elif self._recent:\n                kind = 0\n            else:\n                break\n            segment = self._segment(kind)\n            key, size = segment.popitem(last=False)\n            if kind == 0:\n                self._recent_bytes -= size\n            else:\n                self._frequent_bytes -= size\n            self._resident_bytes -= size\n            evicted.append(key)\n            self._record_ghost(kind, key, size)\n\n    def _insert(self, kind, key, size):\n        segment = self._segment(kind)\n        segment[key] = size\n        if kind == 0:\n            self._recent_bytes += size\n        else:\n            self._frequent_bytes += size\n        self._resident_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n        del now\n\n        if key in self._recent:\n            old_size = self._remove_resident(0, key)\n            if size > self._capacity:\n                self._record_ghost(0, key, old_size)\n                return [key]\n            evicted = []\n            self._make_room(size, evicted)\n            self._insert(1, key, size)\n            return evicted\n\n        if key in self._frequent:\n            old_size = self._remove_resident(1, key)\n            if size > self._capacity:\n                self._record_ghost(1, key, old_size)\n                return [key]\n            evicted = []\n            self._make_room(size, evicted)\n            self._insert(1, key, size)\n            return evicted\n\n        ghost_kind = self._take_ghost(key)\n        if ghost_kind != -1:\n            self._adjust_target(ghost_kind)\n            if size > self._capacity:\n                return []\n            evicted = []\n            self._make_room(size, evicted)\n            self._insert(1, key, size)\n            return evicted\n\n        if size > self._capacity:\n            return []\n\n        evicted = []\n        self._make_room(size, evicted)\n        self._insert(0, key, size)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R69-pair01-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 73.39,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:08:12Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "09aad64e45d7281167608a9335b315cf308cc27fba9d5f371b433bc7e979ad6e",
+    "raw_events_path": "workspace\\model-calls\\R69-pair01-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "f06a12af9a6f41b317de7af4a1333d608cca1d6573c19b51ed550b7e6b68547c",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "60c6e7c3384e6960c0bb34123903c1eabccf3c56453b88c709eed4e096c8193b",
+    "returncode": 0,
+    "role": "R69 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:06:59Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13280,
+      "output_tokens": 5830,
+      "reasoning_output_tokens": 4446
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

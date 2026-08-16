@@ -1,0 +1,430 @@
+{
+  "aggregate": {
+    "all_six_valid_and_deterministic": false,
+    "candidate_median": 58.821,
+    "candidate_pairwise_majority": false,
+    "candidate_scores": [
+      58.821,
+      78.6553,
+      27.7778
+    ],
+    "candidate_strict_median_win": false,
+    "candidate_wins": 0,
+    "incumbent_median": 84.1855,
+    "incumbent_scores": [
+      84.1855,
+      93.4577,
+      0.0
+    ],
+    "incumbent_wins": 1,
+    "invalid_pairs": 2,
+    "ties": 0
+  },
+  "architect": {
+    "candidate_structure_path": "workspace\\rounds\\R64\\architect\\proposed-structure.json",
+    "candidate_structure_sha256": "e9059d71175ec38aca8b35ddb6fd3c415d80d9895a4111ccbc8e5ff9bdb0164d",
+    "candidate_topology_fingerprint": "ac40632875795200f06f33a3ef21f3ac05a1a9b014c30fc26e6bf8bbece82405",
+    "mode_certificate": {
+      "scope_boundary": "Only provenance visibility on the existing analysis handoff changes; call count, sequence, direct external edges, terminal authority, and output kinds remain unchanged.",
+      "why_not_repeat_role_fission": "The lineage retains the same two distinct calls and introduces no duplicated producer, reviewer, finalizer, or terminal role."
+    },
+    "proposal_mode": "local_refinement",
+    "proposal_path": "workspace\\rounds\\R64\\architect\\proposal.json",
+    "proposal_sha256": "6a98bd7d0969b37490df19a37798194fa6841a235c7a482fbeab1c4198113675",
+    "structural_mutation": {
+      "after": "The existing direct-source cut remains, and the sole analysis edge additionally withholds generative-source attribution while carrying source-anonymous claims, conflicts, and normative grounding.",
+      "before": "The terminal call lacks direct generative-source edges, but the analysis handoff may retain attribution linking claims to their generative origins.",
+      "change_count": 1,
+      "factor": "source-origin anonymity on the sole analysis handoff",
+      "why_structural": "This changes the evidence visibility semantics of an existing causal edge and therefore changes the terminal evidence set without adding calls, roles, or a decision gate."
+    }
+  },
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "runner_sha256": "636304977bc178f9e675f59c39d9b24c32874c964b944a3c0275e13f6408efbc",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "cache_r101_opened": false,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "close_confirmation": {
+    "confirmations": [],
+    "passed": true,
+    "threshold": 0.25,
+    "triggered": false
+  },
+  "completed_at": "2026-08-09T22:24:38Z",
+  "display_round": 64,
+  "final_audit": {
+    "all_six_sealed_before_score": true,
+    "cache_r101_opened": false,
+    "checks": [
+      "prior-atomic-champion-chain-unchanged",
+      "one-score-blind-sol-max-fast-architect",
+      "all-six-sealed-with-luna-high-only",
+      "luna-high-fast-priority-executor-epoch-bound",
+      "frozen-replay2-close-and-promotion-recomputed",
+      "champion-policy-and-structure-bound-to-decision",
+      "state-machine-transition-and-stop-contract",
+      "cache-r101-unopened"
+    ],
+    "display_round": 64,
+    "frozen_replay2_recomputed": true,
+    "git_commit_created": false,
+    "passed": true,
+    "schema_version": 1,
+    "state_machine_recomputed": true,
+    "strict_model_split_passed": true,
+    "test_receipt_path": "workspace\\rounds\\R64\\test-receipt.json",
+    "test_receipt_sha256": "291dff89ef573cf2c1359f49940982811bd26e01da4410183dea9517baf265ad",
+    "verified_at": "2026-08-09T22:24:38Z"
+  },
+  "git_commit_created": false,
+  "invalids": [
+    {
+      "arm": "candidate",
+      "pair": 1,
+      "reasons": [
+        "official_replay_invalid"
+      ]
+    },
+    {
+      "arm": "incumbent",
+      "pair": 3,
+      "reasons": [
+        "official_replay_invalid"
+      ]
+    },
+    {
+      "arm": "candidate",
+      "pair": 3,
+      "reasons": [
+        "official_replay_invalid"
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "5c4a205c6d72ec967a7eae0939507f9ed486d254d7deaa40676b233a56146945",
+        "invalid_reasons": [
+          "official_replay_invalid"
+        ],
+        "normalized_result_sha256": "31b4d2f26eabf1367b78ce2317c6214e0b5dfc3ceef50cf7f898ec7cbdf16a22",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R64\\evaluation\\pair-01\\candidate\\replay-01.json",
+          "workspace\\rounds\\R64\\evaluation\\pair-01\\candidate\\replay-02.json"
+        ],
+        "score": 58.821,
+        "valid": false
+      },
+      "candidate_minus_incumbent": -25.364500000000007,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "4231d84c5e16eda44a22f9acf857cb0ecc010e5100c7e6c110fd2b8d322c28d6",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "6b7bbefd088806c88b886e529bdd19f197062b3a582f898a4cece45ac1ed5573",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R64\\evaluation\\pair-01\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R64\\evaluation\\pair-01\\incumbent\\replay-02.json"
+        ],
+        "score": 84.1855,
+        "valid": true
+      },
+      "pair": 1,
+      "verdict": "invalid_pair"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "839e13bd5e95edf09e222fc136c3bced355073afed6d46f8cd26afbd5201b2b6",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "a059e56bd0a3d0c9e65827a4014fbb753e3ae48814cdec8db7c282482185816c",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R64\\evaluation\\pair-02\\candidate\\replay-01.json",
+          "workspace\\rounds\\R64\\evaluation\\pair-02\\candidate\\replay-02.json"
+        ],
+        "score": 78.6553,
+        "valid": true
+      },
+      "candidate_minus_incumbent": -14.802400000000006,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "e7495eb965ed29016037105240677516e18af7c9b92a902293b4abca050437f0",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "310b86cd12204fb91a1ea6539bb475a778756d0cb73859e9b13d7e32dde7f9bb",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R64\\evaluation\\pair-02\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R64\\evaluation\\pair-02\\incumbent\\replay-02.json"
+        ],
+        "score": 93.4577,
+        "valid": true
+      },
+      "pair": 2,
+      "verdict": "incumbent_win"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "b76495433bfd8ac4f2c44ddc269ea5ed0cfd34cf4fe63b410429162e883fe170",
+        "invalid_reasons": [
+          "official_replay_invalid"
+        ],
+        "normalized_result_sha256": "bf6d54677a3961ce2bcc9e0db81ca064e915e4ea9a524bb33e6389fde363caa2",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R64\\evaluation\\pair-03\\candidate\\replay-01.json",
+          "workspace\\rounds\\R64\\evaluation\\pair-03\\candidate\\replay-02.json"
+        ],
+        "score": 27.7778,
+        "valid": false
+      },
+      "candidate_minus_incumbent": 27.7778,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "ece3d6c5418695d27952c09d8db20e1e2492bb7c070695bf7a8dc4694632d252",
+        "invalid_reasons": [
+          "official_replay_invalid"
+        ],
+        "normalized_result_sha256": "b97b2a4ebbaa9dec622258d2b43b124bbf1a7f65c320a52eb5a89d0ee37d7272",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R64\\evaluation\\pair-03\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R64\\evaluation\\pair-03\\incumbent\\replay-02.json"
+        ],
+        "score": 0.0,
+        "valid": false
+      },
+      "pair": 3,
+      "verdict": "invalid_pair"
+    }
+  ],
+  "promotion": {
+    "contract_passed": false,
+    "selection": {
+      "artifact_path": "workspace\\champion-r64\\policy.py",
+      "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+      "cache_r101_opened": false,
+      "champion_source": "retained-r63",
+      "decision_basis": {
+        "all_six_valid_and_deterministic": false,
+        "candidate_median": 58.821,
+        "candidate_pairwise_majority": false,
+        "candidate_strict_median_win": false,
+        "candidate_wins": 0,
+        "close_confirmation_passed": true,
+        "close_confirmation_triggered": false,
+        "incumbent_median": 84.1855,
+        "incumbent_wins": 1
+      },
+      "display_round": 64,
+      "evaluation_batch_path": "workspace\\rounds\\R64\\evaluation\\evaluation-batch.json",
+      "evaluation_batch_sha256": "fc5143f91a45e6fce78828a4ceb651bacaea8c31e55cb6145daf595fee368c4d",
+      "promoted": false,
+      "promotion_contract": {
+        "all_six_valid_and_replay2_deterministic": true,
+        "candidate_median": "strictly greater than incumbent median",
+        "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+        "failure_action": "retain current champion policy and structure",
+        "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+      },
+      "promotion_contract_passed": false,
+      "representative_pair": null,
+      "schema_version": 1,
+      "search_control_after": {
+        "completed_mode": "local_refinement",
+        "emergent_failure_count": 0,
+        "local_refinement_count": 1,
+        "next_local_refinement_attempt": 2,
+        "next_proposal_mode": "local_refinement",
+        "promoted": false,
+        "transition": "next-local-refinement"
+      },
+      "search_control_before": {
+        "derived_from": "workspace\\rounds\\R63\\state.json",
+        "emergent_failure_count": 0,
+        "local_refinement_attempt": 1,
+        "local_refinement_count": 0,
+        "proposal_mode": "local_refinement"
+      },
+      "selected_at": "2026-08-09T22:24:34Z",
+      "source_artifact_path": "workspace\\champion-r63\\policy.py",
+      "source_artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+      "source_seal_path": null,
+      "source_seal_sha256": null,
+      "starting_policy_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+      "starting_structure_sha256": "048bd7f7978a9edc6cce1abb46639026e00145b8afa355da2f0c45cd85e10f88",
+      "structure_path": "workspace\\champion-r64\\structure.json",
+      "structure_sha256": "048bd7f7978a9edc6cce1abb46639026e00145b8afa355da2f0c45cd85e10f88"
+    }
+  },
+  "schema_version": 1,
+  "sealed_before_frozen_evaluation": true,
+  "search_control_after": {
+    "completed_mode": "local_refinement",
+    "emergent_failure_count": 0,
+    "local_refinement_count": 1,
+    "next_local_refinement_attempt": 2,
+    "next_proposal_mode": "local_refinement",
+    "promoted": false,
+    "transition": "next-local-refinement"
+  },
+  "search_control_before": {
+    "derived_from": "workspace\\rounds\\R63\\state.json",
+    "emergent_failure_count": 0,
+    "local_refinement_attempt": 1,
+    "local_refinement_count": 0,
+    "proposal_mode": "local_refinement"
+  },
+  "starting_champion": {
+    "policy_path": "workspace\\champion-r63\\policy.py",
+    "policy_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "selection_receipt_path": "workspace\\champion-r63\\selection-receipt.json",
+    "selection_receipt_sha256": "dcc4db4bbe2e41efc992b73bd3da1368b8555c13084b836984625526bf0e7f0f",
+    "structure_path": "workspace\\champion-r63\\structure.json",
+    "structure_sha256": "048bd7f7978a9edc6cce1abb46639026e00145b8afa355da2f0c45cd85e10f88",
+    "topology_fingerprint": "ac40632875795200f06f33a3ef21f3ac05a1a9b014c30fc26e6bf8bbece82405"
+  },
+  "status": "atomic-state-ready",
+  "tests": {
+    "display_round": 64,
+    "finished_at": "2026-08-09T22:24:38Z",
+    "passed": true,
+    "returncode": 0,
+    "schema_version": 1,
+    "started_at": "2026-08-09T22:24:35Z",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "cc55a10fc32329792d7eadd0ed7c66db5577f2741fe541dae83aa616ac0de1cf",
+    "summary": ".............                                                            [100%]\n13 passed in 1.39s"
+  },
+  "token_accounting": {
+    "architect": {
+      "cached_input_tokens": 5888,
+      "effective_tokens": 13392,
+      "input_tokens": 14424,
+      "model_calls": 1,
+      "output_tokens": 4856,
+      "reasoning_output_tokens": 4016,
+      "total_tokens": 19280,
+      "uncached_input_tokens": 8536
+    },
+    "completed_model_calls": 13,
+    "discarded_executor_epoch": null,
+    "display_round": 64,
+    "failed_transport_attempts": 0,
+    "receipt_paths": [
+      {
+        "call_id": "R64-pair01-candidate-call01-synthesize_and_seal_provenance",
+        "path": "workspace\\model-calls\\R64-pair01-candidate-call01-synthesize_and_seal_provenance\\final-receipt.json",
+        "sha256": "910dd5fdba352bd5404f531e2d39c4f3a5fe1dd12da448631d463bc0ebc2aab0"
+      },
+      {
+        "call_id": "R64-pair01-candidate-call02-emit_from_provenance_sealed_evidence",
+        "path": "workspace\\model-calls\\R64-pair01-candidate-call02-emit_from_provenance_sealed_evidence\\final-receipt.json",
+        "sha256": "2662a5c3c4fd8a0b6cabcf473a03710287a2cfe613c8b4b6a1e9027eb0709896"
+      },
+      {
+        "call_id": "R64-pair01-incumbent-call01-synthesize_cut_sources",
+        "path": "workspace\\model-calls\\R64-pair01-incumbent-call01-synthesize_cut_sources\\final-receipt.json",
+        "sha256": "cb03c6b59d1f0c935fd1d978c315d721c593cbb032fcb1f95a49349f70a29810"
+      },
+      {
+        "call_id": "R64-pair01-incumbent-call02-emit_under_normative_visibility",
+        "path": "workspace\\model-calls\\R64-pair01-incumbent-call02-emit_under_normative_visibility\\final-receipt.json",
+        "sha256": "14f3713aa14f4512459a613cb5a86c7d8cab9c2325d17e7e9f183c53404c48dc"
+      },
+      {
+        "call_id": "R64-pair02-candidate-call01-synthesize_and_seal_provenance",
+        "path": "workspace\\model-calls\\R64-pair02-candidate-call01-synthesize_and_seal_provenance\\final-receipt.json",
+        "sha256": "f7b304d3a66c268e1f883f928456517b7272863c871dcebeee4fe23b876b30cd"
+      },
+      {
+        "call_id": "R64-pair02-candidate-call02-emit_from_provenance_sealed_evidence",
+        "path": "workspace\\model-calls\\R64-pair02-candidate-call02-emit_from_provenance_sealed_evidence\\final-receipt.json",
+        "sha256": "c42b304c6fcb0124fabf269eca865b46a20c7f816f40a40b321f731691fdc8bc"
+      },
+      {
+        "call_id": "R64-pair02-incumbent-call01-synthesize_cut_sources",
+        "path": "workspace\\model-calls\\R64-pair02-incumbent-call01-synthesize_cut_sources\\final-receipt.json",
+        "sha256": "ac40d2ff3684daccf029ddac4ca8559a6818848c07e0da538639c2878b2221f6"
+      },
+      {
+        "call_id": "R64-pair02-incumbent-call02-emit_under_normative_visibility",
+        "path": "workspace\\model-calls\\R64-pair02-incumbent-call02-emit_under_normative_visibility\\final-receipt.json",
+        "sha256": "ac22613beaba219f2bc13ac64071b0d251f8be6a3bbc06936c36e7fd131a492a"
+      },
+      {
+        "call_id": "R64-pair03-candidate-call01-synthesize_and_seal_provenance",
+        "path": "workspace\\model-calls\\R64-pair03-candidate-call01-synthesize_and_seal_provenance\\final-receipt.json",
+        "sha256": "91aa0d8875bdca5118c9d955a8529b0ebb699b589777c2f95a5a34055cd82f74"
+      },
+      {
+        "call_id": "R64-pair03-candidate-call02-emit_from_provenance_sealed_evidence",
+        "path": "workspace\\model-calls\\R64-pair03-candidate-call02-emit_from_provenance_sealed_evidence\\final-receipt.json",
+        "sha256": "bcb80ab7b3b07223fbac4e6eb30131310d776646fa561812d608679b9c328a22"
+      },
+      {
+        "call_id": "R64-pair03-incumbent-call01-synthesize_cut_sources",
+        "path": "workspace\\model-calls\\R64-pair03-incumbent-call01-synthesize_cut_sources\\final-receipt.json",
+        "sha256": "5971d6d1abde34c9fa1f4e2d99a8f8d3d84fdfcd76ad7df1abe9ef91d02ad60a"
+      },
+      {
+        "call_id": "R64-pair03-incumbent-call02-emit_under_normative_visibility",
+        "path": "workspace\\model-calls\\R64-pair03-incumbent-call02-emit_under_normative_visibility\\final-receipt.json",
+        "sha256": "d11ce318e911483b6b755d209b5c2f347285000748d15cf2078ad0ef3960f60a"
+      },
+      {
+        "call_id": "R64-structure-architect",
+        "path": "workspace\\model-calls\\R64-structure-architect\\final-receipt.json",
+        "sha256": "d8e4819ccfd4aa07e29908331e1b58e1b2c4bc3a5be631d20bc3477186c02ebf"
+      }
+    ],
+    "round_model_calls": {
+      "cached_input_tokens": 104448,
+      "effective_tokens": 127992,
+      "input_tokens": 181896,
+      "model_calls": 13,
+      "output_tokens": 50544,
+      "reasoning_output_tokens": 39339,
+      "total_tokens": 232440,
+      "uncached_input_tokens": 77448
+    },
+    "rule": {
+      "effective_tokens": "input_tokens - cached_input_tokens + output_tokens",
+      "reasoning_output_tokens": "subset of output tokens",
+      "total_tokens": "input_tokens + output_tokens"
+    },
+    "schema_version": 1,
+    "spend": {
+      "billing_mode": "ChatGPT subscription via Codex login",
+      "estimated_api_spend_usd": null,
+      "paid_api_spend_usd": 0.0,
+      "paid_api_used": false
+    },
+    "topology_inner_roles": {
+      "cached_input_tokens": 98560,
+      "effective_tokens": 114600,
+      "input_tokens": 167472,
+      "model_calls": 12,
+      "output_tokens": 45688,
+      "reasoning_output_tokens": 35323,
+      "total_tokens": 213160,
+      "uncached_input_tokens": 68912
+    },
+    "transport_attempts": 13,
+    "transport_failures": []
+  }
+}

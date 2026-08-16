@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "counter_hypothesis",
+  "hypothesis": {
+    "observed_bottleneck": "The supported champion preserves useful behavior by diagnosing regressions in a runnable provisional engine, but this makes concrete source deltas the units of reasoning and limits coordinated changes that cross component boundaries. The round-10 clean-room alternative removed that dependency but also discarded too much anchor implementation information, losing all three pairs. The unresolved bottleneck is preserving implementation semantics while enabling a coherent cross-component transformation without provisional-engine review or post-hoc rollback.",
+    "evidence_refs": [
+      "STATE_CAPSULE.hypothesis_frontier[round=7]: exact failure-to-delta attribution was supported at 1W/0L/2T with median Elo delta 15.115 and zero invalid candidates",
+      "STATE_CAPSULE.hypothesis_frontier[round=10]: Contract-First Clean-Room Synthesis lost 0W/3L with median Elo delta -85.552",
+      "STATE_CAPSULE.promising_rejected[round=10]: candidate median score-rate 0.245 versus incumbent 0.35, indicating that discarding implementation detail did not retain the development threshold"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "The authoritative representation of the evolving engine",
+      "before": "A concrete provisional engine is the authoritative mutable state; executable failures are attributed to exact source deltas and a terminal integrator preserves or rolls back those deltas.",
+      "after": "A loss-accounted semantic intermediate representation of the supplied common anchor is the sole authoritative mutable state until one final code emission; preserved semantics, intentional changes, dependencies, and opaque regions remain explicitly distinguishable.",
+      "why_causal": "Changing the authoritative representation changes what can be preserved, inspected, transformed, and recovered. A dependency-bearing semantic representation can coordinate one transformation across search, state, evaluation, and protocol boundaries while retaining untouched implementation behavior, without constructing alternative engines or relying on terminal delta selection."
+    },
+    "expected_effect": "The candidate should retain more anchor strength than clean-room synthesis while permitting non-parametric, cross-component improvements that the champion's exact-delta preserve-or-rollback logic would fragment. Its final engine should therefore obtain a higher median Elo and paired advantage without increasing invalid arms.",
+    "falsifier": "In a completed three-valid-pair, zero-invalid batch, the hypothesis is falsified if candidate wins are not greater than candidate losses or the precommitted candidate-median Elo is not greater than the champion median Elo.",
+    "behavioral_novelty": "The loop can express one coordinated semantic rewrite spanning several source modules while proving that unrelated regions still round-trip to anchor behavior. For example, it can make search-state identity consistently control repetition handling, transposition reuse, make/unmake state, and quiescence entry without treating four resulting edits as independently keepable or rollbackable deltas.",
+    "family_break": {
+      "champion_family": "Artifact-first mutation followed by independent differential failure reproduction, exact delta attribution through reversible interventions, and terminal preserve-or-rollback integration.",
+      "alternative_family": "Loss-Accounted Semantic Transcompilation",
+      "rejected_core_assumptions": [
+        "Useful error localization requires a runnable provisional candidate whose failures can be compared with the anchor.",
+        "Exact source deltas are the safest units for both improvement commitment and failure recovery."
+      ],
+      "forbidden_champion_mechanisms": [
+        "Provisional-engine authorship followed by terminal independent review",
+        "Champion-to-provisional exact-delta attribution using reversible rollback interventions",
+        "A final integrator choosing whether to preserve or remove provisional source deltas"
+      ],
+      "alternative_causal_principle": "Preserve implementation knowledge by lifting the common anchor into a provenance-bearing semantic representation, audit that representation by round-trip equivalence, transform one audited dependency slice, and emit exactly one engine from the resulting representation.",
+      "changed_dimensions": [
+        "information_flow",
+        "error_detection",
+        "failure_recovery",
+        "final_decision"
+      ],
+      "difference_from_champion": {
+        "information_flow": "Anchor source and executable observations flow into a typed dependency representation, then through an equivalence audit and one semantic transformation before code is emitted once; no provisional engine sends failures backward to a delta verifier.",
+        "error_detection": "The audit detects lost or contradictory semantics by comparing anchor behavior with the lifted representation before improvement, identifying semantic nodes and dependency boundaries rather than attributing failures to candidate source edits.",
+        "failure_recovery": "A representation region that cannot round-trip is frozen as an opaque anchor-preserving node, allowing transformation elsewhere; recovery never removes changes from a provisional candidate.",
+        "final_decision": "The final engine is deterministically generated from one audited, transformed representation. There is no terminal choice among candidate artifacts or among keep-versus-rollback alternatives."
+      },
+      "non_derivative_probe": "Give both structures an anchor trace whose incorrect behavior depends jointly on repetition state, transposition identity, and make/unmake restoration, with no single isolated source edit explaining it. The champion family should require a provisional artifact and attempt exact edit-level attribution; this family must instead produce a pre-emission semantic dependency slice, freeze any non-round-tripping nodes, encode one coordinated transformation across the remaining slice, and emit no engine before that representation is audited."
+    },
+    "strengths": [
+      "Preserves source-level implementation knowledge that the failed clean-room family omitted.",
+      "Allows one causally coherent transformation across component boundaries without replicated candidates or best-of-N selection.",
+      "Detects representation loss before intentional changes are mixed with translation errors.",
+      "Provides bounded recovery by freezing unauditable regions while retaining audited transformation opportunities elsewhere."
+    ],
+    "risks": [
+      "The semantic representation may be incomplete or too coarse, causing large regions to be frozen and leaving little improvement opportunity.",
+      "Round-trip checks can preserve observed behavior while missing latent state semantics.",
+      "The optimizer may select a coherent but strategically weak transformation even when it is represented correctly.",
+      "Final code generation may introduce translation defects; bounded translation-only repair cannot revise a flawed semantic design."
+    ],
+    "dominant_assumption": "The champion family assumes that concrete candidate execution plus exact edit-level causal intervention is the most reliable way to preserve gains while removing regressions.",
+    "inversion": "Treat concrete candidate code as a terminal compilation product rather than the medium of deliberation: preserve and transform the anchor through an audited, loss-accounted semantic representation, then emit exactly one complete engine."
+  },
+  "structure": {
+    "name": "Loss-Accounted Semantic Transcompiler",
+    "organization": "collaboration",
+    "information_flow": "A semantic lifter converts the common anchor into one provenance-bearing intermediate representation. A round-trip auditor marks equivalent, lossy, and opaque regions. A transformation architect applies one coherent non-parametric rewrite only to audited dependencies. A final emitter generates and smoke-tests one complete engine, repairing only code-generation defects.",
+    "stages": [
+      {
+        "id": "semantic_lifting",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "lift_anchor_semantics",
+            "role": "semantic lifter",
+            "objective": "Inspect and execute the supplied common anchor as needed, then produce one typed semantic intermediate representation covering UCI lifecycle, board-state transitions, search control, evaluation data flow, and time handling. Attach source provenance and explicitly label preserved semantics, uncertain semantics, and dependency edges. Produce no candidate engine and no alternative representations.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "roundtrip_audit",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "audit_semantic_roundtrip",
+            "role": "round-trip equivalence auditor",
+            "objective": "Use generic executable probes derived from the task and engine interface to compare the anchor with the lifted representation. Return one audited map that certifies equivalent regions, records counterexamples for lossy regions, and freezes unresolved regions as opaque anchor-preserving nodes. Do not inspect benchmark cases, propose engine variants, or produce candidate code.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "lift_anchor_semantics",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "semantic_transformation",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "transform_audited_ir",
+            "role": "semantic transformation architect",
+            "objective": "Select one causally coherent, non-hyperparameter engine improvement and express it as a single dependency-complete transformation of audited IR nodes. Preserve certified nodes outside the transformation boundary and all opaque nodes exactly. Include executable semantic obligations and a deterministic emission plan; do not create or compare candidate engines.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "lift_anchor_semantics",
+              "audit_semantic_roundtrip"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "single_emission",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "emit_complete_engine",
+            "role": "semantic code emitter",
+            "objective": "Generate exactly one complete legal UCI engine from the audited transformed representation and the supplied anchor source. Run compilation, protocol, legality, and state-integrity smoke checks. Perform only bounded repairs of code-generation defects that preserve the transformation plan; if an obligation cannot be emitted safely, preserve the corresponding audited anchor semantics rather than inventing another design. Return the complete engine.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "candidate_hypothesis",
+              "loop_structure",
+              "lift_anchor_semantics",
+              "audit_semantic_roundtrip",
+              "transform_audited_ir"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "emit_complete_engine"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  },
+  "structure_id": "loop_27e6ab11ba09ecf6"
+}

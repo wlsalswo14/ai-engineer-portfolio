@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "attempt": 1,
+  "agent_role": "structural_architect",
+  "proposal_policy": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "auth_mode": "codex_subscription",
+    "allow_paid_api": false,
+    "allow_model_fallback": false,
+    "sandbox": "read-only",
+    "max_model_calls": 1,
+    "max_tokens": 120000,
+    "max_wall_seconds": 1800,
+    "codex_executable": "codex.cmd"
+  },
+  "proposal_policy_sha256": "635f29bc92d9e1d7ff6d31ab49f6e9ff4b5928d0ca8f79f544c84cbe6ca0ce31",
+  "execution_provenance": "collaboration_subagent_direct_contingency",
+  "official_codex_backend_invoked": false,
+  "delegated_subagent_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\manual-proposals\\r0017\\subagent-receipt.json",
+  "delegated_subagent_receipt_sha256": "ee2d3e18d30d6d89bd8497ea9b3a462b77c50357f6dfa81120fcb6266b06e02f",
+  "prompt_sha256": "0a0dcf729ebd9d871b247ce63c42ac6db4effa9f3b347543d00ce1bf5b910837",
+  "response_sha256": "922691ab4a03058e70738296c034054a223201bb174a8d7894b0b1ad3a84b640",
+  "usage": {
+    "input_tokens": 0,
+    "cached_input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_output_tokens": 0,
+    "model_calls": 0
+  },
+  "trace_refs": [
+    "collaboration-subagent:gpt-5.6-sol:max"
+  ],
+  "validation": {
+    "passed": true,
+    "loader": "LoopPlan.from_payload(payload, expected_mode='counter_hypothesis')",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "validated_capsule_file_sha256": "89ebf8e117ab164622e2a079f525abc4b8194230dcabd64d8b322947619bf9b6",
+    "normalized_payload_matches_file": true,
+    "validated_structure_id": "loop_e0aeb13804157865",
+    "validated_call_count": 2,
+    "validated_organization": "collaboration",
+    "validated_stage_ids": [
+      "transformation_programming",
+      "single_program_compilation"
+    ],
+    "validated_final_call_id": "anchor_relative_engine_compiler",
+    "family_break_schema_complete": true,
+    "changed_dimensions": [
+      "information_flow",
+      "error_detection",
+      "final_decision",
+      "failure_recovery"
+    ],
+    "alternative_family_unique_in_bounded_history": true,
+    "previously_seen_structure_id": false,
+    "live_context_hashes_unchanged_during_staging": true
+  }
+}

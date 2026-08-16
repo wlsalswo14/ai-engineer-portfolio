@@ -1,0 +1,80 @@
+{
+  "architect_scope": "one-R75-structural-factor-only",
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The incumbent lineage exposes binding exclusions and nonbinding predecessor framing together, allowing affirmative framing to influence terminal construction despite open visibility.",
+    "causal_change": "Insert an irreversible polarity projection that carries binding exclusions forward while removing predecessor-authored nonbinding material before terminal visibility.",
+    "expected_effect": "Terminal construction remains bounded by negative authority while independently reconciling admissible evidence with less inherited framing.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "irreversible exclusion-only projection on the sole analysis lineage edge",
+    "before": "The adjudicator's complete analysis passes directly to the terminal constructor.",
+    "after": "A non-policy state transition projects that analysis to its binding exclusions before the terminal constructor receives it.",
+    "why_structural": "The mutation subdivides the sole lineage edge with a lossy visibility transformation that changes transmitted state while preserving open external visibility and sole terminal policy authority."
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only the adjudicator-to-constructor lineage edge is mutated; common-input visibility, binding negative authority, and the single terminal policy emission remain unchanged.",
+    "why_not_repeat_role_fission": "The inserted call neither proposes, reviews, nor finalizes a policy; it performs an irreversible information-state transformation, leaving one terminal call as the only policy producer."
+  },
+  "candidate_structure": {
+    "name": "Exclusion-Only Projection Aperture",
+    "organization": "three-call sequential lineage with one authority-preserving lossy visibility transformation",
+    "information_flow": "The first call receives every common input and emits the incumbent-style negative-authority analysis. The second call consumes only that analysis and projects it to binding exclusions by removing predecessor-authored nonbinding material. The final call consumes the projected analysis, directly receives every common input, honors the exclusions, and emits one complete policy.",
+    "stages": [
+      {
+        "id": "projected_negative_authority_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "establish_admissibility_boundary",
+            "role": "negative-authority evidence adjudicator",
+            "objective": "Reconcile visible evidence with normative obligations, identify unsupported commitments as binding exclusions, and preserve admissible conflicts in one analysis without constructing a policy.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          },
+          {
+            "id": "project_boundary_polarity",
+            "role": "lineage polarity transducer",
+            "objective": "Consume establish_admissibility_boundary, retain its binding exclusions, remove its nonbinding affirmative framing and conflict resolutions from lineage-visible state, add no evidence, and emit the projected analysis.",
+            "inputs": [
+              "establish_admissibility_boundary"
+            ],
+            "output_type": "analysis"
+          },
+          {
+            "id": "construct_from_projected_boundary",
+            "role": "bounded constructive policy authority",
+            "objective": "Consume project_boundary_polarity, directly examine all common evidence, honor the projected binding exclusions, independently reconcile admissible claims, and emit one complete policy.",
+            "inputs": [
+              "project_boundary_polarity",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "construct_from_projected_boundary"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

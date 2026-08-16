@@ -1,0 +1,68 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "The anchor is an online, standard-library-only adaptive segmented cache with resident recent/frequent state, byte accounting, ghost histories, and a dynamically adjusted recent target. The hypothesis supports transferring one complete executable state intact so terminal behavior remains coherent; it does not justify reconstructing semantics from analysis or using hidden evidence. Preserve conflicts: continuity may improve action coherence while scan resistance and phase adaptation remain coupled and uncertain without scores. Normative obligations take precedence over hypothesized gains.",
+      "exact_actions": [
+        "Transfer the complete policy state, including resident ordering, byte counters, ghost ordering and metadata, recent-target parameter, and capacity-derived limits, to the terminal successor without reconstruction.",
+        "On each access, perform authoritative resident membership handling before ghost handling, maintain exact byte accounting, and make room through bounded online evictions until the incoming resident size is safe.",
+        "Record evicted resident entries in the appropriate ghost class and remove stale duplicate ghost records before inserting new ghost evidence.",
+        "Adapt the recent-target parameter only from observed ghost re-references, while preserving boundedness and deterministic ordering.",
+        "Handle zero or negative capacity and objects larger than capacity without admitting them; ensure any reported eviction remains legal under the evaluator's current-cache contract.",
+        "Emit no policy source or alternative design from this stage; provide only these reconciled constraints and evidence to the normative policy authority."
+      ],
+      "obligations": [
+        "Maintain the declared Policy constructor and access interface exactly.",
+        "Ensure every transition is online and uses only the current policy state and current access arguments.",
+        "Never exceed capacity_bytes, including after size changes, promotions, ghost hits, or repeated evictions.",
+        "Return only valid currently cached integer keys, with no duplicates and no unrelated keys.",
+        "Keep all executable behavior embodied in one continuous transferred policy state; do not derive or substitute behavior from a non-executable analysis.",
+        "Treat the hypothesis as an unverified causal expectation, not as evidence of score improvement."
+      ],
+      "witnesses": [
+        "Resident state is partitioned into recent and frequent entries with byte totals and a shared capacity bound.",
+        "Ghost histories record evicted keys and sizes, adjust the recent target on re-reference, and are bounded by byte and count limits.",
+        "A resident re-access is promoted to frequent; a new access enters recent unless it matches a ghost, in which case it enters frequent.",
+        "Oversized insertions must not become resident, and returned evictions must contain only unique integer keys that are currently cached under the evaluator's authoritative state.",
+        "No benchmark traces, oracle decisions, external libraries, networking, subprocesses, or score information are available."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R70-pair01-incumbent-call01-synthesize_cut_sources",
+    "duration_seconds": 14.763,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:16:15Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "4d7e2cc5c8fc6cd5c97ca20bbb885517c03daba2738a273b34d0886f2f9b51bd",
+    "raw_events_path": "workspace\\model-calls\\R70-pair01-incumbent-call01-synthesize_cut_sources\\raw-events.jsonl",
+    "raw_events_sha256": "797656a3adcc74196ad48d36b31a4c4c082fb1615a8539a2c83c7a9b0032387a",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "67bcb8f4b3b61d856fb3560baf8ddc21c398fc860d1fa6a0c3c1e1f6094df91b",
+    "returncode": 0,
+    "role": "R70 incumbent topology role upstream generative-evidence synthesizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:16:00Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14314,
+      "output_tokens": 916,
+      "reasoning_output_tokens": 399
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

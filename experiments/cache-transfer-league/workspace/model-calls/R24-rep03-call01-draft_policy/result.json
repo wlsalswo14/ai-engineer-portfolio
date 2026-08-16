@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R24-rep03-call01-draft_policy",
+    "duration_seconds": 9.591,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:37:56Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "69613290f20ea0a13c314e93db9e66088a665d05591821dcd79ff97dac6fa54a",
+    "raw_events_sha256": "e538fc0273ef830d407661f745619a29044f062d9d6e5a2eed6d41870b414aa7",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "dde65b863d2d74f67d4c7a71424295010843b535a8fef419a097c721e1ce351d",
+    "returncode": 0,
+    "role": "anchor-compatible provisional policy constructor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:37:46Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13999,
+      "output_tokens": 340,
+      "reasoning_output_tokens": 126
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

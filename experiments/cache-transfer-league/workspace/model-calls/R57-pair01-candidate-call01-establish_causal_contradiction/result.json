@@ -1,0 +1,58 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "NO_ESTABLISHED_CONTRADICTION: The supplied evidence does not establish that any anchor-dependent assumption is incompatible with the current interface, capacity-safety, online-only, or return-value obligations. The candidate hypothesis, observed bottleneck, and score-blind falsifier are claims about causal authority and expected effects, not contradiction evidence. The anchor source visibly performs online state transitions and bounds admitted bytes, with no demonstrated contract violation.",
+      "exact_actions": [
+        "Mark the causal-demotion trigger as not established.",
+        "Retain the anchor as causally eligible evidence for the downstream authority.",
+        "Pass no policy artifact."
+      ],
+      "obligations": [
+        "Preserve interface legality.",
+        "Return only currently cached unique integer keys.",
+        "Never exceed capacity_bytes.",
+        "Use only online, standard-library-visible state.",
+        "Do not demote the anchor without an established source-distinguished contradiction."
+      ],
+      "witnesses": []
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R57-pair01-candidate-call01-establish_causal_contradiction",
+    "duration_seconds": 18.045,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T21:08:01Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "438e10e83fced58a40907fe1207762b5b7d99a99720b9730ac30aefb4aa8a9fb",
+    "raw_events_path": "workspace\\model-calls\\R57-pair01-candidate-call01-establish_causal_contradiction\\raw-events.jsonl",
+    "raw_events_sha256": "3ee0ba883071d248e43824debe2a68d54e57cd5150d784006ff4edd262f27fda",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "788b092f994c560395d9b1cf942f5b0f83efac3cfb6a52f6d0e99d1750af81a0",
+    "returncode": 0,
+    "role": "R57 candidate topology role source-distinguished causal contradiction authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T21:07:43Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14686,
+      "output_tokens": 1222,
+      "reasoning_output_tokens": 1034
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

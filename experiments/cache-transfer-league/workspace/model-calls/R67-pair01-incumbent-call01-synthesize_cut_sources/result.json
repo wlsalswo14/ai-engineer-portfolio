@@ -1,0 +1,97 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "analysis_only; the anchor and hypothesis were reconciled against the visible contract without score claims or artifact generation. The proposed reversible continuity is a design hypothesis, not executable evidence at this source-cut stage.",
+      "exact_actions": [
+        "Pass the synthesized distinctions to the normative terminal as analysis, not as policy source.",
+        "Preserve the hypothesis only as rationale for continuity and rollback-sensitive state transitions; do not claim that its causal effect is proven.",
+        "Require every terminal design choice to satisfy interface legality, online-only visibility, unique-current-key eviction reporting, and capacity safety.",
+        "Require explicit handling of oversized objects, resident size changes, empty or zero-capacity caches, and repeated accesses.",
+        "Do not reconstruct or copy the anchor verbatim, infer hidden evaluator behavior, use withheld scores, or introduce benchmark-specific adaptation.",
+        "Because the terminal cannot reacquire generative sources, retain the stated conflicts and uncertainty rather than silently converting them into unsupported guarantees."
+      ],
+      "obligations": [
+        {
+          "basis": "anchor_contract and task_constraints.",
+          "requirement": "Preserve the exact Policy constructor and access interface."
+        },
+        {
+          "basis": "task and task_constraints.",
+          "requirement": "Use only online information from the current access and maintained policy state."
+        },
+        {
+          "basis": "task and task_constraints.",
+          "requirement": "Return only unique integer keys that are currently cached and evicted by the request."
+        },
+        {
+          "basis": "task and task_constraints.",
+          "requirement": "Never allow resident bytes to exceed capacity_bytes, including on size changes and oversized requests."
+        },
+        {
+          "basis": "task and anchor_contract.",
+          "requirement": "Remain standard-library-only and avoid evaluator, trace, oracle, benchmark, networking, subprocess, and external-library dependencies."
+        },
+        {
+          "basis": "candidate_hypothesis and task_constraints.",
+          "requirement": "Treat the hypothesis as unvalidated because scores and benchmark evidence are withheld."
+        }
+      ],
+      "witnesses": [
+        {
+          "claim": "The anchor maintains recent and frequent resident segments plus ghost histories, adapts a recent-size target, and evicts through ordered resident entries.",
+          "support": "Visible anchor_policy."
+        },
+        {
+          "claim": "The candidate hypothesis targets rematerialization failures by preserving executable continuity and enabling causal rollback when a transformation is directly contradicted.",
+          "support": "Visible candidate_hypothesis."
+        },
+        {
+          "claim": "The source cut prevents the terminal call from directly reacquiring the anchor, hypothesis, or loop structure.",
+          "support": "Visible loop_structure."
+        },
+        {
+          "claim": "Oversized misses are rejected without insertion, while resident keys are removed before reinsertion or rejection.",
+          "support": "Visible anchor access logic."
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R67-pair01-incumbent-call01-synthesize_cut_sources",
+    "duration_seconds": 15.643,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:49:31Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "97f81eb232da9fdcd271131da0167a91056779bb3aeb1c4b61e25260b081444d",
+    "raw_events_path": "workspace\\model-calls\\R67-pair01-incumbent-call01-synthesize_cut_sources\\raw-events.jsonl",
+    "raw_events_sha256": "308cfc0f70685e9349d84f70c5b410f8f94ff3aa834bd11ccbd3a0908066352a",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "85afa7a59c500f6cd1fff8c4825926dae8e183363f9f0b199a18f40938fca0a0",
+    "returncode": 0,
+    "role": "R67 incumbent topology role upstream generative-evidence synthesizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:49:15Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14307,
+      "output_tokens": 979,
+      "reasoning_output_tokens": 476
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

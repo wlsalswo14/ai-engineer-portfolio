@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.entries = {}\n        self.history = {}\n        self.used_bytes = 0\n        self._tick = 0\n\n    def _age(self):\n        for key, (size, last, frequency) in tuple(self.entries.items()):\n            self.entries[key] = (size, last, max(1, frequency // 2))\n        for key, (count, last) in tuple(self.history.items()):\n            count = max(1, count // 2)\n            if key not in self.entries and self._tick - last > 4096 and count <= 1:\n                del self.history[key]\n            else:\n                self.history[key] = (count, last)\n\n    def _score(self, record):\n        size, last, frequency = record\n        age = min(self._tick - last, 768)\n        size_penalty = min(256, (size * 256) // max(1, self.capacity_bytes))\n        return frequency * 1024 - age - size_penalty\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._tick += 1\n        if self._tick % 512 == 0:\n            self._age()\n\n        history_record = self.history.get(key)\n        previous_count = history_record[0] if history_record is not None else 0\n        self.history[key] = (min(previous_count + 1, 1000000), self._tick)\n\n        current = self.entries.get(key)\n        if current is not None:\n            stored_size, _, frequency = current\n            self.entries[key] = (stored_size, self._tick, min(frequency + 1, 1000000))\n            return []\n\n        if size < 0:\n            size = 0\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        candidate_frequency = min(previous_count + 1, 1000000)\n        candidate_penalty = min(256, (size * 256) // max(1, self.capacity_bytes))\n        candidate_score = candidate_frequency * 1024 - candidate_penalty\n        victims = []\n        remaining = self.used_bytes\n\n        order = sorted(\n            self.entries,\n            key=lambda item: (self._score(self.entries[item]), self.entries[item][1], item),\n        )\n        for victim in order:\n            if remaining + size <= self.capacity_bytes:\n                break\n            if self._score(self.entries[victim]) >= candidate_score:\n                return []\n            victims.append(victim)\n            remaining -= self.entries[victim][0]\n\n        if remaining + size > self.capacity_bytes:\n            return []\n\n        for victim in victims:\n            self.used_bytes -= self.entries[victim][0]\n            del self.entries[victim]\n\n        self.entries[key] = (size, self._tick, candidate_frequency)\n        self.used_bytes += size\n        return victims"
+  },
+  "receipt": {
+    "call_id": "R17-pair02-candidate-call02-independent_policy_originator",
+    "duration_seconds": 75.396,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:10:44Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ad27e29c0d4538e542364a76c574d519b43efecad9e549191eb918bdcdd1b800",
+    "raw_events_path": "workspace\\model-calls\\R17-pair02-candidate-call02-independent_policy_originator\\raw-events.jsonl",
+    "raw_events_sha256": "2f5d211dd50f9283212adc60419ecdf82e9e0525dc627d75814171a4d53bb6b3",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "4e0eddabf97cb89a5df980a1da8512d8e6f8c67aef706808cdd71b9e5634e779",
+    "returncode": 0,
+    "role": "R17 candidate topology role charter-bound sole policy originator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:09:28Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13723,
+      "output_tokens": 5902,
+      "reasoning_output_tokens": 5178
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

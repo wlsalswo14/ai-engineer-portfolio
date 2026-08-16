@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.ghost_recent_bytes = 0\n        self.ghost_frequent_bytes = 0\n        self.used = 0\n        self.recent_target = self.capacity // 2\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n\n    def _remove_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_recent_bytes -= value\n        value = self.ghost_frequent.pop(key, None)\n        if value is not None:\n            self.ghost_frequent_bytes -= value\n\n    def _trim_ghosts(self):\n        while (self.ghost_recent_bytes + self.ghost_frequent_bytes > self.ghost_limit or\n               len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_count_limit):\n            if self.ghost_recent and self.ghost_frequent:\n                target = (self.ghost_recent if next(iter(self.ghost_recent.values()))[1] <=\n                          next(iter(self.ghost_frequent.values()))[1] else self.ghost_frequent)\n            elif self.ghost_recent:\n                target = self.ghost_recent\n            else:\n                target = self.ghost_frequent\n            key, value = target.popitem(last=False)\n            if target is self.ghost_recent:\n                self.ghost_recent_bytes -= value[0]\n            else:\n                self.ghost_frequent_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, frequent):\n        self._remove_ghost(key)\n        serial = getattr(self, \"_serial\", 0) + 1\n        self._serial = serial\n        value = (max(0, int(size)), serial)\n        target = self.ghost_frequent if frequent else self.ghost_recent\n        target[key] = value\n        if frequent:\n            self.ghost_frequent_bytes += value[0]\n        else:\n            self.ghost_recent_bytes += value[0]\n        self._trim_ghosts()\n\n    def _adjust_target(self, frequent_ghost):\n        if self.capacity <= 0:\n            return\n        recent = self.ghost_recent_bytes\n        frequent = self.ghost_frequent_bytes\n        if frequent_ghost:\n            delta = self.capacity if recent == 0 else max(1, min(self.capacity, frequent // recent or 1))\n            self.recent_target = max(0, self.recent_target - delta)\n        else:\n            delta = self.capacity if frequent == 0 else max(1, min(self.capacity, recent // frequent or 1))\n            self.recent_target = min(self.capacity, self.recent_target + delta)\n\n    def _remove_resident(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.recent_bytes -= value\n            self.used -= value\n            return value, False\n        value = self.frequent.pop(key, None)\n        if value is not None:\n            self.frequent_bytes -= value\n            self.used -= value\n            return value, True\n        return None, False\n\n    def _evict_one(self):\n        if self.recent and (not self.frequent or self.recent_bytes > self.recent_target):\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, False)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, True)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, False)\n            return key\n        return None\n\n    def _make_room(self, incoming):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one()\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n        resident = key in self.recent or key in self.frequent\n\n        if size > self.capacity:\n            if resident:\n                self._remove_resident(key)\n                return [key]\n            return []\n\n        if resident:\n            _, _ = self._remove_resident(key)\n            self._remove_ghost(key)\n            evicted = self._make_room(size)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.used += size\n            return evicted\n\n        in_recent_ghost = key in self.ghost_recent\n        in_frequent_ghost = key in self.ghost_frequent\n        if in_recent_ghost or in_frequent_ghost:\n            self._adjust_target(in_frequent_ghost)\n            self._remove_ghost(key)\n            evicted = self._make_room(size)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n        else:\n            evicted = self._make_room(size)\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R75-pair01-candidate-call03-construct_from_projected_boundary",
+    "duration_seconds": 36.155,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:05:32Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "e0618bc087127d4c4f3977ad7a0794e1296333373a859c180ba8cf5cab6030fe",
+    "raw_events_path": "workspace\\model-calls\\R75-pair01-candidate-call03-construct_from_projected_boundary\\raw-events.jsonl",
+    "raw_events_sha256": "8a173eb721196378c3fa50e6fe8a1e082390a69dfb6a066491225fdc09c7ef7b",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "00880dbeda8882116994da9a6a0145559d8894d197b048489ffa6cdd80f16b22",
+    "returncode": 0,
+    "role": "R75 candidate topology role bounded constructive policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:04:56Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15408,
+      "output_tokens": 2318,
+      "reasoning_output_tokens": 932
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

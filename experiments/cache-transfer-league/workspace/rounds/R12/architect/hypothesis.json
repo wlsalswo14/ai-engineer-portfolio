@@ -1,0 +1,6 @@
+{
+  "causal_change": "Introduce an executable-genesis lineage rebase: the first call materializes a complete policy state as a new root, and the second receives that executable root plus public obligations but no anchor-policy visibility or edit provenance.",
+  "expected_effect": "The independent root should allow scan-resistance and phase-shift adaptation behavior to be formed coherently outside the anchor genealogy while preserving a directly executable lineage.",
+  "falsifier": "all-valid matched majority and strict-median contract, with no score",
+  "observed_bottleneck": "The champion assumes every useful behavior must remain reachable as reversible edits of the anchor, so terminal compression can remove edits but cannot escape the anchor's coupled behavioral commitments."
+}

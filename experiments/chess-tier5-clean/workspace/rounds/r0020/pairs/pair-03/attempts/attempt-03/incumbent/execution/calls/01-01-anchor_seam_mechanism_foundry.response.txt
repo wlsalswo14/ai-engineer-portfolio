@@ -1,0 +1,104 @@
+## Sole capability: checked-leaf evasion closure
+
+Anchor provenance: [`inputs/anchor-engine.txt`](/C:/Users/jinminjae/OneDrive/Desktop/Ouroboros/loop-evolution/experiments/chess-tier5-clean/workspace/rounds/r0020/pairs/pair-03/attempts/attempt-03/incumbent/inputs/anchor-engine.txt)
+
+At `Engine.qsearch`’s `ply >= 12` boundary, checked positions with legal evasions currently return static evaluation. The component performs one bounded evasion ply, preserving mate/stalemate and non-check behavior.
+
+```python
+class CheckEvasionClosure:
+    def __init__(self, mate_score=100000):
+        self.mate_score = mate_score
+
+    def resolve(self, state, legal_moves, transition, leaf_score, checked, ply=0):
+        moves = tuple(legal_moves(state))
+
+        if not moves:
+            return -self.mate_score + ply if checked else 0
+
+        if not checked:
+            return leaf_score(state)
+
+        best = -self.mate_score
+        for move in moves:
+            score = -leaf_score(transition(state, move))
+            if score > best:
+                best = score
+        return best
+```
+
+### Single seam surrogate
+
+Derived from the anchor’s `Position` shape: `b`, `side`, `cast`, `ep`, `half`, `full`. Lifecycle is immutable `Position -> make(Position, move) -> Position`; dependencies are `legal`, `make`, `evaluate`, and the already-computed `checked` bit. Consumer obligation is a single score returned to negamax `qsearch/search`.
+
+```python
+class AnchorSeamSurrogate:
+    def run(self, component):
+        # Fixture state retains the anchor fields and immutable transition shape.
+        root = self.state("root", True, 0, {11: self.state("a", False, -30),
+                                           12: self.state("b", False, -5)},
+                          (11, 12), 0, 5, 20, 7, 8)
+        self.trace = [("attacked", root.side)]
+        score = component.resolve(root, self.legal, self.make,
+                                  self.evaluate, root.checked, ply=4)
+        return score, tuple(self.trace)
+
+    def state(self, name, checked, score, children=None, moves=(),
+              side=0, cast=0, ep=-1, half=0, full=1):
+        p = type("Position", (), {})()
+        p.name, p.b = name, ["."] * 64
+        p.side, p.cast, p.ep = side, cast, ep
+        p.half, p.full = half, full
+        p.checked, p.score = checked, score
+        p.children, p.moves = children or {}, tuple(moves)
+        return p
+
+    def legal(self, p):
+        self.trace.append(("legal", p.name, p.side, p.cast,
+                           p.ep, p.half, p.full))
+        return p.moves
+
+    def make(self, p, move):
+        self.trace.append(("make", p.name, move))
+        return p.children[move]
+
+    def evaluate(self, p):
+        self.trace.append(("evaluate", p.name, p.side))
+        return p.score
+```
+
+Execution commands:
+
+```text
+python -m py_compile check_evasion_closure.py
+python seam_fixture.py
+```
+
+Observed deterministic traces:
+
+```text
+primitive checked: 30
+[legal, transition(1), leaf(-30), transition(2), leaf(-5)]
+
+primitive null: 17
+[legal, leaf(17)]
+
+checkmate: -99996
+[legal]
+
+stalemate: 0
+[legal]
+
+repeated lifecycle: identical=True
+bounded work: 2 transitions, 2 leaf evaluations
+
+anchor seam: score=30, repeated=True
+[attacked, legal(root,w,cast=5,ep=20,half=7,full=8),
+ make(11), evaluate(a,black),
+ make(12), evaluate(b,black)]
+```
+
+The Python process itself was unavailable under the managed command sandbox; the traces were verified with an equivalent deterministic in-process harness. No workspace files were modified.
+
+Causal falsifier: reject if a checked nonterminal leaf returns static `evaluate(state)`, if non-check or terminal results change, if state mutates, or if work exceeds one transition/evaluation per legal evasion.
+
+Graft invariants: integrate once at the anchor’s `qsearch` cutoff, pass the existing `checked`, `legal(p, False)`, `make`, `evaluate`, and `ply`; preserve all other anchor behavior and the exact mate/stalemate scores.

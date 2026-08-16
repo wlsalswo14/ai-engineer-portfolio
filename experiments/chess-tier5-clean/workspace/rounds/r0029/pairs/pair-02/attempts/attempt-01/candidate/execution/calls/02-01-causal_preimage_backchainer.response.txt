@@ -1,0 +1,139 @@
+{
+  "record_type": "PREIMAGE_CLOSURE",
+  "terminal_node": {
+    "id": "T0",
+    "type": "terminal_output_legality",
+    "satisfaction_predicate": "The emitted bestmove is an orthodox legal move for the supplied root position.",
+    "anchor_observation": "bestmove e1e2 was emitted; e1e2 is illegal because it captures the opposing king."
+  },
+  "prerequisite_nodes": [
+    {
+      "id": "N0",
+      "type": "root_position_state",
+      "satisfaction_predicate": "The supplied FEN yields White king e1, Black king e2, White to move, no castling rights, no en-passant square.",
+      "anchor_fact": "FEN: 8/8/8/8/8/8/4k3/4K3 w - - 0 1."
+    },
+    {
+      "id": "N1",
+      "type": "candidate_generation",
+      "satisfaction_predicate": "The move candidate e1e2 is generated from the White king because the destination is treated as an enemy-occupied square.",
+      "anchor_fact": "King generation admits any adjacent empty or enemy-occupied destination and does not exclude an opposing king."
+    },
+    {
+      "id": "N2",
+      "type": "state_transition",
+      "satisfaction_predicate": "The legality decision retains the semantic fact that e1e2 targets the opposing king and produces an orthodox-invalid king relationship.",
+      "anchor_fact": "Applying e1e2 moves the White king to e2 and overwrites/removes the Black king."
+    },
+    {
+      "id": "N3",
+      "type": "legality_acceptance",
+      "satisfaction_predicate": "A candidate is accepted only if it satisfies orthodox legality, including the prohibition on capturing the opposing king.",
+      "anchor_fact": "Post-transition validation checks only whether the moving side's king is attacked; with the Black king removed, e1e2 passes."
+    },
+    {
+      "id": "N4",
+      "type": "move_selection_control",
+      "satisfaction_predicate": "The selected move is the first orthodox-legal move returned by the root move generator.",
+      "anchor_fact": "The anchor's legal generator returns e1e2 as its only admitted move."
+    },
+    {
+      "id": "N5",
+      "type": "fast_path_control",
+      "satisfaction_predicate": "The one-millisecond request completes through the bounded fast path while selecting only an orthodox-legal move.",
+      "anchor_fact": "movetime 1 becomes millis=1; millis<=4 returns the first move without deeper search or independent validation."
+    },
+    {
+      "id": "N6",
+      "type": "uci_emission",
+      "satisfaction_predicate": "Exactly one UCI bestmove line emits the selected orthodox-legal move.",
+      "anchor_fact": "The UCI loop prints and flushes bestmove e1e2."
+    }
+  ],
+  "edges": [
+    {
+      "from": "N0",
+      "to": "N1",
+      "type": "state_to_generation",
+      "anchor_facts": [
+        "FEN parsing stores White to move.",
+        "White king is at e1 and Black king is at e2."
+      ]
+    },
+    {
+      "from": "N1",
+      "to": "N2",
+      "type": "candidate_to_transition",
+      "anchor_facts": [
+        "e1e2 is encoded as a normal king capture candidate.",
+        "The destination contains the opposing king."
+      ]
+    },
+    {
+      "from": "N2",
+      "to": "N3",
+      "type": "transition_to_legality",
+      "anchor_facts": [
+        "The transition removes the opposing king.",
+        "Validation queries attacks on the moving side's king in the resulting state."
+      ]
+    },
+    {
+      "from": "N3",
+      "to": "N4",
+      "type": "legality_to_selection",
+      "anchor_facts": [
+        "e1e2 survives the legality filter.",
+        "It is therefore the first returned move."
+      ]
+    },
+    {
+      "from": "N4",
+      "to": "N5",
+      "type": "selection_to_fast_path",
+      "anchor_facts": [
+        "The fast path uses the first returned move.",
+        "movetime is 1 millisecond."
+      ]
+    },
+    {
+      "from": "N5",
+      "to": "N6",
+      "type": "control_to_output",
+      "anchor_facts": [
+        "The selected move is converted to e1e2.",
+        "The UCI loop emits one bestmove line."
+      ]
+    },
+    {
+      "from": "N6",
+      "to": "T0",
+      "type": "output_to_terminal_predicate",
+      "anchor_facts": [
+        "The observed output is bestmove e1e2.",
+        "Independent orthodox validation rejects that move."
+      ]
+    }
+  ],
+  "preservation_boundary": {
+    "preserve": [
+      "Six-field FEN parsing and root-position storage.",
+      "One bestmove output line.",
+      "Completion of the movetime 1 fast path before its deadline.",
+      "Non-mutating root state during move generation.",
+      "All behavior outside the opposing-king-capture legality dependency."
+    ],
+    "required_change": "The accepted-move predicate must become orthodox-legal before fast-path selection and emission."
+  },
+  "dependency_order": [
+    "N0",
+    "N1",
+    "N2",
+    "N3",
+    "N4",
+    "N5",
+    "N6",
+    "T0"
+  ],
+  "unresolved_assumption": "The independent validator applies orthodox chess legality to the supplied, king-adjacent FEN, including the rule that an opposing king is never a capturable move target."
+}

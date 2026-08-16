@@ -1,0 +1,82 @@
+{
+  "architect_scope": "one-R92-structural-factor-only",
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The active family assumes serial custodians with disjoint evidence windows should repeatedly rewrite a complete executable artifact, but that distributed positive authority permits later windows to replace commitments justified by evidence they cannot see.",
+    "causal_change": "Replace serial bidirectional custody with one monotone retract-only terminal authority edge over a complete executable predecessor.",
+    "expected_effect": "Surviving commitments retain stable provenance while contradictory evidence can still suppress unsupported commitments, reducing order-sensitive reinterpretation and operation-validity drift.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "monotone retract-only terminal authority edge",
+    "before": "Four executable authorities perform bidirectional reconciliation through mutually exclusive downstream evidence windows.",
+    "after": "One origin authority emits a complete executable capsule, followed by one jointly informed terminal authority that may retract unsupported semantics but may not add or substitute semantics.",
+    "why_structural": "The mutation replaces the lineage's edge-authority relation and executable state-transition semantics; the two-call topology follows from eliminating intermediate positive rewrite authorities."
+  },
+  "mode_certificate": {
+    "rejected_assumptions": [
+      "Disjoint downstream evidence windows prevent destructive reinterpretation.",
+      "Every executable successor requires positive authority to introduce replacement semantics.",
+      "Repeated mutable custody is necessary for coherent final emission."
+    ],
+    "forbidden_inherited_mechanism": "serial bidirectional executable reconciliation under disjoint evidence windows",
+    "independent_replacement_principle": "Later evidence has negative authority only: it may monotonically retract unsupported inherited commitments while preserving the provenance of every surviving commitment.",
+    "changed_behavioral_dimensions": [
+      "control changes from distributed positive authorship to originator authorship with terminal veto-only authority",
+      "state-transition semantics change from arbitrary executable rewriting to monotone semantic contraction",
+      "evidence visibility changes from isolated downstream windows to joint terminal inspection"
+    ],
+    "counter_until_promotion": true
+  },
+  "candidate_structure": {
+    "name": "Monotone Retraction Executable Dyad",
+    "organization": "two-call sequential lineage with one complete executable origin and one retract-only terminal authority",
+    "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule, reopens all common evidence simultaneously, applies only retract-only authority while preserving executable completeness, and emits one policy.",
+    "stages": [
+      {
+        "id": "single_monotone_authority_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "originate_provenanced_executable",
+            "role": "joint-evidence executable origin authority",
+            "objective": "Reconcile the visible evidence and obligations into one complete executable policy capsule while retaining semantic authorship over every included commitment.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy_capsule"
+          },
+          {
+            "id": "retract_only_terminal_emit",
+            "role": "joint-evidence retract-only terminal authority",
+            "objective": "Consume originate_provenanced_executable, inspect the complete artifact against jointly visible common evidence, retract only unsupported commitments without adding or substituting policy semantics, preserve executable completeness, and emit one policy.",
+            "inputs": [
+              "originate_provenanced_executable",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "retract_only_terminal_emit"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

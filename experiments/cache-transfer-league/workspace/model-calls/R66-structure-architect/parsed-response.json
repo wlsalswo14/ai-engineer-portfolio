@@ -1,0 +1,72 @@
+{
+  "architect_scope": "one-R66-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "transition_authority_and_emit",
+    "information_flow": "The first call receives every common input and emits only an analysis containing reconciled evidence and any concrete incompatibility with normative obligations. The final call consumes that analysis and directly receives task, anchor_contract, and task_constraints. It initially admits the analysis as decision-authoritative; qualifying contradiction evidence irreversibly changes that same edge to observation-only before one policy is emitted.",
+    "name": "Triggered Analysis-Authority Quarantine",
+    "organization": "two-call sequential lineage with an evidence-controlled authority transition on the sole analysis handoff",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "synthesize_causal_conflicts",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile inherited and candidate claims with normative obligations, preserve supporting distinctions, and expose concrete causal incompatibilities as analysis without creating a policy artifact.",
+            "output_type": "analysis",
+            "role": "generative-evidence conflict synthesizer"
+          },
+          {
+            "id": "transition_authority_and_emit",
+            "inputs": [
+              "synthesize_causal_conflicts",
+              "task",
+              "anchor_contract",
+              "task_constraints"
+            ],
+            "objective": "Consume synthesize_causal_conflicts, retain its visibility, irreversibly withdraw its decision authority when it evidences a concrete conflict with visible normative obligations, and emit one complete policy under the resulting authority state.",
+            "output_type": "policy",
+            "role": "evidence-responsive normative policy authority"
+          }
+        ],
+        "id": "authority_transition_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "capability_family": "evidence-triggered causal authority quarantine",
+    "champion_limitation": "The champion controls direct source visibility but cannot revoke the causal authority of synthesis already delivered across its sole handoff.",
+    "not_local_refinement": "This introduces a one-way evidence-controlled authority state absent from the static champion topology and is not a role split, reviewer, certificate, gate, field, rename, or visibility restoration.",
+    "observable_effect": "The analysis remains visible after the trigger but can no longer determine the emitted policy, leaving visible normative evidence as the sole authority.",
+    "state_transition": "The terminal call irreversibly changes the consumed analysis edge from decision-authoritative to observation-only before policy emission.",
+    "trigger": "A concrete conflict in the consumed analysis showing that a generative claim cannot be jointly supported with a visible normative obligation."
+  },
+  "proposal_mode": "emergent_exploration",
+  "qualitative_hypothesis": {
+    "causal_change": "Make the analysis edge subject to irreversible evidence-triggered deauthorization while preserving its visibility.",
+    "expected_effect": "Unsupported generative claims lose causal control when contradicted, while uncontradicted synthesized evidence remains usable across tasks.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion cuts direct generative-source visibility but leaves the delivered synthesis continuously authoritative, so contradicted generative claims can retain causal control through the sole handoff."
+  },
+  "structural_mutation": {
+    "after": "The terminal call begins with the analysis edge decision-authoritative and irreversibly transitions it to observation-only when the consumed analysis supplies concrete contradiction evidence against a visible normative obligation.",
+    "before": "The sole analysis edge retains one fixed decision-authoritative state through terminal emission.",
+    "change_count": 1,
+    "factor": "evidence-triggered one-way deauthorization of the sole analysis edge",
+    "why_structural": "This changes the handoff from a static edge into an evidence-controlled authority state transition without adding calls, branches, roles, fields, or artifacts."
+  }
+}

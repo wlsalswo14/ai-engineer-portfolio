@@ -1,0 +1,209 @@
+## Anchor-seam artifact
+
+Capability: bounded continuation-history ordering. It learns `(previous_move, reply_move)` cutoff pairs and contributes only an additive move-ordering bonus.
+
+Anchor seam provenance:
+
+- Consumer: `Engine.mscore()` reads ordering history.
+- Producer: `Engine.search()` updates history on quiet non-pawn cutoffs.
+- Lifecycle: `ucinewgame` clears ordering state.
+- Adapter: map packed moves to `(side, from, to)`.
+
+```python
+import json
+
+class ContinuationHistory:
+    def __init__(self, capacity=8, bonus_cap=64):
+        if capacity < 1 or bonus_cap < 1:
+            raise ValueError("positive bounds required")
+        self.capacity = capacity
+        self.bonus_cap = bonus_cap
+        self._scores = {}
+        self._fifo = []
+        self.generation = 0
+
+    @staticmethod
+    def _move(move):
+        if type(move) is not tuple or len(move) != 3:
+            raise TypeError("move must be (side, from, to)")
+        if any(type(x) is not int for x in move):
+            raise TypeError("move fields must be integers")
+        return move
+
+    @classmethod
+    def _key(cls, previous, current):
+        current = cls._move(current)
+        if previous is None:
+            return None
+        return cls._move(previous) + current
+
+    def score(self, previous, current):
+        key = self._key(previous, current)
+        return 0 if key is None else self._scores.get(key, 0)
+
+    def record_cutoff(self, previous, current, depth):
+        current = self._move(current)
+        if previous is None:
+            return 0
+        if type(depth) is not int or depth < 1:
+            raise ValueError("depth must be positive")
+        key = self._key(previous, current)
+        old = self._scores.get(key, 0)
+        if key not in self._scores:
+            if len(self._fifo) >= self.capacity:
+                del self._scores[self._fifo.pop(0)]
+            self._fifo.append(key)
+        self._scores[key] = min(self.bonus_cap, old + depth * depth)
+        return self._scores[key]
+
+    def reset(self):
+        self._scores.clear()
+        self._fifo.clear()
+        self.generation += 1
+
+    def size(self):
+        return len(self._scores)
+
+
+class AnchorSeamSurrogate:
+    """Scaffolding for the anchor's mscore/search/ucinewgame seam."""
+    def __init__(self, component):
+        self.component = component
+        self.active_frames = 0
+
+    def open_frame(self, previous_move, depth):
+        if type(depth) is not int or depth < 1:
+            raise ValueError("depth must be positive")
+        if previous_move is not None:
+            self.component._move(previous_move)
+        self.active_frames += 1
+        return (previous_move, depth)
+
+    def order(self, frame, replies):
+        previous_move, _ = frame
+        indexed = list(enumerate(replies))
+        indexed.sort(
+            key=lambda item: (-self.component.score(previous_move, item[1]), item[0])
+        )
+        return [item[1] for item in indexed]
+
+    def cutoff(self, frame, reply):
+        previous_move, depth = frame
+        return self.component.record_cutoff(previous_move, reply, depth)
+
+    def close_frame(self):
+        if self.active_frames < 1:
+            raise RuntimeError("frame underflow")
+        self.active_frames -= 1
+
+    def new_game(self):
+        self.component.reset()
+        self.active_frames = 0
+
+
+def run_fixtures():
+    c = ContinuationHistory()
+    seam = AnchorSeamSurrogate(c)
+    previous = (0, 12, 28)
+    favored = (1, 52, 36)
+    other = (1, 57, 42)
+
+    primitive_before = c.score(previous, favored)
+    primitive_update = c.record_cutoff(previous, favored, 3)
+    primitive_after = c.score(previous, favored)
+
+    c.reset()
+    frame = seam.open_frame(previous, 3)
+    seam_before = seam.order(frame, [other, favored])
+    seam_update = seam.cutoff(frame, favored)
+    seam_after = seam.order(frame, [other, favored])
+    seam.close_frame()
+
+    trace = {
+        "primitive": {
+            "before": primitive_before,
+            "update": primitive_update,
+            "after": primitive_after
+        },
+        "seam": {
+            "before_order": seam_before,
+            "update": seam_update,
+            "after_order": seam_after
+        },
+        "null_case": {
+            "different_reply": c.score(previous, other),
+            "root_context": c.score(None, favored)
+        },
+        "boundary": {
+            "before_generation": c.generation,
+            "before_size": c.size(),
+            "before_frames": seam.active_frames
+        }
+    }
+
+    seam.new_game()
+    trace["boundary"].update({
+        "after_generation": c.generation,
+        "after_size": c.size(),
+        "after_frames": seam.active_frames,
+        "after_score": c.score(previous, favored)
+    })
+
+    frame = seam.open_frame(previous, 2)
+    repeated = [
+        seam.cutoff(frame, favored),
+        seam.cutoff(frame, favored)
+    ]
+    seam.close_frame()
+    trace["repeated_lifecycle"] = {
+        "updates": repeated,
+        "replay_score": c.score(previous, favored)
+    }
+
+    bounded = ContinuationHistory()
+    for i in range(1000):
+        bounded.record_cutoff(
+            (i % 2, i % 64, (i + 1) % 64),
+            ((i + 1) % 2, (i + 2) % 64, (i + 3) % 64),
+            1
+        )
+    trace["dependency_closure"] = {
+        "core_dependencies": [],
+        "score_type": type(c.score(previous, favored)).__name__,
+        "additive_result": 17 + c.score(previous, favored)
+    }
+    trace["bounded_work"] = {
+        "updates": 1000,
+        "capacity": bounded.capacity,
+        "resident_entries": bounded.size()
+    }
+
+    assert primitive_before == 0
+    assert primitive_update == primitive_after == 9
+    assert seam_update == 9
+    assert seam_after == [favored, other]
+    assert trace["null_case"] == {"different_reply": 0, "root_context": 0}
+    assert trace["boundary"]["after_size"] == 0
+    assert trace["boundary"]["after_score"] == 0
+    assert repeated == [4, 13]
+    assert trace["bounded_work"]["resident_entries"] <= 8
+    return trace
+
+
+if __name__ == "__main__":
+    print(json.dumps(run_fixtures(), sort_keys=True))
+```
+
+Expected deterministic trace:
+
+- Primitive: `0 → 9`; seam: `[other, favored] → [favored, other]`.
+- Null cases: both `0`.
+- Reset: generation increments; resident state and score return to `0`.
+- Repeated lifecycle: updates `4, 13`; replay score `13`.
+- Bounded work: `1000` updates, at most `8` resident entries.
+
+Execution was attempted but interpreter launches were blocked by the read-only command policy, so the trace above is statically derived rather than runtime-observed.
+
+Causal falsifier: reject if an exact cutoff pair fails to gain ordering priority, an unrelated/root context gains a bonus, reset leaks state, or resident entries exceed the fixed bound.
+
+Graft invariants: preserve board, legality, evaluation, TT, existing history/killer behavior, and UCI behavior; add only the continuation bonus in `mscore`; update only beside the anchor’s existing quiet non-pawn cutoff update; reset exactly with `ucinewgame`; carry the parent move through recursive search frames once.

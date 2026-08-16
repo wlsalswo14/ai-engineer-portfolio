@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.freq = {}\n        self.recent_bytes = 0\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n        self.max_ghost = 4096\n        self.clock = 0\n\n    def _age(self):\n        for key in list(self.freq):\n            value = self.freq[key]\n            if value > 1:\n                self.freq[key] = max(1, value // 2)\n\n    def _bump(self, key):\n        value = min(255, self.freq.get(key, 0) + 1)\n        self.freq[key] = value\n        return value\n\n    def _remember_ghost(self, key, protected):\n        self.ghost_recent.pop(key, None)\n        self.ghost_protected.pop(key, None)\n        target = self.ghost_protected if protected else self.ghost_recent\n        target[key] = None\n        while len(self.ghost_recent) + len(self.ghost_protected) > self.max_ghost:\n            if len(self.ghost_recent) >= len(self.ghost_protected):\n                self.ghost_recent.popitem(last=False)\n            else:\n                self.ghost_protected.popitem(last=False)\n\n    def _rebalance_protected(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.recent[key] = size\n            self.recent_bytes += size\n\n    def _adjust_target(self, key):\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_protected:\n            self.ghost_protected.pop(key, None)\n            self.protected_target = min(\n                self.capacity_bytes, self.protected_target + step\n            )\n        elif key in self.ghost_recent:\n            self.ghost_recent.pop(key, None)\n            self.protected_target = max(0, self.protected_target - step)\n            self._rebalance_protected()\n\n    def _evict_one(self):\n        recent_limit = self.capacity_bytes - self.protected_target\n        if self.recent and (self.recent_bytes > recent_limit or not self.protected):\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            protected = False\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            protected = True\n        elif self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            protected = False\n        else:\n            return None\n        self.used_bytes -= size\n        self.freq.pop(key, None)\n        self._remember_ghost(key, protected)\n        return key\n\n    def _enforce_capacity(self):\n        evicted = []\n        while self.used_bytes > self.capacity_bytes:\n            key = self._evict_one()\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = max(0, size)\n        self.clock += 1\n        if self.clock % 1024 == 0:\n            self._age()\n\n        if key in self.recent:\n            stored = self.recent.pop(key)\n            self.recent_bytes -= stored\n            self.used_bytes -= stored\n            if size > self.capacity_bytes:\n                self.freq.pop(key, None)\n                return [key]\n            self.recent[key] = size\n            self.recent_bytes += size\n            self.used_bytes += size\n            if self._bump(key) >= 2:\n                self.recent.pop(key)\n                self.recent_bytes -= size\n                self.protected[key] = size\n                self.protected_bytes += size\n                self._rebalance_protected()\n            return self._enforce_capacity()\n\n        if key in self.protected:\n            stored = self.protected.pop(key)\n            self.protected_bytes -= stored\n            self.used_bytes -= stored\n            if size > self.capacity_bytes:\n                self.freq.pop(key, None)\n                return [key]\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used_bytes += size\n            self._bump(key)\n            return self._enforce_capacity()\n\n        self._adjust_target(key)\n        self.ghost_recent.pop(key, None)\n        self.ghost_protected.pop(key, None)\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        self.freq[key] = 1\n        self.recent[key] = size\n        self.recent_bytes += size\n        self.used_bytes += size\n        return self._enforce_capacity()\n"
+  },
+  "receipt": {
+    "call_id": "R15-pair01-candidate-call01-independent_policy_constructor",
+    "duration_seconds": 75.751,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:45:48Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "4720c25322d2f40a9a2affb2c676ca1a1db0216820ea68ff083bc024f6ee5bf3",
+    "raw_events_path": "workspace\\model-calls\\R15-pair01-candidate-call01-independent_policy_constructor\\raw-events.jsonl",
+    "raw_events_sha256": "65620c0292403e16bf284624a2cc598ebc4cdf530f8b28a3ed2f38cb1137feb5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "d2864e54579317fa1d2b4fdf68187e4d99709eb9a6ea9c1876799ae0337ba721",
+    "returncode": 0,
+    "role": "R15 candidate topology role whole-policy constructor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:44:32Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14035,
+      "output_tokens": 5128,
+      "reasoning_output_tokens": 3912
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

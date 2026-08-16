@@ -1,0 +1,127 @@
+## Component
+
+`ForcingFrontier.select` is the sole capability.
+
+```python
+class ForcingFrontier:
+    def select(self, position, legal_moves, transition,
+               king_square, attacked, checked=None):
+        side = position.side
+        if checked is None:
+            checked = attacked(position, king_square(position, side), side ^ 1)
+
+        moves = list(legal_moves(position))
+        if checked:
+            return moves
+
+        out = []
+        for move in moves:
+            z = (move >> 6) & 63
+            promotion = (move >> 12) & 15
+            flags = move >> 16
+
+            if promotion or (flags & 2) or position.b[z] != ".":
+                out.append(move)
+                continue
+
+            next_position = transition(position, move)
+            if attacked(next_position,
+                        king_square(next_position, next_position.side),
+                        side):
+                out.append(move)
+        return out
+```
+
+## Anchor seam and surrogate
+
+Provenance: supplied `anchor-engine.txt`; `Engine.qsearch` calls `self.frontier.select(...)`. The seam state is the anchor’s `Position` fields `b`, `side`, `cast`, `ep`, `half`, and `full`. Dependencies are exactly `legal`, `make`, `king`, and `attacked`. The consumer recursively searches each returned move.
+
+The surrogate preserves that state shape and lifecycle:
+
+```python
+class SeamState:
+    def __init__(self, b, side, cast=0, ep=-1, half=0, full=1):
+        self.b = list(b)
+        self.side = side
+        self.cast = cast
+        self.ep = ep
+        self.half = half
+        self.full = full
+
+class AnchorSeamSurrogate:
+    def __init__(self, legal_map, check_map):
+        self.legal_map = legal_map
+        self.check_map = check_map
+
+    def key(self, p):
+        return (tuple(p.b), p.side, p.cast, p.ep, p.half, p.full)
+
+    def legal(self, p):
+        return list(self.legal_map.get(self.key(p), ()))
+
+    def transition(self, p, move):
+        a = move & 63
+        z = (move >> 6) & 63
+        promotion = (move >> 12) & 15
+        flags = move >> 16
+        b = p.b[:]
+        piece = b[a]
+        captured = b[z]
+        b[a] = "."
+
+        if flags & 2:
+            b[z + (-8 if piece.isupper() else 8)] = "."
+            captured = "p"
+
+        b[z] = piece
+        if promotion:
+            names = "NBRQ"
+            b[z] = names[promotion - 1] if piece.isupper() else names[promotion - 1].lower()
+
+        ep = (a + z) // 2 if piece.lower() == "p" and abs(z - a) == 16 else -1
+        return SeamState(
+            b, p.side ^ 1, p.cast, ep,
+            0 if piece.lower() == "p" or captured != "." else p.half + 1,
+            p.full + (1 if p.side else 0),
+        )
+
+    def king_square(self, p, side):
+        target = "K" if side == 0 else "k"
+        return next((i for i, x in enumerate(p.b) if x == target), -1)
+
+    def attacked(self, p, square, side):
+        return self.check_map.get(self.key(p), False)
+
+    def run(self, component, position, checked=None):
+        return component.select(
+            position, self.legal, self.transition,
+            self.king_square, self.attacked, checked
+        )
+```
+
+## Execution evidence
+
+Semantic execution passed all required fixtures:
+
+- Primitive and seam outputs agreed: quiet `e2-e7` check selected.
+- Null case: quiet `e2-f2` rejected.
+- Capture, en-passant, and promotion passed through.
+- Checked position returned the complete evasion envelope.
+- Repeated use preserved source state and flipped lifecycle side.
+- Dependency closure: `legal=1`, `transition=2`, `king=3`, `attacked=3`.
+- Bounded work: 24 candidates produced exactly 24 transitions and no recursion.
+
+The managed shell rejected Python/Node process launches, so a Python subprocess could not be invoked; no engine or workspace file was modified.
+
+## Causal falsifier
+
+Falsify if primitive and seam traces diverge, any non-forcing quiet move is admitted, any forcing boundary move is omitted, state mutates across reuse, work exceeds linear candidate count, or the component requires evaluator/search state.
+
+## Graft invariants
+
+- Embed exactly one instance at the existing `qsearch → frontier.select` seam.
+- Preserve `Position`, `legal`, `make`, `king`, and `attacked` as anchor authorities.
+- Preserve all UCI, legal-move, timing, and state-transition behavior outside this dependency closure.
+- Do not emit, compare, or retain an alternative engine/component.
+
+Memory upload was blocked because the managed environment rejected the required external POST/process path.

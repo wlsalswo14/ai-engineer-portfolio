@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self._items = {}\n        self._ghost = {}\n        self._freq = {}\n        self._clock = 0\n        self._bytes = 0\n        self._ghost_limit = 2048\n\n    def _bump(self, key):\n        value = self._freq.get(key, 0) + 1\n        self._freq[key] = min(value, 1073741824)\n        if len(self._freq) > 8192:\n            for old_key in list(self._freq):\n                reduced = self._freq[old_key] // 2\n                if reduced:\n                    self._freq[old_key] = reduced\n                else:\n                    del self._freq[old_key]\n\n    def _remember_ghost(self, key, frequency):\n        self._ghost[key] = (max(1, frequency), self._clock)\n        if len(self._ghost) > self._ghost_limit:\n            oldest = min(self._ghost, key=lambda k: (self._ghost[k][1], self._ghost[k][0], k))\n            del self._ghost[oldest]\n\n    def _rank(self, key, item):\n        age = max(0, min(4095, self._clock - item[3]))\n        recency = 4096 - age\n        utility = (item[2] + 1) * 4096 + recency\n        density = (utility * 1048576) // (item[0] + 1)\n        return (density, item[2], item[3], item[0], key)\n\n    def _rebalance(self):\n        target = (self.capacity * 7) // 10\n        protected_bytes = sum(item[0] for item in self._items.values() if item[1] == 1)\n        while protected_bytes > target:\n            protected = [(key, item) for key, item in self._items.items() if item[1] == 1]\n            if not protected:\n                break\n            key, item = min(protected, key=lambda pair: self._rank(pair[0], pair[1]))\n            item[1] = 0\n            protected_bytes -= item[0]\n\n    def _enforce(self):\n        evicted = []\n        while self._bytes > self.capacity and self._items:\n            probation = [(key, item) for key, item in self._items.items() if item[1] == 0]\n            candidates = probation if probation else list(self._items.items())\n            victim_key, victim = min(candidates, key=lambda pair: self._rank(pair[0], pair[1]))\n            del self._items[victim_key]\n            self._bytes -= victim[0]\n            self._remember_ghost(victim_key, victim[2])\n            evicted.append(victim_key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._clock += 1\n        amount = max(0, int(size))\n        self._bump(key)\n        item = self._items.get(key)\n\n        if item is not None:\n            old_size = item[0]\n            if amount > self.capacity:\n                del self._items[key]\n                self._bytes -= old_size\n                self._remember_ghost(key, item[2])\n                return [key]\n            item[0] = amount\n            item[2] = max(1, self._freq.get(key, 1))\n            item[3] = self._clock\n            item[1] = 1\n            self._bytes += amount - old_size\n            self._rebalance()\n            return self._enforce()\n\n        ghost = self._ghost.pop(key, None)\n        if amount > self.capacity:\n            return []\n        segment = 1 if ghost is not None else 0\n        self._items[key] = [amount, segment, max(1, self._freq.get(key, 1)), self._clock]\n        self._bytes += amount\n        self._rebalance()\n        return self._enforce()"
+  },
+  "receipt": {
+    "call_id": "R64-pair03-candidate-call02-emit_from_provenance_sealed_evidence",
+    "duration_seconds": 83.308,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:23:03Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "062ee303ec5ee62b7dbd14ef6c40f7fd430e73d96a040b32ead0762e49facb84",
+    "raw_events_path": "workspace\\model-calls\\R64-pair03-candidate-call02-emit_from_provenance_sealed_evidence\\raw-events.jsonl",
+    "raw_events_sha256": "10d3afe9b4b0e19873d609e931fe1b5fc78c09c5df52423084ef1ed05da4bfc9",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "22656f0a86b9e109a3bccb6c0912427bd0501cff159b457e7bba09934d935df0",
+    "returncode": 0,
+    "role": "R64 candidate topology role source-anonymous normative policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:21:40Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13606,
+      "output_tokens": 6605,
+      "reasoning_output_tokens": 5619
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

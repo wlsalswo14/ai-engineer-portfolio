@@ -1,0 +1,96 @@
+Role: R12 candidate topology role whole-state successor owner
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R12,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: anchor_blind_successor
+Role: whole-state successor owner
+Objective: Treat the immediately preceding executable state as the sole policy ancestry. Using only the listed public obligations, exercise whole-state constructive authority and emit one complete contract-compliant policy without anchor-relative comparison, reviewer verdicts, delta replay, rollback, compression, alternatives, or hidden evidence.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "independent_genesis_materializer": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.used_bytes = 0\n        self.target_t1_bytes = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _record_b1(self, key, size):\n        if key in self.b2:\n            self.b2_bytes -= self.b2.pop(key)\n        if key in self.b1:\n            self.b1_bytes -= self.b1.pop(key)\n        self.b1[key] = size\n        self.b1_bytes += size\n        self._trim_ghosts()\n\n    def _record_b2(self, key, size):\n        if key in self.b1:\n            self.b1_bytes -= self.b1.pop(key)\n        if key in self.b2:\n            self.b2_bytes -= self.b2.pop(key)\n        self.b2[key] = size\n        self.b2_bytes += size\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        first_limit = self.ghost_limit // 2\n        second_limit = self.ghost_limit - first_limit\n        while len(self.b1) > first_limit:\n            key, size = self.b1.popitem(last=False)\n            self.b1_bytes -= size\n        while len(self.b2) > second_limit:\n            key, size = self.b2.popitem(last=False)\n            self.b2_bytes -= size\n\n    def _evict_t1(self):\n        key, size = self.t1.popitem(last=False)\n        self.t1_bytes -= size\n        self.used_bytes -= size\n        self._record_b1(key, size)\n        return key\n\n    def _evict_t2(self):\n        key, size = self.t2.popitem(last=False)\n        self.t2_bytes -= size\n        self.used_bytes -= size\n        self._record_b2(key, size)\n        return key\n\n    def _replace(self, incoming_size):\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes:\n            if self.t1 and (self.t1_bytes > self.target_t1_bytes or not self.t2):\n                evicted.append(self._evict_t1())\n            elif self.t2:\n                evicted.append(self._evict_t2())\n            elif self.t1:\n                evicted.append(self._evict_t1())\n            else:\n                break\n        return evicted\n\n    def _insert_t1(self, key, size):\n        self.t1[key] = size\n        self.t1_bytes += size\n        self.used_bytes += size\n\n    def _insert_t2(self, key, size):\n        self.t2[key] = size\n        self.t2_bytes += size\n        self.used_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored = self.t1.pop(key)\n            self.t1_bytes -= stored\n            self.t2[key] = stored\n            self.t2_bytes += stored\n            return []\n\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] -= stored\n            self.t2[key] = stored\n            return []\n\n        incoming = max(0, int(size))\n        if self.capacity_bytes == 0 or incoming > self.capacity_bytes:\n            return []\n\n        if key in self.b1:\n            prior_b1 = max(1, self.b1_bytes)\n            self.b1_bytes -= self.b1.pop(key)\n            delta = max(1, self.b2_bytes // prior_b1)\n            self.target_t1_bytes = min(self.capacity_bytes, self.target_t1_bytes + delta)\n            evicted = self._replace(incoming)\n            self._insert_t2(key, incoming)\n            return evicted\n\n        if key in self.b2:\n            prior_b2 = max(1, self.b2_bytes)\n            self.b2_bytes -= self.b2.pop(key)\n            delta = max(1, self.b1_bytes // prior_b2)\n            self.target_t1_bytes = max(0, self.target_t1_bytes - delta)\n            evicted = self._replace(incoming)\n            self._insert_t2(key, incoming)\n            return evicted\n\n        evicted = self._replace(incoming)\n        self._insert_t1(key, incoming)\n        return evicted\n",
+    "sha256": "abbcfd84af3c3da9eb390f1a108759285d4380ee348bba191dc8b69808649ce1"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R11 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Introduce an executable-genesis lineage rebase: the first call materializes a complete policy state as a new root, and the second receives that executable root plus public obligations but no anchor-policy visibility or edit provenance.",
+    "expected_effect": "The independent root should allow scan-resistance and phase-shift adaptation behavior to be formed coherently outside the anchor genealogy while preserving a directly executable lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion assumes every useful behavior must remain reachable as reversible edits of the anchor, so terminal compression can remove edits but cannot escape the anchor's coupled behavioral commitments."
+  },
+  "loop_structure": {
+    "final_call_id": "anchor_blind_successor",
+    "information_flow": "The founder receives all six common inputs and may use the anchor only as non-authoritative evidence, then emits one complete executable state without anchor-relative edit provenance. The successor immediately consumes that state plus listed public obligations; it has no anchor_policy edge, owns the rebased state as its sole executable ancestry, and emits the sole outward policy.",
+    "name": "Executable Genesis Rebase with Anchor-Blind Successor",
+    "organization": "Two-call single-lineage succession in which an executable genesis rebase, rather than review or role fission, transfers sole constructive authority.",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "independent_genesis_materializer",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Use the common public evidence to materialize one complete contract-compliant executable policy state as a new lineage root. Give the anchor no source, edit, or fallback authority, and carry no anchor-relative edit ledger, review record, alternatives, or parameter choices into the handoff.",
+            "output_type": "executable_policy_state",
+            "role": "de novo executable lineage founder"
+          },
+          {
+            "id": "anchor_blind_successor",
+            "inputs": [
+              "independent_genesis_materializer",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Treat the immediately preceding executable state as the sole policy ancestry. Using only the listed public obligations, exercise whole-state constructive authority and emit one complete contract-compliant policy without anchor-relative comparison, reviewer verdicts, delta replay, rollback, compression, alternatives, or hidden evidence.",
+            "output_type": "policy",
+            "role": "whole-state successor owner"
+          }
+        ],
+        "id": "executable_genesis_rebase",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

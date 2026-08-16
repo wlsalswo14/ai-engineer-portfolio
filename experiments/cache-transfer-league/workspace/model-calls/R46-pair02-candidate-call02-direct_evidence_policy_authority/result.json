@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.probation_target = self.capacity_bytes // 2\n        self.ghost_limit = max(64, min(8192, self.capacity_bytes // 4096 + 64))\n\n    @property\n    def used_bytes(self):\n        return self.t1_bytes + self.t2_bytes\n\n    def _remember(self, ghost, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _adapt(self, key, size):\n        delta = max(1, self.capacity_bytes // 32)\n        delta = max(delta, min(size, self.capacity_bytes))\n        if key in self.b1:\n            self.b1.pop(key, None)\n            self.probation_target = min(\n                self.capacity_bytes,\n                self.probation_target + delta,\n            )\n        elif key in self.b2:\n            self.b2.pop(key, None)\n            self.probation_target = max(\n                0,\n                self.probation_target - delta,\n            )\n\n    def _rebalance_segments(self):\n        protected_target = self.capacity_bytes - self.probation_target\n        while self.t2 and self.t2_bytes > protected_target:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self.t1[key] = size\n            self.t1_bytes += size\n\n    def _evict_from(self, table, ghost, excluded):\n        victim = None\n        for candidate in table:\n            if candidate != excluded:\n                victim = candidate\n                break\n        if victim is None:\n            return None\n        size = table.pop(victim)\n        if table is self.t1:\n            self.t1_bytes -= size\n        else:\n            self.t2_bytes -= size\n        self._remember(ghost, victim)\n        return victim\n\n    def _evict_one(self, excluded=None):\n        prefer_t1 = bool(self.t1) and (\n            self.t1_bytes > self.probation_target or not self.t2\n        )\n        if prefer_t1:\n            victim = self._evict_from(self.t1, self.b1, excluded)\n            if victim is not None:\n                return victim\n            return self._evict_from(self.t2, self.b2, excluded)\n        victim = self._evict_from(self.t2, self.b2, excluded)\n        if victim is not None:\n            return victim\n        return self._evict_from(self.t1, self.b1, excluded)\n\n    def _remove_hit(self, table, key, new_size):\n        old_size = table.pop(key)\n        if table is self.t1:\n            self.t1_bytes -= old_size\n        else:\n            self.t2_bytes -= old_size\n        if new_size > self.capacity_bytes:\n            return old_size, False\n        if table is self.t1:\n            self.t1[key] = new_size\n            self.t1_bytes += new_size\n        else:\n            self.t2[key] = new_size\n            self.t2_bytes += new_size\n        return old_size, True\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        size = int(size)\n\n        if key in self.t2:\n            old_size = self.t2[key]\n            new_size = size if size > 0 else old_size\n            self.t2.pop(key)\n            self.t2_bytes -= old_size\n            if new_size > self.capacity_bytes:\n                return [key]\n            self.t2[key] = new_size\n            self.t2_bytes += new_size\n            evicted = []\n            while self.used_bytes > self.capacity_bytes:\n                victim = self._evict_one(excluded=key)\n                if victim is None:\n                    self.t2.pop(key, None)\n                    self.t2_bytes -= new_size\n                    evicted.append(key)\n                    break\n                evicted.append(victim)\n            return evicted\n\n        if key in self.t1:\n            old_size = self.t1.pop(key)\n            self.t1_bytes -= old_size\n            new_size = size if size > 0 else old_size\n            if new_size > self.capacity_bytes:\n                return [key]\n            self.t2[key] = new_size\n            self.t2_bytes += new_size\n            self._rebalance_segments()\n            evicted = []\n            while self.used_bytes > self.capacity_bytes:\n                victim = self._evict_one(excluded=key)\n                if victim is None:\n                    if key in self.t2:\n                        self.t2.pop(key, None)\n                        self.t2_bytes -= new_size\n                    elif key in self.t1:\n                        self.t1.pop(key, None)\n                        self.t1_bytes -= new_size\n                    evicted.append(key)\n                    break\n                evicted.append(victim)\n            return evicted\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        self._adapt(key, size)\n        self._forget(key)\n        self._rebalance_segments()\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                return evicted\n            evicted.append(victim)\n\n        self.t1[key] = size\n        self.t1_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R46-pair02-candidate-call02-direct_evidence_policy_authority",
+    "duration_seconds": 88.739,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:59:31Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "51d183be3fdae66b33f5fb8caf1611fc99a9f73f62cd5c76abc03f0ee7710438",
+    "raw_events_path": "workspace\\model-calls\\R46-pair02-candidate-call02-direct_evidence_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "57de78000a80ec5f30f76cf359b8a9b4a934c018675aff887af37ac86d2bd7bf",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "ad4e2ffe5d45361493cafc92eb75e8f798aab6176b2ba39020a6e3d237cf4a98",
+    "returncode": 0,
+    "role": "R46 candidate topology role sole holistic policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:58:02Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14165,
+      "output_tokens": 7120,
+      "reasoning_output_tokens": 5696
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

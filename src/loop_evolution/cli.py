@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from loop_evolution.campaign import RoundCampaign
 from loop_evolution.pipeline import EvolutionPipeline
 
 
@@ -17,6 +18,7 @@ def _parser() -> argparse.ArgumentParser:
             "status",
             "propose",
             "run-round",
+            "run-until",
             "run-fixed-round",
             "recover-round",
             "reconcile-round",
@@ -39,12 +41,22 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--plan", type=Path)
     parser.add_argument("--authoritative-record")
     parser.add_argument("--reason")
+    parser.add_argument("--target-display-round", type=int)
+    parser.add_argument("--retry-delay-seconds", type=float, default=30)
+    parser.add_argument(
+        "--force-complete-pairs",
+        action="store_true",
+        help="Run all three valid pairs even after promotion becomes impossible.",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    pipeline = EvolutionPipeline(args.config)
+    pipeline = EvolutionPipeline(
+        args.config,
+        force_complete_pairs=args.force_complete_pairs,
+    )
     if args.command == "init":
         result = pipeline.initialize()
     elif args.command == "migrate":
@@ -55,6 +67,16 @@ def main(argv: list[str] | None = None) -> int:
         result = pipeline.propose().payload
     elif args.command == "run-round":
         result = pipeline.run_round()
+    elif args.command == "run-until":
+        if args.target_display_round is None:
+            raise SystemExit("run-until requires --target-display-round")
+        if args.force_complete_pairs:
+            raise SystemExit("run-until always uses bounded early adjudication")
+        result = RoundCampaign(
+            pipeline,
+            target_display_round=args.target_display_round,
+            retry_delay_seconds=args.retry_delay_seconds,
+        ).run()
     elif args.command == "run-fixed-round":
         if args.plan is None:
             raise SystemExit("run-fixed-round requires --plan")

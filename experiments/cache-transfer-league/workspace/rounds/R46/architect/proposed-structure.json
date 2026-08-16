@@ -1,0 +1,43 @@
+{
+  "final_call_id": "direct_evidence_policy_authority",
+  "information_flow": "The first call receives all common inputs and emits a nonbinding analysis that exposes inherited assumptions without creating or authorizing a policy artifact. The final call consumes that analysis, receives every common input directly, independently reconciles the public evidence, and emits the lineage's only policy.",
+  "name": "Re-entrant Evidence Fan-In with Sole Authorship",
+  "organization": "two-call sequential lineage with one non-policy counter-analysis edge and direct full-evidence fan-in to the only policy author",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "negate_inherited_structure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Identify conflicts created by inherited structural assumptions across the supplied public evidence, while withholding policy authorship and preserving each common input as independently visible evidence.",
+          "output_type": "analysis",
+          "role": "nonauthoritative assumption-negation analyst"
+        },
+        {
+          "id": "direct_evidence_policy_authority",
+          "inputs": [
+            "negate_inherited_structure",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume negate_inherited_structure as nonbinding counterevidence, independently reconcile every directly supplied common input, and emit exactly one complete policy conforming to the public contract and constraints.",
+          "output_type": "policy",
+          "role": "sole holistic policy authority"
+        }
+      ],
+      "id": "counter_analysis_to_direct_authorship",
+      "mode": "sequential"
+    }
+  ]
+}

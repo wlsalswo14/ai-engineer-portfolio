@@ -147,12 +147,24 @@ class StateStore:
         legacy_local = max(0, int(cycle.get("legacy_local_rounds_completed", 0)))
         return local_limit, emergent_limit, legacy_local
 
+    def _development_config(self) -> tuple[float, int]:
+        cycle = dict(self.config.get("search_cycle", {}))
+        threshold = float(cycle.get("development_performance_ratio", 0.9))
+        if not 0.0 < threshold <= 1.0:
+            raise StateError("development_performance_ratio must be in (0, 1]")
+        history_limit = max(1, int(cycle.get("counter_family_history_limit", 8)))
+        return threshold, history_limit
+
     def _ensure_search_cycle(self, state: dict[str, Any]) -> dict[str, Any]:
-        required = {"local_refinement_count", "emergent_failure_count"}
-        if required.issubset(state):
+        legacy_required = {"local_refinement_count", "emergent_failure_count"}
+        development_required = {"development_candidate", "counter_family_history"}
+        if legacy_required.union(development_required).issubset(state):
             return state
         local_limit, _, legacy_local = self._search_cycle_config()
-        local_count = min(local_limit, legacy_local)
+        local_count = int(
+            state.get("local_refinement_count", min(local_limit, legacy_local))
+        )
+        emergent_failures = int(state.get("emergent_failure_count", 0))
         old_mode = str(state.get("proposal_mode", "general"))
         mode = (
             "counter_hypothesis"
@@ -164,12 +176,15 @@ class StateStore:
         savepoint_dir = self.workspace / "savepoints"
         savepoint_dir.mkdir(parents=True, exist_ok=True)
         stamp = datetime.now().strftime("%Y%m%dT%H%M%S")
-        savepoint = savepoint_dir / f"before-search-cycle-v2-{stamp}.json"
+        savepoint = savepoint_dir / f"before-development-cycle-v3-{stamp}.json"
         atomic_json(
             savepoint,
             {
                 "schema_version": 1,
-                "reason": "adopt two-local then two-emergent-failures search cycle",
+                "reason": (
+                    "adopt strengthened counter-hypothesis discovery followed by a bounded "
+                    "two-general then two-emergent development cycle"
+                ),
                 "state": state,
                 "state_sha256": content_hash(state),
             },
@@ -177,20 +192,23 @@ class StateStore:
         updated = {
             **state,
             "local_refinement_count": local_count,
-            "emergent_failure_count": 0,
+            "emergent_failure_count": emergent_failures,
             "proposal_mode": mode,
-            "search_cycle_migration": {
+            "development_candidate": None,
+            "counter_family_history": list(state.get("counter_family_history", [])),
+            "development_cycle_migration": {
                 "local_refinement_count_seed": local_count,
+                "emergent_failure_count_seed": emergent_failures,
                 "savepoint_path": str(savepoint.resolve()),
             },
         }
         self.save(updated)
         self.append_archive(
             {
-                "event": "search_cycle_migrated",
+                "event": "development_cycle_migrated",
                 "round": int(state["round_index"]),
                 "local_refinement_count": local_count,
-                "emergent_failure_count": 0,
+                "emergent_failure_count": emergent_failures,
                 "proposal_mode": mode,
                 "savepoint_path": str(savepoint.resolve()),
             }
@@ -203,16 +221,38 @@ class StateStore:
         *,
         tested_mode: str,
         promoted: bool,
+        batch_valid: bool = True,
+        development_qualified: bool = False,
+        development_candidate_update: dict[str, Any] | None = None,
+        counter_family: str = "",
     ) -> dict[str, Any]:
-        """Advance local -> emergent -> counter search independently of Elo stagnation."""
+        """Advance champion search or the bounded development mini-cycle."""
 
         local_limit, emergent_limit, _ = self._search_cycle_config()
+        _, history_limit = self._development_config()
         local_count = int(state.get("local_refinement_count", 0))
         emergent_failures = int(state.get("emergent_failure_count", 0))
+        active_development = state.get("development_candidate")
+        counter_history = list(state.get("counter_family_history", []))
+
+        if not batch_valid:
+            return {
+                "stagnation_count": int(state.get("stagnation_count", 0)),
+                "local_refinement_count": local_count,
+                "emergent_failure_count": emergent_failures,
+                "proposal_mode": tested_mode,
+                "development_candidate": active_development,
+                "counter_family_history": counter_history,
+            }
+
+        if tested_mode == "counter_hypothesis" and counter_family.strip():
+            counter_history = [*counter_history, counter_family.strip()][-history_limit:]
 
         if tested_mode == "general":
             local_count = min(local_limit, local_count + 1)
             emergent_failures = 0
+            if active_development is not None and development_candidate_update is not None:
+                active_development = development_candidate_update
             next_mode = (
                 "emergent_exploration" if local_count >= local_limit else "general"
             )
@@ -221,22 +261,39 @@ class StateStore:
                 local_count = 0
                 emergent_failures = 0
                 next_mode = "general"
+                active_development = None
+                counter_history = []
             else:
+                if active_development is not None and development_candidate_update is not None:
+                    active_development = development_candidate_update
                 emergent_failures = min(emergent_limit, emergent_failures + 1)
                 next_mode = (
                     "counter_hypothesis"
                     if emergent_failures >= emergent_limit
                     else "emergent_exploration"
                 )
+                if emergent_failures >= emergent_limit:
+                    active_development = None
         elif tested_mode == "counter_hypothesis":
             if promoted:
                 local_count = 0
                 emergent_failures = 0
                 next_mode = "general"
+                active_development = None
+                counter_history = []
+            elif development_qualified and development_candidate_update is not None:
+                local_count = 0
+                emergent_failures = 0
+                next_mode = "general"
+                active_development = development_candidate_update
             else:
                 next_mode = "counter_hypothesis"
         else:
             raise StateError(f"unknown proposal mode: {tested_mode}")
+
+        if promoted:
+            active_development = None
+            counter_history = []
 
         stagnation = 0 if promoted else int(state.get("stagnation_count", 0)) + 1
         return {
@@ -244,6 +301,8 @@ class StateStore:
             "local_refinement_count": local_count,
             "emergent_failure_count": emergent_failures,
             "proposal_mode": next_mode,
+            "development_candidate": active_development,
+            "counter_family_history": counter_history,
         }
 
     def initialize(
@@ -345,6 +404,8 @@ class StateStore:
             "local_refinement_count": 0,
             "emergent_failure_count": 0,
             "proposal_mode": "general",
+            "development_candidate": None,
+            "counter_family_history": [],
             "recent_outcomes": [],
             "hypothesis_frontier": [],
             "conditional_lessons": [],
@@ -574,6 +635,29 @@ class StateStore:
         champion = state["champion"]
         loop = champion["loop_structure"]
         local_limit, emergent_limit, _ = self._search_cycle_config()
+        development_threshold, history_limit = self._development_config()
+        development = state.get("development_candidate")
+        development_started_round = (
+            int(development.get("started_round", 0))
+            if isinstance(development, dict)
+            else 0
+        )
+        evaluation_protocol = dict(
+            state.get(
+                "evaluation_protocol",
+                {"id": "legacy-single-artifact", "pair_count": 1},
+            )
+        )
+        evaluation_protocol["development_assessment_extension"] = {
+            "threshold_metric": "candidate_median_score_rate / incumbent_median_score_rate",
+            "threshold": development_threshold,
+            "exact_rule": "use all three valid pairs when the two-pair bounds straddle the threshold",
+            "early_rule": (
+                "after formal promotion is impossible, stop at two valid pairs when the best remaining "
+                "case is below threshold or the worst remaining case already reaches threshold"
+            ),
+            "affects_formal_promotion_rule": False,
+        }
 
         def bounded(value: Any) -> str:
             return clip_text(value, field_limit)
@@ -594,7 +678,7 @@ class StateStore:
 
         capsule = {
             "schema_version": 1,
-            "purpose": "bounded input for the next Sol xhigh structural proposal",
+            "purpose": "bounded input for the next independent Sol max structural-architect subagent",
             "goal": bounded(self.config["goal"]),
             "forbidden_structural_hypotheses": [
                 bounded(item) for item in self.config["forbidden_structural_hypotheses"]
@@ -611,13 +695,43 @@ class StateStore:
                 "engine_source_sha256": champion["engine"]["engine_source_sha256"],
                 "elo": champion["metrics"]["elo"],
             },
-            "evaluation_protocol": state.get(
-                "evaluation_protocol",
-                {"id": "legacy-single-artifact", "pair_count": 1},
+            "development_candidate": (
+                {
+                    "lineage_id": bounded(development.get("lineage_id", "")),
+                    "started_round": int(development.get("started_round", 0)),
+                    "updated_round": int(development.get("updated_round", 0)),
+                    "root_structure_id": bounded(
+                        development.get("root_structure_id", "")
+                    ),
+                    "structure_id": bounded(development.get("structure_id", "")),
+                    "structural_family": bounded(
+                        development.get("structural_family", "")
+                    ),
+                    "organization": bounded(development.get("organization", "")),
+                    "changed_factor": bounded(development.get("changed_factor", "")),
+                    "structure_summary": bounded(
+                        development.get("structure_summary", "")
+                    ),
+                    "execution_plan_path": development.get("execution_plan_path"),
+                    "representative_engine_path": development.get(
+                        "representative_engine_path"
+                    ),
+                    "representative_elo": development.get("representative_elo"),
+                    "median_score_rate": development.get("median_score_rate"),
+                    "relative_performance_ratio": development.get(
+                        "relative_performance_ratio"
+                    ),
+                }
+                if isinstance(development, dict)
+                else None
             ),
+            "evaluation_protocol": evaluation_protocol,
             "search_control": {
                 "stagnation_count": state["stagnation_count"],
                 "proposal_mode": state["proposal_mode"],
+                "search_phase": (
+                    "development" if isinstance(development, dict) else "champion"
+                ),
                 "local_refinement_count": int(state.get("local_refinement_count", 0)),
                 "local_refinement_limit": local_limit,
                 "local_rounds_count_promotion_too": True,
@@ -625,19 +739,31 @@ class StateStore:
                 "emergent_failure_limit": emergent_limit,
                 "emergent_capability_families_already_tested": [
                     bounded(item["emergent_capability_family"])
-                    for item in list(state.get("recent_outcomes", []))[-2:]
+                    for item in list(state.get("recent_outcomes", []))
                     if item.get("proposal_mode") == "emergent_exploration"
+                    and int(item.get("round", 0)) >= development_started_round
                     and str(item.get("emergent_capability_family", "")).strip()
+                ][-emergent_limit:],
+                "development_performance_ratio": development_threshold,
+                "development_round_budget": {
+                    "general": local_limit,
+                    "emergent": emergent_limit,
+                },
+                "counter_families_already_tested": [
+                    bounded(item)
+                    for item in list(state.get("counter_family_history", []))[-history_limit:]
                 ],
                 "proposal_validation_max_attempts": max(
                     1, int(self.config.get("proposal_validation_max_attempts", 2))
                 ),
                 "phase_rule": (
-                    "test exactly two local rounds regardless of promotion; then test up to two "
-                    "distinct emergent capabilities; after two emergent non-promotions, keep "
-                    "counter-hypothesis mode until promotion"
+                    "after two general and two distinct emergent valid rounds without promotion, "
+                    "discard the active development lineage; keep generating structurally independent "
+                    "counter hypotheses until one promotes or reaches the 90-percent development threshold; "
+                    "then give that lineage exactly two general and two emergent valid rounds"
                 ),
-                "counter_mode_persists_until_promotion": True,
+                "invalid_batches_consume_development_budget": False,
+                "counter_mode_exit": "formal promotion or development qualification",
             },
             "recent_outcomes": clip_entries(
                 list(state["recent_outcomes"]), int(limits["recent_outcomes"])
@@ -746,12 +872,123 @@ class StateStore:
         plan: dict[str, Any],
         batch: dict[str, Any],
         promoted_package: dict[str, Any] | None,
+        development_candidate_snapshot: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         promoted = promoted_package is not None
         change = plan["hypothesis"]["causal_change"]
         tested_mode = str(plan.get("proposal_mode", state["proposal_mode"]))
         emergent = plan["hypothesis"].get("emergent_capability", {})
+        family_break = plan["hypothesis"].get("family_break", {})
+        counter_family = (
+            str(family_break.get("alternative_family", ""))
+            if isinstance(family_break, dict)
+            else ""
+        )
         median_delta = batch.get("median_delta")
+        full_batch_valid = (
+            int(batch.get("completed_pair_count", 0)) == 3
+            and int(batch.get("candidate_invalid_count", 0)) == 0
+            and int(batch.get("incumbent_invalid_count", 0)) == 0
+            and not bool(batch.get("inconclusive", False))
+        )
+        partial_assessment = batch.get("partial_development_assessment")
+        partial_status = (
+            str(partial_assessment.get("status", ""))
+            if isinstance(partial_assessment, dict)
+            else ""
+        )
+        bounded_decision_valid = (
+            isinstance(partial_assessment, dict)
+            and bool(partial_assessment.get("decisive"))
+            and bool(partial_assessment.get("formal_promotion_already_impossible"))
+            and int(batch.get("candidate_invalid_count", 0)) == 0
+            and int(batch.get("incumbent_invalid_count", 0)) == 0
+        )
+        irreversible_rejection_valid = (
+            bool(batch.get("irreversible_rejection_early_stop_applied"))
+            and int(batch.get("completed_pair_count", 0)) >= 2
+            and int(batch.get("candidate_invalid_count", 0)) == 0
+            and int(batch.get("incumbent_invalid_count", 0)) == 0
+        )
+        # A clean 0-2 (or otherwise mathematically irreversible) ordinary
+        # rejection is a valid structural trial even though pair 3 is skipped.
+        # Not charging it to the search budget can trap the controller in the
+        # local phase forever precisely because early adjudication worked.
+        batch_valid = (
+            full_batch_valid or bounded_decision_valid or irreversible_rejection_valid
+        )
+        development_threshold, _ = self._development_config()
+        performance_ratio = (
+            partial_assessment.get("relative_performance_lower")
+            if partial_status
+            in {"qualification_guaranteed", "development_improvement_guaranteed"}
+            else batch.get("relative_performance_ratio")
+        )
+        development_qualified = (
+            tested_mode == "counter_hypothesis"
+            and not promoted
+            and batch_valid
+            and (
+                partial_status == "qualification_guaranteed"
+                or (
+                    full_batch_valid
+                    and isinstance(performance_ratio, (int, float))
+                    and float(performance_ratio) >= development_threshold
+                )
+            )
+            and development_candidate_snapshot is not None
+        )
+        active_development = state.get("development_candidate")
+        development_update = None
+        development_improved = False
+        if development_qualified and development_candidate_snapshot is not None:
+            development_update = {
+                **development_candidate_snapshot,
+                "lineage_id": f"development_{plan['structure_id']}",
+                "started_round": round_index,
+                "root_structure_id": plan["structure_id"],
+            }
+        elif (
+            isinstance(active_development, dict)
+            and batch_valid
+            and development_candidate_snapshot is not None
+            and isinstance(performance_ratio, (int, float))
+        ):
+            active_ratio = active_development.get("relative_performance_ratio")
+            development_improved = not isinstance(active_ratio, (int, float)) or float(
+                performance_ratio
+            ) > float(active_ratio)
+            if development_improved:
+                development_update = {
+                    **development_candidate_snapshot,
+                    "lineage_id": active_development["lineage_id"],
+                    "started_round": active_development["started_round"],
+                    "root_structure_id": active_development["root_structure_id"],
+                    "structural_family": (
+                        development_candidate_snapshot.get("structural_family")
+                        or active_development.get("structural_family", "")
+                    ),
+                }
+        development_discarded = (
+            isinstance(active_development, dict)
+            and tested_mode == "emergent_exploration"
+            and batch_valid
+            and not promoted
+            and int(state.get("emergent_failure_count", 0)) + 1
+            >= self._search_cycle_config()[1]
+        )
+        if promoted:
+            development_disposition = "promoted"
+        elif development_qualified:
+            development_disposition = "qualified"
+        elif development_discarded:
+            development_disposition = "discarded_after_budget"
+        elif development_improved:
+            development_disposition = "incumbent_improved"
+        elif isinstance(active_development, dict):
+            development_disposition = "incumbent_retained"
+        else:
+            development_disposition = "none"
         outcome = {
             "round": round_index,
             "structure_id": plan["structure_id"],
@@ -760,6 +997,7 @@ class StateStore:
             "hypothesis": str(plan["hypothesis"]["expected_effect"]),
             "behavioral_novelty": str(plan["hypothesis"].get("behavioral_novelty", "")),
             "proposal_mode": tested_mode,
+            "counter_family": counter_family,
             "emergent_capability_family": (
                 str(emergent.get("capability_family", ""))
                 if isinstance(emergent, dict)
@@ -777,11 +1015,28 @@ class StateStore:
             "ties": batch["ties"],
             "candidate_median_elo": batch.get("candidate_median_elo"),
             "incumbent_median_elo": batch.get("incumbent_median_elo"),
+            "candidate_median_score_rate": batch.get("candidate_median_score_rate"),
+            "incumbent_median_score_rate": batch.get("incumbent_median_score_rate"),
+            "relative_performance_ratio": performance_ratio,
+            "relative_performance_bounds": partial_assessment,
+            "development_performance_threshold": development_threshold,
+            "development_qualified": development_qualified,
+            "development_disposition": development_disposition,
+            "valid_batch_consumed_search_budget": batch_valid,
+            "full_batch_completed": full_batch_valid,
+            "bounded_early_decision": bounded_decision_valid,
+            "irreversible_rejection_early_decision": irreversible_rejection_valid,
             "anchor_elo": batch["anchor_elo"],
             "median_delta": median_delta,
             "representative_candidate_elo": batch.get("representative_candidate_elo"),
             "promoted": promoted,
-            "failure_kind": None if promoted else "matched_batch_did_not_satisfy_promotion",
+            "failure_kind": (
+                None
+                if promoted
+                else "matched_batch_did_not_satisfy_promotion"
+                if batch_valid
+                else "invalid_or_incomplete_batch_not_counted"
+            ),
             "strengths": "; ".join(str(item) for item in plan["hypothesis"].get("strengths", [])),
             "weaknesses": "; ".join(str(item) for item in plan["hypothesis"].get("risks", [])),
         }
@@ -792,7 +1047,19 @@ class StateStore:
             "factor": str(change["factor"]),
             "before": str(change["before"]),
             "after": str(change["after"]),
-            "status": "supported" if promoted else "not_supported_in_tested_conditions",
+            "status": (
+                "supported"
+                if promoted
+                else "development_qualified"
+                if development_qualified
+                else "development_lineage_discarded"
+                if development_discarded
+                else "development_incumbent_improved"
+                if development_improved
+                else "invalid_or_incomplete"
+                if not batch_valid
+                else "not_supported_in_tested_conditions"
+            ),
             "evidence": (
                 f"matched batch {batch['candidate_wins']}W/{batch['candidate_losses']}L/"
                 f"{batch['ties']}T, median delta {median_delta}, candidate invalid count "
@@ -808,6 +1075,18 @@ class StateStore:
                 f"{change['before']} to {change['after']} won {batch['candidate_wins']}-"
                 f"{batch['candidate_losses']} with median Elo delta {median_delta} and promoted."
             )
+        elif development_qualified:
+            lesson = (
+                f"Under the round-{round_index} matched conditions, the independent counter family "
+                f"{counter_family!r} did not promote but retained {float(performance_ratio):.3f} of "
+                f"the champion harness median score rate and entered bounded development."
+            )
+        elif development_discarded:
+            lesson = (
+                f"Under the round-{round_index} matched conditions, the active development lineage "
+                "used its second valid emergent round without promotion and was removed from active "
+                "development; counter-family discovery resumes."
+            )
         else:
             lesson = (
                 f"Under the round-{round_index} matched conditions, changing {change['factor']} from "
@@ -821,6 +1100,10 @@ class StateStore:
             state,
             tested_mode=tested_mode,
             promoted=promoted,
+            batch_valid=batch_valid,
+            development_qualified=development_qualified,
+            development_candidate_update=development_update,
+            counter_family=counter_family,
         )
         lessons = [*state["conditional_lessons"], lesson][
             -int(limits["conditional_lessons"]):

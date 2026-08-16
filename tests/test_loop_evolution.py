@@ -6,10 +6,16 @@ from typing import Any
 
 import pytest
 from loop_evolution.agents import Architect, ModelCall
-from loop_evolution.batch import judge_batch, pair_verdict, rejection_is_irreversible
+from loop_evolution.batch import (
+    judge_batch,
+    pair_verdict,
+    partial_relative_performance_bounds,
+    rejection_is_irreversible,
+)
 from loop_evolution.common import atomic_json, canonical_json, read_json
 from loop_evolution.pipeline import EvolutionPipeline
 from loop_evolution.plan import LoopPlan, PlanValidationError
+from loop_evolution.platform.config import ProposalPolicy
 from loop_evolution.usage import normalize_usage, pair_usage
 
 
@@ -71,6 +77,27 @@ def _plan(*, mode: str = "general", organization: str = "solo") -> dict[str, Any
             {
                 "dominant_assumption": "more collaboration is always useful",
                 "inversion": "collapse the loop to one self-contained solver",
+                "family_break": {
+                    "champion_family": "draft then review then integrate",
+                    "alternative_family": "constraint-first single-pass construction",
+                    "rejected_core_assumptions": [
+                        "a provisional implementation must exist before constraints are applied"
+                    ],
+                    "forbidden_champion_mechanisms": [
+                        "post-hoc review and central repair integration"
+                    ],
+                    "alternative_causal_principle": (
+                        "derive executable constraints before emitting one coherent implementation"
+                    ),
+                    "changed_dimensions": ["information_flow", "error_detection"],
+                    "difference_from_champion": {
+                        "information_flow": "constraints precede construction instead of reviewing a draft",
+                        "error_detection": "violations are prevented during construction rather than repaired later",
+                    },
+                    "non_derivative_probe": (
+                        "observe that no provisional draft or post-hoc repair artifact is produced"
+                    ),
+                },
             }
         )
     if mode == "emergent_exploration":
@@ -160,6 +187,8 @@ def _fixture_config(tmp_path: Path) -> Path:
             "search_cycle": {
                 "local_round_limit": 2,
                 "emergent_failure_limit": 2,
+                "development_performance_ratio": 0.9,
+                "counter_family_history_limit": 8,
             },
             "proposal_validation_max_attempts": 2,
             "capsule_limits": {
@@ -167,7 +196,7 @@ def _fixture_config(tmp_path: Path) -> Path:
                 "hypothesis_frontier": 2,
                 "conditional_lessons": 3,
                 "field_characters": 300,
-                "total_characters": 9000,
+                "total_characters": 12000,
             },
         },
     )
@@ -185,11 +214,19 @@ class FakeArchitect:
 
 
 class SequenceProposalClient:
-    def __init__(self, payloads: list[dict[str, Any]]) -> None:
+    def __init__(
+        self,
+        payloads: list[dict[str, Any]],
+        *,
+        policy: ProposalPolicy | None = None,
+    ) -> None:
         self.payloads = list(payloads)
+        self.policy = policy
         self.calls = 0
+        self.requests: list[dict[str, Any]] = []
 
-    def complete(self, **_: Any) -> ModelCall:
+    def complete(self, **request: Any) -> ModelCall:
+        self.requests.append(request)
         payload = self.payloads[self.calls]
         self.calls += 1
         return ModelCall(
@@ -322,6 +359,42 @@ def test_second_emergent_attempt_requires_a_distinct_capability_family() -> None
         plan.validate_search_context(capsule)
 
 
+def test_development_round_must_name_exact_parent_and_family() -> None:
+    plan = LoopPlan.from_payload(_plan(), expected_mode="general")
+    capsule = {
+        "development_candidate": {
+            "structure_id": "loop_parent",
+            "structural_family": "constraint-first",
+        },
+        "search_control": {},
+    }
+    with pytest.raises(PlanValidationError):
+        plan.validate_search_context(capsule)
+
+    payload = _plan()
+    payload["hypothesis"]["development_lineage"] = {
+        "parent_structure_id": "loop_parent",
+        "preserved_family": "constraint-first",
+        "relationship": "general_refinement",
+    }
+    LoopPlan.from_payload(payload, expected_mode="general").validate_search_context(capsule)
+
+
+def test_counter_family_cannot_repeat_bounded_history() -> None:
+    plan = LoopPlan.from_payload(
+        _plan(mode="counter_hypothesis"), expected_mode="counter_hypothesis"
+    )
+    capsule = {
+        "search_control": {
+            "counter_families_already_tested": [
+                "constraint-first single-pass construction"
+            ]
+        }
+    }
+    with pytest.raises(PlanValidationError):
+        plan.validate_search_context(capsule)
+
+
 def test_architect_retries_invalid_plan_and_accounts_for_rejected_spend(tmp_path: Path) -> None:
     invalid = _plan()
     invalid["structure"]["stages"][0]["calls"][0]["inputs"].append("future_output")
@@ -347,9 +420,77 @@ def test_architect_retries_invalid_plan_and_accounts_for_rejected_spend(tmp_path
 
     pipeline = EvolutionPipeline(_fixture_config(tmp_path / "fixture"))
     ledger = pipeline._write_round_token_accounting(round_dir=round_dir, pairs=[])
+    assert ledger["proposal_structural_architect"]["model_calls"] == 2
+    assert ledger["proposal_sol_max"] == ledger["proposal_structural_architect"]
     assert ledger["proposal_sol_xhigh"]["model_calls"] == 2
     assert ledger["proposal_invalid_spend"]["model_calls"] == 1
     assert ledger["proposal_sol_xhigh"]["effective_tokens"] == 26
+
+
+def test_independent_max_architect_persists_policy_provenance(tmp_path: Path) -> None:
+    policy = ProposalPolicy(
+        reasoning_effort="max",
+        agent_mode="independent_subagent",
+    )
+    client = SequenceProposalClient([_plan()], policy=policy)
+    architect = Architect(client)  # type: ignore[arg-type]
+    round_dir = tmp_path / "workspace" / "rounds" / "r0001"
+    architect.propose(
+        capsule={
+            "search_control": {
+                "proposal_mode": "general",
+                "proposal_validation_max_attempts": 1,
+            }
+        },
+        round_dir=round_dir,
+    )
+
+    session = read_json(round_dir / "generation" / "architect-session.json")
+    receipt = read_json(round_dir / "generation" / "architect-receipt.json")
+    assert session["proposal_policy"]["reasoning_effort"] == "max"
+    assert session["proposal_policy"]["agent_mode"] == "independent_subagent"
+    assert receipt["proposal_policy_sha256"] == session["proposal_policy_sha256"]
+    assert client.requests[0]["role"] == "Sol max independent structural-architect subagent"
+
+
+def test_pipeline_refuses_unprovenanced_partial_plan_after_policy_switch(
+    tmp_path: Path,
+) -> None:
+    config_path = _fixture_config(tmp_path)
+    policy_path = tmp_path / "sol-max-independent-structural-architect.json"
+    atomic_json(
+        policy_path,
+        {
+            "schema_version": 1,
+            "model": "gpt-5.6-sol",
+            "reasoning_effort": "max",
+            "agent_mode": "independent_subagent",
+            "auth_mode": "codex_subscription",
+            "allow_paid_api": False,
+            "allow_model_fallback": False,
+            "sandbox": "read-only",
+            "max_model_calls": 1,
+            "max_tokens": 120000,
+            "max_wall_seconds": 1800,
+            "codex_executable": "codex.cmd",
+            "codex_home_pool": [],
+        },
+    )
+    config = read_json(config_path)
+    config["proposal_policy_path"] = str(policy_path)
+    atomic_json(config_path, config)
+    pipeline = EvolutionPipeline(config_path)
+    pipeline.initialize()
+
+    generation_dir = tmp_path / "workspace" / "rounds" / "r0001" / "generation"
+    atomic_json(generation_dir / "normalized-plan.json", _plan())
+    atomic_json(
+        generation_dir / "architect-receipt.json",
+        {"usage": {"model_calls": 1}},
+    )
+
+    with pytest.raises(RuntimeError, match="architect policy provenance"):
+        pipeline.propose()
 
 
 def test_plan_normalizes_prior_call_output_alias() -> None:
@@ -359,8 +500,8 @@ def test_plan_normalizes_prior_call_output_alias() -> None:
     assert plan.structure["stages"][1]["calls"][0]["inputs"][-1] == "critic"
 
 
-def _evaluation(elo: float | None) -> dict[str, Any]:
-    return {"valid": elo is not None, "elo": elo}
+def _evaluation(elo: float | None, score_rate: float = 0.4) -> dict[str, Any]:
+    return {"valid": elo is not None, "elo": elo, "score_rate": score_rate}
 
 
 def test_batch_uses_pair_majority_and_median_candidate() -> None:
@@ -383,6 +524,81 @@ def test_batch_uses_pair_majority_and_median_candidate() -> None:
     assert batch["candidate_wins"] == 3
     assert batch["candidate_median_elo"] == -80.0
     assert batch["representative_candidate_pair"] == 1
+
+
+def test_batch_uses_score_rate_ratio_for_development_threshold() -> None:
+    pairs = [
+        {
+            "incumbent_evaluation": _evaluation(-100.0, 0.40),
+            "candidate_evaluation": _evaluation(-110.0, 0.36),
+        },
+        {
+            "incumbent_evaluation": _evaluation(-95.0, 0.42),
+            "candidate_evaluation": _evaluation(-105.0, 0.38),
+        },
+        {
+            "incumbent_evaluation": _evaluation(-90.0, 0.44),
+            "candidate_evaluation": _evaluation(-100.0, 0.40),
+        },
+    ]
+    batch = judge_batch(pairs=pairs, anchor_elo=-94.211)
+    assert batch["promoted"] is False
+    assert batch["incumbent_median_score_rate"] == 0.42
+    assert batch["candidate_median_score_rate"] == 0.38
+    assert batch["relative_performance_ratio"] == pytest.approx(0.38 / 0.42)
+
+    bounds = partial_relative_performance_bounds(pairs[:2])
+    assert bounds is not None
+    assert bounds["relative_performance_lower"] == pytest.approx(0.36 / 0.42)
+    assert bounds["relative_performance_upper"] == pytest.approx(0.38 / 0.40)
+
+
+def test_counter_partial_bounds_distinguish_impossible_and_undecided(
+    tmp_path: Path,
+) -> None:
+    pipeline = EvolutionPipeline(_fixture_config(tmp_path))
+    counter = LoopPlan.from_payload(
+        _plan(mode="counter_hypothesis"), expected_mode="counter_hypothesis"
+    )
+    capsule = {
+        "search_control": {"development_performance_ratio": 0.9},
+        "development_candidate": None,
+    }
+    impossible_pairs = [
+        {
+            "incumbent_evaluation": _evaluation(-100.0, 0.40),
+            "candidate_evaluation": _evaluation(-200.0, 0.20),
+        },
+        {
+            "incumbent_evaluation": _evaluation(-100.0, 0.42),
+            "candidate_evaluation": _evaluation(-200.0, 0.21),
+        },
+    ]
+    impossible = pipeline._partial_search_assessment(
+        pairs=impossible_pairs,
+        candidate_plan=counter,
+        capsule=capsule,
+    )
+    assert impossible["decisive"] is True
+    assert impossible["status"] == "qualification_impossible"
+
+    uncertain_pairs = [
+        {
+            "incumbent_evaluation": _evaluation(-100.0, 0.40),
+            "candidate_evaluation": _evaluation(-110.0, 0.35),
+        },
+        {
+            "incumbent_evaluation": _evaluation(-100.0, 0.60),
+            "candidate_evaluation": _evaluation(-90.0, 0.50),
+        },
+    ]
+    uncertain = pipeline._partial_search_assessment(
+        pairs=uncertain_pairs,
+        candidate_plan=counter,
+        capsule=capsule,
+    )
+    assert uncertain["decisive"] is False
+    assert uncertain["status"] == "qualification_undecided"
 
 
 def test_batch_rejects_invalid_incumbent_pair_instead_of_granting_free_win() -> None:
@@ -464,6 +680,58 @@ def test_three_pair_batch_promotes_structure_and_median_engine_together(tmp_path
     assert "candidate" in Path(after["engine"]["artifact_path"]).read_text(encoding="utf-8")
 
 
+@pytest.mark.parametrize(("force_complete", "expected_pairs"), [(False, 2), (True, 3)])
+def test_counter_round_registers_development_candidate_with_optional_full_batch(
+    tmp_path: Path,
+    force_complete: bool,
+    expected_pairs: int,
+) -> None:
+    incumbent_source = "print('incumbent-rollout')\n"
+    candidate_source = "print('candidate')\n"
+    pipeline = EvolutionPipeline(
+        _fixture_config(tmp_path),
+        architect=FakeArchitect(_plan(mode="counter_hypothesis")),
+        executor=FakeExecutor(
+            incumbent_source=incumbent_source,
+            candidate_source=candidate_source,
+        ),
+        evaluator=FakeEvaluator(
+            {incumbent_source: -100.0, candidate_source: -110.0}
+        ),
+        force_complete_pairs=force_complete,
+    )
+    state = pipeline.initialize()
+    state.update(
+        {
+            "proposal_mode": "counter_hypothesis",
+            "local_refinement_count": 2,
+            "emergent_failure_count": 2,
+        }
+    )
+    pipeline.store.save(state)
+    pipeline.store.write_capsule(state)
+
+    summary = pipeline.run_round()
+    after = pipeline.store.load()
+    assert summary["batch_decision"]["completed_pair_count"] == expected_pairs
+    assert summary["batch_decision"]["development_assessment_required"] is True
+    assert summary["batch_decision"]["irreversible_rejection_early_stop_applied"] is False
+    assert summary["batch_decision"]["force_complete_pairs"] is force_complete
+    assert summary["batch_decision"]["bounded_development_early_stop_applied"] is (
+        not force_complete
+    )
+    if not force_complete:
+        assert summary["batch_decision"]["partial_development_assessment"]["status"] == (
+            "qualification_guaranteed"
+        )
+    assert summary["promoted"] is False
+    assert summary["development_disposition"] == "qualified"
+    assert after["proposal_mode"] == "general"
+    assert after["development_candidate"]["structure_id"] == summary[
+        "candidate_structure_id"
+    ]
+
+
 def test_token_accounting_does_not_double_count_reasoning_and_keeps_retry_spend() -> None:
     one = normalize_usage(
         {
@@ -488,7 +756,7 @@ def test_token_accounting_does_not_double_count_reasoning_and_keeps_retry_spend(
     assert ledger["invalid_attempts"]["combined"]["total_tokens"] == 280
 
 
-def test_interrupted_partial_attempt_recovers_completed_call_usage(tmp_path: Path) -> None:
+def test_interrupted_partial_call_without_artifact_is_rerun(tmp_path: Path) -> None:
     pipeline = EvolutionPipeline(_fixture_config(tmp_path))
     pipeline.initialize()
     attempt = tmp_path / "workspace" / "rounds" / "r0001" / "pairs" / "pair-01" / "attempts" / "attempt-01"
@@ -508,9 +776,8 @@ def test_interrupted_partial_attempt_recovers_completed_call_usage(tmp_path: Pat
     )
     recovered = pipeline._recover_interrupted_attempt(attempt)
     assert recovered is not None
-    assert recovered["candidate"]["evaluation"]["failure_kind"] == "interrupted_partial_arm"
-    assert recovered["candidate"]["execution_traces"][0]["usage"]["input_tokens"] == 100
-    assert recovered["incumbent"]["evaluation"]["valid"] is False
+    assert recovered == {}
+    assert "incumbent" not in recovered
 
 
 def test_abort_next_round_archives_partial_without_advancing_state(tmp_path: Path) -> None:
@@ -642,4 +909,190 @@ def test_search_cycle_counts_promoted_local_rounds_then_escalates(tmp_path: Path
     assert len(capsule["recent_outcomes"]) == 3
     assert len(capsule["hypothesis_frontier"]) == 2
     assert len(capsule["conditional_lessons"]) == 3
-    assert capsule["serialized_characters"] < 9000
+    assert capsule["serialized_characters"] < 12000
+
+
+def test_irreversible_two_pair_rejection_consumes_search_budget(tmp_path: Path) -> None:
+    pipeline = EvolutionPipeline(_fixture_config(tmp_path))
+    pipeline.initialize()
+    state = pipeline.store.load()
+    plan = LoopPlan.from_payload(_plan(mode="general"), expected_mode="general")
+
+    full_batch = {
+        "completed_pair_count": 3,
+        "candidate_wins": 1,
+        "candidate_losses": 1,
+        "ties": 1,
+        "candidate_median_elo": -100.0,
+        "incumbent_median_elo": -90.0,
+        "candidate_median_score_rate": 0.35,
+        "incumbent_median_score_rate": 0.38,
+        "relative_performance_ratio": 0.92,
+        "anchor_elo": -94.211,
+        "median_delta": -10.0,
+        "representative_candidate_elo": -100.0,
+        "candidate_invalid_count": 0,
+        "incumbent_invalid_count": 0,
+        "inconclusive": False,
+        "promotion_checks": {},
+    }
+    state = pipeline.store.apply_batch_outcome(
+        state=state,
+        round_index=1,
+        plan=plan.payload,
+        batch=full_batch,
+        promoted_package=None,
+    )
+    assert state["local_refinement_count"] == 1
+
+    early_rejection = {
+        **full_batch,
+        "completed_pair_count": 2,
+        "candidate_wins": 0,
+        "candidate_losses": 2,
+        "ties": 0,
+        "candidate_median_elo": None,
+        "incumbent_median_elo": None,
+        "candidate_median_score_rate": None,
+        "incumbent_median_score_rate": None,
+        "relative_performance_ratio": None,
+        "median_delta": None,
+        "representative_candidate_elo": None,
+        "inconclusive": True,
+        "irreversible_rejection_early_stop_applied": True,
+    }
+    state = pipeline.store.apply_batch_outcome(
+        state=state,
+        round_index=2,
+        plan=plan.payload,
+        batch=early_rejection,
+        promoted_package=None,
+    )
+
+    assert state["local_refinement_count"] == 2
+    assert state["proposal_mode"] == "emergent_exploration"
+    assert state["recent_outcomes"][-1]["valid_batch_consumed_search_budget"] is True
+    assert state["recent_outcomes"][-1]["full_batch_completed"] is False
+    assert state["recent_outcomes"][-1]["irreversible_rejection_early_decision"] is True
+    assert state["hypothesis_frontier"][-1]["status"] == "not_supported_in_tested_conditions"
+
+
+def test_counter_candidate_gets_exact_two_general_and_two_emergent_rounds(
+    tmp_path: Path,
+) -> None:
+    pipeline = EvolutionPipeline(_fixture_config(tmp_path))
+    pipeline.initialize()
+    state = pipeline.store.load()
+    state.update(
+        {
+            "proposal_mode": "counter_hypothesis",
+            "local_refinement_count": 2,
+            "emergent_failure_count": 2,
+        }
+    )
+    pipeline.store.save(state)
+
+    def batch(*, valid: bool = True, ratio: float = 0.95) -> dict[str, Any]:
+        return {
+            "completed_pair_count": 3 if valid else 1,
+            "candidate_wins": 0,
+            "candidate_losses": 3 if valid else 0,
+            "ties": 0,
+            "candidate_median_elo": -110.0 if valid else None,
+            "incumbent_median_elo": -100.0 if valid else None,
+            "candidate_median_score_rate": 0.38 if valid else None,
+            "incumbent_median_score_rate": 0.40 if valid else None,
+            "relative_performance_ratio": ratio if valid else None,
+            "anchor_elo": -94.211,
+            "median_delta": -10.0 if valid else None,
+            "representative_candidate_elo": -110.0 if valid else None,
+            "candidate_invalid_count": 0 if valid else 1,
+            "incumbent_invalid_count": 0,
+            "inconclusive": not valid,
+            "promotion_checks": {},
+        }
+
+    def snapshot(round_index: int, structure_id: str, ratio: float = 0.95) -> dict[str, Any]:
+        return {
+            "updated_round": round_index,
+            "structure_id": structure_id,
+            "organization": "solo",
+            "changed_factor": "constraint-first construction",
+            "structure_summary": "Constraints flow directly into one construction pass.",
+            "structural_family": "constraint-first single-pass construction",
+            "execution_plan_path": str(tmp_path / f"r{round_index}-plan.json"),
+            "representative_engine_path": str(tmp_path / f"r{round_index}-engine.json"),
+            "representative_engine_sha256": f"sha-{round_index}",
+            "representative_elo": -110.0,
+            "median_score_rate": 0.38,
+            "relative_performance_ratio": ratio,
+            "qualification_batch": {},
+        }
+
+    counter = LoopPlan.from_payload(
+        _plan(mode="counter_hypothesis"), expected_mode="counter_hypothesis"
+    )
+    state = pipeline.store.apply_batch_outcome(
+        state=state,
+        round_index=1,
+        plan=counter.payload,
+        batch=batch(),
+        promoted_package=None,
+        development_candidate_snapshot=snapshot(1, counter.structure_id),
+    )
+    assert state["proposal_mode"] == "general"
+    assert state["development_candidate"]["root_structure_id"] == counter.structure_id
+    assert state["local_refinement_count"] == 0
+
+    general = LoopPlan.from_payload(_plan(mode="general"), expected_mode="general")
+    state = pipeline.store.apply_batch_outcome(
+        state=state,
+        round_index=2,
+        plan=general.payload,
+        batch=batch(valid=False),
+        promoted_package=None,
+    )
+    assert state["proposal_mode"] == "general"
+    assert state["local_refinement_count"] == 0
+
+    for round_index in (3, 4):
+        state = pipeline.store.apply_batch_outcome(
+            state=state,
+            round_index=round_index,
+            plan=general.payload,
+            batch=batch(ratio=0.92),
+            promoted_package=None,
+            development_candidate_snapshot=snapshot(
+                round_index, general.structure_id, ratio=0.92
+            ),
+        )
+    assert state["proposal_mode"] == "emergent_exploration"
+    assert state["local_refinement_count"] == 2
+
+    emergent = LoopPlan.from_payload(
+        _plan(mode="emergent_exploration"), expected_mode="emergent_exploration"
+    )
+    state = pipeline.store.apply_batch_outcome(
+        state=state,
+        round_index=5,
+        plan=emergent.payload,
+        batch=batch(ratio=0.93),
+        promoted_package=None,
+        development_candidate_snapshot=snapshot(5, emergent.structure_id, ratio=0.93),
+    )
+    assert state["proposal_mode"] == "emergent_exploration"
+    assert state["emergent_failure_count"] == 1
+    assert state["development_candidate"] is not None
+
+    state = pipeline.store.apply_batch_outcome(
+        state=state,
+        round_index=6,
+        plan=emergent.payload,
+        batch=batch(ratio=0.94),
+        promoted_package=None,
+        development_candidate_snapshot=snapshot(6, emergent.structure_id, ratio=0.94),
+    )
+    assert state["proposal_mode"] == "counter_hypothesis"
+    assert state["emergent_failure_count"] == 2
+    assert state["development_candidate"] is None
+    assert state["recent_outcomes"][-1]["development_disposition"] == "discarded_after_budget"

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.ghost_recent_bytes = 0\n        self.ghost_protected_bytes = 0\n        self._tick = 0\n        self._protected_floor = max(1, self.capacity_bytes // 4) if self.capacity_bytes else 0\n        self._protected_target = max(1, self.capacity_bytes // 2) if self.capacity_bytes else 0\n\n    def _step(self, size):\n        return max(1, min(max(1, self.capacity_bytes // 8), max(1, int(size))))\n\n    def _raise_target(self, size):\n        if self.capacity_bytes:\n            self._protected_target = min(self.capacity_bytes, self._protected_target + self._step(size))\n\n    def _lower_target(self, size):\n        if self.capacity_bytes:\n            self._protected_target = max(self._protected_floor, self._protected_target - self._step(size))\n\n    def _forget_ghost(self, key):\n        size = self.ghost_recent.pop(key, None)\n        if size is not None:\n            self.ghost_recent_bytes -= size\n        size = self.ghost_protected.pop(key, None)\n        if size is not None:\n            self.ghost_protected_bytes -= size\n\n    def _trim_ghosts(self):\n        limit = self.capacity_bytes * 2\n        while self.ghost_recent_bytes + self.ghost_protected_bytes > limit:\n            if self.ghost_recent:\n                _, size = self.ghost_recent.popitem(last=False)\n                self.ghost_recent_bytes -= size\n            elif self.ghost_protected:\n                _, size = self.ghost_protected.popitem(last=False)\n                self.ghost_protected_bytes -= size\n            else:\n                break\n\n    def _remember_ghost(self, key, size, was_protected):\n        self._forget_ghost(key)\n        if was_protected:\n            self.ghost_protected[key] = size\n            self.ghost_protected_bytes += size\n        else:\n            self.ghost_recent[key] = size\n            self.ghost_recent_bytes += size\n        self._trim_ghosts()\n\n    def _rebalance(self):\n        while self.protected and len(self.protected) > 1 and self.protected_bytes > self._protected_target:\n            key, entry = self.protected.popitem(last=False)\n            self.protected_bytes -= entry[0]\n            self.probation[key] = entry\n\n    def _evict_one(self):\n        if self.probation:\n            key, entry = self.probation.popitem(last=False)\n            self.used_bytes -= entry[0]\n            self._remember_ghost(key, entry[0], False)\n            return key\n        if self.protected:\n            key, entry = self.protected.popitem(last=False)\n            self.used_bytes -= entry[0]\n            self.protected_bytes -= entry[0]\n            self._remember_ghost(key, entry[0], True)\n            return key\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._tick += 1\n\n        if key in self.protected:\n            entry = self.protected.pop(key)\n            entry[1] += 1\n            entry[2] = self._tick\n            self.protected[key] = entry\n            return []\n\n        if key in self.probation:\n            entry = self.probation.pop(key)\n            entry[1] += 1\n            entry[2] = self._tick\n            self.protected[key] = entry\n            self.protected_bytes += entry[0]\n            self._raise_target(entry[0])\n            self._rebalance()\n            return []\n\n        recent_hit = key in self.ghost_recent\n        protected_hit = key in self.ghost_protected\n        self._forget_ghost(key)\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        if recent_hit:\n            self._raise_target(size)\n        elif protected_hit:\n            self._lower_target(size)\n\n        self._rebalance()\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        entry = [size, 2 if recent_hit or protected_hit else 1, self._tick]\n        if recent_hit or protected_hit:\n            self.protected[key] = entry\n            self.protected_bytes += size\n        else:\n            self.probation[key] = entry\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R24-pair02-candidate-call02-provenance_blind_policy_authority",
+    "duration_seconds": 31.626,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:20:32Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "f56e50dee33b87efabde46022ecdd56fcab5afeb25b1fae54c828df6ea7eadf5",
+    "raw_events_path": "workspace\\model-calls\\R24-pair02-candidate-call02-provenance_blind_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "c84f80f60f8dc46b82f540f8c75861a77424b14e5f90fb72df4034a90a1918e7",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "9b432479ee136633a28320619a9f4c643eec5bdc7f0868d1daa4ffd9b2c5c479",
+    "returncode": 0,
+    "role": "R24 candidate topology role provenance-blind final semantic authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:20:00Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14253,
+      "output_tokens": 2225,
+      "reasoning_output_tokens": 1034
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

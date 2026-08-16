@@ -1,0 +1,42 @@
+{
+  "parsed_response": {
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.used = 0\n        self.p = self.capacity // 2\n        self.entries = {}\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.max_ghosts = 8192\n\n    def _discard_ghost(self, ghosts, key, which):\n        nonlocal_dummy = None\n        if key in ghosts:\n            size = ghosts.pop(key)\n            if which == 1:\n                self.b1_bytes -= size\n            else:\n                self.b2_bytes -= size\n\n    def _remember(self, ghosts, key, size, which):\n        self._discard_ghost(ghosts, key, which)\n        ghosts[key] = size\n        if which == 1:\n            self.b1_bytes += size\n        else:\n            self.b2_bytes += size\n        while len(ghosts) > self.max_ghosts:\n            old_key, old_size = ghosts.popitem(last=False)\n            if which == 1:\n                self.b1_bytes -= old_size\n            else:\n                self.b2_bytes -= old_size\n\n    def _remove_resident(self, key, remember=True):\n        entry = self.entries.pop(key, None)\n        if entry is None:\n            return None\n        size, segment = entry\n        self.used -= size\n        if segment == 1:\n            self.t1.pop(key, None)\n            if remember:\n                self._remember(self.b1, key, size, 1)\n        else:\n            self.t2.pop(key, None)\n            if remember:\n                self._remember(self.b2, key, size, 2)\n        return key\n\n    def _make_room(self, amount, incoming_b2, evicted):\n        while self.used + amount > self.capacity and self.entries:\n            if self.t1 and (self.t1_bytes() > self.p or (incoming_b2 and self.t1_bytes() == self.p)):\n                key = next(iter(self.t1))\n            elif self.t2:\n                key = next(iter(self.t2))\n            else:\n                key = next(iter(self.t1))\n            removed = self._remove_resident(key, True)\n            if removed is not None:\n                evicted.append(removed)\n\n    def t1_bytes(self):\n        return sum(self.entries[key][0] for key in self.t1)\n\n    def _insert(self, key, size, segment):\n        self.entries[key] = (size, segment)\n        if segment == 1:\n            self.t1[key] = None\n        else:\n            self.t2[key] = None\n        self.used += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = max(0, int(size))\n        evicted = []\n\n        if self.capacity == 0 or size > self.capacity:\n            if key in self.entries:\n                self._remove_resident(key, False)\n                evicted.append(key)\n            for resident in list(self.entries):\n                self._remove_resident(resident, False)\n                if resident not in evicted:\n                    evicted.append(resident)\n            self.b1.clear()\n            self.b2.clear()\n            self.b1_bytes = 0\n            self.b2_bytes = 0\n            return evicted\n\n        entry = self.entries.get(key)\n        if entry is not None:\n            old_size, segment = entry\n            self.used += size - old_size\n            self.entries[key] = (size, 2)\n            if segment == 1:\n                self.t1.pop(key, None)\n            else:\n                self.t2.pop(key, None)\n            self.t2[key] = None\n            self._make_room(0, False, evicted)\n            return evicted\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            old = self.b1.pop(key)\n            self.b1_bytes -= old\n            step = max(size, self.b2_bytes // max(1, self.b1_bytes))\n            self.p = min(self.capacity, self.p + step)\n        elif in_b2:\n            old = self.b2.pop(key)\n            self.b2_bytes -= old\n            step = max(size, self.b1_bytes // max(1, self.b2_bytes))\n            self.p = max(0, self.p - step)\n\n        self._make_room(size, in_b2, evicted)\n        self._insert(key, size, 2 if (in_b1 or in_b2) else 1)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R55-pair01-candidate-call02-unify_without_raw_anchor",
+    "duration_seconds": 41.932,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:56:11Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "3ddf48c14ca56b3687c6fc0261b7ff5386ee04ecd8f04450c7d047b6289e2234",
+    "raw_events_path": "workspace\\model-calls\\R55-pair01-candidate-call02-unify_without_raw_anchor\\raw-events.jsonl",
+    "raw_events_sha256": "9b985e04a2beebc93c76b9ee8ce5e540cc6f300752dc3e2ad7f34f273a2a2a78",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "668aba732e8b20b9f498b6ab12bce0c1635707e9b74904737b70333a90f384c7",
+    "returncode": 0,
+    "role": "R55 candidate topology role anchor-mediated unitary policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:55:29Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13965,
+      "output_tokens": 3219,
+      "reasoning_output_tokens": 2070
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

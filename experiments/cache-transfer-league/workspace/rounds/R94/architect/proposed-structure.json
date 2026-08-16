@@ -1,0 +1,43 @@
+{
+  "final_call_id": "closure_preserving_retract_emit",
+  "information_flow": "The first call receives every common input and emits one complete executable policy closure carrying authoritative causal dependencies among its commitments. The final call consumes that closure, reopens every common input simultaneously, applies only closure-preserving retractions without adding or substituting semantics, and emits one policy.",
+  "name": "Closure-Bound Retraction Executable Dyad",
+  "organization": "two-call sequential lineage with one executable dependency-closure origin and one closure-preserving retract-only terminal authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_executable_dependency_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the jointly visible evidence and obligations into one complete executable policy artifact whose causal dependencies define authoritative closure-preserving retraction transitions.",
+          "output_type": "executable_policy_closure",
+          "role": "joint-evidence executable closure origin authority"
+        },
+        {
+          "id": "closure_preserving_retract_emit",
+          "inputs": [
+            "originate_executable_dependency_closure",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume originate_executable_dependency_closure, inspect the complete artifact against jointly visible common evidence, retract unsupported semantics only through its authoritative closure-preserving transitions, add or substitute no semantics, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "joint-evidence closure-preserving retract-only terminal authority"
+        }
+      ],
+      "id": "single_closure_bound_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

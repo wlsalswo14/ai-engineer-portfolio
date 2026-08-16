@@ -1,0 +1,69 @@
+{
+  "architect_scope": "one-R65-structural-factor-only",
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The terminal authority must reconstruct a complete policy from an analysis-only handoff without direct artifact-level continuity from the inherited policy.",
+    "causal_change": "Restore direct terminal visibility of anchor_policy while retaining the existing cuts on candidate_hypothesis and loop_structure.",
+    "expected_effect": "Artifact-level continuity should reduce materialization failures without reopening terminal access to counter-generative sources.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "selective inherited-policy visibility restoration on the terminal edge",
+    "before": "The final call receives the upstream analysis and normative inputs but cannot directly see anchor_policy.",
+    "after": "The final call additionally receives anchor_policy; all other edges, cuts, roles, and authority remain unchanged.",
+    "why_structural": "This adds one concrete visibility edge carrying a complete inherited artifact into terminal policy authority."
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only the anchor_policy-to-final-call visibility edge changes from the current champion topology.",
+    "why_not_repeat_role_fission": "The lineage retains the same two calls and authorities; no producer, reviewer, gate, or terminal subrole is added or split."
+  },
+  "candidate_structure": {
+    "name": "Selective Inherited-Artifact Reentry",
+    "organization": "two-call sequential lineage with one restored inherited-policy visibility edge",
+    "information_flow": "The first call receives every common input and emits only analysis. The final call consumes that analysis, directly receives task, anchor_policy, anchor_contract, and task_constraints, remains cut off from candidate_hypothesis and loop_structure, and emits one complete policy.",
+    "stages": [
+      {
+        "id": "selective_reentry_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "synthesize_cut_counter_sources",
+            "role": "upstream generative-evidence synthesizer",
+            "objective": "Reconcile inherited and counter-generative claims against normative obligations, preserve material conflicts and distinctions, and emit only analysis.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          },
+          {
+            "id": "emit_with_inherited_artifact_visibility",
+            "role": "normative-source policy authority",
+            "objective": "Consume synthesize_cut_counter_sources, reconcile its evidence with visible normative inputs and the directly visible inherited policy artifact, and emit one complete policy without reacquiring the other cut sources.",
+            "inputs": [
+              "synthesize_cut_counter_sources",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "emit_with_inherited_artifact_visibility"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "record_type": "WITNESS",
+  "priority_order": [
+    "legality",
+    "protocol behavior",
+    "bounded work",
+    "state integrity",
+    "decision quality"
+  ],
+  "committed_obligation": "state integrity across ucinewgame",
+  "procedure": {
+    "inputs": "One legal position P_a and movetime greater than 5 ms; then ucinewgame; one legal position P_b where the prior root move u is legal but is not the clean initial move; go movetime 5; compare with a fresh anchor process given only P_b and go movetime 5.",
+    "steps": [
+      "Run P_a and record the returned root move u.",
+      "Send ucinewgame, then P_b and go movetime 5.",
+      "Run a fresh anchor on P_b and go movetime 5.",
+      "Require both outputs to be legal and compare them."
+    ]
+  },
+  "observed_anchor_trace": [
+    "think assigns root_hint before iterative search.",
+    "root assigns root_hint to the completed root move.",
+    "ucinewgame clears tt, history, killers, and position, but does not reset root_hint.",
+    "For movetime <= 5, think orders legal moves using root_hint and immediately returns the first ordered move.",
+    "Therefore the reset path orders u first, while a fresh process orders the clean first move v."
+  ],
+  "failed_terminal_predicate": "For admissible P_a and P_b with u legal in P_b and v != u, reset-after-ucinewgame returns bestmove u while the fresh anchor returns bestmove v; ucinewgame therefore fails to establish equivalent new-game state.",
+  "preservation_predicates": [
+    "The source remains standard-library-only and syntactically parseable.",
+    "UCI handshake and ready responses remain unchanged.",
+    "Exactly one bestmove is emitted.",
+    "Both emitted moves are legal for their respective positions.",
+    "The 5 ms path performs bounded immediate move selection.",
+    "No benchmark position, evaluator detail, or engine source is used."
+  ],
+  "falsifier": "The witness is falsified if the reset path returns the same move as the fresh anchor for every admissible P_a/P_b pair, or if root_hint is observed reset before processing P_b."
+}

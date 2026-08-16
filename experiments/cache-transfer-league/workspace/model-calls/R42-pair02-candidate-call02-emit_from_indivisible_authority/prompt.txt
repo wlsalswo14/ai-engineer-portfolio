@@ -1,0 +1,32 @@
+Role: R42 candidate topology role capsule-sovereign terminal authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R42,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_from_indivisible_authority
+Role: capsule-sovereign terminal authority
+Objective: Consume encapsulate_unitary_authority as the sole evidence source, exercise indivisible authority over the inherited complete artifact, establish its end-to-end public conformance, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "encapsulate_unitary_authority": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.target = self.capacity // 2\n        self.ghost_limit = 4096\n\n    def _trim_ghosts(self):\n        while len(self.b1) + len(self.b2) > self.ghost_limit:\n            if len(self.b1) >= len(self.b2) and self.b1:\n                self.b1.popitem(last=False)\n            elif self.b2:\n                self.b2.popitem(last=False)\n            else:\n                break\n\n    def _ghost_add(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        self._trim_ghosts()\n\n    def _ghost_remove(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _move_t1_to_t2(self, key):\n        size = self.t1.pop(key)\n        self.t1_bytes -= size\n        self.t2[key] = size\n        self.t2_bytes += size\n\n    def _evict_one(self):\n        if self.t1 and (self.t1_bytes > self.target or not self.t2):\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._ghost_add(self.b1, key, size)\n        elif self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._ghost_add(self.b2, key, size)\n        elif self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._ghost_add(self.b1, key, size)\n        else:\n            return None\n        return key, size\n\n    def _make_room(self, size):\n        evicted = []\n        while self.t1_bytes + self.t2_bytes + size > self.capacity:\n            removed = self._evict_one()\n            if removed is None:\n                break\n            evicted.append(removed[0])\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            self._move_t1_to_t2(key)\n            return []\n\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] = stored\n            return []\n\n        if size <= 0 or size > self.capacity or self.capacity == 0:\n            return []\n\n        if key in self.b1:\n            old = self.b1[key]\n            self.target = min(\n                self.capacity,\n                self.target + max(size, old, self.capacity // 32, 1),\n            )\n            self._ghost_remove(key)\n        elif key in self.b2:\n            old = self.b2[key]\n            self.target = max(\n                0,\n                self.target - max(size, old, self.capacity // 32, 1),\n            )\n            self._ghost_remove(key)\n\n        evicted = self._make_room(size)\n        self.t1[key] = size\n        self.t1_bytes += size\n        return evicted\n",
+    "sha256": "6034e65f82b848a56175cbd2cf73a89e3140671bcf3981155fbef98c4eb510a1"
+  }
+}

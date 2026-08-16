@@ -1,0 +1,56 @@
+{
+  "final_call_id": "release_accountable_policy",
+  "information_flow": "The first call receives all common inputs and issues one non-policy charter that identifies the origin and status of relevant assumptions. The second call consumes that charter without direct anchor-policy visibility, forms one complete executable policy state, and preserves the charter as visible evidence. The final call consumes the complete state and its declared provenance with public obligations and emits one policy.",
+  "name": "Prospective Assumption-Accountability Lineage",
+  "organization": "three-call sequential lineage with one preconstruction accountability boundary and an uninterrupted executable handoff after materialization",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "issue_assumption_charter",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Issue one non-policy charter before any executable artifact exists, relating anchor-derived assumptions and candidate claims to public obligations by declared origin and exposing unresolved tensions for downstream resolution.",
+          "output_type": "analysis",
+          "role": "preconstruction assumption-accountability authority"
+        },
+        {
+          "id": "materialize_accountable_state",
+          "inputs": [
+            "issue_assumption_charter",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the preceding charter and supplied public obligations, resolve its exposed tensions into one complete executable policy state, and preserve the charter's declared provenance as visible evidence for the next call.",
+          "output_type": "executable_policy_state",
+          "role": "accountable executable-state materializer"
+        },
+        {
+          "id": "release_accountable_policy",
+          "inputs": [
+            "materialize_accountable_state",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the complete executable state and its declared assumption provenance, reconcile its current semantics with supplied public obligations, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "provenance-visible contract release authority"
+        }
+      ],
+      "id": "accountable_materialization_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

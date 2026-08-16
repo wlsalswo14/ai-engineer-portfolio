@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.prob = OrderedDict()\n        self.prot = OrderedDict()\n        self.ghost_p = OrderedDict()\n        self.ghost_q = OrderedDict()\n        self.prob_bytes = 0\n        self.prot_bytes = 0\n        self.ghost_p_bytes = 0\n        self.ghost_q_bytes = 0\n        self.used = 0\n        self.target = (self.capacity * 2) // 3\n        self.serial = 0\n        self.ghost_serial = 0\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n\n    def _ghost_remove(self, key):\n        value = self.ghost_p.pop(key, None)\n        if value is not None:\n            self.ghost_p_bytes -= value[0]\n            self.ghost_bytes -= value[0]\n        value = self.ghost_q.pop(key, None)\n        if value is not None:\n            self.ghost_q_bytes -= value[0]\n            self.ghost_bytes -= value[0]\n\n    def _ghost_add(self, key, size, segment):\n        self._ghost_remove(key)\n        self.ghost_serial += 1\n        value = (size, self.ghost_serial)\n        table = self.ghost_p if segment == 1 else self.ghost_q\n        table[key] = value\n        if segment == 1:\n            self.ghost_p_bytes += size\n        else:\n            self.ghost_q_bytes += size\n        self.ghost_bytes += size\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_p) + len(self.ghost_q) > self.ghost_count_limit):\n            p_stamp = next(iter(self.ghost_p.values()))[1] if self.ghost_p else None\n            q_stamp = next(iter(self.ghost_q.values()))[1] if self.ghost_q else None\n            if q_stamp is None or (p_stamp is not None and p_stamp < q_stamp):\n                _, old = self.ghost_p.popitem(last=False)\n                self.ghost_p_bytes -= old[0]\n            else:\n                _, old = self.ghost_q.popitem(last=False)\n                self.ghost_q_bytes -= old[0]\n            self.ghost_bytes -= old[0]\n\n    def _adjust_target(self, segment, size):\n        if self.capacity <= 0:\n            return\n        step = max(1, min(self.capacity, max(size, self.capacity // 16)))\n        if segment == 1:\n            self.target = min(self.capacity, self.target + step)\n        else:\n            self.target = max(0, self.target - step)\n\n    def _remove_resident(self, key):\n        if key in self.prob:\n            entry = self.prob.pop(key)\n            self.prob_bytes -= entry[0]\n            self.used -= entry[0]\n            return entry, 1\n        if key in self.prot:\n            entry = self.prot.pop(key)\n            self.prot_bytes -= entry[0]\n            self.used -= entry[0]\n            return entry, 2\n        return None, 0\n\n    def _rebalance(self):\n        while self.prot and self.prot_bytes > self.target:\n            key, entry = self.prot.popitem(last=False)\n            self.prot_bytes -= entry[0]\n            self.prob[key] = entry\n            self.prob_bytes += entry[0]\n\n    def _evict_one(self):\n        self._rebalance()\n        if self.prob:\n            key, entry = self.prob.popitem(last=False)\n            self.prob_bytes -= entry[0]\n            self.used -= entry[0]\n            self._ghost_add(key, entry[0], 1)\n            return key\n        if self.prot:\n            key, entry = self.prot.popitem(last=False)\n            self.prot_bytes -= entry[0]\n            self.used -= entry[0]\n            self._ghost_add(key, entry[0], 2)\n            return key\n        return None\n\n    def _make_room(self, incoming):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one()\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n        self.serial += 1\n\n        if key in self.prob or key in self.prot:\n            entry, segment = self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            entry[0] = size\n            entry[1] = min(255, entry[1] + 1)\n            entry[2] = self.serial\n            evicted = self._make_room(size)\n            if segment == 2 or entry[1] >= 2:\n                self.prot[key] = entry\n                self.prot_bytes += size\n            else:\n                self.prob[key] = entry\n                self.prob_bytes += size\n            self.used += size\n            self._rebalance()\n            return evicted\n\n        segment = 1 if key in self.ghost_p else 2 if key in self.ghost_q else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if segment:\n            self._adjust_target(segment, size)\n            self._ghost_remove(key)\n\n        evicted = self._make_room(size)\n        entry = [size, 2 if segment else 1, self.serial]\n        if segment:\n            self.prot[key] = entry\n            self.prot_bytes += size\n        else:\n            self.prob[key] = entry\n            self.prob_bytes += size\n        self.used += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R74-pair02-candidate-call02-construct_after_late_boundary",
+    "duration_seconds": 70.119,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:01:05Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "6e2b046d6aea4660dcae15aaa4891f2ab70eb9a5313c157ac6d4e8703766c687",
+    "raw_events_path": "workspace\\model-calls\\R74-pair02-candidate-call02-construct_after_late_boundary\\raw-events.jsonl",
+    "raw_events_sha256": "5837021721b3ea3451236573153da0bcdb39d28502bd7a0c01b404fc3cf6e0f1",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "221e6480afb84b1c1a20cb8a9f72fadf8951f35377981f15005293df0a2003a9",
+    "returncode": 0,
+    "role": "R74 candidate topology role bounded constructive policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:59:55Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15092,
+      "output_tokens": 5280,
+      "reasoning_output_tokens": 3829
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

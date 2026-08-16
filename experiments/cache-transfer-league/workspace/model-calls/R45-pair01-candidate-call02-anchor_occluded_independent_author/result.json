@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        try:\n            capacity = int(capacity_bytes)\n        except (TypeError, ValueError, OverflowError):\n            capacity = 0\n        self.capacity = max(0, capacity)\n        self._p = 0\n        self._t1 = OrderedDict()\n        self._t2 = OrderedDict()\n        self._b1 = OrderedDict()\n        self._b2 = OrderedDict()\n        self._t1_bytes = 0\n        self._t2_bytes = 0\n        self._bytes = 0\n        self._ghost_limit = 4096\n\n    def _ghost_add(self, queue, key, size):\n        self._b1.pop(key, None)\n        self._b2.pop(key, None)\n        queue[key] = size\n        while len(self._b1) + len(self._b2) > self._ghost_limit:\n            if self._b1 and (not self._b2 or len(self._b1) >= len(self._b2)):\n                self._b1.popitem(last=False)\n            elif self._b2:\n                self._b2.popitem(last=False)\n            else:\n                break\n\n    def _take(self, queue):\n        key, size = queue.popitem(last=False)\n        if queue is self._t1:\n            self._t1_bytes -= size\n            ghost = self._b1\n        else:\n            self._t2_bytes -= size\n            ghost = self._b2\n        self._bytes -= size\n        self._ghost_add(ghost, key, size)\n        return key\n\n    def _make_room(self, need, from_b2=False):\n        evicted = []\n        while self._bytes + need > self.capacity and (self._t1 or self._t2):\n            if self._t1 and (self._t1_bytes > self._p or (from_b2 and self._t1_bytes == self._p)):\n                evicted.append(self._take(self._t1))\n            elif self._t2:\n                evicted.append(self._take(self._t2))\n            elif self._t1:\n                evicted.append(self._take(self._t1))\n        return evicted\n\n    def _drain(self):\n        evicted = []\n        while self._t1:\n            evicted.append(self._take(self._t1))\n        while self._t2:\n            evicted.append(self._take(self._t2))\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        try:\n            n = int(size)\n        except (TypeError, ValueError, OverflowError):\n            return []\n\n        if self.capacity <= 0:\n            return self._drain()\n        if n <= 0:\n            return []\n        if n > self.capacity:\n            return self._drain()\n\n        if key in self._t1:\n            old = self._t1.pop(key)\n            self._t1_bytes -= old\n            self._bytes -= old\n            self._b1.pop(key, None)\n            self._b2.pop(key, None)\n            evicted = self._make_room(n)\n            self._t2[key] = n\n            self._t2_bytes += n\n            self._bytes += n\n            return evicted\n\n        if key in self._t2:\n            old = self._t2.pop(key)\n            self._t2_bytes -= old\n            self._bytes -= old\n            self._b1.pop(key, None)\n            self._b2.pop(key, None)\n            evicted = self._make_room(n)\n            self._t2[key] = n\n            self._t2_bytes += n\n            self._bytes += n\n            return evicted\n\n        in_b1 = key in self._b1\n        in_b2 = key in self._b2\n        if in_b1:\n            self._b1.pop(key, None)\n            self._p = min(self.capacity, self._p + max(1, min(n, self.capacity)))\n        elif in_b2:\n            self._b2.pop(key, None)\n            self._p = max(0, self._p - max(1, min(n, self.capacity)))\n\n        evicted = self._make_room(n, from_b2=in_b2)\n        if in_b1 or in_b2:\n            self._t2[key] = n\n            self._t2_bytes += n\n        else:\n            self._t1[key] = n\n            self._t1_bytes += n\n        self._bytes += n\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R45-pair01-candidate-call02-anchor_occluded_independent_author",
+    "duration_seconds": 92.071,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:50:01Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "0f09444cf6b77388d865594b18970ad53fb5760415239f48e498615ad13bed6b",
+    "raw_events_path": "workspace\\model-calls\\R45-pair01-candidate-call02-anchor_occluded_independent_author\\raw-events.jsonl",
+    "raw_events_sha256": "8d93fd76e89fc18d85c546cfa0e2fc2bb061ebc1db0c39cc1a64e1cf4d4016ee",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "7cea2258a0b6eff8b9d5e0100eab7d39c9cde401e85d90faae53ae6597609e37",
+    "returncode": 0,
+    "role": "R45 candidate topology role sole independent policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:48:29Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14011,
+      "output_tokens": 7104,
+      "reasoning_output_tokens": 5991
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

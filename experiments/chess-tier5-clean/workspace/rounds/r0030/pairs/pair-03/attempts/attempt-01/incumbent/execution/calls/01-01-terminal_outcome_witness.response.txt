@@ -1,0 +1,15 @@
+{
+  "WITNESS": {
+    "obligation": "Returned bestmove is legal",
+    "procedure": "Run the unchanged anchor; send `position fen 7k/6Q1/6K1/8/8/8/8/8 b - - 0 1`, then `go movetime 10`.",
+    "observed_anchor_trace": "The position has no legal moves. `think()` returns `0000`; the UCI loop emits `bestmove 0000`.",
+    "failed_terminal_predicate": "`bestmove` must name one legal move; `0000` is not a legal move.",
+    "preservation_predicates": [
+      "The FEN is a valid six-field checkmate position.",
+      "UCI handshake behavior is unchanged.",
+      "Exactly one bestmove line is emitted.",
+      "No benchmark or evaluator information is used."
+    ],
+    "falsifier": "Falsify if the task contract explicitly permits `0000` for checkmate, or if independent legal-move enumeration finds a legal move in the supplied FEN."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "final_call_id": "anchor_blind_successor",
+  "information_flow": "The first call receives every common input and produces one complete executable predecessor. The terminal call consumes that predecessor plus public obligations and the candidate hypothesis, receives no anchor_policy edge, and exercises sole final-emission authority.",
+  "name": "Anchor-Blind Executable Successor Chain",
+  "organization": "two-call asymmetric-visibility succession",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "anchor_visible_precursor",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Interpret the supplied evidence prospectively and produce one complete contract-compliant executable predecessor as the sole lineage artifact, without creating the forbidden inherited mechanism.",
+          "output_type": "policy",
+          "role": "contract-grounded executable precursor author"
+        },
+        {
+          "id": "anchor_blind_successor",
+          "inputs": [
+            "anchor_visible_precursor",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding executable artifact as the sole policy lineage, use only the visible public obligations and candidate hypothesis as external evidence, exercise final authorship without reconstructing anchor-relative deltas, and emit exactly one complete contract-compliant policy.",
+          "output_type": "policy",
+          "role": "anchor-blind terminal policy author"
+        }
+      ],
+      "id": "executable_successor_transfer",
+      "mode": "sequential"
+    }
+  ]
+}

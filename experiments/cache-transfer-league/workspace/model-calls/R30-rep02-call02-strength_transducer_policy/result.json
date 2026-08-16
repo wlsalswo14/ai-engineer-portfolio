@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self.entries = {}\n        self.ghost = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_limit = max(1, (self.capacity_bytes * 3) // 5) if self.capacity_bytes else 0\n        self.ghost_limit = max(1, min(4096, self.capacity_bytes // 64 + 1))\n        self.request_count = 0\n        self.hit_count = 0\n        self.miss_count = 0\n        self.last_now = None\n\n    def _snapshot(self):\n        return (\n            tuple(self.probationary.items()),\n            tuple(self.protected.items()),\n            tuple(self.entries.items()),\n            tuple(self.ghost.items()),\n            self.used_bytes,\n            self.protected_bytes,\n        )\n\n    def _restore(self, snapshot):\n        probationary, protected, entries, ghost, used, protected_bytes = snapshot\n        self.probationary.clear()\n        self.probationary.update(probationary)\n        self.protected.clear()\n        self.protected.update(protected)\n        self.entries.clear()\n        self.entries.update(entries)\n        self.ghost.clear()\n        self.ghost.update(ghost)\n        self.used_bytes = used\n        self.protected_bytes = protected_bytes\n\n    def _valid(self):\n        if self.used_bytes < 0 or self.used_bytes > self.capacity_bytes:\n            return False\n        if self.protected_bytes < 0:\n            return False\n        if set(self.entries) != set(self.probationary) | set(self.protected):\n            return False\n        if set(self.probationary) & set(self.protected):\n            return False\n        for key, size in self.probationary.items():\n            record = self.entries.get(key)\n            if record is None or record[0] != size or record[1] != 0 or size <= 0:\n                return False\n        for key, size in self.protected.items():\n            record = self.entries.get(key)\n            if record is None or record[0] != size or record[1] != 1 or size <= 0:\n                return False\n        if self.used_bytes != sum(self.probationary.values()) + sum(self.protected.values()):\n            return False\n        if self.protected_bytes != sum(self.protected.values()):\n            return False\n        return True\n\n    def _remember(self, key):\n        self.ghost.pop(key, None)\n        self.ghost[key] = None\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n\n    def _insert_probationary(self, key, size, prior_reference):\n        self.ghost.pop(key, None)\n        self.probationary[key] = size\n        self.entries[key] = (size, 0, 1 if prior_reference else 0)\n        self.used_bytes += size\n\n    def _promote(self, key, hits):\n        size = self.probationary.pop(key)\n        self.protected[key] = size\n        self.protected_bytes += size\n        self.entries[key] = (size, 1, hits)\n        while self.protected_bytes > self.protected_limit and len(self.protected) > 1:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self.probationary[old_key] = old_size\n            old_hits = self.entries[old_key][2]\n            self.entries[old_key] = (old_size, 0, old_hits)\n\n    def _evict_one(self):\n        if self.probationary:\n            old_key, old_size = self.probationary.popitem(last=False)\n            segment = 0\n        elif self.protected:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            segment = 1\n        else:\n            return None\n        del self.entries[old_key]\n        self.used_bytes -= old_size\n        self._remember(old_key)\n        return old_key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.request_count += 1\n        self.last_now = now\n        snapshot = self._snapshot()\n\n        if key in self.entries:\n            self.hit_count += 1\n            record = self.entries[key]\n            stored_size, segment, hits = record\n            if segment == 0:\n                self.probationary.pop(key)\n                hits += 1\n                if hits >= 2:\n                    self._promote(key, hits)\n                else:\n                    self.probationary[key] = stored_size\n                    self.entries[key] = (stored_size, 0, hits)\n            else:\n                self.protected.pop(key)\n                self.protected[key] = stored_size\n                self.entries[key] = (stored_size, 1, hits + 1)\n            if not self._valid():\n                self._restore(snapshot)\n            return []\n\n        self.miss_count += 1\n        if self.capacity_bytes <= 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        prior_reference = key in self.ghost\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                self._restore(snapshot)\n                return []\n            evicted.append(old_key)\n\n        self._insert_probationary(key, size, prior_reference)\n        if not self._valid():\n            self._restore(snapshot)\n            return []\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-rep02-call02-strength_transducer_policy",
+    "duration_seconds": 98.249,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:52:40Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "6e0866977b4c9b46071b3439871c4e54c21c3e9565470f9fe4d2418b8f4ddb4f",
+    "raw_events_path": "workspace\\model-calls\\R30-rep02-call02-strength_transducer_policy\\raw-events.jsonl",
+    "raw_events_sha256": "ca8910a5c9a840faa05c4105e7303d550aa56b51d1af1528531a2d91043b7db1",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 1,
+    "response_sha256": "98e2d7bfb1b5a2e21d1d33c1829ce1f306ae664b65125e7ad1c341f765d1e470",
+    "returncode": 0,
+    "role": "obligation-preserving performance transducer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:51:02Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14336,
+      "output_tokens": 5293,
+      "reasoning_output_tokens": 3903
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

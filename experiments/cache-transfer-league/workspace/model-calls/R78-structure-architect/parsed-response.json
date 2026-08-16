@@ -1,0 +1,76 @@
+{
+  "architect_scope": "one-R78-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "release_from_closed_custody",
+    "information_flow": "The first call alone receives all common inputs, reconciles their evidence and obligations, and emits one complete executable policy closure. The final call consumes only that closure, receives no common external input directly, applies its self-contained custody transition, and emits its single enclosed policy.",
+    "name": "Epistemically Closed Executable Custody",
+    "organization": "two-call sequential lineage whose sole edge transfers exclusive custody of one complete executable policy closure",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_executable_custody",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile all visible evidence and obligations into one complete executable policy closure whose carried basis is sufficient for downstream custody, without issuing binding exclusions.",
+            "output_type": "executable_policy_closure",
+            "role": "atomic evidence-to-artifact custodian"
+          },
+          {
+            "id": "release_from_closed_custody",
+            "inputs": [
+              "form_executable_custody"
+            ],
+            "objective": "Consume form_executable_custody as the sole visible evidence, preserve the complete artifact under its self-contained custody semantics, and emit its one policy.",
+            "output_type": "policy",
+            "role": "closure-governed policy release authority"
+          }
+        ],
+        "id": "closed_custody_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "changed_behavioral_dimensions": [
+      "authoritative-operation consistency",
+      "scan-resistance coherence",
+      "phase-shift adaptation coherence"
+    ],
+    "counter_until_promotion": true,
+    "forbidden_inherited_mechanism": "binding negative-authority vetoes carried on an analysis-to-policy edge",
+    "independent_replacement_principle": "Resolve evidence atomically into one complete executable artifact and transfer exclusive custody of that artifact across an epistemically closed edge.",
+    "rejected_assumptions": [
+      "A binding negative analysis must control downstream policy construction.",
+      "The terminal emitter must reread all common evidence and remain the sole constructive authority.",
+      "A non-policy handoff can reliably preserve evidence-to-artifact coherence."
+    ]
+  },
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "causal_change": "Replace the veto-bearing analysis handoff with one epistemically closed executable-custody transfer that commits a complete policy artifact upstream and makes that artifact the terminal call's sole evidence.",
+    "expected_effect": "Executable continuity should improve authoritative-operation consistency and produce more coherent scan-resistance and phase-shift adaptation behavior by preventing late divergence between reconciled evidence and emitted policy.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family leaves policy identity uncommitted until a terminal call that can reinterpret every source, while its predecessor supplies only binding negative analysis and preserves no executable artifact."
+  },
+  "structural_mutation": {
+    "after": "The upstream call transfers one complete executable policy closure under exclusive custody, and the terminal call sees only that closure when emitting its policy.",
+    "before": "A non-policy analysis edge carries binding exclusions to a terminal constructor that also directly sees every common input.",
+    "change_count": 1,
+    "factor": "epistemically closed executable-custody transfer on the sole lineage edge",
+    "why_structural": "The single custody factor changes the edge payload, construction authority, evidence timing, and downstream visibility as inseparable consequences of making the transferred executable artifact the sole post-handoff source of truth."
+  }
+}

@@ -32,6 +32,16 @@ EMERGENT_CAPABILITY_FIELDS = (
     "not_local_refinement",
 )
 
+COUNTER_FAMILY_DIMENSIONS = frozenset(
+    {
+        "information_flow",
+        "error_detection",
+        "candidate_selection",
+        "final_decision",
+        "failure_recovery",
+    }
+)
+
 
 @dataclass(frozen=True)
 class LoopPlan:
@@ -94,6 +104,59 @@ class LoopPlan:
                 raise PlanValidationError("counter-hypothesis mode requires dominant_assumption")
             if not str(hypothesis.get("inversion", "")).strip():
                 raise PlanValidationError("counter-hypothesis mode requires inversion")
+            family_break = hypothesis.get("family_break")
+            if not isinstance(family_break, dict):
+                raise PlanValidationError(
+                    "counter-hypothesis mode requires hypothesis.family_break"
+                )
+            for key in (
+                "champion_family",
+                "alternative_family",
+                "alternative_causal_principle",
+                "non_derivative_probe",
+            ):
+                if not str(family_break.get(key, "")).strip():
+                    raise PlanValidationError(f"family_break is missing {key}")
+            if str(family_break["champion_family"]).strip().casefold() == str(
+                family_break["alternative_family"]
+            ).strip().casefold():
+                raise PlanValidationError(
+                    "family_break.alternative_family must differ from champion_family"
+                )
+            assumptions = family_break.get("rejected_core_assumptions")
+            if (
+                not isinstance(assumptions, list)
+                or not 1 <= len(assumptions) <= 2
+                or any(not str(item).strip() for item in assumptions)
+            ):
+                raise PlanValidationError(
+                    "family_break.rejected_core_assumptions must contain one or two assumptions"
+                )
+            forbidden = family_break.get("forbidden_champion_mechanisms")
+            if (
+                not isinstance(forbidden, list)
+                or not forbidden
+                or any(not str(item).strip() for item in forbidden)
+            ):
+                raise PlanValidationError(
+                    "family_break.forbidden_champion_mechanisms must be a non-empty list"
+                )
+            dimensions = family_break.get("changed_dimensions")
+            if (
+                not isinstance(dimensions, list)
+                or len(set(dimensions)) < 2
+                or any(item not in COUNTER_FAMILY_DIMENSIONS for item in dimensions)
+            ):
+                raise PlanValidationError(
+                    "family_break.changed_dimensions must contain at least two valid dimensions"
+                )
+            differences = family_break.get("difference_from_champion")
+            if not isinstance(differences, dict) or any(
+                not str(differences.get(item, "")).strip() for item in dimensions
+            ):
+                raise PlanValidationError(
+                    "family_break.difference_from_champion must explain every changed dimension"
+                )
         if expected_mode == "emergent_exploration":
             capability = hypothesis.get("emergent_capability")
             if not isinstance(capability, dict):
@@ -189,6 +252,51 @@ class LoopPlan:
     def validate_search_context(self, capsule: dict[str, Any]) -> None:
         """Validate round-specific search constraints that are not intrinsic to the plan."""
 
+        development = capsule.get("development_candidate")
+        if isinstance(development, dict):
+            relation = self.payload["hypothesis"].get("development_lineage")
+            if not isinstance(relation, dict):
+                raise PlanValidationError(
+                    "active development requires hypothesis.development_lineage"
+                )
+            if str(relation.get("parent_structure_id", "")).strip() != str(
+                development.get("structure_id", "")
+            ).strip():
+                raise PlanValidationError(
+                    "development_lineage.parent_structure_id must match the active candidate"
+                )
+            if str(relation.get("preserved_family", "")).strip().casefold() != str(
+                development.get("structural_family", "")
+            ).strip().casefold():
+                raise PlanValidationError(
+                    "development_lineage.preserved_family must match the active family"
+                )
+            expected_relation = (
+                "emergent_extension"
+                if self.payload["proposal_mode"] == "emergent_exploration"
+                else "general_refinement"
+            )
+            if str(relation.get("relationship", "")).strip() != expected_relation:
+                raise PlanValidationError(
+                    f"development_lineage.relationship must be {expected_relation}"
+                )
+
+        if self.payload["proposal_mode"] == "counter_hypothesis":
+            family = str(
+                self.payload["hypothesis"]["family_break"]["alternative_family"]
+            ).strip().casefold()
+            prior = {
+                str(item).strip().casefold()
+                for item in capsule.get("search_control", {}).get(
+                    "counter_families_already_tested", []
+                )
+                if str(item).strip()
+            }
+            if family in prior:
+                raise PlanValidationError(
+                    "counter hypothesis must use a different alternative_family"
+                )
+            return
         if self.payload["proposal_mode"] != "emergent_exploration":
             return
         capability = self.payload["hypothesis"]["emergent_capability"]

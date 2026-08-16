@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R24-rep01-call01-draft_policy",
+    "duration_seconds": 8.981,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:37:18Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "3ade58c1c1295bad360947178d4ca2c9c29fd43c1a257891062dbb42ef92f8a3",
+    "raw_events_sha256": "ac19a8d3e9f0cf39d3290d68a498e78fa2d8236ce684f6195871fcd8304d17a8",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "dde65b863d2d74f67d4c7a71424295010843b535a8fef419a097c721e1ce351d",
+    "returncode": 0,
+    "role": "anchor-compatible provisional policy constructor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:37:09Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 11008,
+      "input_tokens": 13360,
+      "output_tokens": 286,
+      "reasoning_output_tokens": 72
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

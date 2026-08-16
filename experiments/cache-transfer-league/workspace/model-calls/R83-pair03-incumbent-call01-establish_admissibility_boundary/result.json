@@ -1,0 +1,104 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Admissible construction is limited to a standard-library, online, single-access policy preserving the declared interface, returning only unique integer keys currently cached, and never exceeding capacity. No score, benchmark, trace, oracle, external implementation, or hidden evaluator state supports additional commitments. The anchor and hypothesis are evidence, not authority to violate the contract. Conflicts between adaptation, scan resistance, phase response, and hit-rate objectives remain admissible and must be resolved online without assuming any unavailable workload facts.",
+      "exact_actions": [
+        "Carry forward every binding inclusion and exclusion as non-overridable constraints.",
+        "Reject any proposed commitment requiring unavailable scores, hidden workload knowledge, evaluator artifacts, or non-online information.",
+        "Keep the objective tradeoffs explicitly admissible for downstream reconciliation; do not resolve them by unsupported workload assumptions.",
+        "Permit downstream construction only within the contract-valid space and prohibit reinstatement of any excluded commitment.",
+        "Do not construct, emit, or prescribe policy source in this analysis."
+      ],
+      "obligations": [
+        {
+          "kind": "binding_inclusion",
+          "requirement": "Preserve the required Policy constructor and access interface."
+        },
+        {
+          "kind": "binding_inclusion",
+          "requirement": "Use only Python standard-library facilities and online per-access information."
+        },
+        {
+          "kind": "binding_inclusion",
+          "requirement": "Return only unique integer keys that are currently cached and are evicted by the request."
+        },
+        {
+          "kind": "binding_inclusion",
+          "requirement": "Never make authoritative cache usage exceed capacity_bytes, including edge cases."
+        },
+        {
+          "kind": "binding_exclusion",
+          "requirement": "Do not use benchmark paths, hidden traces, oracle decisions, evaluator implementations, external libraries, networking, subprocesses, or score assumptions."
+        },
+        {
+          "kind": "binding_exclusion",
+          "requirement": "Do not treat the candidate hypothesis, withheld falsifier, or any unobserved workload preference as established fact."
+        },
+        {
+          "kind": "admissible_conflict",
+          "requirement": "Reconcile hit rate, byte hit rate, scan resistance, phase adaptation, regret, continuity, and reversibility only through observable online evidence."
+        }
+      ],
+      "witnesses": [
+        {
+          "evidence": "anchor_contract",
+          "finding": "Interface legality, capacity safety, and online-only visibility are binding normative requirements."
+        },
+        {
+          "evidence": "task_constraints",
+          "finding": "Standard-library-only execution, unique currently cached integer evictions, capacity safety, and one final policy are mandatory."
+        },
+        {
+          "evidence": "score_information",
+          "finding": "Scores are withheld; no optimization claim or ranking is supported."
+        },
+        {
+          "evidence": "candidate_hypothesis",
+          "finding": "The proposed causal change and falsifier are hypotheses only, not validated evidence."
+        },
+        {
+          "evidence": "anchor_policy",
+          "finding": "The inherited artifact is visible and may inform continuity, but its behavior is not an authority beyond the contract."
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R83-pair03-incumbent-call01-establish_admissibility_boundary",
+    "duration_seconds": 13.632,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T01:30:50Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c585f3c28cd5448330d6db31b7100c27278232537fd49bf264ea5e0acd16c5af",
+    "raw_events_path": "workspace\\model-calls\\R83-pair03-incumbent-call01-establish_admissibility_boundary\\raw-events.jsonl",
+    "raw_events_sha256": "95fae47da717d1c584f6b718585cc21b5482a82eafb904ffb305e1a66c4ac99f",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "fb0c2018e2f7a94962aa5f85855bdee7786fcde1199b4d9c55ea93b220fcfdd8",
+    "returncode": 0,
+    "role": "R83 incumbent topology role negative-authority evidence adjudicator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T01:30:37Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14443,
+      "output_tokens": 831,
+      "reasoning_output_tokens": 278
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

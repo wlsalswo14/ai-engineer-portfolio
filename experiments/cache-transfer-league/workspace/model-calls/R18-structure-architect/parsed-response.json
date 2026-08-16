@@ -1,0 +1,83 @@
+{
+  "architect_scope": "one-R18-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "forward_policy_materializer",
+    "information_flow": "The first call sees all six common inputs and emits one immutable, provenance-visible analysis state coupling contractual obligations with interacting behavioral objectives. The final call consumes that state first and retains common-source visibility, but the committed state cannot be reopened, ranked, rolled back, pruned, or replaced; it is materialized once into one policy.",
+    "name": "Constructive Obligation Typestate Relay",
+    "organization": "two-call sequential relay with upstream commitment authority and downstream materialization authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "constructive_obligation_architect",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Identify contractual evidence and cross-objective interactions before any policy artifact exists, then commit one positive, internally coherent obligation state with visible provenance. Exclude local anchor edits, reversible deltas, alternatives, rankings, and postconstruction pruning.",
+            "output_type": "analysis",
+            "role": "constructive obligation architect"
+          },
+          {
+            "id": "forward_policy_materializer",
+            "inputs": [
+              "constructive_obligation_architect",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the immediately preceding committed obligation state as the controlling evidence and perform its single permitted state transition into one complete contract-compliant policy. Do not reopen commitments, repair the anchor locally, create rollback states, select among alternatives, or apply terminal compression.",
+            "output_type": "policy",
+            "role": "forward-only policy materializer"
+          }
+        ],
+        "id": "commit_and_materialize",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "changed_behavioral_dimensions": [
+      "object-hit prioritization",
+      "byte-hit prioritization",
+      "scan-resistance response",
+      "phase-shift adaptation response"
+    ],
+    "counter_until_promotion": true,
+    "forbidden_inherited_mechanism": "the anchor-derived reversible delta stack, including checkpoint-patch replay, rollback, and terminal causal compression",
+    "independent_replacement_principle": "constructive obligation coupling in an immutable pre-materialization typestate followed by one forward-only materialization",
+    "rejected_assumptions": [
+      "Behavioral quality must emerge from anchor-local checkpoint-patch repairs.",
+      "Accepted commitments must remain reversible deltas.",
+      "Postconstruction causal compression is necessary to reconcile interacting objectives."
+    ]
+  },
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "causal_change": "Replace the mutable repair stack with one immutable constructive-obligation typestate edge that resolves cross-objective interactions before policy materialization.",
+    "expected_effect": "A globally coupled commitment should change object-hit and byte-hit prioritization together while also changing scan-resistance and phase-shift responses, without dependence on edit order or terminal pruning.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The incumbent family binds behavioral commitments to anchor-local repairs and evaluates cross-objective interactions only after those commitments have accumulated."
+  },
+  "structural_mutation": {
+    "after": "An obligation architect commits one positive, provenance-visible cross-objective typestate before any artifact exists; a succeeding materializer performs the sole forward transition from that state to one policy.",
+    "before": "One producer mutates an anchor-derived reversible delta stack and compresses that stack after construction.",
+    "change_count": 1,
+    "factor": "immutable constructive-obligation typestate edge",
+    "why_structural": "The mutation replaces the single-node repair loop with a typed inter-call edge whose upstream endpoint owns behavioral commitment and whose downstream endpoint owns only forward materialization, changing edge authority, evidence timing, and state-transition semantics."
+  }
+}

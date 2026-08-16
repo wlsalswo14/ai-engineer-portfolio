@@ -1,0 +1,198 @@
+# Isolated capability artifact
+
+Capability: bounded quiet-threat frontier extension.
+
+Causal prediction: extending one frontier ply after a quiet move newly attacks a minor or major piece exposes fork/skewer/hanging-piece responses while the two-credit burst limit prevents search explosion.
+
+```python
+import json
+import sys
+
+MAX_CREDITS = 2
+TARGET_CLASSES = ("none", "minor", "major")
+
+
+class InterfaceError(ValueError):
+    pass
+
+
+def initial_state():
+    return {"credits": MAX_CREDITS, "last_ply": -1}
+
+
+def _validate(state, event):
+    if not isinstance(state, dict):
+        raise InterfaceError("state must be a record")
+    if type(state.get("credits")) is not int or not 0 <= state["credits"] <= MAX_CREDITS:
+        raise InterfaceError("invalid credits")
+    if type(state.get("last_ply")) is not int or state["last_ply"] < -1:
+        raise InterfaceError("invalid last_ply")
+
+    required = ("ply", "depth_left", "capture", "promotion",
+                "gives_check", "newly_attacked")
+    if not isinstance(event, dict) or any(k not in event for k in required):
+        raise InterfaceError("incomplete event")
+    if type(event["ply"]) is not int or event["ply"] < 0:
+        raise InterfaceError("invalid ply")
+    if event["ply"] != state["last_ply"] + 1:
+        raise InterfaceError("non-contiguous search line")
+    if type(event["depth_left"]) is not int or event["depth_left"] < 0:
+        raise InterfaceError("invalid depth_left")
+    for key in ("capture", "promotion", "gives_check"):
+        if type(event[key]) is not bool:
+            raise InterfaceError("boolean field required")
+    if event["newly_attacked"] not in TARGET_CLASSES:
+        raise InterfaceError("invalid target class")
+
+
+def advance(state, event):
+    _validate(state, event)
+
+    credits_before = state["credits"]
+    quiet = not event["capture"] and not event["promotion"] and not event["gives_check"]
+    trigger = quiet and event["newly_attacked"] != "none"
+    frontier = event["depth_left"] <= 1
+    extension = 0
+    credits_after = credits_before
+
+    if trigger and not frontier:
+        reason = "not_frontier"
+    elif trigger and credits_before == 0:
+        reason = "credit_exhausted"
+    elif trigger:
+        extension = 1
+        credits_after -= 1
+        reason = "extended_" + event["newly_attacked"]
+    elif not quiet:
+        reason = "non_quiet"
+    else:
+        credits_after = MAX_CREDITS
+        reason = "null"
+
+    next_state = {"credits": credits_after, "last_ply": event["ply"]}
+    decision = {
+        "extension": extension,
+        "reason": reason,
+        "credits_before": credits_before,
+        "credits_after": credits_after,
+        "work_units": 1,
+    }
+    return next_state, decision
+
+
+def _event(ply, depth_left, target="none", capture=False,
+           promotion=False, gives_check=False):
+    return {
+        "ply": ply,
+        "depth_left": depth_left,
+        "capture": capture,
+        "promotion": promotion,
+        "gives_check": gives_check,
+        "newly_attacked": target,
+    }
+
+
+def _replay(events):
+    state = initial_state()
+    decisions = []
+    for event in events:
+        state, decision = advance(state, event)
+        decisions.append(decision)
+    return {"decisions": decisions, "final_state": state}
+
+
+def run_fixtures():
+    predicted = [
+        _event(0, 1, "minor"),
+        _event(1, 0, "major"),
+    ]
+    null_case = [
+        _event(0, 0),
+        _event(1, 0),
+    ]
+    boundaries = [
+        _event(0, 2, "major"),
+        _event(1, 1, "major"),
+        _event(2, 1, "major"),
+        _event(3, 1, "major"),
+        _event(4, 0, "major", gives_check=True),
+    ]
+    work_safety = [_event(i, 0, "major") for i in range(10000)]
+
+    predicted_trace = _replay(predicted)
+    null_trace = _replay(null_case)
+    boundary_trace = _replay(boundaries)
+    work_trace = _replay(work_safety)
+
+    assert [d["extension"] for d in predicted_trace["decisions"]] == [1, 1]
+    assert [d["extension"] for d in null_trace["decisions"]] == [0, 0]
+    assert [d["extension"] for d in boundary_trace["decisions"]] == [0, 1, 1, 0, 0]
+    assert work_trace["final_state"]["credits"] == 0
+    assert sum(d["extension"] for d in work_trace["decisions"]) == MAX_CREDITS
+    assert max(d["extension"] for d in work_trace["decisions"]) == 1
+
+    first = _replay(predicted)
+    second = _replay(predicted)
+    assert first == second
+
+    rejected = False
+    try:
+        advance({"credits": 2, "last_ply": 1}, _event(3, 0))
+    except InterfaceError:
+        rejected = True
+    assert rejected
+
+    return {
+        "predicted_effect": predicted_trace,
+        "null_case": null_trace,
+        "state_boundaries": boundary_trace,
+        "work_safety": {
+            "events": len(work_safety),
+            "extensions": sum(d["extension"] for d in work_trace["decisions"]),
+            "max_extension_per_event": 1,
+            "final_state": work_trace["final_state"],
+        },
+        "deterministic": first == second,
+        "invalid_state_transition_rejected": rejected,
+    }
+
+
+if __name__ == "__main__":
+    if sys.argv[1:] != ["--fixtures"]:
+        raise SystemExit("usage: quiet_threat_frontier.py --fixtures")
+    print(json.dumps(run_fixtures(), sort_keys=True, separators=(",", ":")))
+```
+
+Execution command:
+
+```text
+python quiet_threat_frontier.py --fixtures
+```
+
+Expected deterministic trace:
+
+```json
+{
+  "predicted_extensions": [1, 1],
+  "null_extensions": [0, 0],
+  "boundary_extensions": [0, 1, 1, 0, 0],
+  "work_safety_events": 10000,
+  "work_safety_extensions": 2,
+  "max_extension_per_event": 1,
+  "deterministic": true,
+  "invalid_state_transition_rejected": true
+}
+```
+
+Falsifier: reject the capability if any null or non-frontier case extends, if credits exceed two, if more than two extensions occur in the bounded burst, if repeated execution differs, or if the adapter cannot compute the newly-attacked class from pre/post legal board states.
+
+Integration invariants:
+
+- Keep the supplied anchor authoritative and integrate only this rule.
+- Invoke after a legal quiet move is made, using `depth_left = parent_depth - 1`.
+- Apply `extension` only in normal search; do not alter quiescence, move legality, evaluation, or UCI behavior.
+- Reset state at each root and pass immutable returned state down exactly one search branch.
+- Map only newly attacked minor/major pieces to the component; checks, captures, and promotions remain non-triggering.
+- Add at most one ply per event and never exceed two credits in one tactical burst.
+
+Interpreter execution was blocked by the sandbox policy; the trace above is the component’s bounded self-test specification, not a claimed live process capture.

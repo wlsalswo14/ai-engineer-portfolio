@@ -1,0 +1,8 @@
+WITNESS {
+  "priority_order": ["legality", "protocol behavior", "bounded work", "state integrity", "decision quality"],
+  "procedure": "Send uci, isready, position fen 7k/6Q1/7K/8/8/8/8/8 b - - 0 1, go movetime 1, quit.",
+  "observed_anchor_trace": "The FEN is checkmate: legal(position) returns []; think() returns 0000; main() emits bestmove 0000.",
+  "failed_terminal_predicate": "The bestmove token must denote a legal move, but 0000 is not legal.",
+  "preservation_predicates": ["uci handshake remains uciok", "isready remains readyok", "exactly one bestmove line is emitted", "the supplied FEN and side-to-move are preserved"],
+  "falsifier": "The witness is falsified if the exact untouched anchor produces a legal move token for this FEN or if the task contract explicitly permits 0000 as a legal terminal response."
+}

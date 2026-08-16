@@ -1,0 +1,37 @@
+{
+  "final_call_id": "anchor_blind_policy_originator",
+  "information_flow": "The boundary call receives all common inputs and emits one implementation-erased map containing public interface obligations, validity obligations, and cross-objective behavioral tensions. The final call consumes only that immediately preceding map, preventing anchor implementation, reversible edit history, and terminal compression evidence from entering policy construction.",
+  "name": "Anchor-Erasure Clean-Room Relay",
+  "organization": "Two-call sequential relay separated by one lossy visibility edge; the first call is an abstraction boundary and the second is the sole policy producer.",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "anchor_erasure_boundary",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Project the supplied evidence into one contract-level causal tension map while preserving public interface, authoritative-state, capacity, determinism, and standard-library obligations. Exclude anchor implementation details, repair sequences, reversible deltas, policy fragments, cases, traces, scores, and alternative candidates.",
+          "output_type": "analysis",
+          "role": "contract-level evidence projector"
+        },
+        {
+          "id": "anchor_blind_policy_originator",
+          "inputs": [
+            "anchor_erasure_boundary"
+          ],
+          "objective": "Consume the immediately preceding implementation-erased map as the sole visible evidence and construct one complete, internally coherent, contract-compliant policy artifact addressing its behavioral tensions together. Do not reconstruct or edit the anchor, inherit reversible repair or compression, create alternatives, or perform review-based selection.",
+          "output_type": "policy",
+          "role": "clean-room whole-policy originator"
+        }
+      ],
+      "id": "erase_then_originate",
+      "mode": "sequential"
+    }
+  ]
+}

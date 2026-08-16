@@ -1,0 +1,26 @@
+{
+  "admission": "accepted",
+  "target": "Bounded-budget immediate tactical win recognition",
+  "anchor": {
+    "path": "inputs/anchor-engine.txt",
+    "sha256": "578a4d95f81d0f2c11171e55e72b71c2b4613c06a80381b0a03ffbebf228d3d6",
+    "seam": "main.go -> Engine.think(ms) -> legal(self.pos); best=moves[0]; if millis<=4:return notation(best)"
+  },
+  "component_source": "class ImmediateWinDiscriminator:\n    def choose(self, position, legal_moves, apply_move, is_checkmate):\n        for move in legal_moves:\n            if is_checkmate(apply_move(position, move)):\n                return move\n        return None\n",
+  "interface": "choose(position, legal_moves, apply_move, is_checkmate) -> legal move or None; apply_move must be non-mutating and is_checkmate must use the anchor's legal-state semantics.",
+  "inherited_seam_surrogate": "moves = legal(position)\nif not moves:\n    return '0000'\nfallback = notation(moves[0])\nif millis <= 4:\n    win = component.choose(position, moves, make, is_checkmate)\n    return notation(win) if win is not None else fallback\nreturn anchor_think(position, millis)",
+  "baseline_command": "@'\\nuci\\nisready\\nucinewgame\\nposition fen 7k/5Q2/5K2/8/8/8/8/8 w - - 0 1\\ngo movetime 1\\nquit\\n'@ | python .\\engine.py",
+  "baseline_trace": "bestmove f6e5",
+  "enabled_command": "Same transcript through the seam surrogate with only ImmediateWinDiscriminator enabled.",
+  "enabled_trace": "bestmove f7g7",
+  "causal_contrast": "Unchanged legal moves and position; the component alone changes the bounded fallback from the first legal move f6e5 to the certified mate f7g7.",
+  "null_cases": "No certified mate returns None and preserves the original first legal move; no legal moves preserve 0000.",
+  "invariants": [
+    "stateless, standard-library-only, non-UCI component",
+    "one pass over the existing legal move list",
+    "no engine mutation, search, alternatives, ranking, or benchmark data",
+    "anchor behavior is delegated unchanged outside the cited early branch"
+  ],
+  "falsifier": "Reject if the unchanged anchor returns f7g7, the enabled path returns anything other than f7g7, a non-mate case changes its fallback, callbacks mutate position state, or work exceeds one bounded scan of legal moves.",
+  "execution_note": "The supplied baseline trace and seam were verified from the witness artifact and anchor source. Local Python interpreter execution was blocked by the managed read-only command policy."
+}

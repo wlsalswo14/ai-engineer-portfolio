@@ -1,0 +1,265 @@
+# Producer Artifact
+
+- Identity: `repetition-ledger-search-seam-v1`
+- Causal target: detect threefold repetition across game history and reversible search paths.
+- Anchor seam: `Engine.root → Engine.search → make(...)`; anchor fields are `b`, `side`, `cast`, `ep`.
+- Preservation envelope: no move-generation, evaluation, TT, UCI, or timing changes. Final graft must call the guard before TT lookup and always `leave()` in cleanup.
+- Evidence: anchor seam confirmed in [anchor-engine.txt](C:/Users/jinminjae/OneDrive/Desktop/Ouroboros/loop-evolution/experiments/chess-tier5-clean/workspace/rounds/r0021/pairs/pair-03/attempts/attempt-01/candidate/inputs/anchor-engine.txt). Deterministic self-tests are embedded; runtime execution was blocked by workspace policy.
+
+```python
+"""Standalone repetition-aware search-path component."""
+import json
+from dataclasses import dataclass
+
+
+def _read(position, *names):
+    for name in names:
+        if hasattr(position, name):
+            return getattr(position, name)
+    raise AttributeError("position lacks " + "/".join(names))
+
+
+def canonical_key(position, ep_relevant=None):
+    board = tuple(_read(position, "b", "board"))
+    if len(board) != 64:
+        raise ValueError("board must contain 64 squares")
+    side = int(_read(position, "side", "turn"))
+    castling = int(_read(position, "cast", "castling"))
+    ep = int(_read(position, "ep", "en_passant"))
+    if ep >= 0 and ep_relevant is not None and not ep_relevant(position):
+        ep = -1
+    return board, side, castling, ep
+
+
+class RepetitionLedger:
+    """Game-history counts plus a reversible search-path overlay."""
+
+    def __init__(self, ep_relevant=None):
+        self.ep_relevant = ep_relevant
+        self._counts = {}
+        self._path = []
+
+    def reset(self):
+        if self._path:
+            raise RuntimeError("cannot reset during an active search path")
+        self._counts.clear()
+
+    def record(self, position):
+        if self._path:
+            raise RuntimeError("game-history record overlaps search path")
+        key = canonical_key(position, self.ep_relevant)
+        self._counts[key] = self._counts.get(key, 0) + 1
+        return self._counts[key]
+
+    def record_many(self, positions):
+        last = 0
+        for position in positions:
+            last = self.record(position)
+        return last
+
+    def count(self, position):
+        return self._counts.get(
+            canonical_key(position, self.ep_relevant), 0
+        )
+
+    def is_threefold(self, position):
+        return self.count(position) >= 3
+
+    def enter(self, position):
+        mark = len(self._path)
+        self.push(position)
+        return mark
+
+    def push(self, position):
+        key = canonical_key(position, self.ep_relevant)
+        self._path.append(key)
+        self._counts[key] = self._counts.get(key, 0) + 1
+        return self._counts[key]
+
+    def pop(self):
+        if not self._path:
+            raise IndexError("empty search path")
+        key = self._path.pop()
+        count = self._counts[key] - 1
+        if count:
+            self._counts[key] = count
+        else:
+            del self._counts[key]
+        return count
+
+    def leave(self, mark):
+        if not isinstance(mark, int) or mark < 0 or mark > len(self._path):
+            raise ValueError("invalid search-path mark")
+        while len(self._path) > mark:
+            self.pop()
+
+    def search_guard(self, position, draw_score=0):
+        return draw_score if self.is_threefold(position) else None
+
+
+@dataclass(frozen=True)
+class SearchNode:
+    position: object
+    depth: int
+    alpha: int
+    beta: int
+    ply: int
+
+
+class RepetitionSearchSeam:
+    def __init__(self, ledger, draw_score=0):
+        self.ledger = ledger
+        self.draw_score = draw_score
+
+    def enter(self, node):
+        return self.ledger.enter(node.position)
+
+    def terminal(self, node):
+        return self.ledger.search_guard(node.position, self.draw_score)
+
+    def leave(self, mark):
+        self.ledger.leave(mark)
+
+
+class _View:
+    def __init__(self, board, side=0, cast=0, ep=-1):
+        self.b = list(board)
+        self.side = side
+        self.cast = cast
+        self.ep = ep
+
+
+def _fixture_view(tag, side=0, cast=3, ep=-1):
+    board = ["."] * 64
+    board[4] = "K"
+    board[60] = "k"
+    board[8] = "P" if tag == "a" else "."
+    board[16] = "P" if tag == "b" else "."
+    return _View(board, side, cast, ep)
+
+
+def run_fixtures():
+    a = _fixture_view("a")
+    b = _fixture_view("b")
+    ep_off = _View(a.b, a.side, a.cast, -1)
+    ep_stale = _View(a.b, a.side, a.cast, 20)
+    unseen = _View(a.b, 1, a.cast, -1)
+
+    ledger = RepetitionLedger(ep_relevant=lambda position: False)
+    first = ledger.record_many([a, b, a, b])
+    mark = ledger.enter(a)
+    prediction = {
+        "count_after_two_prior_occurrences": ledger.count(a),
+        "third_occurrence_is_draw": ledger.search_guard(a),
+    }
+    ledger.leave(mark)
+
+    null_case = {
+        "different_position_count": ledger.count(unseen),
+        "different_side_count": ledger.count(unseen),
+    }
+
+    boundary = RepetitionLedger()
+    boundary.record_many([a, a])
+    before = boundary.count(a)
+    mark = boundary.enter(a)
+    at_boundary = (boundary.count(a), boundary.is_threefold(a))
+    boundary.leave(mark)
+    after = (boundary.count(a), boundary.is_threefold(a))
+
+    lifecycle = RepetitionLedger()
+    lifecycle.record(a)
+    seam = RepetitionSearchSeam(lifecycle, draw_score=0)
+    node = SearchNode(a, 2, -100, 100, 0)
+    mark = seam.enter(node)
+    nested = seam.ledger.push(b)
+    seam.ledger.pop()
+    seam.leave(mark)
+    lifecycle_after = (
+        lifecycle.count(a),
+        lifecycle.count(b),
+        len(lifecycle._path),
+    )
+
+    closure = {
+        "stale_ep_collapses_when_callback_says_irrelevant":
+            canonical_key(ep_off, lambda position: False) ==
+            canonical_key(ep_stale, lambda position: False),
+        "relevant_ep_remains_distinct":
+            canonical_key(ep_off, lambda position: True) !=
+            canonical_key(ep_stale, lambda position: True),
+        "anchor_fields_consumed": ["b", "side", "cast", "ep"],
+        "downstream_return": "None-or-draw-score",
+    }
+
+    bounded = RepetitionLedger()
+    for _ in range(2048):
+        bounded.push(a)
+        bounded.push(b)
+        bounded.pop()
+        bounded.pop()
+
+    bounded_result = {
+        "iterations": 2048,
+        "maximum_live_path": 2,
+        "final_path": len(bounded._path),
+        "final_counts": (bounded.count(a), bounded.count(b)),
+    }
+
+    assert first == 2
+    assert prediction == {
+        "count_after_two_prior_occurrences": 3,
+        "third_occurrence_is_draw": 0,
+    }
+    assert null_case == {
+        "different_position_count": 0,
+        "different_side_count": 0,
+    }
+    assert before == 2
+    assert at_boundary == (3, True)
+    assert after == (2, False)
+    assert nested == 1
+    assert lifecycle_after == (1, 0, 0)
+    assert closure["stale_ep_collapses_when_callback_says_irrelevant"]
+    assert closure["relevant_ep_remains_distinct"]
+    assert bounded_result["final_path"] == 0
+    assert bounded_result["final_counts"] == (0, 0)
+
+    return {
+        "primitive": {
+            "prediction": prediction,
+            "null": null_case,
+            "boundary": {
+                "before": before,
+                "at": at_boundary,
+                "after": after,
+            },
+        },
+        "seam": {
+            "node_shape": [
+                "position",
+                "depth",
+                "alpha",
+                "beta",
+                "ply",
+            ],
+            "lifecycle": lifecycle_after,
+            "dependency_closure": closure,
+            "bounded_work": bounded_result,
+        },
+        "status": "PASS",
+    }
+
+
+if __name__ == "__main__":
+    print(json.dumps(run_fixtures(), sort_keys=True))
+```
+
+Binding claims:
+
+- `Position` shape: observed.
+- Recursive search seam: observed.
+- Missing repetition history: observed by anchor inspection.
+- Reversible lifecycle: executable in component fixtures.
+- Causal identity unchanged: satisfied.
+- Graft invariant: exactly one ledger, one guard, and one `enter/leave` pair per search node.

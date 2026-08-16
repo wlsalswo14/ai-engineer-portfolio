@@ -1,0 +1,116 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R7-structure-architect\\final-receipt.json",
+    "sha256": "b276057cae8c2ae32e4202cd74702dc1e656f7851c6b82f1d2eccd18f1cae496"
+  },
+  "architect_response": {
+    "architect_scope": "one-R7-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "obligation_lift_policy_constructor",
+      "information_flow": "The first call receives all six common inputs and emits one non-policy quotient containing observable obligations without granting implementation provenance authority. The final call consumes that quotient plus all six common inputs, retains full evidence visibility, and emits one policy through a single nonbranching lineage.",
+      "name": "Provenance-Quotient Obligation Lift",
+      "organization": "two-call sequential provenance-authority reset",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "provenance_quotient_normalizer",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Extract observable obligations, validity duties, and behavioral tensions from the supplied evidence; neutralize implementation provenance as authority; emit one non-policy obligation quotient without proposing edits, causal repairs, alternatives, or policy logic.",
+              "output_type": "analysis",
+              "role": "source-neutral obligation normalizer"
+            },
+            {
+              "id": "obligation_lift_policy_constructor",
+              "inputs": [
+                "provenance_quotient_normalizer",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding quotient as construction authority and the common inputs as visible contract evidence, then emit exactly one complete contract-compliant policy whose lineage is obligation-derived rather than anchor-edit-derived.",
+              "output_type": "policy",
+              "role": "independent obligation-to-policy constructor"
+            }
+          ],
+          "id": "quotient_then_lift",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "scan-resistance posture under transient sequences",
+        "phase-shift adaptation posture across regime changes"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "anchor-relative checkpoint-patch-rollback lineage with terminal delta deletion or compression",
+      "independent_replacement_principle": "Observable-contract provenance quotient: construction authority comes from source-neutral obligations while all common inputs remain visible as nonbinding evidence.",
+      "rejected_assumptions": [
+        "The anchor artifact must be the generative substrate for every valid candidate.",
+        "Novel behavior must be justified as an ordered stack of reversible anchor-relative deltas.",
+        "Terminal causal compression is necessary for structural coherence."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Introduce one observable-contract provenance quotient boundary that removes edit ancestry as construction authority while preserving final-call visibility of every common input.",
+      "expected_effect": "Obligation-derived construction can jointly reconsider resistance to transient sequences and responsiveness to regime changes without inheriting the anchor's behavioral coupling.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion makes admissible novelty depend on expression as anchor-relative reversible edits, coupling target behaviors to inherited structural premises."
+    },
+    "structural_mutation": {
+      "after": "A provenance normalizer first emits a source-neutral observable-obligation quotient; one final constructor consumes that quotient and all common inputs, treating the anchor as visible evidence rather than generative ancestry.",
+      "before": "One producer derives the candidate through an anchor-relative transactional repair stack followed by terminal delta compression.",
+      "change_count": 1,
+      "factor": "observable-contract provenance quotient boundary",
+      "why_structural": "The mutation changes the authority and lineage carried across the sole inter-call edge from artifact ancestry to observable obligations; it is not terminal-role fission, review, repair rebasing, visibility restriction, or whole-artifact relay."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 7,
+  "incumbent_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R7\\qualitative-error-notebook.json",
+    "sha256": "297ca2e11add6783672e7520b1f80396a5bc3611f4f3f153b5fcfc4e3b08ac5e"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R7\\source-manifest.json",
+    "sha256": "9abc343d56849a85c929c0093036566db86c77543426df9e18813e24e0e246e1"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": {
+      "coarse_topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c",
+      "mere_role_fission_or_rename": false,
+      "reason": "coarse call shape reused with a novel certified edge/control semantic factor"
+    },
+    "factor": "observable-contract provenance quotient boundary",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "e3e4de857169ffc7ab5124bb24a6342b14f2403c8bb706935faa413f2703f083",
+    "topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c"
+  }
+}

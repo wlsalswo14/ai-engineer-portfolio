@@ -1,0 +1,102 @@
+Role: R58 candidate topology role dependency-directed rollback authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R58,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: propagate_retraction_and_emit
+Role: dependency-directed rollback authority
+Objective: Consume the executable state alongside reacquired common evidence, trigger rollback when support is withdrawn from a causally necessary premise, rederive affected commitments from surviving evidence, preserve independent commitments, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "instantiate_revocable_state": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.target_recent = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _forget_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _remember_ghost(self, ghost, key, size):\n        self._forget_ghost(key)\n        ghost[key] = size\n        while len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_limit:\n            if self.ghost_recent:\n                self.ghost_recent.popitem(last=False)\n            elif self.ghost_frequent:\n                self.ghost_frequent.popitem(last=False)\n\n    def _remove_resident(self, key):\n        if key in self.recent:\n            size = self.recent.pop(key)\n            self.recent_bytes -= size\n            return size, 1\n        if key in self.frequent:\n            size = self.frequent.pop(key)\n            self.frequent_bytes -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, prefer_recent):\n        choose_recent = bool(self.recent) and (\n            self.recent_bytes > self.target_recent\n            or (prefer_recent and self.recent_bytes == self.target_recent)\n        )\n        if choose_recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember_ghost(self.ghost_recent, key, size)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self._remember_ghost(self.ghost_frequent, key, size)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember_ghost(self.ghost_recent, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, prefer_recent):\n        evicted = []\n        while self.recent_bytes + self.frequent_bytes + size > self.capacity_bytes:\n            key = self._evict_one(prefer_recent)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n        if requested <= 0:\n            if key in self.recent:\n                self.recent.move_to_end(key)\n            elif key in self.frequent:\n                self.frequent.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._remove_resident(key)\n            if segment is not None:\n                self._remember_ghost(\n                    self.ghost_recent if segment == 1 else self.ghost_frequent,\n                    key,\n                    old_size,\n                )\n                return [key]\n            return []\n\n        if key in self.recent:\n            self._remove_resident(key)\n            evicted = self._make_room(requested, False)\n            self.frequent[key] = requested\n            self.frequent_bytes += requested\n            return evicted\n\n        if key in self.frequent:\n            self._remove_resident(key)\n            evicted = self._make_room(requested, False)\n            self.frequent[key] = requested\n            self.frequent_bytes += requested\n            return evicted\n\n        recent_ghost_hit = key in self.ghost_recent\n        frequent_ghost_hit = key in self.ghost_frequent\n        step = max(1, self.capacity_bytes // 16)\n        if recent_ghost_hit:\n            self.target_recent = min(self.capacity_bytes, self.target_recent + step)\n        elif frequent_ghost_hit:\n            self.target_recent = max(0, self.target_recent - step)\n\n        self._forget_ghost(key)\n        evicted = self._make_room(requested, frequent_ghost_hit)\n        if recent_ghost_hit or frequent_ghost_hit:\n            self.frequent[key] = requested\n            self.frequent_bytes += requested\n        else:\n            self.recent[key] = requested\n            self.recent_bytes += requested\n        return evicted\n",
+    "sha256": "ea27e7563dd3fe10a38ab55edf54820fdda5553bab1e589542222d8739da5d5b"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "ec1ccb464a5e08c51726868594c64fb5e3c6de895d8e852c00ea7d4c5741dc6c",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.ghost_limit = 4096\n        self.target = self.capacity_bytes // 2\n        self.bytes1 = 0\n        self.bytes2 = 0\n\n    def _forget_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._forget_ghost(key)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _take(self, key):\n        if key in self.t1:\n            size = self.t1.pop(key)\n            self.bytes1 -= size\n            return size, 1\n        if key in self.t2:\n            size = self.t2.pop(key)\n            self.bytes2 -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, b2_hit):\n        use_t1 = bool(self.t1) and (\n            self.bytes1 > self.target\n            or (b2_hit and self.bytes1 == self.target)\n        )\n        if use_t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.bytes2 -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, b2_hit):\n        evicted = []\n        while self.bytes1 + self.bytes2 + size > self.capacity_bytes:\n            key = self._evict_one(b2_hit)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n\n        if requested <= 0:\n            if key in self.t1:\n                self.t1.move_to_end(key)\n            elif key in self.t2:\n                self.t2.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._take(key)\n            if segment == 1:\n                self._remember(self.b1, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.b2, key, old_size)\n                return [key]\n            return []\n\n        if key in self.t1:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        if key in self.t2:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        b1_hit = key in self.b1\n        b2_hit = key in self.b2\n        if b1_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(step, min(requested, self.capacity_bytes)),\n            )\n        elif b2_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = max(\n                0,\n                self.target - max(step, min(requested, self.capacity_bytes)),\n            )\n\n        self._forget_ghost(key)\n        evicted = self._make_room(requested, b2_hit)\n        if b1_hit or b2_hit:\n            self.t2[key] = requested\n            self.bytes2 += requested\n        else:\n            self.t1[key] = requested\n            self.bytes1 += requested\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R57 champion policy anchor",
+    "artifact_sha256": "ec1ccb464a5e08c51726868594c64fb5e3c6de895d8e852c00ea7d4c5741dc6c",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Replace the non-policy handoff with a revocable executable policy state whose terminal consumer retracts and rederives commitments causally dependent on any premise that loses evidential support.",
+    "expected_effect": "Unsupported consequences cease propagating while independently supported commitments remain intact within one executable lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion can reconcile two evidence views but cannot propagate withdrawal of support through commitments already combined during terminal synthesis."
+  },
+  "loop_structure": {
+    "final_call_id": "propagate_retraction_and_emit",
+    "information_flow": "The first call receives every common input and emits one complete executable policy state whose commitments remain causally revocable. The final call consumes that state and independently receives every common input. Withdrawal of support for an operative premise triggers dependency-directed rollback and rederivation within the same artifact lineage; no side channel or alternate candidate exists.",
+    "name": "Revocable Executable Truth-Maintenance Edge",
+    "organization": "two-call sequential lineage with one complete executable-state handoff and terminal dependency-retraction authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "instantiate_revocable_state",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Construct one complete executable policy artifact from the supplied evidence while making each adopted commitment operationally dependent on the premises that authorize it.",
+            "output_type": "executable_policy_state",
+            "role": "executable causal-state constructor"
+          },
+          {
+            "id": "propagate_retraction_and_emit",
+            "inputs": [
+              "instantiate_revocable_state",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the executable state alongside reacquired common evidence, trigger rollback when support is withdrawn from a causally necessary premise, rederive affected commitments from surviving evidence, preserve independent commitments, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "dependency-directed rollback authority"
+          }
+        ],
+        "id": "truth_maintenance_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

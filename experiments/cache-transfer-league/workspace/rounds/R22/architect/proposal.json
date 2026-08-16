@@ -1,0 +1,111 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R22-structure-architect\\final-receipt.json",
+    "sha256": "7423b62657fe3b0e6f1cac5a149b84d98fb6c96702caa8b8f3c6fe062aeb4ddc"
+  },
+  "architect_response": {
+    "architect_scope": "one-R22-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "post_commit_evidence_reconstitution",
+      "information_flow": "The first call receives all six common inputs and emits one complete executable policy before forming anchor-relative causal evidence. The final call consumes that exact policy plus the common inputs, forms allowed task-and-contract evidence only after commitment, and reconstitutes the same single lineage as one final policy. The handoff carries executable state rather than analysis alone and introduces no branch or competing candidate.",
+      "name": "Hypothesis-First Executable Commitment with Post-Commit Evidence",
+      "organization": "two-call sequential lineage separated by one evidence-timing boundary",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "pre_evidence_policy_commitment",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Commit exactly one complete contract-compliant executable policy hypothesis from the common inputs before forming any anchor-relative causal audit. Materialize one whole-policy state rather than provisionally accepted edits, and emit no alternatives, scores, traces, or evaluation artifacts.",
+              "output_type": "policy",
+              "role": "whole-policy conjecture committer"
+            },
+            {
+              "id": "post_commit_evidence_reconstitution",
+              "inputs": [
+                "pre_evidence_policy_commitment",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding executable policy and only then form allowed task-and-contract evidence about the committed whole. Reconstitute that single lineage as a complete contract-compliant policy without terminal causal compression, a review-only verdict, or a competing candidate.",
+              "output_type": "policy",
+              "role": "post-commit evidence reconstitution producer"
+            }
+          ],
+          "id": "commit_then_evidence",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "scan resistance",
+        "phase-shift adaptation"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "terminal causal compression of a reversible repair-delta stack",
+      "independent_replacement_principle": "Hypothesis-first executable commitment: materialize one whole policy before causal audit, then form evidence about that committed whole and reconstitute the same single lineage in the next and final call.",
+      "rejected_assumptions": [
+        "Causal evidence must precede every executable departure from the anchor.",
+        "Global coherence is best obtained by accumulating reversible local repairs and deleting redundant deltas at the terminal call."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Reverse that causal order through one executable commitment-before-evidence boundary: materialize a complete policy first, then let the final call form evidence about that committed whole.",
+      "expected_effect": "Whole-policy commitment before causal audit should permit scan resistance and phase-shift adaptation to change coherently, while the policy-bearing handoff preserves a concrete executable lineage for final validity reasoning.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion assumes causal evidence must precede every executable departure, constraining construction to anchor-local reversible repairs whose terminal compression cannot replace the behavioral frame that generated them."
+    },
+    "structural_mutation": {
+      "after": "Two sequential calls are separated by one policy-bearing evidence-timing boundary: the first emits a complete executable policy before causal audit, and the final call consumes that exact state before forming evidence and reconstituting the same lineage.",
+      "before": "One call audits before divergence, accumulates reversible local repairs, and performs terminal causal compression while anchor, evidence, and policy state remain co-resident.",
+      "change_count": 1,
+      "factor": "executable whole-policy commitment preceding causal evidence formation",
+      "why_structural": "The mutation reverses evidence timing across a new executable-state edge rather than renaming or fissioning terminal roles. It does not reuse anchor-capability inversion, subtractive authority, constructive typestate, writer transfer, history erasure, or behavioral arbitration."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 22,
+  "incumbent_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R22\\qualitative-error-notebook.json",
+    "sha256": "c0abfee9370e5c1572f45e59bc79bcc5fe749ea8be7a7766c9adaca14ad27236"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R22\\source-manifest.json",
+    "sha256": "85458e145410c3f087449729c17c0e75d16f095e09c98ac27eb21db06f70a8e3"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "executable whole-policy commitment preceding causal evidence formation",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "50fcdb1eff6b783177e83fdd276569d46c2378745f1df62430f51798a9e893c0",
+    "topology_fingerprint": "9d8233fd047dcdab31f88ce388605a432898ae940e9229cee39de576486994ac"
+  }
+}

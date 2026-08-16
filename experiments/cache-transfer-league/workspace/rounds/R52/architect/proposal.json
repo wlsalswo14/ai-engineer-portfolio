@@ -1,0 +1,111 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R52-structure-architect\\final-receipt.json",
+    "sha256": "461a4bd16e57aaccda69827d325c7f834f97f9bed38328f785844a9e9734fc9c"
+  },
+  "architect_response": {
+    "architect_scope": "one-R52-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "indivisible_state_authority",
+      "information_flow": "The first call alone receives all common external inputs and encapsulates their relevant evidence and provenance in one complete executable policy state without separating contract and behavior authority. The terminal call consumes only that state, exercises indivisible authority over the complete artifact, and emits one policy.",
+      "name": "Single-Ingress Indivisible State Authority",
+      "organization": "two-call sequential lineage with one exclusive executable-state handoff",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "encapsulate_complete_evidence_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Receive the supplied evidence once, form one complete executable policy state retaining the provenance needed for downstream judgment, avoid imposing an immutable contract-versus-behavior authority partition, and pass the state as the sole downstream evidence carrier.",
+              "output_type": "executable_policy_state",
+              "role": "single-ingress executable evidence custodian"
+            },
+            {
+              "id": "indivisible_state_authority",
+              "inputs": [
+                "encapsulate_complete_evidence_state"
+              ],
+              "objective": "Consume only encapsulate_complete_evidence_state, jointly adjudicate public-contract conformance and behavior-bearing semantics from its contained evidence, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "indivisible whole-state authority"
+            }
+          ],
+          "id": "exclusive_state_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "phase-shift adaptation responsiveness",
+        "scan-resistance stability"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "the contract-locked executable relay with supplemental terminal evidence access",
+      "independent_replacement_principle": "single-ingress executable encapsulation with indivisible terminal authority over the complete artifact",
+      "rejected_assumptions": [
+        "Public-contract conformance must be frozen before behavior-bearing judgment.",
+        "Terminal judgment requires supplemental common evidence alongside the inherited executable artifact."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the contract-locked dual-input relay with one atomic single-ingress evidence-authority encapsulation: all common evidence enters once, and one complete executable state becomes the terminal authority's sole input.",
+      "expected_effect": "Indivisible whole-state judgment should increase phase-shift adaptation responsiveness while preserving scan-resistance stability by resolving both dimensions within one evidence context.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Freezing contract authority upstream while restoring external evidence downstream fragments responsibility for behavior and may impose boundary-driven inertia across distinct behavioral objectives."
+    },
+    "structural_mutation": {
+      "after": "All common evidence is encapsulated once in one complete executable state, which is the terminal call's sole input and carries indivisible whole-artifact authority without an immutable contract partition.",
+      "before": "An upstream call freezes contract conformance in an executable closure, while a terminal call receives that closure plus supplemental external evidence and controls only behavior-bearing semantics.",
+      "change_count": 1,
+      "factor": "atomic single-ingress evidence-authority encapsulation",
+      "why_structural": "The mutation replaces the inherited split-authority, supplemental-fan-in edge with one exclusive evidence-and-authority edge, changing concrete visibility and control rather than renaming or dividing roles."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 52,
+  "incumbent_structure_sha256": "6d86bef367251508b3b25489be0cb4e54f42cc76ca7d557e842f23d6846c7696",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R52\\qualitative-error-notebook.json",
+    "sha256": "25843d0b5104d427685e2a1f640742d9f4a2f7ab8687c7605b41929cff7b2c74"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R52\\source-manifest.json",
+    "sha256": "5fad7b7a6baf5309591056a2665c6aabbcf4c8a63d811c4d29042df4ee9790e6"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "atomic single-ingress evidence-authority encapsulation",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "encapsulate_complete_evidence_state",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      }
+    ],
+    "semantic_topology_fingerprint": "1ea6e0f27d80aa749c44fb9582ad5479e31921c2fa3e4798b58ec31dbd7f5367",
+    "topology_fingerprint": "17509663addc3a3360544ed0db0f815e81333d0d4518c299cc9a984442c5fbb6"
+  }
+}

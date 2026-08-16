@@ -1,0 +1,71 @@
+{
+  "architect_scope": "one-R2-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "sole_policy_author",
+    "information_flow": "All common inputs enter the causal-frame call first. Its immutable analysis flows directly into the sole policy author, which also retains visibility of the common inputs and emits one policy without feedback, branching, or downstream review.",
+    "name": "Precommitted Causal Frame with Sole Policy Author",
+    "organization": "two-call sequential lineage with one upstream evidence-framing role and one policy-authoring role",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "causal_frame_precommitment",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Before any candidate policy exists, derive an immutable contract-grounded causal-attribution frame that separates available evidence from assumptions and states what would refute the proposed attribution, without proposing or judging policy content.",
+            "output_type": "analysis",
+            "role": "pre-policy causal-evidence framer"
+          },
+          {
+            "id": "sole_policy_author",
+            "inputs": [
+              "causal_frame_precommitment",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the precommitted frame as the fixed causal basis for departures from the anchor, preserve the incumbent's transactional evidence and reversibility semantics without retrospectively redefining that frame, and emit one complete contract-compliant policy.",
+            "output_type": "policy",
+            "role": "evidence-bound policy author"
+          }
+        ],
+        "id": "precommit_then_author",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only evidence timing is refined: causal attribution is precommitted upstream while the incumbent's single-author construction, evidence preservation, and final emission remain otherwise intact.",
+    "why_not_repeat_role_fission": "The added call neither produces, reviews, repairs, nor finalizes a policy; exactly one terminal call authors the policy, and the new edge carries a pre-policy causal frame rather than a second terminal judgment."
+  },
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "causal_change": "Precommit an immutable causal-evidence frame in one upstream non-policy call before the sole policy author begins any mutation.",
+    "expected_effect": "Earlier graph-enforced evidence commitment should make policy departures more directly attributable to contract-grounded evidence and reduce self-justifying retention.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The incumbent frames causal evidence inside the same context that later sees the emerging policy, leaving evidence attribution vulnerable to hindsight-shaped reinterpretation despite its ordered audit discipline."
+  },
+  "structural_mutation": {
+    "after": "A non-policy call first freezes the causal-evidence frame, which is then consumed by the sole downstream policy-producing call.",
+    "before": "One policy-producing call both frames evidence and acts after gaining visibility into the developing policy.",
+    "change_count": 1,
+    "factor": "upstream pre-mutation causal-evidence precommitment",
+    "why_structural": "The added analysis-to-policy edge moves evidence commitment across a call boundary, changing its causal timing without adding a second policy judgment."
+  }
+}

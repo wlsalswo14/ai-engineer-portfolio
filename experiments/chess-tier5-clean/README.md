@@ -33,4 +33,9 @@ reran both arms, produced zero failures on both sides, and was the valid pair us
 
 The current official state is R28 complete. R26 promoted the three-call causally attributed exact-rollback structure.
 R27 and R28 tested two distinct emergent capability families and did not promote, so R26 remains champion and R29 will
-start in persistent counter-hypothesis mode.
+start in strengthened counter-hypothesis mode. From R29 onward a counter candidate must declare the incumbent family's
+rejected assumptions, forbidden inherited mechanisms, an independent replacement principle, and at least two changed
+behavioral dimensions. A non-promoting candidate whose exact three-pair ratio or conservative two-pair lower bound retains
+at least 90% of the champion harness median score rate becomes a development candidate. Pair 3 runs only when the bounds
+still straddle the threshold or formal promotion remains possible. That lineage then receives exactly two valid general rounds and two valid emergent rounds; it must
+formally promote within that budget or be removed from active development and replaced through counter-hypothesis search.

@@ -1,0 +1,44 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.used = 0\n        self.probation_target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _drop_ghost(self, key):\n        value = self.ghost_probation.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_protected.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if kind == 1:\n            self.ghost_probation[key] = value\n        else:\n            self.ghost_protected[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_probation) + len(self.ghost_protected) > self.ghost_count_limit):\n            source = None\n            oldest = None\n            for ghosts in (self.ghost_probation, self.ghost_protected):\n                if ghosts:\n                    value = next(iter(ghosts.values()))\n                    if oldest is None or value[1] < oldest[1]:\n                        oldest = value\n                        source = ghosts\n            _, value = source.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _adjust_target(self, kind):\n        if self.capacity <= 0:\n            return\n        first = sum(value[0] for value in self.ghost_probation.values())\n        second = sum(value[0] for value in self.ghost_protected.values())\n        if kind == 1:\n            delta = self.capacity if first == 0 else max(1, min(self.capacity, second // first or 1))\n            self.probation_target = min(self.capacity, self.probation_target + delta)\n        else:\n            delta = self.capacity if second == 0 else max(1, min(self.capacity, first // second or 1))\n            self.probation_target = max(0, self.probation_target - delta)\n\n    def _remove_resident(self, key):\n        value = self.probation.pop(key, None)\n        if value is not None:\n            self.probation_bytes -= value\n            self.used -= value\n            return value, 1\n        value = self.protected.pop(key, None)\n        if value is not None:\n            self.protected_bytes -= value\n            self.used -= value\n            return value, 2\n        return None, 0\n\n    def _evict_one(self, prefer_probation):\n        if prefer_probation and self.probation:\n            key, size = self.probation.popitem(last=False)\n            self.probation_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self.probation_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        return None\n\n    def _make_room(self, incoming, ghost_kind):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            prefer_probation = self.probation_bytes > self.probation_target\n            if ghost_kind == 1 and self.probation_bytes >= self.probation_target:\n                prefer_probation = True\n            elif ghost_kind == 2 and self.probation_bytes == self.probation_target:\n                prefer_probation = False\n            key = self._evict_one(prefer_probation)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def _rebalance(self):\n        protected_limit = max(0, self.capacity - self.probation_target)\n        while self.protected_bytes > protected_limit and self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n            self.probation_bytes += size\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = max(0, int(size))\n        if size <= 0 or size > self.capacity:\n            return []\n\n        if key in self.probation or key in self.protected:\n            self._remove_resident(key)\n            evicted = self._make_room(size, 0)\n            if self.used + size > self.capacity:\n                return evicted\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used += size\n            self._rebalance()\n            return evicted\n\n        ghost_kind = 1 if key in self.ghost_probation else 2 if key in self.ghost_protected else 0\n        if ghost_kind:\n            self._adjust_target(ghost_kind)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size, ghost_kind)\n        if self.used + size > self.capacity:\n            return evicted\n        if ghost_kind:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.probation[key] = size\n            self.probation_bytes += size\n        self.used += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R92-pair03-incumbent-call03-constraint_window_transition",
+    "duration_seconds": 34.948,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T03:38:12Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "858a8212384db2968ce303c2523e1911ca5f901c111b396b58ea530a628b45b6",
+    "raw_events_path": "workspace\\model-calls\\R92-pair03-incumbent-call03-constraint_window_transition\\raw-events.jsonl",
+    "raw_events_sha256": "0ae38b5eea1372ecf7771ae6a4c06de1c5bebbedf8360ea2a09b21f218a84cf8",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "667b1238479b8c1a5583b7a79d8a47345934014099dc41d1a049a022b7e3834c",
+    "returncode": 0,
+    "role": "R92 incumbent topology role constraint-window executable custodian",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T03:37:38Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14246,
+      "output_tokens": 2535,
+      "reasoning_output_tokens": 1034
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,198 @@
+Artifact: `anchor_seam_component.py` (not written to or emitted as `engine.py`)
+
+```python
+from dataclasses import dataclass, replace
+
+MAX_CREDITS = 2
+TARGET_CLASSES = ("none", "minor", "major")
+
+
+@dataclass(frozen=True)
+class CapabilityState:
+    credits: int
+    last_ply: int
+
+
+@dataclass(frozen=True)
+class CapabilityEvent:
+    ply: int
+    depth_left: int
+    capture: bool
+    promotion: bool
+    gives_check: bool
+    target: str
+
+
+@dataclass(frozen=True)
+class Transition:
+    state: CapabilityState
+    extension: int
+
+
+def initial():
+    return CapabilityState(MAX_CREDITS, -1)
+
+
+def advance(state, event):
+    if event.ply != state.last_ply + 1:
+        raise ValueError("invalid capability transition")
+    if event.target not in TARGET_CLASSES:
+        raise ValueError("invalid capability target")
+
+    quiet = not event.capture and not event.promotion and not event.gives_check
+    trigger = quiet and event.target != "none"
+
+    if trigger and event.depth_left <= 1 and state.credits:
+        return Transition(
+            CapabilityState(state.credits - 1, event.ply), 1
+        )
+    if quiet:
+        return Transition(CapabilityState(MAX_CREDITS, event.ply), 0)
+    return Transition(CapabilityState(state.credits, event.ply), 0)
+
+
+@dataclass(frozen=True)
+class AnchorState:
+    b: tuple
+    side: int
+    cast: int
+    ep: int
+    half: int
+    full: int
+
+
+@dataclass(frozen=True)
+class SeamFrame:
+    before: AnchorState
+    after: AnchorState
+    move: int
+    depth_left: int
+    ply: int
+    capture: bool
+    promotion: bool
+    gives_check: bool
+    target: str
+
+
+class AnchorSeamSurrogate:
+    DEPENDENCY_CLOSURE = (
+        "before.b", "before.side", "after.b", "after.side",
+        "move", "depth_left", "ply", "capture", "promotion",
+        "gives_check", "target",
+    )
+    MAX_TRACE = 16
+
+    def __init__(self):
+        self.state = initial()
+        self.last_after = None
+        self.trace = []
+
+    def submit(self, frame):
+        before, after = frame.before, frame.after
+
+        if len(before.b) != 64 or len(after.b) != 64:
+            raise ValueError("invalid anchor board shape")
+        if before.side not in (0, 1) or after.side != (before.side ^ 1):
+            raise ValueError("invalid anchor lifecycle")
+        if not isinstance(frame.move, int) or not 0 <= frame.move < (1 << 20):
+            raise ValueError("invalid anchor move shape")
+        if self.last_after is not None and before != self.last_after:
+            raise ValueError("anchor lifecycle discontinuity")
+        if len(self.trace) >= self.MAX_TRACE:
+            raise ValueError("bounded trace exhausted")
+
+        result = advance(self.state, CapabilityEvent(
+            frame.ply, frame.depth_left, frame.capture,
+            frame.promotion, frame.gives_check, frame.target
+        ))
+        self.state = result.state
+        self.last_after = after
+        self.trace.append((
+            frame.ply, frame.depth_left, frame.capture,
+            frame.promotion, frame.gives_check, frame.target,
+            result.state.credits, result.state.last_ply, result.extension
+        ))
+        return result
+
+
+def run_fixtures():
+    board = (".",) * 64
+    before = AnchorState(board, 0, 0, -1, 0, 1)
+    seam = AnchorSeamSurrogate()
+    cases = []
+
+    def add(label, depth, target="none", capture=False,
+            promotion=False, gives_check=False):
+        nonlocal before
+        after = AnchorState(
+            board, before.side ^ 1, before.cast, before.ep,
+            before.half + 1, before.full + (1 if before.side == 0 else 0)
+        )
+        cases.append((label, SeamFrame(
+            before, after, 4 | (12 << 6), depth, len(cases),
+            capture, promotion, gives_check, target
+        )))
+        before = after
+
+    add("effect", 1, target="minor")
+    add("depth-boundary", 2, target="major")
+    add("null", 1)
+    add("nonquiet", 1, target="major", capture=True)
+    add("repeat-1", 1, target="major")
+    add("repeat-2", 0, target="major")
+    add("credit-exhaustion", 1, target="major")
+
+    expected = ((1, 1), (0, 2), (0, 2), (0, 2),
+                (1, 1), (1, 0), (0, 2))
+    observed = []
+
+    for (label, frame), want in zip(cases, expected):
+        result = seam.submit(frame)
+        got = (result.extension, result.state.credits)
+        assert got == want, (label, got, want)
+        observed.append((label, frame.ply, got))
+
+    bad = replace(cases[-1][1], ply=8)
+    try:
+        seam.submit(bad)
+    except ValueError as error:
+        invalid = str(error)
+    else:
+        raise AssertionError("invalid lifecycle accepted")
+
+    assert len(seam.trace) == 7 <= seam.MAX_TRACE
+    return {
+        "observed": observed,
+        "invalid_lifecycle": invalid,
+        "dependencies": seam.DEPENDENCY_CLOSURE,
+        "bounded_transitions": len(seam.trace),
+    }
+
+
+if __name__ == "__main__":
+    print(run_fixtures())
+```
+
+Seam provenance: `Engine.root`/`Engine.search` performs `q = make(p, m)`, derives `capability_event(p, q, m, depth_left, ply)`, calls `capability_advance`, then passes `(q, depth_left + extension, next_state)` to recursive `search`.
+
+Deterministic trace:
+
+```text
+effect             ply=0 extension=1 credits=1
+depth-boundary     ply=1 extension=0 credits=2
+null               ply=2 extension=0 credits=2
+nonquiet           ply=3 extension=0 credits=2
+repeat-1           ply=4 extension=1 credits=1
+repeat-2           ply=5 extension=1 credits=0
+credit-exhaustion  ply=6 extension=0 credits=2
+invalid lifecycle  rejected
+bounded transitions=7
+```
+
+Execution command: `python anchor_seam_component.py`
+
+Causal falsifier: a quiet, non-checking move newly attacking a minor/major target at `depth_left <= 1` must produce extension `1`; captures, promotions, checks, null targets, or `depth_left > 1` must not.
+
+Graft invariants: preserve the untouched anchor; call the same transition once per searched move; carry returned state unchanged; add only the returned extension; reject noncontiguous ply/state transitions; retain O(1) component work and the bounded trace.
+
+Python execution was unavailable because the managed workspace rejected shell execution; no engine file was modified or emitted.

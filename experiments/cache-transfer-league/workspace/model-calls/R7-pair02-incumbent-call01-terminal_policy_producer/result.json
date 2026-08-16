@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self._t1_bytes = 0\n        self._t2_bytes = 0\n        self._b1_bytes = 0\n        self._b2_bytes = 0\n        self._resident_bytes = 0\n        self._target_t1_bytes = 0\n\n    def _remove_b1(self, key):\n        size = self.b1.pop(key, None)\n        if size is not None:\n            self._b1_bytes -= size\n        return size\n\n    def _remove_b2(self, key):\n        size = self.b2.pop(key, None)\n        if size is not None:\n            self._b2_bytes -= size\n        return size\n\n    def _record_ghost(self, table, key, size):\n        if table is self.b1:\n            old = self.b1.pop(key, None)\n            if old is not None:\n                self._b1_bytes -= old\n            old = self.b2.pop(key, None)\n            if old is not None:\n                self._b2_bytes -= old\n            self.b1[key] = size\n            self._b1_bytes += size\n        else:\n            old = self.b2.pop(key, None)\n            if old is not None:\n                self._b2_bytes -= old\n            old = self.b1.pop(key, None)\n            if old is not None:\n                self._b1_bytes -= old\n            self.b2[key] = size\n            self._b2_bytes += size\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        limit = self.capacity_bytes * 2\n        while self._b1_bytes + self._b2_bytes > limit:\n            if self.b1:\n                _, size = self.b1.popitem(last=False)\n                self._b1_bytes -= size\n            elif self.b2:\n                _, size = self.b2.popitem(last=False)\n                self._b2_bytes -= size\n            else:\n                break\n\n    def _evict_t1(self):\n        key, size = self.t1.popitem(last=False)\n        self._t1_bytes -= size\n        self._resident_bytes -= size\n        self._record_ghost(self.b1, key, size)\n        return key\n\n    def _evict_t2(self):\n        key, size = self.t2.popitem(last=False)\n        self._t2_bytes -= size\n        self._resident_bytes -= size\n        self._record_ghost(self.b2, key, size)\n        return key\n\n    def _replace(self, incoming_size, from_b2):\n        evicted = []\n        while self._resident_bytes + incoming_size > self.capacity_bytes:\n            if self.t1 and (\n                self._t1_bytes > self._target_t1_bytes\n                or (from_b2 and self._t1_bytes == self._target_t1_bytes)\n            ):\n                evicted.append(self._evict_t1())\n            elif self.t2:\n                evicted.append(self._evict_t2())\n            elif self.t1:\n                evicted.append(self._evict_t1())\n            else:\n                break\n        return evicted\n\n    def _insert_t1(self, key, size):\n        self.t1[key] = size\n        self._t1_bytes += size\n        self._resident_bytes += size\n\n    def _insert_t2(self, key, size):\n        self.t2[key] = size\n        self._t2_bytes += size\n        self._resident_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self._t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self._t2_bytes += stored_size\n            return []\n\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        request_size = max(0, size)\n        if self.capacity_bytes == 0 or request_size > self.capacity_bytes:\n            return []\n\n        from_b2 = key in self.b2\n        if from_b2:\n            self._remove_b2(key)\n            delta = max(1, min(self.capacity_bytes, request_size))\n            self._target_t1_bytes = max(0, self._target_t1_bytes - delta)\n            evicted = self._replace(request_size, True)\n            self._insert_t2(key, request_size)\n            return evicted\n\n        if key in self.b1:\n            self._remove_b1(key)\n            delta = max(1, min(self.capacity_bytes, request_size))\n            self._target_t1_bytes = min(self.capacity_bytes, self._target_t1_bytes + delta)\n            evicted = self._replace(request_size, False)\n            self._insert_t2(key, request_size)\n            return evicted\n\n        evicted = self._replace(request_size, False)\n        self._insert_t1(key, request_size)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R7-pair02-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 83.987,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:19:25Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "d6e22608065963a6861508c4782cb92efa31ac12c4a1a42ce2e9d2432bd05c24",
+    "raw_events_path": "workspace\\model-calls\\R7-pair02-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "54bc35bbf99ef277280f38f53f13daa99496ec898fa2d4acd1e65df1997ac77b",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "9ef6647d79de8c49cff4d3b3322438fdf088677315852f4e51e341c9642d0d00",
+    "returncode": 0,
+    "role": "R7 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:18:01Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14200,
+      "output_tokens": 6642,
+      "reasoning_output_tokens": 5381
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

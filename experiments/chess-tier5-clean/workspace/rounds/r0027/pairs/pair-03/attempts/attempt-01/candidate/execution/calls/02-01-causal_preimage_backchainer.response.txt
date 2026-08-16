@@ -1,0 +1,99 @@
+{
+  "record_type": "PREIMAGE_CLOSURE",
+  "terminal_node": {
+    "id": "T0",
+    "type": "decision_quality_outcome",
+    "failed_predicate": "wins > losses",
+    "satisfaction_predicate": "The supplied aggregate record has strictly more wins than losses."
+  },
+  "prerequisite_nodes": [
+    {
+      "id": "N1",
+      "type": "aggregate_outcome",
+      "satisfaction_predicate": "All counted game outcomes are valid and their win/loss totals equal the realized games."
+    },
+    {
+      "id": "N2",
+      "type": "game_realization",
+      "satisfaction_predicate": "The engine's emitted moves produce enough game results under the fixed match contract for wins to exceed losses."
+    },
+    {
+      "id": "N3",
+      "type": "bounded_move_emission",
+      "satisfaction_predicate": "Every go movetime request emits exactly one deterministic legal UCI move before its deadline."
+    },
+    {
+      "id": "N4",
+      "type": "decision_selection",
+      "satisfaction_predicate": "The selected move is the result of the bounded root/search decision over the current legal position."
+    },
+    {
+      "id": "N5",
+      "type": "state_transition_fidelity",
+      "satisfaction_predicate": "Position parsing, legal filtering, attack detection, and make transitions preserve board, turn, castling, en-passant, and clock state."
+    }
+  ],
+  "edges": [
+    {
+      "from": "N5",
+      "to": "N4",
+      "anchor_facts": [
+        "think calls legal(self.pos)",
+        "root and search call make, legal, attacked, and evaluate",
+        "legal filters pseudo moves by make and king-attack tests"
+      ],
+      "required_relation": "The search decision receives the actual legal successor states of the actual current position."
+    },
+    {
+      "from": "N4",
+      "to": "N3",
+      "anchor_facts": [
+        "think iterates root over legal(self.pos)",
+        "root returns bestm",
+        "think converts the selected move through notation"
+      ],
+      "required_relation": "The emitted move is the selected root decision, subject to the bounded deadline."
+    },
+    {
+      "from": "N3",
+      "to": "N2",
+      "anchor_facts": [
+        "main handles go and prints bestmove",
+        "the task contract requires one legal bestmove before the deadline"
+      ],
+      "required_relation": "Each game consumes a valid engine move sequence rather than a protocol failure or illegal move."
+    },
+    {
+      "from": "N2",
+      "to": "N1",
+      "anchor_facts": [
+        "The supplied witness reports 100 valid games and aggregate wins, draws, and losses"
+      ],
+      "required_relation": "Realized game results are the sole source of aggregate win/loss counts."
+    },
+    {
+      "from": "N1",
+      "to": "T0",
+      "anchor_facts": [
+        "The witness commits the predicate wins > losses",
+        "The supplied record is wins 5, draws 54, losses 41"
+      ],
+      "required_relation": "The aggregate counts must satisfy strict win predominance."
+    }
+  ],
+  "preservation_boundary": [
+    "Preserve the supplied anchor's passed UCI behavior.",
+    "Preserve valid-game accounting, legality, state integrity, determinism, and deadline safety.",
+    "Do not alter benchmark inputs, evaluator behavior, or external match contracts.",
+    "No dependency outside N1-N5 is admitted into the closure."
+  ],
+  "dependency_order": [
+    "N5",
+    "N4",
+    "N3",
+    "N2",
+    "N1",
+    "T0"
+  ],
+  "unresolved_assumption": "The supplied aggregate record does not identify which game trajectories must change; it is assumed that an anchor-native realization of N4 can alter sufficient realized outcomes while preserving the stated boundary."
+}

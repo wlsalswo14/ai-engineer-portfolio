@@ -1,0 +1,15 @@
+{
+  "ANCHOR_FACTS": [
+    "Anchor is a standard-library Python UCI engine.",
+    "Engine.think returns '0000' whenever legal(self.pos) is empty.",
+    "main prints that value as bestmove without terminal-state handling."
+  ],
+  "ONE_CAPABILITY_GAP": "Explicit terminal-position outcome handling: checkmate/stalemate produces the non-legal sentinel 0000 instead of a recognized terminal transition.",
+  "BASELINE_WITNESS": "(printf 'uci\\nisready\\nposition fen 7k/6Q1/6K1/8/8/8/8/8 b - - 0 1\\ngo movetime 10\\nquit\\n') | python engine.py",
+  "BASELINE_TRACE": "uciok\\nreadyok\\nbestmove 0000",
+  "FAILED_POSTCONDITION": "The go command must return one legal UCI move; 0000 is not legal.",
+  "REQUIRED_POSITIVE_TRANSITION": "The identical terminal witness must produce an explicitly recognized terminal result, while nonterminal positions retain one legal move.",
+  "PRESERVATION_ENVELOPE": "Preserve UCI handshake, valid-FEN loading, legal move generation, ordinary move output, determinism, state integrity, and deadline behavior.",
+  "BOUNDED_WORK": "One fixed six-field FEN; legal generation terminates immediately with an empty list; no unbounded search.",
+  "PRODUCER_CONSUMER_SEAM": "main(): go branch -> Engine.think(): if not moves:return '0000' -> main(): print('bestmove '+mv)."
+}

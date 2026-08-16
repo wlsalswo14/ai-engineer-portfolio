@@ -1,0 +1,54 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "No failure found in the visible artifact. The draft is byte-identical to anchor_policy (SHA-256 f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348) and uses only online access observations.",
+      "exact_actions": [
+        "Instantiate with capacity 10; access (1,4,0), (2,6,1), (1,4,2), (3,5,3). Expected evictions: [], [], [], [2].",
+        "Instantiate with capacity 10; access (1,4,0), then (9,11,1). Expected evictions: [], []; key 1 remains cached.",
+        "Replay any valid finite trace against both artifacts and compare eviction lists after each access; outputs must match exactly."
+      ],
+      "obligations": [
+        "Preserve Policy(capacity_bytes) and access(key, size, now) interfaces.",
+        "Return only currently cached keys in eviction order.",
+        "Maintain byte usage at or below capacity for valid nonnegative sizes.",
+        "Do not cache objects larger than capacity.",
+        "Use no evaluator state, hidden traces, external libraries, networking, or subprocesses."
+      ],
+      "witnesses": []
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R24-rep01-call02-postbuild_falsification_packet",
+    "duration_seconds": 22.409,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:37:41Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "e6ce1bc2628e725c901ccc1a9afd601d7739e74345afa8d2d077aa0a4521b7a3",
+    "raw_events_sha256": "d58450de7224456c49c60e6b3cb2c02de98c23f6619d3323a658f95d83ba5435",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "8578784d9c028ffc2eb325c9d52d0f8edce9c74aa9d77964b1041e9305f122a7",
+    "returncode": 0,
+    "role": "independent realized-artifact verifier",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:37:18Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12803,
+      "output_tokens": 1072,
+      "reasoning_output_tokens": 811
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

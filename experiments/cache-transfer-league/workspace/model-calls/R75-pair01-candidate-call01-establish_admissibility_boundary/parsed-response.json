@@ -1,0 +1,26 @@
+{
+  "analysis_packet": {
+    "certificate": "Visible evidence supports only online, standard-library, interface-legal cache behavior with capacity safety and currently-cached unique integer evictions; no score, trace, oracle, benchmark path, external implementation, or causal performance claim is admissible.",
+    "exact_actions": [
+      "Bind downstream construction to interface legality, capacity safety, online-only visibility, and unique-current-key eviction requirements.",
+      "Exclude any implementation choice justified by unavailable scores, traces, oracle decisions, benchmark paths, or external references.",
+      "Preserve unresolved admissible tradeoffs as conflicts rather than asserting unsupported superiority.",
+      "Do not construct or prescribe a policy in this analysis."
+    ],
+    "obligations": [
+      "Preserve the required interface and return type.",
+      "Enforce nonnegative capacity and never admit objects beyond capacity.",
+      "Return only keys that are currently cached, without duplicates.",
+      "Use standard-library facilities only and remain online-only.",
+      "Exclude benchmark-source inspection, hidden-trace hardcoding, oracle adaptation, external cache libraries, networking, subprocesses, and non-stdlib packages.",
+      "Treat unsupported performance commitments and inherited affirmative framing as nonbinding."
+    ],
+    "witnesses": [
+      "The task requires Policy(capacity_bytes) and access(key, size, now) -> list[int].",
+      "The evaluator owns authoritative cache state; returned keys must be currently cached, unique integers, and capacity must not be exceeded.",
+      "All decisions must use only the current access and retained policy state.",
+      "The anchor and hypothesis provide no validated performance evidence."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

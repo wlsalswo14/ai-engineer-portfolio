@@ -1,0 +1,94 @@
+Role: R72 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R72,
+matched pair 2, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "The inherited anchor is an online, size-aware adaptive recency/frequency policy with ghost histories, promotion on hits, and bounded capacity accounting. Its supporting strengths are online legality, byte-aware eviction, scan resistance, and phase adaptation; its risks are reconstruction complexity, edge-case accounting, and heuristic target behavior. The proposed causal change supports earlier complete commitment and terminal amendment of only unresolved obligations, but the permanent source cut creates a provenance-loss conflict: terminal reconstruction may preserve normative legality while losing rationale and cross-source distinctions. No score or benchmark evidence is available, so improvements remain unverified.",
+      "witnesses": [
+        {
+          "claim": "The anchor maintains separate recent and frequent resident classes plus ghost histories.",
+          "support": "Provides recency/frequency differentiation, scan resistance, and feedback from recently evicted keys."
+        },
+        {
+          "claim": "The anchor tracks resident bytes and evicts until the incoming object fits.",
+          "support": "Supports the capacity invariant and byte hit-rate tradeoffs."
+        },
+        {
+          "claim": "Resident hits are removed and reinserted as frequent entries.",
+          "support": "Encodes reuse promotion and phase adaptation."
+        },
+        {
+          "claim": "Ghost hits adjust the recent target and reinsert the key as frequent.",
+          "support": "Provides adaptive response to workload phase changes."
+        },
+        {
+          "claim": "Oversized misses are not cached and oversized resident refreshes are returned for eviction.",
+          "support": "Preserves capacity safety, though refresh and zero-size edge cases require explicit validation."
+        },
+        {
+          "claim": "Earlier complete artifact creation may preserve coherence, while terminal amendment may repair unresolved contract obligations.",
+          "support": "Matches the candidate hypothesis, but amendment authority must remain bounded and cannot invent hidden evidence."
+        }
+      ],
+      "obligations": [
+        "Emit analysis only; do not create, copy, or propose policy source here.",
+        "Preserve the distinction between inherited anchor behavior, counter-generative hypothesis, supporting evidence, and unresolved risks.",
+        "Require a single complete Policy implementation downstream using only Python standard-library facilities.",
+        "Preserve the exact constructor and access interface, including integer key handling and list-of-integer eviction results.",
+        "Maintain evaluator-owned online semantics: decisions may use only prior observed accesses and the current request.",
+        "Return only keys currently cached at the request boundary, with no duplicates or non-integer keys.",
+        "Never exceed capacity_bytes, including zero capacity, zero-size objects, changing sizes, repeated hits, and objects larger than capacity.",
+        "Do not use benchmark traces, evaluator references, oracle decisions, external libraries, networking, subprocesses, or score information.",
+        "Allow terminal amendment only for explicitly unresolved obligations; do not reacquire or reconstruct cut generative sources as if directly observed.",
+        "Produce exactly one final policy artifact downstream, without alternatives or ranked choices."
+      ],
+      "exact_actions": [
+        "Pass the synthesized distinctions and risks to the terminal policy authority as analysis, not executable code.",
+        "Have the terminal authority reconcile the evidence with task, contract, and constraint obligations before committing one implementation.",
+        "Require explicit invariant checks for resident-byte accounting, eviction eligibility, uniqueness, oversize handling, and zero-capacity behavior.",
+        "Retain only online, standard-library-compatible mechanisms; treat heuristic performance claims as defeasible because no scores are visible.",
+        "Use the terminal amendment boundary solely to resolve identified contract obligations, while preserving unresolved uncertainty rather than asserting unsupported provenance."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R71 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

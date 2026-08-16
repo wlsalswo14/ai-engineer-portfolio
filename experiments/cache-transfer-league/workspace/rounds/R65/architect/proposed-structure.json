@@ -1,0 +1,41 @@
+{
+  "final_call_id": "emit_with_inherited_artifact_visibility",
+  "information_flow": "The first call receives every common input and emits only analysis. The final call consumes that analysis, directly receives task, anchor_policy, anchor_contract, and task_constraints, remains cut off from candidate_hypothesis and loop_structure, and emits one complete policy.",
+  "name": "Selective Inherited-Artifact Reentry",
+  "organization": "two-call sequential lineage with one restored inherited-policy visibility edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "synthesize_cut_counter_sources",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile inherited and counter-generative claims against normative obligations, preserve material conflicts and distinctions, and emit only analysis.",
+          "output_type": "analysis",
+          "role": "upstream generative-evidence synthesizer"
+        },
+        {
+          "id": "emit_with_inherited_artifact_visibility",
+          "inputs": [
+            "synthesize_cut_counter_sources",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "objective": "Consume synthesize_cut_counter_sources, reconcile its evidence with visible normative inputs and the directly visible inherited policy artifact, and emit one complete policy without reacquiring the other cut sources.",
+          "output_type": "policy",
+          "role": "normative-source policy authority"
+        }
+      ],
+      "id": "selective_reentry_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

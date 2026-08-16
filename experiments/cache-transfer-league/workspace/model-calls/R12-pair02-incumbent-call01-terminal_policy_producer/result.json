@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n        self.ghost = OrderedDict()\n        self.frequency = {}\n        self.operations = 0\n        self.ghost_limit = 4096\n\n    def _bump(self, key):\n        self.frequency[key] = self.frequency.get(key, 0) + 1\n        self.operations += 1\n        if self.operations >= 2048:\n            self.operations = 0\n            for item in list(self.frequency):\n                value = (self.frequency[item] + 1) // 2\n                if value:\n                    self.frequency[item] = value\n                else:\n                    del self.frequency[item]\n\n    def _remember_ghost(self, key):\n        self.ghost.pop(key, None)\n        self.ghost[key] = None\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n\n    def _demote_protected(self):\n        target = self.capacity_bytes // 2\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > target:\n            key, size = self.protected.popitem(last=False)\n            protected_bytes -= size\n            self.probation[key] = size\n\n    def _oldest_victim(self):\n        if self.probation:\n            return next(iter(self.probation.items()))\n        if self.protected:\n            return next(iter(self.protected.items()))\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            self._bump(key)\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._bump(key)\n            self._demote_protected()\n            return []\n\n        item_size = max(0, size)\n        self._bump(key)\n\n        if item_size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        was_ghost = key in self.ghost\n        candidate_frequency = self.frequency.get(key, 1)\n        evicted = []\n\n        while self.used_bytes + item_size > self.capacity_bytes:\n            victim = self._oldest_victim()\n            if victim is None:\n                break\n\n            victim_key, victim_size = victim\n            victim_frequency = self.frequency.get(victim_key, 1)\n            if candidate_frequency <= victim_frequency and not was_ghost:\n                return []\n            if candidate_frequency * victim_size < victim_frequency * item_size:\n                return []\n\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            else:\n                old_key, old_size = self.protected.popitem(last=False)\n            self.used_bytes -= old_size\n            self._remember_ghost(old_key)\n            evicted.append(old_key)\n\n        self.ghost.pop(key, None)\n        self.probation[key] = item_size\n        self.used_bytes += item_size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R12-pair02-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 53.277,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:23:48Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "e0cb3798faa83e91cd09829bd3dbfa8af151dc948e7c75baa52c9ff784b279bd",
+    "raw_events_path": "workspace\\model-calls\\R12-pair02-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "23095ffad7c6dbd03586c8f50357bef806ab8e063805123dab4ebec6b9f376a3",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "e13d9cd4bb476db9df0b3e20b90ed905f24e00da47cdbcbb0263c892e3d0c39c",
+    "returncode": 0,
+    "role": "R12 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:22:55Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14232,
+      "output_tokens": 3924,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

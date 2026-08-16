@@ -1,0 +1,28 @@
+{
+  "record": "WITNESS",
+  "anchor": "supplied champion_engine",
+  "priority_order": [
+    "legality",
+    "protocol_behavior",
+    "bounded_work",
+    "state_integrity",
+    "decision_quality"
+  ],
+  "committed_obligation": "legality",
+  "procedure": "Start the supplied anchor, submit one accepted six-field FEN whose side-to-move king is immediately adjacent to the opposing king, request one bounded move, and independently verify that the returned move does not capture the opposing king.",
+  "inputs": "One synthetic adjacent-king six-field FEN; one bounded movetime; no benchmark data.",
+  "observed_anchor_trace": [
+    "The anchor accepts the position.",
+    "Its legal-move path retains the side-to-move king capture onto the opposing king square.",
+    "The UCI result is the corresponding king-capture move, e.g. e1e2 in the minimal orientation.",
+    "Applying that move removes the opposing king."
+  ],
+  "failed_terminal_predicate": "Every returned legal move must preserve both kings and must not capture the opposing king. False: the retained move has king(q, opposite_side) == -1.",
+  "preservation_predicates": [
+    "uci produces uciok.",
+    "isready produces readyok.",
+    "Each go movetime produces exactly one bestmove before the bound.",
+    "The returned move remains syntactically valid UCI."
+  ],
+  "falsifier": "Repeat the same procedure against the byte-identical anchor; the witness is falsified if the adjacent-king capture is absent from the legal result and no bestmove can remove the opposing king."
+}

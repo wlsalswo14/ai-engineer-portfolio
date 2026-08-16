@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity = int(capacity_bytes)\n        except (TypeError, ValueError):\n            capacity = 0\n        self.capacity = max(0, capacity)\n        self._entries = {}\n        self._probationary = OrderedDict()\n        self._protected = OrderedDict()\n        self._recent_ghost = OrderedDict()\n        self._frequent_ghost = OrderedDict()\n        self._used = 0\n        self._protected_bytes = 0\n        self._protected_target = self.capacity // 2\n        self._clock = 0\n        self._history_limit = max(64, min(4096, self.capacity + 64))\n\n    def _key_is_legal(self, key):\n        return isinstance(key, int) and not isinstance(key, bool)\n\n    def _normal_size(self, size):\n        try:\n            value = int(size)\n        except (TypeError, ValueError):\n            value = 0\n        return max(0, value)\n\n    def _remember_ghost(self, key, size, frequent):\n        recent = self._recent_ghost\n        frequent_map = self._frequent_ghost\n        recent.pop(key, None)\n        frequent_map.pop(key, None)\n        target = frequent_map if frequent else recent\n        target[key] = size\n        while len(target) > self._history_limit:\n            target.popitem(last=False)\n\n    def _remove_entry(self, key):\n        entry = self._entries.pop(key)\n        size = entry[\"size\"]\n        self._used -= size\n        if entry[\"segment\"] == 1:\n            self._protected.pop(key, None)\n            self._protected_bytes -= size\n            self._remember_ghost(key, size, True)\n        else:\n            self._probationary.pop(key, None)\n            self._remember_ghost(key, size, False)\n        return key\n\n    def _effective_frequency(self, entry):\n        age = max(0, self._clock - entry[\"last\"])\n        decay = min(8, age // 32)\n        return max(1, entry[\"frequency\"] >> decay)\n\n    def _trim_protected(self):\n        while len(self._protected) > 1 and self._protected_bytes > self._protected_target:\n            key = next(iter(self._protected))\n            entry = self._entries[key]\n            self._protected.pop(key, None)\n            self._protected_bytes -= entry[\"size\"]\n            entry[\"segment\"] = 0\n            self._probationary[key] = None\n\n    def _victims_for(self, required, excluded):\n        victims = []\n        freed = 0\n        for key in list(self._probationary):\n            if key == excluded:\n                continue\n            entry = self._entries.get(key)\n            if entry is None:\n                continue\n            victims.append(self._remove_entry(key))\n            freed += entry[\"size\"]\n            if freed >= required:\n                return victims\n        protected_keys = [\n            key for key in self._protected\n            if key != excluded and key in self._entries\n        ]\n        protected_keys.sort(\n            key=lambda candidate: (\n                self._effective_frequency(self._entries[candidate]),\n                self._entries[candidate][\"last\"],\n                candidate,\n            )\n        )\n        for key in protected_keys:\n            entry = self._entries.get(key)\n            if entry is None:\n                continue\n            victims.append(self._remove_entry(key))\n            freed += entry[\"size\"]\n            if freed >= required:\n                break\n        return victims\n\n    def _add_entry(self, key, size, protected, frequency):\n        entry = {\n            \"size\": size,\n            \"segment\": 1 if protected else 0,\n            \"frequency\": max(1, frequency),\n            \"last\": self._clock,\n        }\n        self._entries[key] = entry\n        self._used += size\n        if protected:\n            self._protected[key] = None\n            self._protected_bytes += size\n        else:\n            self._probationary[key] = None\n\n    def access(self, key, size, now):\n        self._clock += 1\n        if not self._key_is_legal(key):\n            return []\n        size = self._normal_size(size)\n        victims = []\n\n        if key in self._entries:\n            entry = self._entries[key]\n            if size > self.capacity:\n                for candidate in list(self._entries):\n                    victims.append(self._remove_entry(candidate))\n                return victims\n\n            delta = size - entry[\"size\"]\n            if delta > 0 and self._used + delta > self.capacity:\n                victims.extend(\n                    self._victims_for(self._used + delta - self.capacity, key)\n                )\n            entry = self._entries.get(key)\n            if entry is None:\n                return victims\n            if delta:\n                self._used += delta\n                if entry[\"segment\"] == 1:\n                    self._protected_bytes += delta\n                entry[\"size\"] = size\n            entry[\"frequency\"] = min(1 << 20, entry[\"frequency\"] + 1)\n            entry[\"last\"] = self._clock\n            if entry[\"segment\"] == 0:\n                self._probationary.pop(key, None)\n                entry[\"segment\"] = 1\n                self._protected[key] = None\n                self._protected_bytes += entry[\"size\"]\n            else:\n                self._protected.pop(key, None)\n                self._protected[key] = None\n            self._trim_protected()\n            return victims\n\n        frequent_reentry = key in self._frequent_ghost\n        recent_reentry = key in self._recent_ghost\n        if frequent_reentry:\n            self._frequent_ghost.pop(key, None)\n            step = max(1, max(size, self.capacity // 16))\n            self._protected_target = min(self.capacity, self._protected_target + step)\n        elif recent_reentry:\n            self._recent_ghost.pop(key, None)\n            step = max(1, max(size, self.capacity // 16))\n            self._protected_target = max(0, self._protected_target - step)\n\n        if size > self.capacity:\n            for candidate in list(self._entries):\n                victims.append(self._remove_entry(candidate))\n            return victims\n\n        required = max(0, self._used + size - self.capacity)\n        if required:\n            victims.extend(self._victims_for(required, None))\n\n        if self._used + size <= self.capacity:\n            self._add_entry(\n                key,\n                size,\n                frequent_reentry,\n                2 if frequent_reentry else 1,\n            )\n            self._trim_protected()\n        return victims"
+  },
+  "receipt": {
+    "call_id": "R23-pair02-candidate-call02-anchor_blind_policy_originator",
+    "duration_seconds": 72.748,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:11:32Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ffacb57fdf9a01bf572662681e6d2e878b483ba6cd10f3894f8ea0ee3cd10406",
+    "raw_events_path": "workspace\\model-calls\\R23-pair02-candidate-call02-anchor_blind_policy_originator\\raw-events.jsonl",
+    "raw_events_sha256": "85f0a3dc456d7e64ed03e1817e9f70bfa6b23a810b0489db0336ba932e63eff2",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "c9874f35112c6956980e34d9d43b1da2ad0754a3139bacddf68a3f9f0f66b923",
+    "returncode": 0,
+    "role": "R23 candidate topology role clean-room whole-policy originator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:10:19Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12323,
+      "output_tokens": 5767,
+      "reasoning_output_tokens": 4142
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

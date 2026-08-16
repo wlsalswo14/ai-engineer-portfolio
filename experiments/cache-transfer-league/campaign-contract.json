@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "display_round": 0,
+  "stop_after_display_round": 0,
+  "lineage": "fresh-no-prior-cache-lineage",
+  "forbidden_sources": [
+    "Recycle Bin",
+    "prior Cache R0-R14 scores",
+    "prior Cache R0-R14 artifacts",
+    "prior Cache R0-R14 error notes"
+  ],
+  "benchmark": {
+    "authority_root": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive",
+    "field": "cache_policy_scratch",
+    "seed": 20260605,
+    "scale": 3,
+    "trace_count": 9,
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "replays": 2,
+    "validity": "trace_count_9_and_zero_invalid_operations_and_zero_timeouts_and_no_runtime_or_static_reject",
+    "generation_visibility": "task-contract-only-no-fixtures-no-scores"
+  },
+  "models": {
+    "structure_architect": {
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "role_boundary": "roles-topology-visibility-hypothesis-only-no-policy-code"
+    },
+    "inner_loop": {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "service_tier": "default",
+      "role_boundary": "all-policy-create-analyze-repair-finalize-roles"
+    }
+  },
+  "bootstrap": {
+    "representatives_per_structure": 3,
+    "shared_anchor": "one-fresh-luna-high-mechanical-lru-policy",
+    "structures": [
+      {
+        "display_source_round": 20,
+        "internal_source_round": "r0001"
+      },
+      {
+        "display_source_round": 24,
+        "internal_source_round": "r0005"
+      },
+      {
+        "display_source_round": 26,
+        "internal_source_round": "r0007"
+      },
+      {
+        "display_source_round": 30,
+        "internal_source_round": "r0011"
+      }
+    ],
+    "topology_rule": "vocabulary-only-translation-preserve-stage-order-mode-call-count-dependency-graph-output-kinds-and-final-call",
+    "sampling_rule": "exactly-three-independent-reps-no-best-of-n-no-post-score-generation",
+    "seal_rule": "anchor-and-all-twelve-representatives-sealed-before-first-frozen-evaluation"
+  },
+  "selection": {
+    "eligibility": "all-three-representatives-valid-and-replay2-deterministic",
+    "primary": "highest-median-score",
+    "tie_breaks": [
+      "highest-minimum-representative-score",
+      "highest-mean-representative-score",
+      "lowest-display-source-round"
+    ],
+    "representative": "median-ranked-valid-artifact-then-lexicographically-smallest-artifact-sha256",
+    "no_eligible_fallback": "shared-lru-anchor-if-valid"
+  },
+  "close_confirmation": {
+    "trigger_absolute_median_difference_lte": 0.25,
+    "action": "third-frozen-replay-for-all-three-representatives-of-top-two-eligible-structures",
+    "pass": "third-normalized-result-identical-to-both-sealed-replay-results",
+    "selection_effect": "confirmation-only-no-regeneration-no-policy-change"
+  },
+  "coordination": {
+    "heavy_lock": "experiments/.heavy-evaluation.lock.json",
+    "require_chess_go_before_evaluate": true,
+    "generation_may_overlap_chess": true,
+    "scoring_may_not_overlap_stockfish": true
+  }
+}

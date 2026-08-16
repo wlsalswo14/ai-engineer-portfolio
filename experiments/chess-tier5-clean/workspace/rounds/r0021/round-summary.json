@@ -1,0 +1,203 @@
+{
+  "event": "matched_round_completed",
+  "round": 21,
+  "protocol": "matched-three-diverse-anchor-relative-v5",
+  "anchor_package_before": "package_faee07d6265127db",
+  "incumbent_structure_id": "loop_f7c2f8106612d495",
+  "candidate_structure_id": "loop_9119ae8b813d3665",
+  "candidate_plan_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\generation\\normalized-plan.json",
+  "pair_summary_paths": [
+    "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\pairs\\pair-01\\pair-summary.json",
+    "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\pairs\\pair-02\\pair-summary.json",
+    "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\pairs\\pair-03\\pair-summary.json"
+  ],
+  "batch_decision": {
+    "schema_version": 3,
+    "protocol": "OUROBOROS_MATCHED_THREE_DIVERSE_ANCHOR_RELATIVE_V5",
+    "planned_pair_count": 3,
+    "completed_pair_count": 3,
+    "completed_early": false,
+    "anchor_elo": -204.753,
+    "candidate_wins": 2,
+    "candidate_losses": 1,
+    "ties": 0,
+    "invalid_pair_count": 0,
+    "pair_verdicts": [
+      {
+        "pair": 1,
+        "verdict": "candidate_loss",
+        "incumbent_elo": -234.506,
+        "candidate_elo": -239.761
+      },
+      {
+        "pair": 2,
+        "verdict": "candidate_win",
+        "incumbent_elo": -109.037,
+        "candidate_elo": -94.211
+      },
+      {
+        "pair": 3,
+        "verdict": "candidate_win",
+        "incumbent_elo": -267.603,
+        "candidate_elo": -250.568
+      }
+    ],
+    "candidate_median_elo": -239.761,
+    "incumbent_median_elo": -234.506,
+    "candidate_median_score_rate": 0.195,
+    "incumbent_median_score_rate": 0.2,
+    "relative_performance_ratio": 0.975,
+    "median_delta": -5.2549999999999955,
+    "representative_candidate_pair": 1,
+    "representative_candidate_elo": -239.761,
+    "candidate_invalid_count": 0,
+    "incumbent_invalid_count": 0,
+    "promotion_checks": {
+      "three_valid_pairs_completed": true,
+      "candidate_wins_strictly_exceed_losses": true,
+      "candidate_median_strictly_exceeds_incumbent": false,
+      "candidate_invalid_count_zero": true,
+      "incumbent_invalid_count_zero": true
+    },
+    "promoted": false,
+    "inconclusive": false,
+    "promotion_rule": "complete three valid pairs; candidate wins > losses; candidate median Elo > incumbent median Elo; zero invalid arms on either side",
+    "anchor_policy": "three precommitted diverse anchors; common within each pair",
+    "development_assessment_required": false,
+    "force_complete_pairs": false,
+    "partial_development_assessment": null,
+    "bounded_development_early_stop_applied": false,
+    "irreversible_rejection_early_stop_applied": false,
+    "anchor_panel": [
+      {
+        "pair": 1,
+        "anchor_id": "anchor_578a4d95f81d0f2c",
+        "role": "current_champion",
+        "origin": "champion:package_faee07d6265127db",
+        "engine_source_sha256": "578a4d95f81d0f2c11171e55e72b71c2b4613c06a80381b0a03ffbebf228d3d6",
+        "elo": -204.753
+      },
+      {
+        "pair": 2,
+        "anchor_id": "anchor_eaba2e9ff3e678c1",
+        "role": "frozen_lineage_baseline",
+        "origin": "bootstrap:package_ebdecd200797a81e",
+        "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+        "elo": -94.211
+      },
+      {
+        "pair": 3,
+        "anchor_id": "anchor_8dc4dc4e71f53303",
+        "role": "recent_promotion_alternate",
+        "origin": "round:19:pair:2:candidate",
+        "engine_source_sha256": "8dc4dc4e71f5330371a21951937846c806484f7b1329009847e2acfdc88b00a9",
+        "elo": -261.806
+      }
+    ],
+    "distinct_anchor_count": 3
+  },
+  "token_accounting_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\evaluation\\token-accounting.json",
+  "token_usage": {
+    "proposal_structural_architect": {
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_output_tokens": 0,
+      "model_calls": 0,
+      "uncached_input_tokens": 0,
+      "total_tokens": 0,
+      "effective_tokens": 0
+    },
+    "proposal_sol_max": {
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_output_tokens": 0,
+      "model_calls": 0,
+      "uncached_input_tokens": 0,
+      "total_tokens": 0,
+      "effective_tokens": 0
+    },
+    "proposal_sol_xhigh": {
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_output_tokens": 0,
+      "model_calls": 0,
+      "uncached_input_tokens": 0,
+      "total_tokens": 0,
+      "effective_tokens": 0
+    },
+    "proposal_invalid_spend": {
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "uncached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_output_tokens": 0,
+      "total_tokens": 0,
+      "effective_tokens": 0,
+      "model_calls": 0
+    },
+    "internal_loop_luna_high": {
+      "incumbent": {
+        "input_tokens": 2886748,
+        "cached_input_tokens": 2582784,
+        "output_tokens": 115241,
+        "reasoning_output_tokens": 61825,
+        "model_calls": 10,
+        "uncached_input_tokens": 303964,
+        "total_tokens": 3001989,
+        "effective_tokens": 419205
+      },
+      "candidate": {
+        "input_tokens": 4687359,
+        "cached_input_tokens": 4088832,
+        "output_tokens": 157091,
+        "reasoning_output_tokens": 87680,
+        "model_calls": 20,
+        "uncached_input_tokens": 598527,
+        "total_tokens": 4844450,
+        "effective_tokens": 755618
+      },
+      "combined": {
+        "input_tokens": 7574107,
+        "cached_input_tokens": 6671616,
+        "output_tokens": 272332,
+        "reasoning_output_tokens": 149505,
+        "model_calls": 30,
+        "uncached_input_tokens": 902491,
+        "total_tokens": 7846439,
+        "effective_tokens": 1174823
+      },
+      "invalid_retry_spend": {
+        "input_tokens": 3190161,
+        "cached_input_tokens": 2835200,
+        "output_tokens": 109663,
+        "reasoning_output_tokens": 56041,
+        "model_calls": 12,
+        "uncached_input_tokens": 354961,
+        "total_tokens": 3299824,
+        "effective_tokens": 464624
+      }
+    },
+    "round_total": {
+      "input_tokens": 7574107,
+      "cached_input_tokens": 6671616,
+      "output_tokens": 272332,
+      "reasoning_output_tokens": 149505,
+      "model_calls": 30,
+      "uncached_input_tokens": 902491,
+      "total_tokens": 7846439,
+      "effective_tokens": 1174823
+    }
+  },
+  "promoted": false,
+  "development_disposition": "none",
+  "development_candidate_after": null,
+  "champion_package_after": "package_faee07d6265127db",
+  "stagnation_count_after": 2,
+  "local_refinement_count_after": 2,
+  "emergent_failure_count_after": 1,
+  "proposal_mode_after": "emergent_exploration",
+  "archive_record_sha256": "88797b65582ab0650828fdd4bec983048c34a5a29f397dbe08b479eed8b0b4b4"
+}

@@ -1,0 +1,123 @@
+Role: independent terminal falsifier and delta attributor
+
+Execute exactly one role in a fixed historical topology translated to Cache
+Policy vocabulary. This is representative 3 for topology R26.
+It is an independent run: no other representative, candidate, evaluation, or
+score is visible. Do not use tools or inspect the filesystem; use only the inline
+visible inputs below. Do not search, sample variants, or ask another agent.
+
+Role id: causal_attributor
+Role: independent terminal falsifier and delta attributor
+Objective: Inspect and exercise the realized provisional policy, reproduce a bounded set of concrete eviction-validity, interface-protocol, regression, and replacement-decision failures, and compare its source with the anchor policy. For each reproduced failure, use exact reversible A-B-A rollback interventions on implicated changed deltas to determine whether removal closes the witness and restoration reopens it. Emit a bounded evidence-only analysis packet containing executable witnesses, preservation obligations, and exact certified rollback descriptions referencing existing reversible deltas, or a no-failure certificate. Intervention artifacts are diagnostic counterfactuals only and must not be promoted as candidate policies. Do not author policy code.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output policy source, Python, patches, diffs, alternative policies, or a
+ranked selection. Analyze only the one visible policy lineage and provide the
+bounded evidence requested by your role.
+
+Visible inputs, exactly as fixed by the topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "fresh mechanical byte-capacity LRU anchor",
+    "artifact_sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality and online-only access visibility"
+  },
+  "provisional_builder": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n\n    def _rebalance_protected(self):\n        target = (self.capacity_bytes * 3) // 4\n        while self.protected_bytes > target and self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probationary[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probationary:\n            stored_size = self.probationary.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance_protected()\n            return []\n\n        incoming_size = max(0, int(size))\n        if self.capacity_bytes <= 0 or incoming_size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes:\n            if self.probationary:\n                old_key, old_size = self.probationary.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probationary[key] = incoming_size\n        self.used_bytes += incoming_size\n        return evicted\n",
+    "sha256": "519e5769f846d4541c4dd9db5e97e0edbd59670ad6adb40110724e956b9af7ec"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_or_trace_hardcoding": true,
+    "no_scores_available": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Exact A-B-A rollback interventions certify causal deltas before the final integrator applies any rollback.",
+    "expected_effect": "The final artifact should retain the provisional policy when clean and otherwise remove only causally certified changes with a safe anchor fallback.",
+    "falsifier": "Falsified unless the emitted policy artifact is all-valid and satisfies the median promotion contract.",
+    "observed_bottleneck": "A reproduced failure can be associated with changed regions without establishing which reversible delta caused it."
+  },
+  "loop_structure": {
+    "final_call_id": "certified_rollback_integrator",
+    "information_flow": "One producer creates a single provisional policy artifact. A non-authoring verifier compares it with the anchor, reproduces failures, and uses reversible delta rollbacks solely as causal interventions to emit either a no-failure certificate or exact rollback certificates. The final integrator emits the provisional artifact unchanged when certified clean; otherwise it applies only certified rollbacks, replays their bounded obligations, and falls back to the exact anchor policy if a prescribed rollback cannot be applied or replayed safely.",
+    "name": "Causally Attributed Exact-Rollback Integrator",
+    "organization": "collaboration",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "provisional_builder",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Starting from the anchor policy, execute one continuous anchor-style improvement trajectory and emit exactly one complete contract-compliant provisional policy artifact. Do not generate alternatives, replicate attempts, or select among candidates.",
+            "output_type": "policy",
+            "role": "provisional policy producer"
+          }
+        ],
+        "id": "construct",
+        "mode": "sequential"
+      },
+      {
+        "calls": [
+          {
+            "id": "causal_attributor",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "provisional_builder",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Inspect and exercise the realized provisional policy, reproduce a bounded set of concrete eviction-validity, interface-protocol, regression, and replacement-decision failures, and compare its source with the anchor policy. For each reproduced failure, use exact reversible A-B-A rollback interventions on implicated changed deltas to determine whether removal closes the witness and restoration reopens it. Emit a bounded evidence-only analysis packet containing executable witnesses, preservation obligations, and exact certified rollback descriptions referencing existing reversible deltas, or a no-failure certificate. Intervention artifacts are diagnostic counterfactuals only and must not be promoted as candidate policies. Do not author policy code.",
+            "output_type": "analysis",
+            "role": "independent terminal falsifier and delta attributor"
+          }
+        ],
+        "id": "attribute",
+        "mode": "sequential"
+      },
+      {
+        "calls": [
+          {
+            "id": "certified_rollback_integrator",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "provisional_builder",
+              "causal_attributor",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Emit exactly one complete contract-compliant policy artifact. If the verifier issued a no-failure certificate, emit the provisional policy unchanged. Otherwise apply only the verifier's exact certified rollback deltas, without inventing repairs or modifying unrelated content, and replay the packet's witnesses and preservation obligations. Emit the resulting policy only if every replay passes; if attribution is incomplete, an exact rollback cannot be applied, or replay fails, emit the exact anchor policy.",
+            "output_type": "policy",
+            "role": "constrained final policy emitter"
+          }
+        ],
+        "id": "emit",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

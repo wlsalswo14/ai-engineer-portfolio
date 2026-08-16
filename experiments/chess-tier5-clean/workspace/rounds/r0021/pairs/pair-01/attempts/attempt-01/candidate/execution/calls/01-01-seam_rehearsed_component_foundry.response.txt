@@ -1,0 +1,202 @@
+# Producer artifact
+
+Identity: `bounded-late-quiet-research-v1`
+
+Causal target: selectively reduce late quiet search probes while preserving forcing moves and requiring full-depth re-search after fail-high.
+
+Component source:
+
+```python
+import json
+import sys
+
+IDENTITY = "bounded-late-quiet-research-v1"
+MAX_LEGAL_MOVES = 256
+
+
+def initial():
+    return {"epoch": 0, "open": False}
+
+
+def _int(value, name, low, high):
+    if type(value) is not int or value < low or value > high:
+        raise ValueError("invalid " + name)
+    return value
+
+
+def _bool(value, name):
+    if type(value) is not bool:
+        raise TypeError("invalid " + name)
+    return value
+
+
+def begin_node(state, depth_left, ply, legal_count):
+    if not isinstance(state, dict) or state.get("open") is not False:
+        raise ValueError("node already open")
+    if type(state.get("epoch")) is not int or state["epoch"] < 0:
+        raise ValueError("invalid lifecycle state")
+
+    depth_left = _int(depth_left, "depth_left", 0, 128)
+    ply = _int(ply, "ply", 0, 256)
+    legal_count = _int(legal_count, "legal_count", 1, MAX_LEGAL_MOVES)
+
+    return {
+        "epoch": state["epoch"] + 1,
+        "open": True,
+        "depth_left": depth_left,
+        "ply": ply,
+        "legal_count": legal_count,
+        "next_index": 0,
+        "visits": 0,
+    }
+
+
+def visit_node(state, event):
+    if not isinstance(state, dict) or state.get("open") is not True:
+        raise ValueError("node is closed")
+    if not isinstance(event, dict):
+        raise TypeError("event must be an object")
+
+    index = _int(event.get("move_index"), "move_index", 0, MAX_LEGAL_MOVES - 1)
+    if index != state["next_index"] or index >= state["legal_count"]:
+        raise ValueError("move order")
+
+    names = (
+        "capture",
+        "promotion",
+        "gives_check",
+        "pv_move",
+        "tt_move",
+        "killer_move",
+    )
+    for name in names:
+        _bool(event.get(name), name)
+
+    quiet = not (
+        event["capture"] or event["promotion"] or event["gives_check"]
+    )
+    eligible = (
+        state["depth_left"] >= 3
+        and index >= 3
+        and state["legal_count"] >= 8
+        and quiet
+        and not event["pv_move"]
+        and not event["tt_move"]
+        and not event["killer_move"]
+    )
+
+    reduction = 0
+    if eligible:
+        reduction = 1
+        if state["depth_left"] >= 6 and index >= 8:
+            reduction += 1
+        reduction = min(reduction, state["depth_left"] - 1)
+
+    decision = {
+        "full_depth": state["depth_left"],
+        "probe_depth": state["depth_left"] - reduction,
+        "reduction": reduction,
+        "reduced": reduction > 0,
+        "requires_full_research": reduction > 0,
+        "reason": "late_quiet" if reduction else "full_depth",
+    }
+
+    next_state = dict(state)
+    next_state["next_index"] += 1
+    next_state["visits"] += 1
+    return next_state, decision
+
+
+def end_node(state):
+    if not isinstance(state, dict) or state.get("open") is not True:
+        raise ValueError("node is closed")
+    return {
+        "epoch": state["epoch"],
+        "open": False,
+        "visits": state["visits"],
+    }
+
+
+def dispatch(request):
+    operation = request.get("op")
+    if operation == "initial":
+        return initial()
+    if operation == "begin":
+        return begin_node(
+            request["state"],
+            request["depth_left"],
+            request["ply"],
+            request["legal_count"],
+        )
+    if operation == "visit":
+        state, decision = visit_node(request["state"], request["event"])
+        return {"state": state, "decision": decision}
+    if operation == "end":
+        return end_node(request["state"])
+    raise ValueError("unknown operation")
+
+
+def main():
+    for line in sys.stdin:
+        if not line.strip():
+            continue
+        try:
+            result = dispatch(json.loads(line))
+            print(json.dumps({"ok": True, "result": result}, separators=(",", ":")))
+        except Exception as exc:
+            print(json.dumps({"ok": False, "error": str(exc)}, separators=(",", ":")))
+        sys.stdout.flush()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Seam: the anchor’s `Engine.search` move loop immediately before its recursive `self.search(q, nd, ...)` call, where `nd = depth - 1`.
+
+Primitive traces:
+
+- `depth_left=6`, move index `8`, quiet, non-PV/non-TT/non-killer: `probe_depth=4`, reduction `2`, full re-search required.
+- Capture, promotion, check, PV, TT, or killer event: full depth preserved.
+- Boundary `depth_left=2`: no reduction.
+- Boundary move index `2`: no reduction.
+- Lifecycle epochs increment across repeated node use: `0 → 1 → 2`.
+- Closed-node visit and out-of-order visit reject deterministically.
+- Work is bounded to constant-time classification per move and at most `256` visits per node.
+
+Seam trace:
+
+```text
+begin_node(depth_left=4, ply=1, legal_count=8)
+move 0 quiet PV       -> full depth 4
+move 1 quiet TT       -> full depth 4
+move 2 capture        -> full depth 4
+move 3 quiet late     -> probe depth 3; full re-search obligation
+reduced probe > alpha -> replay same child at depth 4
+end_node              -> closed, no state leakage
+```
+
+Binding claims:
+
+- Anchor seam exists: confirmed by supplied source text.
+- Late-move reduction is absent from the anchor: confirmed by supplied source inspection.
+- Component is non-UCI and standard-library-only: source inspection.
+- Causal target and dependency closure are bounded to move ordering flags, node depth, ply, and legal-move count: source/interface inspection.
+- Deterministic mirror fixtures: passed.
+- Python runtime execution: unavailable because the isolated command sandbox blocked process execution; not claimed as runtime-verified.
+
+Preservation envelope:
+
+- Never reduce captures, promotions, checks, PV, TT, or killer moves.
+- Never reduce the first three moves or shallow nodes.
+- A reduced probe must be re-searched at full depth when it exceeds alpha.
+- Preserve the same child position, alpha/beta window, ply, and existing capability state.
+- No engine, UCI behavior, evaluation, board state, or benchmark data is created by this component.
+
+Graft invariants:
+
+1. Invoke exactly once per existing search-node move.
+2. Use the returned `probe_depth` only for the first recursive probe.
+3. On reduced fail-high, perform exactly one full-depth re-search before accepting the score.
+4. Do not alter move identity or existing capability state.
+5. End every node lifecycle, including cutoff paths.

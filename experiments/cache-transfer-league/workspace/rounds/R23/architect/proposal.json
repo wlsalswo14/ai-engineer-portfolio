@@ -1,0 +1,106 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R23-structure-architect\\final-receipt.json",
+    "sha256": "6baa3ffbba8008861d516875a1846cae3c83f126b9f2219419e4392807be32d8"
+  },
+  "architect_response": {
+    "architect_scope": "one-R23-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "anchor_blind_policy_originator",
+      "information_flow": "The boundary call receives all common inputs and emits one implementation-erased map containing public interface obligations, validity obligations, and cross-objective behavioral tensions. The final call consumes only that immediately preceding map, preventing anchor implementation, reversible edit history, and terminal compression evidence from entering policy construction.",
+      "name": "Anchor-Erasure Clean-Room Relay",
+      "organization": "Two-call sequential relay separated by one lossy visibility edge; the first call is an abstraction boundary and the second is the sole policy producer.",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "anchor_erasure_boundary",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Project the supplied evidence into one contract-level causal tension map while preserving public interface, authoritative-state, capacity, determinism, and standard-library obligations. Exclude anchor implementation details, repair sequences, reversible deltas, policy fragments, cases, traces, scores, and alternative candidates.",
+              "output_type": "analysis",
+              "role": "contract-level evidence projector"
+            },
+            {
+              "id": "anchor_blind_policy_originator",
+              "inputs": [
+                "anchor_erasure_boundary"
+              ],
+              "objective": "Consume the immediately preceding implementation-erased map as the sole visible evidence and construct one complete, internally coherent, contract-compliant policy artifact addressing its behavioral tensions together. Do not reconstruct or edit the anchor, inherit reversible repair or compression, create alternatives, or perform review-based selection.",
+              "output_type": "policy",
+              "role": "clean-room whole-policy originator"
+            }
+          ],
+          "id": "erase_then_originate",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "scan-resistance response",
+        "phase-shift adaptation response"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "anchor-relative reversible repair lineage with terminal causal compression",
+      "independent_replacement_principle": "contract-grounded clean-room whole-policy synthesis behind an anchor-implementation erasure boundary",
+      "rejected_assumptions": [
+        "The anchor implementation is the necessary coordinate system for every valid structural improvement.",
+        "Causal accountability must be represented through an ordered reversible checkpoint-patch lineage.",
+        "Whole-policy coherence is best recovered by terminal compression of locally accepted edits."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Insert one lossy anchor-implementation erasure edge before the sole policy-producing call so that only a contract-level behavioral tension map crosses into construction.",
+      "expected_effect": "The emitted policy should express a jointly coherent response across scan resistance and phase shifts without preserving anchor-local choices merely because they possess reversible edit evidence.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active family binds causal evidence to anchor-relative reversible edits, so cross-objective behavior can remain path-dependent even after terminal compression."
+    },
+    "structural_mutation": {
+      "after": "An abstraction call projects the common inputs into a contract-level behavioral tension map, while the final policy call receives only that map and cannot see anchor implementation details, repair ordering, deltas, or policy fragments.",
+      "before": "The sole producer retains direct anchor implementation visibility throughout reversible repair and terminal causal compression.",
+      "change_count": 1,
+      "factor": "lossy anchor-implementation erasure edge before policy construction",
+      "why_structural": "The mutation creates a concrete one-way visibility boundary that changes what final construction can causally depend on; the additional call exists solely to enforce this information cut rather than to review, select, or finalize another producer's work."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 23,
+  "incumbent_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R23\\qualitative-error-notebook.json",
+    "sha256": "279eb0f335dc30014d25bfa784c4c8f26237d1d9604e5d875c6140231252efed"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R23\\source-manifest.json",
+    "sha256": "0c92d83046aa69717f2751d99a0988972d5b3656f591403f1db4a22a056752ab"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "lossy anchor-implementation erasure edge before policy construction",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "3e7e08f48abfb579410032ac576798a3c9f3e6f429ebbad46d4e2de7401167dc",
+    "topology_fingerprint": "f1e759b7b03f0e4cc9fbf08d002249d278a161740427e7b46d06767caccc2c77"
+  }
+}
