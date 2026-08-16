@@ -54,7 +54,6 @@ class ChessAdapter(DomainAdapter):
         atomic_json(artifact, {"files": {"engine.py": source}})
         case = self.case_for(split, replicate)
         request = {
-            "ouroboros_source": self.config.evaluator["ouroboros_source"],
             "case": case,
             "artifact_path": str(artifact.resolve()),
             "result_dir": str((output_directory / "benchmark").resolve()),

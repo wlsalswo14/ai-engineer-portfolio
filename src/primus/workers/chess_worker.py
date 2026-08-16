@@ -8,8 +8,12 @@ from pathlib import Path
 def main() -> int:
     request_path, result_path = map(Path, sys.argv[1:3])
     request = json.loads(request_path.read_text(encoding="utf-8"))
-    source_root = Path(request["ouroboros_source"]).resolve()
-    sys.path.insert(0, str(source_root))
+    # The scorer is a frozen in-tree copy verified against primus/vendor/VENDOR.json.
+    # It is never read from an external checkout: that made the evaluation contract
+    # track whatever the other project's working tree happened to contain.
+    from primus.vendor import activate
+
+    activate("chessbench-evaluator")
     from loop_evolution.platform.common import content_hash
     from loop_evolution.platform.domain import TaskCase
     from loop_evolution.platform.evaluation.chessbench import ChessBench100Scorer

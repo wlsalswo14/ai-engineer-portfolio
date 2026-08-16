@@ -10,6 +10,7 @@ from primus.errors import IntegrityError
 from primus.jsonutil import file_hash, read_json
 from primus.models import LoopStructure
 from primus.store import PrimusStore
+from primus.vendor import verify as verify_vendor
 
 
 def doctor(root: Path) -> list[str]:
@@ -18,6 +19,7 @@ def doctor(root: Path) -> list[str]:
     store = PrimusStore(root)
     store.initialize()
     checks: list[str] = []
+    checks.append(f"vendored-evaluators:{len(verify_vendor('chessbench-evaluator'))}")
     if shutil.which(system.architect_policy.codex_executable) is None:
         raise IntegrityError(f"Codex executable not found: {system.architect_policy.codex_executable}")
     checks.append("codex-launcher")

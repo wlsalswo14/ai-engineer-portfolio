@@ -145,6 +145,7 @@ python -m primus.cli loop resume coding
 - 공개 실험 노트: `resources/public_lessons/<domain>/`
 - 공개 행동 피드백: `resources/public_audits/<domain>/`
 - 활성 챔피언 포인터: `registry/domains/<domain>/active.json`
+- 동결된 외부 채점기: `src/primus/vendor/`(해시는 `VENDOR.json`, 검증은 `primus doctor`)
 - 변경 불가능한 객체/영수증: `objects/sha256/`, `receipts/sha256/`
 - 라운드 증거: `runs/<domain>/<run-id>/`
 - 상태 DB: `state/primus.db`
