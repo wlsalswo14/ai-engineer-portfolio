@@ -1,0 +1,29 @@
+Closed realization contract:
+
+- **Single authority:** one mutable `Position`; all transitions use `make(position, move) -> Delta` and `unmake(position, delta)`.
+- **Delta contents:** every changed square once, prior side/castling/EP/halfmove/fullmove state, and the pushed repetition key.
+- **Consumers:** UCI replay uses persistent `make`; legality uses `make → king-safety test → unmake`; recursive search uses the same pair under `finally`.
+
+Walk results:
+
+- Ordinary moves: pass.
+- Captures and rook-right updates: pass.
+- Castling, including transit-square attacks and rook movement: pass.
+- En-passant: reject current key canonicalization unless EP target is empty, victim-valid, and the capture is king-safe. Correct `effective_ep` first.
+- Promotions: pass; all four choices restore exactly.
+- Check evasions: pass; every candidate is validated through the shared kernel.
+- Terminal positions: pass; mate, stalemate, repetition, 50-move, and insufficient-material checks occur after legal generation.
+- UCI replay: pass after lifecycle correction; every replayed move must resolve through shared legality and `make`.
+- Recursive make/unmake: pass; restoration is exact and repetition counters unwind LIFO.
+
+Required dependency-order corrections:
+
+1. Tighten `effective_ep` canonicalization as above.
+2. Change `ucinewgame` to replace the position with `Position.start()`, clear search tables, and rebuild cached root moves/key. Reinitializing history on the existing position is insufficient.
+3. Keep cached legal root moves synchronized atomically after every valid `position` command and reset, ensuring timeout fallback always has a legal move.
+
+Deadline contract:
+
+- Preserve checkpoints at iterative root entry, each root move, recursive search/qsearch entry, pseudo-generation, and legal-move iteration.
+- Every timed search starts with a legal cached fallback; timeout exits through `finally` restoration and returns that move.
+- No separate mutation or reconstruction path remains.

@@ -1,0 +1,407 @@
+# State-Semantics Obligation Ledger
+
+Scope is limited to the supplied public task, champion artifact, hypothesis, and loop contract. No hidden evidence, scores, evaluator files, tasksets, openings, or other runs are used.
+
+## O-001 — Public contract
+
+1. Produce one standard-library-only `engine.py`.
+2. Support:
+   - `uci` → `uciok`
+   - `isready` → `readyok`
+   - `ucinewgame`
+   - `position startpos [moves ...]`
+   - `position fen <six fields> [moves ...]`
+   - `go movetime <ms>` → exactly one flushed `bestmove`
+   - `quit`
+3. Every emitted move must be valid UCI and legal in the authoritative current position.
+4. No external engine, library, file, network, package, evaluator, opening, or score dependency.
+5. A terminal position with no legal move must return the protocol’s no-move sentinel `0000`; otherwise the response must be a legal move.
+
+## O-002 — Canonical position state
+
+The authoritative position must contain exactly:
+
+- 64-square piece placement.
+- Side to move.
+- Four castling-right bits: white king-side, white queen-side, black king-side, black queen-side.
+- En-passant target square or none.
+- Halfmove clock.
+- Fullmove number.
+- Repetition/history information sufficient for rule-consistent repetition handling.
+
+Board convention must remain stable: `a1 = 0`, files increase horizontally, ranks increase from White’s side.
+
+## O-003 — FEN and start-position construction
+
+1. Parse exactly six FEN fields.
+2. Expand each of eight ranks to exactly eight squares.
+3. Preserve piece colors and piece types exactly.
+4. Parse side-to-move exactly.
+5. Preserve castling rights as supplied; do not infer them from current rook locations.
+6. Parse `-` and algebraic en-passant targets exactly.
+7. Preserve halfmove and fullmove counters.
+8. Require a defined behavior for malformed FEN; malformed input must not create partially initialized state.
+9. Initialize repetition state with the constructed position as its first occurrence.
+10. `startpos` must equal the standard initial FEN.
+
+Champion responsibilities: `Position.fen`, `Position.start`, and `Engine.setpos`.
+
+Current risks: FEN structure and semantic validity are not checked; missing fields, malformed ranks, invalid coordinates, or missing kings can create undefined behavior.
+
+## O-004 — UCI move replay
+
+1. Replay moves strictly in listed order.
+2. Decode coordinate moves and promotion suffixes exactly.
+3. Generate legal moves from the current position and match the exact UCI representation.
+4. Apply the matched move through the authoritative transition path.
+5. Update every state field after every move.
+6. Reject or deterministically fail malformed or illegal replay; never silently ignore an unmatched token.
+7. A failed replay must not leave a partially applied or stale position.
+8. `position` must replace the previous authoritative position before replay begins.
+9. Replay and recursive search must produce identical child states for identical parent states and moves.
+10. The engine must not automatically apply its own emitted `bestmove`; UCI position state remains externally driven.
+
+Champion responsibility: `Engine.setpos`, which currently calls `legal` and then `make`.
+
+Current risk: unmatched moves are silently skipped.
+
+## O-005 — Move encoding and notation
+
+Move encoding must preserve:
+
+- Source square.
+- Destination square.
+- Promotion piece.
+- Castling marker.
+- En-passant marker.
+- No conflicting or unsupported flags.
+
+UCI notation must emit:
+
+- Four coordinate characters.
+- Lowercase promotion suffix `n`, `b`, `r`, or `q` when applicable.
+- No suffix otherwise.
+- `0000` only for no legal move.
+
+Champion responsibilities: `enc`, `notation`, and all callers interpreting encoded flags.
+
+## O-006 — Pseudo-legal generation
+
+Generation must be complete and deterministic for the side to move.
+
+1. Pawns:
+   - Single advance only to an empty square.
+   - Initial double advance only from the correct rank with both squares empty.
+   - Diagonal captures only against enemy pieces.
+   - En-passant only to the active target square and only when a capturable enemy pawn is present.
+   - Promotions on the final rank to exactly queen, rook, bishop, and knight.
+   - No non-promoting move onto the final rank.
+2. Knights:
+   - All eight bounded jumps.
+   - No friendly destination occupancy.
+3. Bishops, rooks, queens:
+   - Correct rays.
+   - Stop at the first occupied square.
+   - Include an enemy capture at the blocker, never beyond it.
+4. Kings:
+   - One-square movement.
+   - No friendly destination occupancy.
+   - No enemy-king capture.
+5. Castling:
+   - Generated only in full-move mode, not capture-only mode.
+   - Correct home king square.
+   - Correct castling right.
+   - Correct same-color rook present on its home square.
+   - Required empty squares.
+   - Origin, transit, and destination safety conditions.
+6. All generated squares must remain within the board.
+7. Capture-only generation must include captures, en-passant, and all promotions, including quiet promotions where required for quiescence correctness.
+
+Champion responsibility: `pseudo`.
+
+Current risk: pseudo-generation can encode an enemy-king capture; legality filtering is not a substitute for a complete no-king-capture invariant.
+
+## O-007 — Attack detection and king location
+
+1. Pawn attack direction must be correct for each color.
+2. Knight and king attacks must be bounded and complete.
+3. Sliding attacks must stop at the first occupied square.
+4. A slider attacks only along its valid movement class.
+5. King lookup must identify exactly the moving side’s king.
+6. Missing or multiply defined kings must not be treated as ordinary legal positions.
+7. Attack queries used for king safety must reflect the post-move board when required.
+8. Enemy attacks must be evaluated independently of pseudo-legal move filtering.
+9. Castling attack checks must test the king’s origin, transit, and destination squares.
+10. Adjacent kings must make the relevant king move illegal.
+
+Champion responsibilities: `attacked` and `king`.
+
+Current risk: `king` returns `-1` if absent, and callers may then treat an invalid position as safe.
+
+## O-008 — King-safety legality
+
+For every pseudo-legal move:
+
+1. Apply the complete transition.
+2. Locate the moving side’s king in the resulting state.
+3. Reject the move if that king is attacked.
+4. Reject any move that captures the opposing king.
+5. Test discovered checks caused by ordinary captures.
+6. Test discovered checks caused by en-passant removal.
+7. Test king captures against the resulting occupancy.
+8. Test castling with both pre-move transit restrictions and final post-move safety.
+9. Preserve the parent state exactly after the trial.
+10. Produce the same legal set for UCI replay validation, root selection, recursive search, and quiescence.
+
+Champion responsibility: `legal`, which currently uses `make` followed by `attacked`.
+
+## O-009 — Ordinary transition semantics
+
+A successful transition must:
+
+1. Remove the source piece.
+2. Place the moving piece on the destination.
+3. Remove a captured destination piece, if any.
+4. Preserve all unaffected squares.
+5. Toggle side to move exactly once.
+6. Update castling rights.
+7. Set or clear en-passant state.
+8. Update halfmove and fullmove clocks.
+9. Update repetition state.
+10. Reject impossible flag combinations.
+
+Champion responsibility: `make`.
+
+## O-010 — Captures
+
+1. Destination captures remove exactly the destination piece.
+2. Capturing a rook on a rook-home square removes the corresponding castling right.
+3. Capturing any other piece must not remove that right.
+4. Captures reset the halfmove clock.
+5. Captures increment the fullmove number only after Black’s move.
+6. Captured-piece identity and square must be recorded for restoration.
+
+Current risk: champion clears castling rights based on destination square alone rather than verifying that the captured piece is the relevant rook.
+
+## O-011 — Castling transitions
+
+1. Castling moves the king and the correct rook atomically.
+2. White king-side: `e1→g1`, `h1→f1`.
+3. White queen-side: `e1→c1`, `a1→d1`.
+4. Black king-side: `e8→g8`, `h8→f8`.
+5. Black queen-side: `e8→c8`, `a8→d8`.
+6. Both rights for that color are cleared.
+7. No unrelated rights are changed.
+8. Castling does not reset the halfmove clock.
+9. Castling increments the fullmove number after Black’s move.
+10. An in-check, through-check, or into-check castle is illegal.
+11. Missing rook or occupied transit squares make castling unavailable.
+12. Castling flags cannot be applied to ordinary moves.
+
+Champion responsibility: castling branches in `pseudo` and `make`.
+
+## O-012 — En-passant state and transitions
+
+1. A double pawn advance sets the target square between source and destination.
+2. Every other move clears en-passant state.
+3. Only the immediately following move may use that target.
+4. En-passant removes the pawn from its actual capture square, not the destination square.
+5. The resulting destination contains the capturing pawn.
+6. The captured pawn must be the correct enemy pawn.
+7. En-passant resets the halfmove clock.
+8. En-passant legality must test discovered self-check after removal.
+9. The transition delta must record the distinct captured square.
+10. Replayed and searched en-passant moves must be identical.
+
+Champion responsibilities: en-passant generation in `pseudo`, removal and clock handling in `make`.
+
+Current risk: malformed en-passant state is not validated and may remove an unrelated square.
+
+## O-013 — Promotion
+
+1. Promotion is mandatory on the final rank.
+2. Exactly four promotion choices are available: queen, rook, bishop, knight.
+3. Both quiet and capturing promotions are generated.
+4. The promoted piece has the mover’s color.
+5. The pawn is replaced, not retained alongside the promoted piece.
+6. Promotion cannot produce a king or pawn.
+7. Capturing promotion still updates capture-related rights and clocks.
+8. Promotion resets the halfmove clock.
+9. Promotion notation round-trips exactly through UCI replay.
+10. Promotion metadata is restored exactly on unmake.
+
+Champion responsibilities: promotion encoding in `pseudo`, replacement in `make`, suffix handling in `notation`.
+
+## O-014 — Castling-right state
+
+Rights are historical state, not board inference.
+
+1. Moving a king clears both rights for that color.
+2. Moving the original king-side rook clears that side’s right.
+3. Moving the original queen-side rook clears that side’s right.
+4. Capturing the relevant rook clears its right.
+5. Other moves preserve rights.
+6. Rights survive reconstruction exactly from FEN.
+7. Rights survive ordinary make/unmake exactly.
+8. Rights are part of position identity and transposition identity.
+
+## O-015 — Clock state
+
+1. Pawn moves reset the halfmove clock.
+2. Any capture resets it.
+3. En-passant and promotion reset it.
+4. Quiet non-pawn, non-capture moves increment it.
+5. Castling increments it as a quiet king move.
+6. Fullmove increments after Black’s move only.
+7. FEN clocks are preserved before replay.
+8. Clock changes are reversible.
+9. If clock-based draw adjudication is used, the search and terminal logic must honor the exact rule.
+10. If not adjudicating such draws, clocks must still remain correct for state reconstruction and protocol semantics.
+
+Champion responsibility: clock updates in `make`; reconstruction in `Position.fen`.
+
+## O-016 — Repetition state
+
+1. Position identity includes:
+   - Piece placement.
+   - Side to move.
+   - Castling rights.
+   - Effective en-passant availability.
+2. Halfmove and fullmove counters are not part of repetition identity.
+3. The initial reconstructed position counts once.
+4. Each replayed move records the resulting identity.
+5. Each search-line transition records and later removes its identity.
+6. Sibling search branches must not share incremented counts.
+7. Make/unmake must restore counts and history exactly.
+8. Repetition context must not be lost when a position is reached through UCI replay.
+9. Transposition-table reuse must account for history-dependent draw outcomes or avoid unsafe reuse.
+10. FEN without prior moves cannot invent unknown historical occurrences.
+
+Champion gap: no repetition state exists anywhere in the artifact.
+
+## O-017 — Make/unmake restoration
+
+The reversible delta must cover every changed item:
+
+- Source square and original piece.
+- Destination square and original occupant.
+- En-passant capture square and captured pawn.
+- Castling rook source, destination, and original occupants.
+- Promotion replacement.
+- Previous side to move.
+- Previous castling rights.
+- Previous en-passant target.
+- Previous halfmove clock.
+- Previous fullmove number.
+- Previous repetition identity/count information.
+
+Required invariants:
+
+1. `unmake(make(parent, move))` reproduces the parent exactly.
+2. Illegal trial moves leave the parent exactly unchanged.
+3. Recursive search leaves the root position unchanged.
+4. UCI replay does not alias or corrupt search state.
+5. No branch-specific history leaks into siblings.
+6. Timeout or exception unwinding restores all active state.
+7. No reconstruction from incomplete board data may replace full restoration.
+
+Champion behavior: `make` copies the board and returns a new `Position`; there is no explicit unmake or reversible delta. Board isolation is partial, but repetition and explicit restoration guarantees are absent.
+
+## O-018 — Terminal positions
+
+1. Generate the complete legal move set.
+2. If moves exist, the position is nonterminal for checkmate/stalemate purposes.
+3. If no moves exist and the side to move is attacked, classify checkmate.
+4. If no moves exist and the side to move is not attacked, classify stalemate.
+5. Mate scores must be side-relative and preserve mate distance.
+6. Invalid king states must not be classified as stalemate or checkmate.
+7. Root terminal search must return `0000`.
+8. Quiescence must detect terminal checked and un-checked positions consistently.
+9. Check evasions must include all legal move classes, including castling where legal and applicable.
+10. Search must never emit a pseudo-legal move from a terminal position.
+
+Champion responsibilities: terminal checks in `search`, `qsearch`, and `think`.
+
+## O-019 — Search-state ownership
+
+1. Search must read the authoritative position only through the shared transition semantics.
+2. `root`, `search`, and `qsearch` must not mutate the root board directly.
+3. Evaluation must be observational and must not alter position state.
+4. TT keys must include every state component affecting legal moves or terminal evaluation.
+5. If repetition or clock draws affect scores, TT entries must include the necessary history context.
+6. Mate scores involving `ply` must not be reused across incompatible contexts.
+7. `ucinewgame` must clear search caches and history heuristics.
+8. Position reconstruction must not inherit stale repetition data.
+9. `nodes` and deadline state must be per-search invocation.
+10. Killers, history, TT, and node counters are search metadata, not board state, and must not substitute for missing position fields.
+
+Champion responsibilities: `tt`, `history`, `killers`, `nodes`, `deadline`, `root`, `search`, `qsearch`, and `think`.
+
+Current risk: TT identity omits clocks and repetition context.
+
+## O-020 — Deadline-safe search entry
+
+1. Start the monotonic deadline before root move generation and all `go` work.
+2. Include legal generation, ordering, evaluation, output preparation, and flush margin in the budget.
+3. Do not bypass deadline setup for very small time controls.
+4. Use a monotonic clock.
+5. Establish a legal fallback before deep search.
+6. Never begin an unbounded iteration without a reachable timeout checkpoint.
+
+Champion risk: `think` generates all root legal moves before setting `deadline`; the `millis <= 4` path also bypasses deadline establishment.
+
+## O-021 — Deadline-safe search execution
+
+1. Check time at recursive entry.
+2. Check time during root and move loops.
+3. Check time during expensive generation, sorting, and quiescence work.
+4. Timeout must abort only the current incomplete iteration.
+5. Preserve the last fully completed best move.
+6. If no iteration completes, retain the already validated legal fallback.
+7. Unwind all active transitions and repetition pushes.
+8. Do not return a partially searched or unvalidated move.
+9. Prevent cache cleanup or exception handling from exceeding the deadline materially.
+10. Avoid broad exception handling that converts state errors into potentially late or illegal fallback responses.
+
+Champion behavior: checks every 32 nodes, catches timeout per iterative depth, and retains the prior best move. Root move generation precedes the deadline, and `main` has a broad fallback path that may perform additional legal generation.
+
+## O-022 — Deadline-safe search exit
+
+1. Return exactly one `bestmove` line.
+2. Return before the supplied `movetime` deadline.
+3. Flush immediately.
+4. The selected move must still be legal in the unchanged root position.
+5. Search metadata may persist only where safe; active board/repetition transitions may not.
+6. A subsequent `go` must start with a fresh node count and fresh deadline.
+7. Terminal positions must exit promptly with `0000`.
+8. Exceptions must not produce duplicate responses or omit the required response.
+
+## O-023 — Champion responsibility map
+
+| Champion component | State responsibility |
+|---|---|
+| `Position.fen` / `start` | Construct board, side, rights, en-passant, clocks |
+| `pseudo` | Read state and generate encoded pseudo-moves |
+| `attacked` / `king` | Derive attack and king-location facts |
+| `make` | Apply all board and rule-state transitions |
+| `legal` | Trial-transition plus king-safety filtering |
+| `notation` | Serialize moves for replay and output |
+| `Engine.setpos` | Replace position and replay UCI moves |
+| `root` | Apply root child transitions |
+| `search` | Apply recursive transitions, terminal checks, TT updates |
+| `qsearch` | Apply capture/check-evasion transitions |
+| `evaluate` | Read-only position inspection |
+| `think` | Root fallback, timing, iterative search, best-move retention |
+| `main` | UCI state replacement, cache resets, response emission |
+
+## O-024 — Closed acceptance condition
+
+The realization satisfies the ledger only when, for every valid constructed position and every generated move class:
+
+- UCI replay, legality testing, and search invoke identical transition semantics.
+- Parent state is unchanged after every trial and completed search.
+- Ordinary moves, captures, castling, en-passant, promotion, clocks, rights, and repetition restore exactly.
+- Terminal classification is correct.
+- No illegal move is emitted.
+- Every `go movetime` exits with exactly one timely response.
+- No benchmark-specific, score-dependent, or hidden-evidence behavior exists.

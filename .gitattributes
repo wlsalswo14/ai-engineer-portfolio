@@ -1,0 +1,5 @@
+# Primus verifies objects/, receipts/, and frozen resources by exact-byte SHA-256
+# (store.audit -> bytes_hash(path.read_bytes()); doctor -> file_hash(runner/openings)).
+# Any end-of-line translation would invalidate every stored digest on checkout, so
+# line-ending conversion is disabled repository-wide. Do not narrow this rule.
+* -text

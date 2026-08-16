@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr3-post-ecr2-single-activation-preparation-v8",
+  "status": "prepared_fail_closed_before_ecr2_runtime_or_results",
+  "created_at": "2026-07-19T00:27:00+09:00",
+  "extends_ecr3_live_preparation_sha256": "88ce5f1e6b086bed8a0ba69c08a54d75a06cdbc0a6b42b5f608fb1471254e731",
+  "requires_ecr2_runner_preparation_sha256": "cd147f1a597b2d165dc66fd30ffd494642a4ab8f04d7db690789df3f04dde91d",
+  "mutation_registry_sha256": "3904b23d83b3a4b5b4e5d40f0bd71e4d582d114f4b0c3fb5953112a2f1cdedf8",
+  "current_ecr1_queue_sha256": "ec4ba0f9ebbc74ae24635c844ea6d40546d21b4cb821808991d5e008de0afc85",
+  "ecr1_completed_arms_at_preparation": 0,
+  "ecr2_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "ecr2_runtime_package_present_at_preparation": false,
+  "activation_03_present_at_preparation": false,
+  "files": {
+    "activation_gate": {
+      "path": "scripts/activate_agentloop_harness_ecr3_v8.py",
+      "sha256": "102ab225c1ab6d6ef50dcde82f84d078876f606f107d1e1aa14da92172b1b071"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR3_ACTIVATION_STATUS.md",
+      "sha256": "2062bfa31de325582e20eec3545fa3bf407eb258d28239268cc56083767fd33e"
+    },
+    "tests": {
+      "path": "tests/test_agentloop_ecr3_activation_v8.py",
+      "sha256": "f47d29c2da551c4f830ceb95bd9220c70c10225cdd1b58a216fccc127fbcb95d"
+    }
+  },
+  "activation_requires_all_six_ecr2_arms": true,
+  "activation_requires_recomputed_ecr2_batch_promotion": true,
+  "activation_requires_exact_actual_resource_outer_archive_replay": true,
+  "promoted_ecr2_or_preserved_incoming_champion_only": true,
+  "best_valid_artifact_tie_breaks_to_lowest_pair": true,
+  "activation_is_append_only_and_exactly_once": true,
+  "failed_preactivation_is_side_effect_free": true,
+  "next_successor_is_ecr3_only": true,
+  "first_promotion_completes_research_goal": false,
+  "gate_performs_hidden_evaluation": false,
+  "gate_launches_actor": false,
+  "paired_performance_evidence": false
+}

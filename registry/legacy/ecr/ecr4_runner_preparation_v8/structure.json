@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr4-post-activation-paired-runner-preparation-v8",
+  "status": "sealed_after_ecr3_judgment_before_activation_04_or_ecr4_trial_1",
+  "created_at": "2026-07-19T03:10:47+09:00",
+  "extends_ecr4_preparation_sha256": "b1944bfd148dba2b9de74aa7d24498e38c2131acb97732e6e496f441fc715968",
+  "requires_ecr4_activation_preparation_sha256": "7f682ff1c816a2513d4c6a5e2e08baea59463343b72dcd27468a779a50e016ef",
+  "requires_ecr3_runner_preparation_sha256": "8925536efb8f3cb17e3ab2d745002a7886d41005bb30e15adb08e8849c17f578",
+  "ecr1_completed_arms_at_runner_seal": 6,
+  "ecr2_completed_arms_at_runner_seal": 6,
+  "ecr3_completed_arms_at_runner_seal": 6,
+  "ecr3_batch_sha256_at_runner_seal": "4bc36ddc19cd9b8f1ef6c5101be3d1b5ce5d44f80986176a19212c37cab593c6",
+  "ecr3_resource_sha256_at_runner_seal": "41d5f5d9a15b7efc447199799a23848ed1a6f9ab14ddb52f7895b2976f129826",
+  "ecr4_completed_arms_at_preparation": 0,
+  "activation_04_receipts_at_preparation": 0,
+  "runtime_package_present_at_preparation": false,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "ecr4_structure_frozen_result_blind_in_ancestor_preparations": true,
+  "runner_wiring_sealed_after_ecr3_results": true,
+  "task_sha256": "f58a98bdab65cb785ff7cf3f6d85ae838546ebd9219ce18771db030fa0bf36cb",
+  "files": {
+    "post_activation_runner": {
+      "path": "scripts/run_agentloop_harness_ecr4_v8.py",
+      "sha256": "8b08fdbf669483040b9f7f190c66e528a649a4240f306ccaf78eec59108c7728"
+    },
+    "runner_status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_RUNNER_STATUS.md",
+      "sha256": "6fd1976a86881ee465eb4e7f8886812e664fb3091a0a2a60de1a7a0880b4c262"
+    },
+    "runner_tests": {
+      "path": "tests/test_agentloop_ecr4_runner_v8.py",
+      "sha256": "b103a944ed6a4896b5f03b4a2b92ca68bc023355c07cab4fda090a3310f4e45f"
+    },
+    "reviewer_objective": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_REVIEWER_GOAL.md",
+      "sha256": "953e9976cd7de53c25507c64ca8d49bf47fc089d6f07336a81bf4171943205cd"
+    },
+    "reviewer_gate": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_MATCHED_REVIEWER.py",
+      "sha256": "7470ccb783d2387406a4854bd5cad35ab0fff9449f05e80d45577bb62eaa4549"
+    },
+    "activation_gate": {
+      "path": "scripts/activate_agentloop_harness_ecr4_v8.py",
+      "sha256": "3616d0b79d86b7d24d497bc17b0b2684d3e8d80dee776364b0f074e6517fe00c"
+    },
+    "parent_ecr3_runner": {
+      "path": "scripts/run_agentloop_harness_ecr3_v8.py",
+      "sha256": "14f6988abecc0d3ae07a1e55f7fa45e5e8f32feed7e7665bc6f8f65b94879b8f"
+    },
+    "v4_relay_runner": {
+      "path": "scripts/run_agentloop_frontier_v4_relay.py",
+      "sha256": "250cd967366c7106cbabaf13a2f3ee20f4b6ef61307f8ee5450a8081b891edce"
+    },
+    "official_native_launcher": {
+      "path": "scripts/run_agentloop_v3_lab.py",
+      "sha256": "7b56c12f430537bb496248118a0145332e22a4996e2edcea6571b1d51bb52552"
+    },
+    "representative_task": {
+      "path": "benchmark_tasks_v3/fast/text-compressor/TASK.md",
+      "sha256": "f58a98bdab65cb785ff7cf3f6d85ae838546ebd9219ce18771db030fa0bf36cb"
+    },
+    "sealed_ecr3_batch": {
+      "path": "harness_ecr3_results_v8/batches/ecr3-text-b1/BATCH_PROMOTION.json",
+      "sha256": "4bc36ddc19cd9b8f1ef6c5101be3d1b5ce5d44f80986176a19212c37cab593c6"
+    },
+    "sealed_ecr3_resource_receipt": {
+      "path": "harness_ecr3_results_v8/batches/ecr3-text-b1/ECR3_RESOURCE_RECEIPT.json",
+      "sha256": "41d5f5d9a15b7efc447199799a23848ed1a6f9ab14ddb52f7895b2976f129826"
+    }
+  },
+  "same_configured_60000_token_1800_second_64_tool_total_within_pair": true,
+  "candidate_split_is_exactly_one_50000_actor_plus_one_10000_reviewer": true,
+  "candidate_actor_inputs_identical_to_incumbent_actor_inputs": true,
+  "reviewer_workspace_is_read_only_and_allowlisted": true,
+  "reject_invalid_or_mismatched_acceptance_restores_incoming": true,
+  "repair_or_third_model_call_allowed": false,
+  "promotion_rule_unchanged": true,
+  "first_promotion_completes_research_goal": false,
+  "runner_performs_hidden_evaluation": false,
+  "runner_can_launch_models_only_after_activation_and_explicit_run_arm": true,
+  "paired_performance_evidence": false
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr2-post-activation-paired-runner-preparation-v8",
+  "status": "prepared_fail_closed_before_activation_not_actor_launched",
+  "created_at": "2026-07-18T23:59:56+09:00",
+  "extends_ecr2_live_preparation_sha256": "3054f03fd82e7f9cd49230c720f3ec60e0baf5daf87e36f99c27f836a56bafe3",
+  "extends_ecr2_inner_preparation_sha256": "81fc24182502dfcbb3f1aec2d4d7b5d110ac2e0fdf90690556d01fff10271718",
+  "requires_successor_activation_preparation_sha256": "8efb6e851f8eb81b61f52e5c5901136795126aa8cbbf7beed592cba46970de6f",
+  "mutation_registry_sha256": "3904b23d83b3a4b5b4e5d40f0bd71e4d582d114f4b0c3fb5953112a2f1cdedf8",
+  "current_ecr1_queue_sha256": "ec4ba0f9ebbc74ae24635c844ea6d40546d21b4cb821808991d5e008de0afc85",
+  "ecr1_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "successor_activation_receipts_at_preparation": 0,
+  "runtime_package_present_at_preparation": false,
+  "ecr2_completed_arms_at_preparation": 0,
+  "files": {
+    "post_activation_runner": {
+      "path": "scripts/run_agentloop_harness_ecr2_v8.py",
+      "sha256": "944374958e916b0f4692e366a9a35beedd5a91a43d9d4225fdbe6a65136baf0b"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR2_RUNNER_STATUS.md",
+      "sha256": "962975cf4b8b8e5692ed96fc8bdd6bc68ec9591daeeadf65ee4e1380b5777b67"
+    },
+    "tests": {
+      "path": "tests/test_agentloop_ecr2_runner_v8.py",
+      "sha256": "cfb24bcc3fbe448e3aa5d81407e402790a8f0b09a422757ee1c12e3c8bfd6ccd"
+    }
+  },
+  "initialize_requires_sealed_ecr1_batch_and_activation_02": true,
+  "preactivation_initialize_has_zero_runtime_package_side_effects": true,
+  "runtime_package_install_is_single_directory_atomic_rename": true,
+  "supports_promoted_ecr1_or_preserved_v4_base": true,
+  "same_60000_token_budget_within_pair": true,
+  "same_transport_within_pair": true,
+  "paired_trial_count": 3,
+  "promotion_rule_unchanged": true,
+  "outer_archive_uses_actual_tokens_evaluator_calls_wall_failures_and_recovery": true,
+  "missing_actual_outer_metric_fails_closed": true,
+  "first_promotion_completes_research_goal": false,
+  "runner_performs_hidden_evaluation": false,
+  "runner_can_launch_actor_only_after_activation_and_explicit_run_arm": true,
+  "paired_performance_evidence": false
+}

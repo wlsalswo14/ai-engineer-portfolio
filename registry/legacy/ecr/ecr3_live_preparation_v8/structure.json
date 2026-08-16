@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr3-live-discriminating-probe-preparation-v8",
+  "status": "prepared_composition_tested_not_activated_or_actor_launched",
+  "created_at": "2026-07-19T00:13:17+09:00",
+  "extends_ecr3_protocol_preparation_sha256": "2bbd34dbb98e8c71390f28f7646de73f23ca9e663bc1af3dbf78ce2aadec07bf",
+  "requires_ecr2_runner_preparation_sha256": "cd147f1a597b2d165dc66fd30ffd494642a4ab8f04d7db690789df3f04dde91d",
+  "mutation_registry_sha256": "3904b23d83b3a4b5b4e5d40f0bd71e4d582d114f4b0c3fb5953112a2f1cdedf8",
+  "current_ecr1_queue_sha256": "ec4ba0f9ebbc74ae24635c844ea6d40546d21b4cb821808991d5e008de0afc85",
+  "ecr1_completed_arms_at_preparation": 0,
+  "ecr2_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "files": {
+    "actor_probe_helper": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR3_PROBE.py",
+      "sha256": "cbd431f690ff5ddd90b43f26060c11a87a53441b5928cc35d0daa06ef28064cb"
+    },
+    "goal_addendum": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR3_GOAL_ADDENDUM.md",
+      "sha256": "ea0e40c8420ea0e2cd80e44e18fa4e6c385ac498b1afc505bbe15a04578ab6d5"
+    },
+    "live_journal_adapter": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR3_LIVE_INTEGRATION.py",
+      "sha256": "6c482fba294cb0fa6219778b4a07ab692d53fd5b55c1fa8f1350a6506badb2ff"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR3_LIVE_STATUS.md",
+      "sha256": "1042afc465b240e8d5754521c96e58f125303eddd9c8b39a637ef3be3c791a83"
+    },
+    "tests": {
+      "path": "tests/test_agentloop_ecr3_live_integration_v8.py",
+      "sha256": "916fc8ba21c12fceac23223e758d0fe638554d18792d89742b278508a54d8ac5"
+    }
+  },
+  "host_publishes_cluster_from_exact_sealed_public_receipt": true,
+  "event_requires_exactly_two_distinct_predictions_before_mutation": true,
+  "next_public_receipt_resolves_probe": true,
+  "mutation_without_accepted_probe_is_terminal_ineligible": true,
+  "neither_or_protected_regression_blocks_followup": true,
+  "forged_followup_is_host_rejected": true,
+  "composes_with_v4_or_ecr1_parent_journal": true,
+  "post_ecr2_activation_queue_and_runner_still_required": true,
+  "module_performs_hidden_evaluation": false,
+  "module_launches_actor": false,
+  "paired_performance_evidence": false
+}

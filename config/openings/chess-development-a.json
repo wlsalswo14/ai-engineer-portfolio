@@ -1,0 +1,856 @@
+{
+  "schema_version": 1,
+  "id": "standard-chess-eco-deciles-50-v1",
+  "source": {
+    "repository": "https://github.com/lichess-org/chess-openings",
+    "commit": "292fd0468068f58bb244f7fe1c3e573e493c3c53",
+    "license": "CC0-1.0",
+    "files_sha256": {
+      "a.tsv": "41722fa3d44f294357326fe2ca1b956d9e56490b30efcfa68db61114c9df7e10",
+      "b.tsv": "28d5c2dfc3329d70e85be2a149d001a59e47c2176c9d2c6594eb3be88128a3fc",
+      "c.tsv": "e90f063b3a04f5fbb24425682b13f574141a266a1ba877974cdd9c6595a3d942",
+      "d.tsv": "58cad40b886bd499717eabcce281d4bfcf00eeadbdc00552f42042cf4aac50d2",
+      "e.tsv": "f1f8494f488f660e284f23527d5acfbeccdbbc3acc76e74f05d125f39d2f8a74"
+    }
+  },
+  "selection": {
+    "ecos": "A00,A10,...,A90 through E00,E10,...,E90",
+    "one_per_eco": true,
+    "order": "A00_to_E90",
+    "choice_key": "minimum_whitespace_token_count_then_name_then_pgn",
+    "match_pairing": "candidate_white_then_candidate_black_from_each_identical_fen"
+  },
+  "openings": [
+    {
+      "id": "a00",
+      "eco": "A00",
+      "name": "Amar Opening",
+      "source_file": "a.tsv",
+      "pgn": "1. Nh3",
+      "uci": [
+        "g1h3"
+      ],
+      "plies": 1,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/7N/PPPPPPPP/RNBQKB1R b KQkq - 1 1"
+    },
+    {
+      "id": "a10",
+      "eco": "A10",
+      "name": "English Opening",
+      "source_file": "a.tsv",
+      "pgn": "1. c4",
+      "uci": [
+        "c2c4"
+      ],
+      "plies": 1,
+      "fen": "rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq - 0 1"
+    },
+    {
+      "id": "a20",
+      "eco": "A20",
+      "name": "English Opening: King's English Variation",
+      "source_file": "a.tsv",
+      "pgn": "1. c4 e5",
+      "uci": [
+        "c2c4",
+        "e7e5"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "a30",
+      "eco": "A30",
+      "name": "English Opening: Symmetrical Variation",
+      "source_file": "a.tsv",
+      "pgn": "1. c4 c5",
+      "uci": [
+        "c2c4",
+        "c7c5"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "a40",
+      "eco": "A40",
+      "name": "Queen's Pawn Game",
+      "source_file": "a.tsv",
+      "pgn": "1. d4",
+      "uci": [
+        "d2d4"
+      ],
+      "plies": 1,
+      "fen": "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"
+    },
+    {
+      "id": "a50",
+      "eco": "A50",
+      "name": "Indian Defense: Normal Variation",
+      "source_file": "a.tsv",
+      "pgn": "1. d4 Nf6 2. c4",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4"
+      ],
+      "plies": 3,
+      "fen": "rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2"
+    },
+    {
+      "id": "a60",
+      "eco": "A60",
+      "name": "Benoni Defense: Modern Variation",
+      "source_file": "a.tsv",
+      "pgn": "1. d4 Nf6 2. c4 c5 3. d5 e6",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "c7c5",
+        "d4d5",
+        "e7e6"
+      ],
+      "plies": 6,
+      "fen": "rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P5/8/PP2PPPP/RNBQKBNR w KQkq - 0 4"
+    },
+    {
+      "id": "a70",
+      "eco": "A70",
+      "name": "Benoni Defense: Classical Variation",
+      "source_file": "a.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nf3 c5 4. d5 exd5 5. cxd5 d6 6. Nc3 g6 7. e4",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "g1f3",
+        "c7c5",
+        "d4d5",
+        "e6d5",
+        "c4d5",
+        "d7d6",
+        "b1c3",
+        "g7g6",
+        "e2e4"
+      ],
+      "plies": 13,
+      "fen": "rnbqkb1r/pp3p1p/3p1np1/2pP4/4P3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 7"
+    },
+    {
+      "id": "a80",
+      "eco": "A80",
+      "name": "Dutch Defense",
+      "source_file": "a.tsv",
+      "pgn": "1. d4 f5",
+      "uci": [
+        "d2d4",
+        "f7f5"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/ppppp1pp/8/5p2/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "a90",
+      "eco": "A90",
+      "name": "Dutch Defense: Classical Variation",
+      "source_file": "a.tsv",
+      "pgn": "1. d4 f5 2. c4 Nf6 3. g3 e6 4. Bg2",
+      "uci": [
+        "d2d4",
+        "f7f5",
+        "c2c4",
+        "g8f6",
+        "g2g3",
+        "e7e6",
+        "f1g2"
+      ],
+      "plies": 7,
+      "fen": "rnbqkb1r/pppp2pp/4pn2/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR b KQkq - 1 4"
+    },
+    {
+      "id": "b00",
+      "eco": "B00",
+      "name": "King's Pawn Game",
+      "source_file": "b.tsv",
+      "pgn": "1. e4",
+      "uci": [
+        "e2e4"
+      ],
+      "plies": 1,
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
+    },
+    {
+      "id": "b10",
+      "eco": "B10",
+      "name": "Caro-Kann Defense",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c6",
+      "uci": [
+        "e2e4",
+        "c7c6"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "b20",
+      "eco": "B20",
+      "name": "Sicilian Defense",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5",
+      "uci": [
+        "e2e4",
+        "c7c5"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "b30",
+      "eco": "B30",
+      "name": "Sicilian Defense: Old Sicilian",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5 2. Nf3 Nc6",
+      "uci": [
+        "e2e4",
+        "c7c5",
+        "g1f3",
+        "b8c6"
+      ],
+      "plies": 4,
+      "fen": "r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3"
+    },
+    {
+      "id": "b40",
+      "eco": "B40",
+      "name": "Sicilian Defense: French Variation",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5 2. Nf3 e6",
+      "uci": [
+        "e2e4",
+        "c7c5",
+        "g1f3",
+        "e7e6"
+      ],
+      "plies": 4,
+      "fen": "rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3"
+    },
+    {
+      "id": "b50",
+      "eco": "B50",
+      "name": "Sicilian Defense: Modern Variations",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5 2. Nf3 d6",
+      "uci": [
+        "e2e4",
+        "c7c5",
+        "g1f3",
+        "d7d6"
+      ],
+      "plies": 4,
+      "fen": "rnbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3"
+    },
+    {
+      "id": "b60",
+      "eco": "B60",
+      "name": "Sicilian Defense: Richter-Rauzer Variation",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 Nc6 6. Bg5",
+      "uci": [
+        "e2e4",
+        "c7c5",
+        "g1f3",
+        "d7d6",
+        "d2d4",
+        "c5d4",
+        "f3d4",
+        "g8f6",
+        "b1c3",
+        "b8c6",
+        "c1g5"
+      ],
+      "plies": 11,
+      "fen": "r1bqkb1r/pp2pppp/2np1n2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R b KQkq - 4 6"
+    },
+    {
+      "id": "b70",
+      "eco": "B70",
+      "name": "Sicilian Defense: Dragon Variation",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 g6",
+      "uci": [
+        "e2e4",
+        "c7c5",
+        "g1f3",
+        "d7d6",
+        "d2d4",
+        "c5d4",
+        "f3d4",
+        "g8f6",
+        "b1c3",
+        "g7g6"
+      ],
+      "plies": 10,
+      "fen": "rnbqkb1r/pp2pp1p/3p1np1/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 6"
+    },
+    {
+      "id": "b80",
+      "eco": "B80",
+      "name": "Sicilian Defense: Scheveningen Variation",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5 2. Nf3 e6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 d6",
+      "uci": [
+        "e2e4",
+        "c7c5",
+        "g1f3",
+        "e7e6",
+        "d2d4",
+        "c5d4",
+        "f3d4",
+        "g8f6",
+        "b1c3",
+        "d7d6"
+      ],
+      "plies": 10,
+      "fen": "rnbqkb1r/pp3ppp/3ppn2/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 6"
+    },
+    {
+      "id": "b90",
+      "eco": "B90",
+      "name": "Sicilian Defense: Najdorf Variation",
+      "source_file": "b.tsv",
+      "pgn": "1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6",
+      "uci": [
+        "e2e4",
+        "c7c5",
+        "g1f3",
+        "d7d6",
+        "d2d4",
+        "c5d4",
+        "f3d4",
+        "g8f6",
+        "b1c3",
+        "a7a6"
+      ],
+      "plies": 10,
+      "fen": "rnbqkb1r/1p2pppp/p2p1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 6"
+    },
+    {
+      "id": "c00",
+      "eco": "C00",
+      "name": "French Defense",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e6",
+      "uci": [
+        "e2e4",
+        "e7e6"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "c10",
+      "eco": "C10",
+      "name": "French Defense: Paulsen Variation",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e6 2. d4 d5 3. Nc3",
+      "uci": [
+        "e2e4",
+        "e7e6",
+        "d2d4",
+        "d7d5",
+        "b1c3"
+      ],
+      "plies": 5,
+      "fen": "rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 1 3"
+    },
+    {
+      "id": "c20",
+      "eco": "C20",
+      "name": "King's Pawn Game",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5",
+      "uci": [
+        "e2e4",
+        "e7e5"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "c30",
+      "eco": "C30",
+      "name": "King's Gambit",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5 2. f4",
+      "uci": [
+        "e2e4",
+        "e7e5",
+        "f2f4"
+      ],
+      "plies": 3,
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq - 0 2"
+    },
+    {
+      "id": "c40",
+      "eco": "C40",
+      "name": "King's Knight Opening",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5 2. Nf3",
+      "uci": [
+        "e2e4",
+        "e7e5",
+        "g1f3"
+      ],
+      "plies": 3,
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
+    },
+    {
+      "id": "c50",
+      "eco": "C50",
+      "name": "Italian Game",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bc4",
+      "uci": [
+        "e2e4",
+        "e7e5",
+        "g1f3",
+        "b8c6",
+        "f1c4"
+      ],
+      "plies": 5,
+      "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3"
+    },
+    {
+      "id": "c60",
+      "eco": "C60",
+      "name": "Ruy Lopez",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bb5",
+      "uci": [
+        "e2e4",
+        "e7e5",
+        "g1f3",
+        "b8c6",
+        "f1b5"
+      ],
+      "plies": 5,
+      "fen": "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3"
+    },
+    {
+      "id": "c70",
+      "eco": "C70",
+      "name": "Ruy Lopez: Morphy Defense",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bb5 a6",
+      "uci": [
+        "e2e4",
+        "e7e5",
+        "g1f3",
+        "b8c6",
+        "f1b5",
+        "a7a6"
+      ],
+      "plies": 6,
+      "fen": "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4"
+    },
+    {
+      "id": "c80",
+      "eco": "C80",
+      "name": "Ruy Lopez: Open",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Nxe4",
+      "uci": [
+        "e2e4",
+        "e7e5",
+        "g1f3",
+        "b8c6",
+        "f1b5",
+        "a7a6",
+        "b5a4",
+        "g8f6",
+        "e1g1",
+        "f6e4"
+      ],
+      "plies": 10,
+      "fen": "r1bqkb1r/1ppp1ppp/p1n5/4p3/B3n3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 6"
+    },
+    {
+      "id": "c90",
+      "eco": "C90",
+      "name": "Ruy Lopez: Closed",
+      "source_file": "c.tsv",
+      "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O",
+      "uci": [
+        "e2e4",
+        "e7e5",
+        "g1f3",
+        "b8c6",
+        "f1b5",
+        "a7a6",
+        "b5a4",
+        "g8f6",
+        "e1g1",
+        "f8e7",
+        "f1e1",
+        "b7b5",
+        "a4b3",
+        "d7d6",
+        "c2c3",
+        "e8g8"
+      ],
+      "plies": 16,
+      "fen": "r1bq1rk1/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N2/PP1P1PPP/RNBQR1K1 w - - 1 9"
+    },
+    {
+      "id": "d00",
+      "eco": "D00",
+      "name": "Queen's Pawn Game",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 d5",
+      "uci": [
+        "d2d4",
+        "d7d5"
+      ],
+      "plies": 2,
+      "fen": "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "id": "d10",
+      "eco": "D10",
+      "name": "Slav Defense",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 d5 2. c4 c6",
+      "uci": [
+        "d2d4",
+        "d7d5",
+        "c2c4",
+        "c7c6"
+      ],
+      "plies": 4,
+      "fen": "rnbqkbnr/pp2pppp/2p5/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3"
+    },
+    {
+      "id": "d20",
+      "eco": "D20",
+      "name": "Queen's Gambit Accepted",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 d5 2. c4 dxc4",
+      "uci": [
+        "d2d4",
+        "d7d5",
+        "c2c4",
+        "d5c4"
+      ],
+      "plies": 4,
+      "fen": "rnbqkbnr/ppp1pppp/8/8/2pP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3"
+    },
+    {
+      "id": "d30",
+      "eco": "D30",
+      "name": "Queen's Gambit Declined",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 d5 2. c4 e6",
+      "uci": [
+        "d2d4",
+        "d7d5",
+        "c2c4",
+        "e7e6"
+      ],
+      "plies": 4,
+      "fen": "rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3"
+    },
+    {
+      "id": "d40",
+      "eco": "D40",
+      "name": "Queen's Gambit Declined: Semi-Tarrasch Defense",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nf3 d5 4. Nc3 c5",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "g1f3",
+        "d7d5",
+        "b1c3",
+        "c7c5"
+      ],
+      "plies": 8,
+      "fen": "rnbqkb1r/pp3ppp/4pn2/2pp4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 5"
+    },
+    {
+      "id": "d50",
+      "eco": "D50",
+      "name": "Queen's Gambit Declined: Modern Variation",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 d5 2. c4 e6 3. Nc3 Nf6 4. Bg5",
+      "uci": [
+        "d2d4",
+        "d7d5",
+        "c2c4",
+        "e7e6",
+        "b1c3",
+        "g8f6",
+        "c1g5"
+      ],
+      "plies": 7,
+      "fen": "rnbqkb1r/ppp2ppp/4pn2/3p2B1/2PP4/2N5/PP2PPPP/R2QKBNR b KQkq - 3 4"
+    },
+    {
+      "id": "d60",
+      "eco": "D60",
+      "name": "Queen's Gambit Declined: Orthodox Defense",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nf3 d5 4. Nc3 Be7 5. Bg5 O-O 6. e3 Nbd7",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "g1f3",
+        "d7d5",
+        "b1c3",
+        "f8e7",
+        "c1g5",
+        "e8g8",
+        "e2e3",
+        "b8d7"
+      ],
+      "plies": 12,
+      "fen": "r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R w KQ - 1 7"
+    },
+    {
+      "id": "d70",
+      "eco": "D70",
+      "name": "Neo-Grünfeld Defense: Goglidze Attack",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 Nf6 2. c4 g6 3. f3 d5",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "g7g6",
+        "f2f3",
+        "d7d5"
+      ],
+      "plies": 6,
+      "fen": "rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/5P2/PP2P1PP/RNBQKBNR w KQkq - 0 4"
+    },
+    {
+      "id": "d80",
+      "eco": "D80",
+      "name": "Grünfeld Defense",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 Nf6 2. c4 g6 3. Nc3 d5",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "g7g6",
+        "b1c3",
+        "d7d5"
+      ],
+      "plies": 6,
+      "fen": "rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 4"
+    },
+    {
+      "id": "d90",
+      "eco": "D90",
+      "name": "Grünfeld Defense: Three Knights Variation",
+      "source_file": "d.tsv",
+      "pgn": "1. d4 Nf6 2. c4 g6 3. Nc3 d5 4. Nf3",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "g7g6",
+        "b1c3",
+        "d7d5",
+        "g1f3"
+      ],
+      "plies": 7,
+      "fen": "rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 1 4"
+    },
+    {
+      "id": "e00",
+      "eco": "E00",
+      "name": "Catalan Opening",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. g3",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "g2g3"
+      ],
+      "plies": 5,
+      "fen": "rnbqkb1r/pppp1ppp/4pn2/8/2PP4/6P1/PP2PP1P/RNBQKBNR b KQkq - 0 3"
+    },
+    {
+      "id": "e10",
+      "eco": "E10",
+      "name": "Indian Defense: Anti-Nimzo-Indian",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nf3",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "g1f3"
+      ],
+      "plies": 5,
+      "fen": "rnbqkb1r/pppp1ppp/4pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R b KQkq - 1 3"
+    },
+    {
+      "id": "e20",
+      "eco": "E20",
+      "name": "Nimzo-Indian Defense",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "b1c3",
+        "f8b4"
+      ],
+      "plies": 6,
+      "fen": "rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 2 4"
+    },
+    {
+      "id": "e30",
+      "eco": "E30",
+      "name": "Nimzo-Indian Defense: Leningrad Variation",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. Bg5",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "b1c3",
+        "f8b4",
+        "c1g5"
+      ],
+      "plies": 7,
+      "fen": "rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 3 4"
+    },
+    {
+      "id": "e40",
+      "eco": "E40",
+      "name": "Nimzo-Indian Defense: Rubinstein System",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. e3",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "b1c3",
+        "f8b4",
+        "e2e3"
+      ],
+      "plies": 7,
+      "fen": "rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4"
+    },
+    {
+      "id": "e50",
+      "eco": "E50",
+      "name": "Nimzo-Indian Defense",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. e3 O-O 5. Nf3",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "e7e6",
+        "b1c3",
+        "f8b4",
+        "e2e3",
+        "e8g8",
+        "g1f3"
+      ],
+      "plies": 9,
+      "fen": "rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/2N1PN2/PP3PPP/R1BQKB1R b KQ - 2 5"
+    },
+    {
+      "id": "e60",
+      "eco": "E60",
+      "name": "Indian Defense: West Indian Defense",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 g6",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "g7g6"
+      ],
+      "plies": 4,
+      "fen": "rnbqkb1r/pppppp1p/5np1/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3"
+    },
+    {
+      "id": "e70",
+      "eco": "E70",
+      "name": "King's Indian Defense: Normal Variation",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "g7g6",
+        "b1c3",
+        "f8g7",
+        "e2e4"
+      ],
+      "plies": 7,
+      "fen": "rnbqk2r/ppppppbp/5np1/8/2PPP3/2N5/PP3PPP/R1BQKBNR b KQkq - 0 4"
+    },
+    {
+      "id": "e80",
+      "eco": "E80",
+      "name": "King's Indian Defense: Sämisch Variation",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. f3",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "g7g6",
+        "b1c3",
+        "f8g7",
+        "e2e4",
+        "d7d6",
+        "f2f3"
+      ],
+      "plies": 9,
+      "fen": "rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 5"
+    },
+    {
+      "id": "e90",
+      "eco": "E90",
+      "name": "King's Indian Defense: Normal Variation, Rare Defenses",
+      "source_file": "e.tsv",
+      "pgn": "1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3",
+      "uci": [
+        "d2d4",
+        "g8f6",
+        "c2c4",
+        "g7g6",
+        "b1c3",
+        "f8g7",
+        "e2e4",
+        "d7d6",
+        "g1f3"
+      ],
+      "plies": 9,
+      "fen": "rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 1 5"
+    }
+  ]
+}

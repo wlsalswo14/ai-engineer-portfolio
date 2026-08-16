@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr4-post-ecr3-single-activation-preparation-v8",
+  "status": "prepared_fail_closed_before_ecr3_runtime_or_results",
+  "created_at": "2026-07-19T01:01:39+09:00",
+  "requires_ecr3_runner_preparation_sha256": "8925536efb8f3cb17e3ab2d745002a7886d41005bb30e15adb08e8849c17f578",
+  "extends_ecr4_preparation_sha256": "b1944bfd148dba2b9de74aa7d24498e38c2131acb97732e6e496f441fc715968",
+  "mutation_registry_sha256": "3904b23d83b3a4b5b4e5d40f0bd71e4d582d114f4b0c3fb5953112a2f1cdedf8",
+  "current_ecr1_queue_sha256": "ec4ba0f9ebbc74ae24635c844ea6d40546d21b4cb821808991d5e008de0afc85",
+  "ecr1_completed_arms_at_preparation": 0,
+  "ecr2_completed_arms_at_preparation": 0,
+  "ecr3_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "ecr3_runtime_package_present_at_preparation": false,
+  "activation_04_present_at_preparation": false,
+  "files": {
+    "activation_gate": {
+      "path": "scripts/activate_agentloop_harness_ecr4_v8.py",
+      "sha256": "3616d0b79d86b7d24d497bc17b0b2684d3e8d80dee776364b0f074e6517fe00c"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_ACTIVATION_STATUS.md",
+      "sha256": "6adda2177f577d63fb0b4c4b62a142c831233ae1d1ccbe96c9e2c0fc10fc67db"
+    },
+    "tests": {
+      "path": "tests/test_agentloop_ecr4_activation_v8.py",
+      "sha256": "3aefc281dbb4cdc6b558ad9cd9e17ede583785a9864428a78c859e18085733da"
+    }
+  },
+  "activation_requires_all_six_ecr3_arms": true,
+  "activation_requires_recomputed_ecr3_batch_promotion": true,
+  "activation_requires_exact_actual_resource_receipt_replay": true,
+  "promoted_ecr3_or_preserved_incoming_champion_only": true,
+  "best_valid_artifact_tie_breaks_to_lowest_pair": true,
+  "activation_is_append_only_and_exactly_once": true,
+  "failed_preactivation_is_side_effect_free": true,
+  "next_successor_is_ecr4_only": true,
+  "reviewer_acceptance_is_not_promotion": true,
+  "first_promotion_completes_research_goal": false,
+  "gate_performs_hidden_evaluation": false,
+  "gate_launches_actor": false,
+  "paired_performance_evidence": false
+}

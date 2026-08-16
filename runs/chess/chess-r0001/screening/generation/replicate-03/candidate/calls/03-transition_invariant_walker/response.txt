@@ -1,0 +1,40 @@
+## Deterministic invariant walk
+
+The supplied architecture has one valid mutation authority: `make_move`/`unmake_move`. `legal`, UCI replay, and recursive search all route through it. Evaluation and move ordering remain read-only.
+
+Five corrections are required to close the contract.
+
+1. Strengthen the kernel preconditions and delta stack discipline.
+2. Correct queenside castling transit-square validation.
+3. Correct terminal handling in quiescence and consume repetition/clock state.
+4. Make transposition keys include the relevant repetition history.
+5. Add deadline checkpoints around move generation and every transition loop.
+
+### Transition classes
+
+| Class | Result | Required closure |
+|---|---|---|
+| Ordinary moves | Pass for generated moves. Square, side, castling, en-passant, clocks, and repetition state restore correctly. | `make_move` must reject malformed geometric moves if called outside `pseudo`; legality remains owned by `legal`. |
+| Captures | Pass. Captured rook rights are removed, halfmove clock resets, and deltas restore both squares. | Preserve the kernel’s captured-square handling. |
+| Castling | Reject. Queenside castling checks the destination twice instead of checking the transit square (`d1`/`d8`). | Use `f1,d1`/`f8,d8` as transit squares and `g1,c1`/`g8,c8` as destinations. Require initial, transit, and destination squares unattacked. |
+| En-passant | Pass for generated moves. The captured pawn is removed from the correct adjacent square and restored by the delta. | Kernel must also validate pawn direction and diagonal displacement, not only `ep` occupancy. |
+| Promotions | Pass. All four promotions are generated, replacement pieces are correct, and restoration includes the original pawn. | Keep promotion validation before mutation and reject non-pawn promotion sources. |
+| Check evasions | Pass after castling correction. `legal` makes each candidate, checks the moving side’s king, and always unmakes in `finally`. | Keep king captures excluded from pseudo-legal generation. |
+| Terminal positions | Reject. Full-width search detects mate/stalemate, but quiescence can return an evaluation for a stalemate with no captures. Repetition and 50-move state are tracked but unused. | When quiescence has no tactical moves, generate full legal moves before returning evaluation. Give mate/stalemate precedence, then apply repetition/100-halfmove draw scoring. |
+| UCI replay | Pass after the above corrections. FEN construction maps rank 1 to board indices 0–7 correctly; replay is atomic and uses `legal` plus `make_move`. | Preserve the candidate-position approach so invalid replay leaves the existing position unchanged. |
+| Recursive make/unmake | Pass for LIFO search traversal. Board squares, scalar state, and repetition counters restore exactly. | Add strict parent-stack validation to `Delta`; transposition keys must include the complete relevant repetition context, not only the current position’s repetition count. |
+
+### Closed realization contract
+
+- `Position` owns the sole mutable board and rule state.
+- `make_move` is the only forward mutation path.
+- `unmake_move` is the only reverse mutation path.
+- Every mutation records all changed squares, side, castling rights, en-passant square, halfmove clock, fullmove number, and repetition append/removal data.
+- `legal` is the sole legality authority: pseudo-legal generation followed by make, king-safety validation, and guaranteed unmake.
+- UCI replay selects moves through `legal` and applies them through `make_move`.
+- Search and quiescence use the same make/unmake pair; no copied-board or parallel mutation path remains.
+- Terminal classification checks legal moves before draw scoring, ensuring checkmate is not converted into a draw.
+- Transposition identity includes position identity, halfmove state, and the exact repetition-history context needed to preserve draw equivalence.
+- Deadline checks occur at search entry, after legal generation, before each child transition, after each transition restoration, and inside bounded move-generation loops. The last completed legal root move remains the timeout fallback.
+
+With those corrections, all listed transition classes share one authoritative reversible kernel and have equivalent replay, legality, restoration, terminal, repetition, and timing semantics.

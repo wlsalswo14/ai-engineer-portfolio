@@ -1,0 +1,225 @@
+# Fixed Architecture: Authoritative Reversible-State Kernel
+
+## 1. Ownership
+
+`Position` is the sole authoritative state owner. It contains:
+
+- `board[64]`
+- `side`
+- `castling`
+- `ep`
+- `halfmove`
+- `fullmove`
+- `king_sq[2]`
+- `repetition_stack`
+- `repetition_counts`
+
+Search metadata remains exclusively in `Engine`:
+
+- transposition table
+- history heuristic
+- killer moves
+- node counter
+- deadline
+- last completed root move
+
+No search or replay operation creates a child `Position`. The current position is mutated and restored in place.
+
+## 2. Sole transition interface
+
+All state changes use exactly:
+
+```text
+delta = push(position, move, record_repetition=True)
+...
+pop(position, delta)
+```
+
+`push` is the only forward transition authority. `pop` is its exact inverse.
+
+`Delta` records:
+
+- every changed square as `(square, old_piece, new_piece)`
+- source and destination squares
+- captured square and captured piece
+- en-passant victim square and piece
+- castling rook source, destination, and prior contents
+- original moving piece
+- promotion piece
+- old/new side
+- old/new castling rights
+- old/new en-passant square
+- old/new halfmove clock
+- old/new fullmove number
+- old/new king locations
+- repetition key added
+- prior repetition count
+- repetition-stack length
+
+The delta is complete and LIFO-restorable. No caller reconstructs effects independently.
+
+## 3. Position construction
+
+`startpos` and validated six-field FEN parsing are root constructors only. They initialize a fresh position, validate:
+
+- eight legal ranks of width eight
+- valid piece symbols
+- valid side, castling, en-passant, and clocks
+- exactly one king per side
+
+The root repetition stack contains exactly one repetition key.
+
+A `position` command is built in a temporary root position. Every replay token must match the current legal move list and is applied through `push`. If parsing or replay fails, the temporary position is discarded and the previously published position remains unchanged.
+
+Successful position replacement publishes the new root and clears incompatible search metadata.
+
+## 4. Move generation and legality
+
+Pseudo-legal generation is read-only and deterministic.
+
+It must:
+
+- exclude opponent-owned source pieces
+- exclude own-piece captures
+- exclude king captures
+- validate en-passant victim presence and color
+- generate all four promotions
+- generate castling only with valid rights, home-piece occupancy, clear transit squares, and unattacked current/transit/destination king squares
+
+`legal(position)` follows this exact sequence:
+
+1. Generate pseudo-legal moves.
+2. For each move, call `push`.
+3. Check the moving side’s cached king square against opponent attacks.
+4. Accept only if the king is safe.
+5. Always call `pop` in a `finally` path.
+
+This handles pins, discovered attacks, en-passant line opening, castling relocation, promotions, check evasions, double check, and king adjacency through one path.
+
+## 5. Kernel rules
+
+`push` validates and applies:
+
+- ordinary moves
+- captures
+- castling
+- en passant
+- quiet promotions
+- capturing promotions
+
+It updates:
+
+- source and destination occupancy
+- captured pieces
+- rook relocation
+- promotion replacement
+- king locations
+- castling rights from actual king/rook movement or rook capture
+- en-passant target
+- halfmove clock
+- fullmove number
+- side to move
+- repetition state
+
+En passant is accepted only when the destination equals the current target and the immediately rearward square contains the opposing pawn.
+
+Every non-search replay and every search branch uses this same kernel.
+
+## 6. Repetition and draw identity
+
+The repetition key contains:
+
+- piece placement
+- side to move
+- castling rights
+- effective en-passant availability
+
+The en-passant component is included only when a legal en-passant capture exists. Halfmove and fullmove counters are excluded from repetition identity but remain fully reversible position state.
+
+Search branches increment repetition counts on `push` and decrement/remove them on `pop`. TT keys include the complete state affecting search results:
+
+```text
+board, side, castling, effective_ep, halfmove, repetition_context
+```
+
+Thus cached scores cannot cross incompatible draw histories.
+
+Terminal adjudication is centralized and called before normal search continuation:
+
+- checkmate
+- stalemate
+- repetition draw state
+- halfmove draw state
+- dead-position material state
+
+A legal move remains required for nonterminal or drawn positions. A no-move root returns `0000`.
+
+## 7. Search integration
+
+The champion’s compatible behavior is retained:
+
+- same evaluation formula
+- same move encoding and notation
+- same move scoring
+- same history and killer heuristics
+- same negamax alpha-beta structure
+- same quiescence behavior
+- same late check extension
+- same iterative deepening
+- same transposition-bound semantics
+- same 82% deadline allocation
+
+The only mutation change is that recursive search uses:
+
+```text
+delta = push(p, move)
+try:
+    score = recursive_search(p, ...)
+finally:
+    pop(p, delta)
+```
+
+The root position is therefore byte-for-byte and field-for-field identical after every completed search, timeout, or exception.
+
+Search metadata may remain partially updated after timeout, but position state may not.
+
+## 8. UCI compatibility adapters
+
+The existing public-facing interfaces remain:
+
+- `Position.b`
+- `Position.side`
+- `Position.cast`
+- `Position.ep`
+- `Position.half`
+- `Position.full`
+- `notation(move)`
+- `legal(position)`
+- `evaluate(position)`
+- `mscore(position, move, tt_move, ply)`
+
+The old child-producing `make()` behavior is replaced by a compatibility adapter that performs `push` and returns its delta only to controlled callers. No caller receives an independent child position.
+
+`setpos()` becomes:
+
+1. Construct fresh root.
+2. Replay tokens with `legal` plus `push`.
+3. Publish only on complete success.
+
+`ucinewgame` clears TT, history, killers, and resets repetition tracking for the currently published root without mutating its board.
+
+## 9. Deterministic execution order
+
+Every command follows this order:
+
+1. Parse and validate command.
+2. Construct or select the authoritative position.
+3. Generate legal moves through the shared legality path.
+4. Save the first legal move as fallback.
+5. Establish the monotonic deadline.
+6. Run iterative search through `push`/`pop`.
+7. Retain only the last completed legal root result.
+8. Verify the selected move against the unchanged root legal set.
+9. Emit exactly one flushed `bestmove`.
+
+Timeout recovery uses the saved fallback and never regenerates it after the deadline. All kernel calls are exception-safe, so failed replay, rejected legality tests, recursive returns, and timed-out searches restore the exact parent state.

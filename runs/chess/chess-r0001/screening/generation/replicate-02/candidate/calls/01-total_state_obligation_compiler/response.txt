@@ -1,0 +1,255 @@
+# Closed obligation ledger
+
+Scope is limited to the supplied public contract and champion artifact. No hidden evidence, scores, benchmark positions, evaluator files, or other runs are used.
+
+## L0 — Canonical state
+
+The sole authoritative position state is:
+
+`(board[64], side_to_move, castling_rights, en_passant_target, halfmove_clock, fullmove_number, repetition_history)`
+
+Required invariants:
+
+- Board indices are fixed as `a1 = 0` through `h8 = 63`.
+- Exactly one piece occupies each nonempty square; piece case determines color.
+- Side, rights, en-passant, and clocks are preserved independently of board contents.
+- Search state is transient and cannot alter the root game state.
+- Repetition history is distinct from the current position and is carried through UCI replay and recursive search paths.
+
+## L1 — Position construction
+
+`startpos` must construct the standard initial position exactly.
+
+Six-field FEN construction must:
+
+- Decode all eight ranks and exactly 64 squares.
+- Preserve piece identity, side to move, `KQkq` rights, raw en-passant target, halfmove clock, and fullmove number.
+- Reject or deterministically handle malformed ranks, symbols, fields, and numeric values without silently fabricating state.
+- Initialize repetition history with the constructed position; prior history cannot be inferred from a standalone FEN.
+- Never retain state from the preceding `position` command.
+
+Champion responsibilities: `Position.fen`, `Position.start`, `Engine.setpos`.
+
+## L2 — UCI replay
+
+For `position ... moves ...`:
+
+- Construct the base position first.
+- Generate legal moves from the current state for every token.
+- Match exact UCI coordinate notation, including lowercase promotion suffixes `n`, `b`, `r`, and `q`.
+- Apply moves strictly in order.
+- Advance every state field after each move.
+- Never silently skip an unmatched move or continue from a divergent position.
+- Record each resulting position in repetition history.
+- Leave `Engine.pos` equal to the final replayed state.
+
+Champion responsibilities: `Engine.setpos`, `legal`, `notation`, `make`.
+
+## L3 — Attack and pseudo-legal generation
+
+Attack detection must correctly handle:
+
+- Pawns with color-specific capture direction.
+- Knights, kings, bishops, rooks, and queens.
+- Sliding blockers and first occupied square semantics.
+- Board-edge boundaries.
+- Current board state after special-move effects.
+
+Pseudo-legal generation must include:
+
+- Pawn single pushes and unobstructed initial double pushes.
+- Pawn captures and promotion captures.
+- En-passant only on the exact target square with the correct opposing pawn present.
+- All four promotion choices for quiet and capturing promotions.
+- Knight, sliding-piece, and king moves.
+- Castling only with the correct king, rook, right, empty transit squares, and unattacked origin, transit, and destination king squares.
+
+Pseudo-legal generation must exclude friendly captures, illegal off-board moves, and actual king-capture moves.
+
+Champion responsibilities: `attacked`, `pseudo`, `king`.
+
+## L4 — King-safety legality
+
+Every candidate move must be applied through the authoritative transition kernel, then checked for:
+
+- Presence and location of the moving side’s king.
+- The king not being attacked after the move.
+- Discovered attacks and pinned-piece exposure.
+- Correct en-passant discovered-line effects.
+- Correct castling rook relocation.
+- Correct promotion occupancy.
+- No capture of the opposing king as a playable move.
+
+Castling must additionally be rejected when the king starts in check or crosses an attacked square.
+
+Legal generation must be the sole source for:
+
+- UCI replay validation.
+- Root move selection.
+- Recursive search moves.
+- Check-evasion detection.
+- Terminal-position detection.
+
+Champion responsibility: `legal`; it currently delegates state transition to `make`.
+
+## L5 — Authoritative reversible transition
+
+One transition kernel must be the only state-changing implementation. It must support exact apply/unapply for:
+
+- Quiet moves.
+- Captures.
+- Double pawn pushes.
+- Castling.
+- En-passant.
+- Quiet promotions.
+- Capturing promotions.
+
+Its reversible delta must contain:
+
+- Every changed square and its prior contents.
+- Moving piece and captured piece.
+- En-passant victim square, when applicable.
+- Castling rook source and destination squares, when applicable.
+- Previous castling rights.
+- Previous en-passant target.
+- Previous halfmove and fullmove clocks.
+- Previous side to move.
+- Repetition-key/count changes.
+
+Unapply must restore the complete prior state byte-for-byte, including history counts. Timeout, exception, cutoff, and normal return paths must all restore state.
+
+All of these consumers must use this same kernel:
+
+- `Engine.setpos` replay.
+- `legal`.
+- Root search.
+- Alpha-beta recursion.
+- Quiescence recursion.
+- Any future transition or validation helper.
+
+Champion responsibility: `make` is currently the only transition routine, but it creates copied positions and has no unmake/delta path. All callers relying on it must be treated as transition consumers.
+
+## L6 — Castling rights
+
+Rights use the fixed `KQkq` mapping and must obey:
+
+- Moving either king clears both rights for that color.
+- Moving a rook from its original square clears the corresponding right.
+- Capturing a rook on its original square clears the corresponding right.
+- Castling clears the moving side’s rights and relocates the rook.
+- Rights are never newly granted by a move.
+- Promotion to a rook never creates castling rights.
+- Rights are restored exactly by unmake.
+- FEN-provided rights are preserved, while castling still requires the actual rook and legal geometry.
+
+Champion responsibility: rights updates occur inside `make`; castling construction occurs inside `pseudo`.
+
+## L7 — En-passant state
+
+The transition contract must:
+
+- Set the target to the midpoint square only after a valid two-square pawn advance.
+- Clear it after every other move.
+- Remove exactly the adjacent opposing pawn during en-passant.
+- Reset the halfmove clock for en-passant.
+- Reject en-passant that leaves the moving king attacked.
+- Restore target, victim square, and clocks exactly on unmake.
+- Preserve a FEN-provided raw target without silently rewriting it.
+
+For repetition identity, the effective en-passant component must reflect whether an actual legal en-passant capture exists; raw FEN state remains separately preserved.
+
+Champion responsibilities: `Position.fen`, `pseudo`, `make`, and the transposition key in `search`.
+
+## L8 — Promotion
+
+Promotion must:
+
+- Occur only when a pawn reaches the back rank.
+- Replace the pawn with exactly one of queen, rook, bishop, or knight.
+- Preserve color.
+- Support both quiet and capturing promotion.
+- Use exact UCI suffix encoding and decoding.
+- Apply capture, en-passant, rights, and clock semantics consistently.
+- Restore the original pawn and captured piece on unmake.
+- Never permit promotion to king or pawn.
+
+Champion responsibilities: `pseudo`, `make`, `notation`, and `mscore`.
+
+## L9 — Clocks
+
+The transition kernel must:
+
+- Reset halfmove clock after every pawn move or capture, including en-passant and promotion.
+- Increment halfmove clock after every other move.
+- Increment fullmove number only after Black’s move.
+- Preserve FEN clocks at construction.
+- Restore both clocks exactly on unmake.
+- Include halfmove state in any search terminal/draw determination.
+- Avoid using fullmove number as a substitute for repetition identity.
+
+Champion responsibility: clock updates occur in `make`; current transposition keys omit both clocks.
+
+## L10 — Repetition state
+
+Repetition history must:
+
+- Begin at the constructed root position.
+- Include every successfully replayed UCI position.
+- Track positions by board, side, castling rights, and effective en-passant availability.
+- Be pushed on apply and popped on unapply.
+- Be path-local during recursive search.
+- Not leak between sibling branches, searches, or `position` commands.
+- Prevent transposition-table values from being reused where repetition status differs.
+- Be reset or invalidated appropriately on `ucinewgame` and a new root position.
+
+Champion responsibilities: no repetition representation exists in `Position`; `setpos` does not record history; recursive `make` does not track it; the TT key omits it.
+
+## L11 — Terminal positions
+
+Terminal adjudication must be performed from the complete current state:
+
+- No legal moves plus own king attacked: checkmate.
+- No legal moves plus own king safe: stalemate.
+- Terminal scoring must be consistent with side-to-move perspective and mate distance.
+- Terminal detection must happen at search leaves, including quiescence leaves.
+- A non-checking position with no captures is not automatically stalemate; full legal mobility must be checked.
+- Repetition and applicable move-count draw conditions must be recognized without allowing search cycles to continue indefinitely.
+- Dead-position/insufficient-material handling must not be confused with evaluation heuristics.
+- A terminal root with no legal move must return the UCI null sentinel `0000`; otherwise the returned move must belong to the root legal-move set.
+
+Champion responsibilities: `search` checks full mobility at normal nodes; `qsearch` can return a static evaluation for a stalemate position because it only generates captures when not in check; no repetition or clock-draw adjudication exists.
+
+## L12 — Deadline-safe search entry and exit
+
+For every `go movetime <ms>`:
+
+- Establish the deadline before any potentially expensive root work.
+- Parse the requested time deterministically.
+- Generate or retain a validated legal root move set under the same deadline.
+- Maintain a deterministic legal fallback before iterative search begins.
+- Check the deadline at search entry, recursive descent, move-generation loops, root loops, quiescence loops, and before output.
+- Propagate timeout as a controlled search return, not as a generic failure.
+- Restore all reversible state before returning from timeout or exception.
+- Never rerun unbounded legal generation in the timeout fallback.
+- Return exactly one `bestmove` line, flush it, and do so before the deadline.
+- Return a legal root move whenever one exists; return `0000` only for a terminal root.
+- Preserve the root position after search.
+
+Champion responsibilities: `think`, `root`, `search`, `qsearch`, `check_time`, and the `go` handler. Current gaps include initial legal generation before the deadline, polling only at coarse node checkpoints, and an exception fallback that may perform another unbounded legal move generation.
+
+## L13 — State consumers and ownership
+
+The following champion components must be reconciled with the single-kernel contract:
+
+- `Position.fen` / `Position.start`: construction authority.
+- `Engine.setpos`: replay and root-state authority.
+- `pseudo`: candidate construction, including special moves.
+- `attacked` / `king`: read-only legality predicates.
+- `make`: transition authority, currently without reversible deltas.
+- `legal`: transition-and-king-safety consumer.
+- `root`, `search`, `qsearch`: recursive transition consumers.
+- `think`: deadline and root-result owner.
+- `mscore`, `evaluate`, and TT lookup: read-only consumers whose keys and cached results must not omit rule-relevant state.
+- `main`: protocol boundary, timeout handling, and exactly-once output owner.
+
+No second board representation, ad hoc replay mutation, reconstructed special-move state, or independent legality transition may remain authoritative.

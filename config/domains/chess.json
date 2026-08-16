@@ -1,0 +1,14 @@
+{
+  "id": "chess",
+  "enabled": true,
+  "adapter": "chess",
+  "artifact_scope": "domain_lineage",
+  "public_task": "config/tasks/chess.md",
+  "public_taskset": "config/tasksets/chess-development.json",
+  "certification_taskset": "config/tasksets/chess-certification.json",
+  "artifact_contract": {"required_keys": ["files"], "allowed_keys": ["files"], "file": "engine.py"},
+  "budget": {"max_calls": 4, "max_total_tokens": 900000, "max_effective_tokens": 350000, "max_wall_seconds": 9600, "max_output_tokens": 90000},
+  "evaluation": {"screening_replicates": 3, "certification_replicates": 3, "minimum_effect": 0.03, "confidence": 0.9, "bootstrap_samples": 5000, "quality_scale": 1.0, "token_penalty_per_1k": 0.002, "call_penalty": 0.0, "invalid_rate_tolerance": 0.0, "control_interval_rounds": 5, "control_replicates": 1, "quality_non_regression_tolerance": 0.01, "minimum_cost_reduction_ratio": 0.2, "allow_efficiency_promotion": true},
+  "exploration": {"mode_cycle": ["open", "add", "delete", "research_transfer", "recombine", "de_novo"], "minimum_research_sources": 2, "maximum_research_sources": 5, "adaptive": true, "novelty_interval_rounds": 5, "portfolio_size": 1, "probe_replicates": 1},
+  "evaluator": {"ouroboros_source": "C:/Users/jinminjae/OneDrive/Desktop/Ouroboros/loop-evolution/src", "worker_wall_seconds": 1800}
+}

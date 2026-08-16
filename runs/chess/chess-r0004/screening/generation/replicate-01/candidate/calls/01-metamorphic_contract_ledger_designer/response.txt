@@ -1,0 +1,272 @@
+```json
+{
+  "LEDGER_SPEC": {
+    "version": "1.0",
+    "scope": "Fixed, deterministic, benchmark-independent contract ledger for the supplied chess engine.",
+    "prohibitions": [
+      "No benchmark positions, openings, expected benchmark moves, strength fixtures, evaluator data, hidden files, external engines, tablebases, packages, network access, or source-derived test states.",
+      "All source states must originate from the standard initial position and deterministic legal move walks.",
+      "No engine.py authoring, patching, tuning, or alternative ledger proposals."
+    ],
+    "independent_model": {
+      "state": [
+        "64-square board",
+        "side to move",
+        "KQkq castling-right mask",
+        "en-passant square",
+        "halfmove clock",
+        "fullmove number"
+      ],
+      "serialization": "Canonical six-field FEN using rank 8 through rank 1, lowercase side, canonical KQkq order, '-' for absent castling or en-passant fields.",
+      "move_format": "Coordinate UCI: source square, destination square, optional lowercase promotion suffix q/r/b/n.",
+      "legality": "Independent chess-rule move generation including check exposure, castling restrictions, en-passant capture, promotion, captures, and terminal status."
+    },
+    "source_generation": {
+      "prng": "SplitMix64 with fixed 64-bit arithmetic and seed-specific deterministic output.",
+      "seeds": [
+        "0x13579BDF",
+        "0x2468ACE0",
+        "0x0F1E2D3C",
+        "0x89ABCDEF"
+      ],
+      "base_walks": {
+        "depths": [0, 3, 7, 12, 20, 32],
+        "selection": "At each ply, sort independent-model legal UCI moves lexicographically and select index PRNG_next modulo move count.",
+        "termination": "Stop immediately at mate or stalemate.",
+        "maximum_unique_states": 28
+      },
+      "feature_walks": {
+        "targets": [
+          "legal en-passant capture",
+          "legal castling move",
+          "legal promotion move",
+          "in-check state",
+          "checkmate or stalemate"
+        ],
+        "search": "Deterministic depth-first legal move traversal from the standard initial position; moves are lexicographically ordered and visited states are deduplicated by canonical state tuple.",
+        "limits": {
+          "maximum_depth": 96,
+          "maximum_model_nodes_per_target": 250000
+        },
+        "selection": "Retain the first witness for each target. Missing witnesses are harness_fail, never an engine fail.",
+        "maximum_unique_states": 40
+      },
+      "state_digest": "SHA-256 of the canonical state tuple and canonical FEN.",
+      "global_generation_budget": {
+        "model_nodes": 1500000,
+        "wall_seconds": 20
+      }
+    },
+    "execution_budget": {
+      "engine_go_values_ms": [1, 5, 20, 100],
+      "maximum_go_commands": 192,
+      "maximum_process_sessions": 96,
+      "per_go_watchdog_ms": "movetime + 250",
+      "global_wall_seconds": 90,
+      "retries": 0,
+      "process_restarts": "Fresh-process relations use one fresh process per related execution; no retry after failure."
+    },
+    "normalization": {
+      "commands": "Trim trailing whitespace, normalize line endings to LF, preserve token order.",
+      "responses": "Trim line endings and whitespace; ignore optional UCI info lines for equivalence; retain uciok, readyok, bestmove, malformed lines, stderr, exit status, and ordering.",
+      "bestmove": "Exactly one bestmove line per go command. A nonterminal response must contain a syntactically valid legal move; a terminal response must be 0000.",
+      "timing": "Measure monotonic time from flushed go command transmission through receipt of the bestmove line.",
+      "conservative_margin_ms": "raw_deadline_margin_ms - 1.0"
+    },
+    "relations": [
+      {
+        "id": "UCI-TRANSCRIPT-EQUIVALENCE",
+        "inputs": "Each generated state S with walk W, canonical FEN F, and movetime T.",
+        "executions": [
+          "Fresh process: uci, isready, ucinewgame, position startpos moves W, go movetime T.",
+          "Fresh process: uci, isready, ucinewgame, position fen F, go movetime T."
+        ],
+        "assertions": [
+          "Both transcripts contain uciok and readyok in the required order.",
+          "Both executions produce exactly one bestmove.",
+          "Normalized bestmove results are identical.",
+          "No malformed protocol response occurs."
+        ],
+        "budget": {
+          "cases": 24,
+          "go_commands": 48
+        }
+      },
+      {
+        "id": "LEGAL-MOVE-VALIDITY",
+        "inputs": "Every nonterminal generated state and every tested movetime.",
+        "oracle": "Independent-model legal move set for the exact generated state.",
+        "assertions": [
+          "bestmove has valid UCI syntax.",
+          "bestmove belongs to the independent-model legal move set.",
+          "Terminal states are handled only by the terminal relation."
+        ],
+        "budget": {
+          "cases": 32,
+          "go_commands": 32
+        }
+      },
+      {
+        "id": "PARSE-SERIALIZE-PRESERVATION",
+        "inputs": "Every generated canonical state.",
+        "assertions": [
+          "Independent-model parse(serialize(S)) equals S in all six state fields.",
+          "position startpos moves W and position fen F produce equivalent normalized bestmove results.",
+          "All castling, en-passant, promotion, halfmove, and fullmove fields remain represented canonically."
+        ],
+        "budget": {
+          "model_roundtrips": 40,
+          "engine_cases": 20,
+          "go_commands": 40
+        }
+      },
+      {
+        "id": "MAKE-UNMAKE-RESTORATION",
+        "inputs": "Up to 12 generated states containing a reversible quiet move and legal inverse.",
+        "model_procedure": [
+          "Select the first lexicographically ordered non-pawn, non-capture, non-promotion, non-castling move whose legal inverse exists.",
+          "Apply move with independent-model push, then inverse with independent-model push.",
+          "Verify independent-model pop restores the original complete state tuple exactly."
+        ],
+        "engine_observation": [
+          "Compare a fresh execution from S with an execution that reconstructs S, performs the reversible pair, reconstructs S again, and searches.",
+          "Compare normalized bestmove, legality, and terminal classification."
+        ],
+        "note": "UCI exposes no internal undo stack; the engine assertion is therefore an observational restoration relation, while exact push/pop restoration is checked only in the independent model.",
+        "budget": {
+          "cases": 12,
+          "go_commands": 24
+        }
+      },
+      {
+        "id": "REPEATED-STATE-ISOLATION",
+        "inputs": "Ordered generated states S and T with distinct canonical digests.",
+        "execution": [
+          "Fresh process: set S, go T; set T, go T; set S, go T.",
+          "Fresh process: set S, go T."
+        ],
+        "assertions": [
+          "The final S result equals the fresh S result.",
+          "No transposition, history, killer, repetition, or cached-state residue changes the reconstructed S result.",
+          "Every returned move remains legal."
+        ],
+        "budget": {
+          "pairs": 12,
+          "go_commands": 48
+        }
+      },
+      {
+        "id": "TERMINAL-HANDLING",
+        "inputs": "Rule-generated checkmate and stalemate witnesses, when available.",
+        "assertions": [
+          "Independent model reports zero legal moves.",
+          "Checkmate is distinguished from stalemate by check status.",
+          "Engine emits exactly one bestmove 0000 before the deadline.",
+          "No ordinary move is emitted for a terminal state."
+        ],
+        "budget": {
+          "witnesses": 5,
+          "go_commands": 10
+        }
+      },
+      {
+        "id": "DETERMINISTIC-STATE-RECONSTRUCTION",
+        "inputs": "Every generated state, with T in [5, 20].",
+        "executions": [
+          "Two fresh processes using identical commands.",
+          "Fresh process using startpos plus W.",
+          "Fresh process using canonical FEN F.",
+          "Warm process after unrelated generated state U, then reconstructed S."
+        ],
+        "assertions": [
+          "All normalized bestmove results agree.",
+          "All outputs are legal or terminal 0000.",
+          "State digest and canonical FEN are identical for all model reconstructions."
+        ],
+        "budget": {
+          "states": 12,
+          "go_commands": 48
+        }
+      },
+      {
+        "id": "SYNTAX",
+        "inputs": "Submitted engine.py artifact.",
+        "assertions": [
+          "Compilation succeeds using the target Python interpreter.",
+          "No syntax, indentation, or encoding error occurs."
+        ],
+        "budget": {
+          "compilations": 1
+        }
+      },
+      {
+        "id": "STANDARD-LIBRARY-COMPLIANCE",
+        "inputs": "Submitted engine.py artifact.",
+        "assertions": [
+          "Every statically imported module belongs to the Python standard library.",
+          "No package installation, external engine, tablebase, network, benchmark file, hidden file, or evaluator artifact is accessed.",
+          "No importable chess library or engine implementation is used."
+        ],
+        "result": "Pass or fail is based only on artifact compliance; this check does not generate chess states or expected moves."
+      },
+      {
+        "id": "DEADLINE-BEHAVIOR",
+        "inputs": "All nonterminal and terminal cases at movetimes 1, 5, 20, and 100 ms.",
+        "assertions": [
+          "A bestmove line arrives strictly before the requested deadline.",
+          "Nonterminal output is legal; terminal output is 0000.",
+          "Watchdog expiry, process hang, missing output, or late output fails the case."
+        ],
+        "timing_fields": [
+          "requested_movetime_ms",
+          "elapsed_ms",
+          "raw_deadline_margin_ms",
+          "conservative_margin_ms",
+          "minimum_observed_margin_ms"
+        ],
+        "pass_rule": "elapsed_ms < requested_movetime_ms for every case; conservative margin is recorded and must not be silently discarded."
+      }
+    ],
+    "ledger_record": {
+      "case_id": "string",
+      "relation_id": "enum",
+      "status": "pass | fail | harness_fail",
+      "pass": "boolean",
+      "fail": {
+        "nullable": true,
+        "failure_class": "protocol | illegal_move | state_mismatch | terminal_mismatch | nondeterminism | syntax | dependency | deadline | harness"
+      },
+      "seed": "nullable fixed seed",
+      "walk": "canonical legal UCI move list",
+      "state_fen": "canonical six-field FEN",
+      "state_digest": "SHA-256 string",
+      "related_case_ids": "ordered list",
+      "commands_normalized": "ordered command list",
+      "responses_normalized": "ordered response list",
+      "observed_bestmove": "nullable UCI move",
+      "expected_relation": "typed relation assertion, never a benchmark move",
+      "trace": {
+        "stdout": "normalized captured output",
+        "stderr": "normalized captured error output",
+        "exit_code": "integer or null",
+        "process_timeout": "boolean",
+        "model_legal_moves": "ordered list",
+        "model_terminal_status": "normal | checkmate | stalemate"
+      },
+      "timing_margin": {
+        "requested_ms": "integer",
+        "elapsed_ms": "number",
+        "raw_margin_ms": "number",
+        "conservative_margin_ms": "number"
+      },
+      "reproducibility_digest": "SHA-256 of seed, walk, commands, normalized responses, and timing classification"
+    },
+    "aggregation": {
+      "relation_pass": "true only if every generated case for that relation passes.",
+      "ledger_pass": "true only if all mandatory relations pass and no harness_fail prevents required coverage.",
+      "failure_policy": "Record the first failure and all related traces; do not invent follow-up cases or alter generation after observing outcomes.",
+      "strength_policy": "No playing-strength, benchmark, Stockfish, expected-answer, or aggregate-metric relation exists in this ledger."
+    }
+  }
+}
+```

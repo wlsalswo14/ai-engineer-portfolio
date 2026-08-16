@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr4-native-hard-cap-mechanical-skip-preparation-v8",
+  "status": "prepared_after_incumbent_preflight_before_any_ecr4_candidate_or_reviewer_call",
+  "created_at": "2026-07-19T03:24:34+09:00",
+  "source_runner_preparation_sha256": "25159e6a01ddba4df64e48ac9968acbcf756599e4dfeec3b28fb5741ae84900e",
+  "source_runtime_queue_sha256": "cee93e7b06a037b72248d11980f33a3af74ea227dd2760c3d17e8a626cf56ba6",
+  "source_incumbent_preflight_result_sha256": "52be6f9e930e740c4bb8f111898339170c933ed8f607a5fc3df438492d12004e",
+  "incumbent_preflight_actor_calls_at_preparation": 1,
+  "candidate_actor_calls_at_preparation": 0,
+  "reviewer_calls_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "performance_evidence_claimed": false,
+  "observed_configured_incumbent_token_cap": 60000,
+  "observed_incumbent_actor_tokens": 74773,
+  "observed_native_token_overshoot": 14773,
+  "precommitted_stop_condition": "mechanically_skip_with_zero_candidate_actor_calls_if_equal_total_compute_or_per_phase_hard_caps_cannot_be_enforced",
+  "files": {
+    "skip_gate": {
+      "path": "scripts/skip_agentloop_harness_ecr4_v8.py",
+      "sha256": "7ff532f5e1702461fecb41dd8897795c2f9787634eb8db0b90a39bed9ac6e7a4"
+    },
+    "skip_status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_SKIP_STATUS.md",
+      "sha256": "620d52f1faf7e87f5f0df59ac395b1735fb493b731d1800f04529f25b7dbc093"
+    },
+    "skip_tests": {
+      "path": "tests/test_agentloop_ecr4_skip_v8.py",
+      "sha256": "8f76446807bcf0178821036437ed3c6bbe1eca951e9e98ecb0e39fb43b11aaad"
+    },
+    "precommitted_ecr4_status": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_STATUS.md",
+      "sha256": "568501a65aa0831b422a060d40009d016e65dba7799c89ea82b26bc01fe5009b"
+    },
+    "sealed_ecr4_runner_preparation": {
+      "path": "agent_structures_v3/harness_successors_v8/ecr4_runner_preparation_v8.json",
+      "sha256": "25159e6a01ddba4df64e48ac9968acbcf756599e4dfeec3b28fb5741ae84900e"
+    },
+    "sealed_ecr4_runtime_queue": {
+      "path": "agent_structures_v3/harness_ecr4_runtime_v8/harness_queue_v8.json",
+      "sha256": "cee93e7b06a037b72248d11980f33a3af74ea227dd2760c3d17e8a626cf56ba6"
+    },
+    "sealed_incumbent_preflight_result": {
+      "path": "harness_ecr4_results_v8/batches/ecr4-text-b1/pair-01/incumbent/ARM_RESULT.json",
+      "sha256": "52be6f9e930e740c4bb8f111898339170c933ed8f607a5fc3df438492d12004e"
+    }
+  },
+  "zero_candidate_calls_is_required_not_optional": true,
+  "skip_preserves_incoming_champion": true,
+  "skip_is_not_candidate_performance_evidence": true,
+  "first_promotion_completes_research_goal": false,
+  "paired_performance_evidence": false
+}
