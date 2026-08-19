@@ -1,0 +1,116 @@
+{
+  "candidate_structure": {
+    "calls": [
+      {
+        "id": "metamorphic_contract_ledger_designer",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "champion_metrics",
+          "public_audit",
+          "hypothesis",
+          "loop_structure"
+        ],
+        "objective": "Inspect the public task contract, untouched champion, aggregate metrics, public audit, hypothesis, and loop structure. Emit one fixed LEDGER_SPEC containing bounded, deterministic, benchmark-independent procedures and typed relations covering UCI transcript equivalence, legal-move validity, parse/serialize preservation, make/unmake restoration, repeated-state isolation, terminal handling, deterministic state reconstruction, syntax, standard-library compliance, and deadline behavior. Generate source states only from chess rules, the standard initial state, and deterministic legal move walks; do not use frozen openings, benchmark positions, expected benchmark answers, external engines, tablebases, evaluator information, strength fixtures, or source code. Define explicit execution budgets and ledger fields for pass, fail, trace, and timing margin. Do not author or patch engine.py and do not propose alternative ledgers.",
+        "output_type": "analysis",
+        "role": "single contract-to-metamorphic-ledger designer"
+      },
+      {
+        "id": "champion_metamorphic_executor",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "metamorphic_contract_ledger_designer"
+        ],
+        "objective": "Execute the untouched champion against exactly the procedures in metamorphic_contract_ledger_designer. Record normalized commands, seeds, related executions, observed relations, failures, successful preservation facts, state hashes or canonical summaries, elapsed times, and conservative timing margins in one CHAMPION_LEDGER_TRACE. Distinguish harness failure from engine failure and stop within the specified global budget. Do not inspect benchmark artifacts, invent additional tests after observing outcomes, modify source, tune parameters, compare alternative engines, or emit implementation advice.",
+        "output_type": "tool_trace",
+        "role": "single bounded champion execution recorder"
+      },
+      {
+        "id": "ledger_bounded_architecture_reflector",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "champion_metrics",
+          "public_audit",
+          "hypothesis",
+          "loop_structure",
+          "metamorphic_contract_ledger_designer",
+          "champion_metamorphic_executor"
+        ],
+        "objective": "Consume the untouched champion, aggregate metrics, public audit, fixed ledger specification, and sole champion trace. Translate the execution evidence into exactly one connected DESIGN_COMMITMENT for a complete engine: preserve every champion-passing ledger relation and its conservative deadline boundary, repair all reproducible contract failures, and allocate remaining bounded resources to a coherent improvement of state representation, search, evaluation, ordering, caching, and time control. Resolve interactions across those mechanisms rather than limiting scope to the first failure. State invariants, ownership boundaries, data flow, resource budgets, and a deterministic implementation order, but emit no source, patch, competing designs, parameter sweep, candidate ranking, benchmark-specific policy, or copied external implementation.",
+        "output_type": "analysis",
+        "role": "single execution-feedback whole-system design committer"
+      },
+      {
+        "id": "ledger_constrained_engine_producer",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "champion_metrics",
+          "public_audit",
+          "hypothesis",
+          "loop_structure",
+          "metamorphic_contract_ledger_designer",
+          "champion_metamorphic_executor",
+          "ledger_bounded_architecture_reflector"
+        ],
+        "objective": "Produce exactly one complete standard-library-only engine.py in one working lineage from the untouched champion and the sole DESIGN_COMMITMENT. Implement the committed connected redesign while retaining all champion-passing mandatory ledger relations and conservative deadline boundaries. After each causally connected implementation stage, execute the relevant fixed ledger procedures, repair the same engine in place at the earliest violated committed invariant, and then run the complete bounded ledger plus syntax and UCI smoke checks. Do not create replicas, provisional alternatives, best-of-N branches, benchmark-specific logic, an external engine dependency, a parameter sweep, or an evaluator modification. Emit only the final complete engine after all mandatory checks pass; if a non-mandatory strength change conflicts with a protected ledger fact or timing margin, preserve the ledger fact.",
+        "output_type": "engine",
+        "role": "single ledger-constrained whole-engine author and verifier"
+      }
+    ],
+    "changed_factor": "Insertion of an execution-derived metamorphic regression ledger as the mandatory boundary for a single-lineage whole-engine redesign",
+    "final_call_id": "ledger_constrained_engine_producer",
+    "information_flow": "The contract, untouched champion, aggregate metrics, public audit, hypothesis, and loop structure first yield a fixed set of task-derived metamorphic relations and bounded execution procedures. A second call executes those procedures only on rule-generated states and synthetic UCI transcripts, populating a typed ledger of champion passes, failures, timing margins, and reproducible traces. A third call reflects once over the source and ledger to commit one connected whole-engine design that targets decision quality while treating every champion-passing relation and deadline margin as a mandatory boundary. The final call realizes that design in one working lineage, repeatedly exercising the same ledger during in-place repair, and emits the sole complete engine.",
+    "name": "Metamorphic Ledger-Constrained Whole-System Redesign",
+    "organization": "sequential",
+    "provenance": {
+      "exploration_operation": "research_transfer",
+      "external_ideas_only": true,
+      "research_source_sha256": [
+        "08e6a6645cf7ae2da7470ed67962ac75df4d8042a8f3e4b1c214bb5c0eda14c0",
+        "3cdc917b4632118b081d5f81704523c6329a7fd0c939a6e36789ff28657dc649",
+        "d9cd532a527d99ae417b9bf2c7d73b3196fbc1d59f2254a3853eb353ae52817c"
+      ]
+    },
+    "structure_id": "loop_a3582fd170b58764"
+  },
+  "changed_factor": "Insertion of an execution-derived metamorphic regression ledger as the mandatory boundary for a single-lineage whole-engine redesign",
+  "exploration_operation": "research_transfer",
+  "falsifier": "The intervention is falsified if the matched public rerun does not improve over the incumbent, if the result is not repeatable, or if any champion-passing mandatory ledger relation becomes failing, including an illegal move, protocol failure, state-restoration mismatch, or missed movetime deadline.",
+  "hypothesis": "If the final author is constrained by a pre-authoring ledger populated from bounded metamorphic executions of the champion, then it can redesign connected search and state mechanisms while preserving verified legality, protocol, state-integrity, and deadline behavior; this should produce a repeatable matched improvement more reliably than optimizing one failed terminal predicate.",
+  "observed_bottleneck": "The incumbent narrows authoring around one anchor-negative terminal witness and one causal corridor. The public relative regression suggests that this local closure can improve a selected obligation while lacking an execution-grounded envelope of already-correct behaviors and resource margins that must survive a broader strength-oriented redesign.",
+  "predicted_observation": "On repeated matched public comparisons, the candidate retains the champion's verified UCI, legality, state-restoration, and timing behaviors while producing a repeatable playing improvement from a coherent search/state redesign; synthetic metamorphic probes also continue to pass after authoring.",
+  "protected_behavior": [
+    "Complete standard-library-only engine.py",
+    "Legal standard chess state transitions and legal UCI bestmove output",
+    "A legal move returned before every go movetime deadline",
+    "No benchmark-position access, opening hardcoding, external engine, tablebase, evaluator change, or hidden-data dependence",
+    "One sequential working lineage and one final engine artifact",
+    "Champion behaviors demonstrated as passing by the bounded mandatory ledger"
+  ],
+  "research_sources": [
+    {
+      "kind": "paper",
+      "license_or_terms": "not_applicable_idea_only; no paper text, test data, or implementation code copied",
+      "structural_insight": "Express correctness as relations between generated source and follow-up executions, allowing broad invariant coverage without exact-answer fixtures.",
+      "title": "Application of property-based testing tools for metamorphic testing",
+      "url": "https://arxiv.org/abs/2211.12003"
+    },
+    {
+      "kind": "paper",
+      "license_or_terms": "not_applicable_idea_only; abstract feedback-to-reflection organization transferred without copying content or code",
+      "structural_insight": "Convert concrete environment feedback into a compact linguistic record that directly conditions the subsequent authoring decision.",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2303.11366"
+    },
+    {
+      "kind": "github",
+      "license_or_terms": "MIT; organizational idea only, with no source code copied",
+      "structural_insight": "Expose execution through a concise, structured agent-computer interface so the author receives typed command outcomes rather than an unbounded narrative review.",
+      "title": "SWE-agent",
+      "url": "https://github.com/SWE-agent/SWE-agent"
+    }
+  ]
+}

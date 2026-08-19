@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr5-post-activation-paired-runner-preparation-v8",
+  "status": "prepared_after_ecr4_skip_before_activation_05_or_ecr5_trial_1",
+  "created_at": "2026-07-19T03:44:15+09:00",
+  "extends_ecr5_preparation_sha256": "ef58ddf49faa7dfe12af4a16bf32777f44467ac886ac180db4dce0c4b9d11014",
+  "requires_ecr5_activation_preparation_sha256": "f7d579ff6586bfa9760f9ec0f1742331b8264b3c2cdea887dd8facd475944ab3",
+  "source_ecr4_skip_sha256": "58ae1a964e298cebeddfba80c23c94abc2f7d72241d1cdb3e96b3a2c3ec0d0ef",
+  "ecr1_completed_arms_at_runner_seal": 6,
+  "ecr2_completed_arms_at_runner_seal": 6,
+  "ecr3_completed_arms_at_runner_seal": 6,
+  "ecr5_completed_arms_at_preparation": 0,
+  "activation_05_receipts_at_preparation": 0,
+  "runtime_package_present_at_preparation": false,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "result_informed_only_by_ecr4_resource_enforcement_failure": true,
+  "candidate_performance_known_at_preparation": false,
+  "task_sha256": "f58a98bdab65cb785ff7cf3f6d85ae838546ebd9219ce18771db030fa0bf36cb",
+  "files": {
+    "paired_runner": {
+      "path": "scripts/run_agentloop_harness_ecr5_v8.py",
+      "sha256": "94314e37a944e7c61676a28785217d8458ff524c5c56eb7c76a94c7cdc0d2142"
+    },
+    "runner_status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR5_RUNNER_STATUS.md",
+      "sha256": "a0127a720c0399c2f034f45c2560d7b52c653f68a8f3f27f188f0f8e6109e273"
+    },
+    "runner_tests": {
+      "path": "tests/test_agentloop_ecr5_runner_v8.py",
+      "sha256": "c396fb6d1ad4e03aa29d5fe1eb30de94dd3e70dcc81279fab9511eefc45139f7"
+    },
+    "activation_gate": {
+      "path": "scripts/activate_agentloop_harness_ecr5_v8.py",
+      "sha256": "f7aa10ae0162a8257738b0a392c7e11151e34d6981edcb489c7fccc0a9b12bc0"
+    },
+    "configured_reviewer_gate": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR5_CONFIGURED_REVIEWER.py",
+      "sha256": "3da23290f3f90e814ed84a1685569f0393515359ee72d8a96ccf939698ae36a7"
+    },
+    "reviewer_objective": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR5_REVIEWER_GOAL.md",
+      "sha256": "d34ece975ddfea328fe5f7be4872cef9a6d9d308a211fd2f49bf9ee348a55d8f"
+    },
+    "v4_relay_runner": {
+      "path": "scripts/run_agentloop_frontier_v4_relay.py",
+      "sha256": "250cd967366c7106cbabaf13a2f3ee20f4b6ef61307f8ee5450a8081b891edce"
+    },
+    "official_native_launcher": {
+      "path": "scripts/run_agentloop_v3_lab.py",
+      "sha256": "7b56c12f430537bb496248118a0145332e22a4996e2edcea6571b1d51bb52552"
+    },
+    "parent_ecr3_runner": {
+      "path": "scripts/run_agentloop_harness_ecr3_v8.py",
+      "sha256": "14f6988abecc0d3ae07a1e55f7fa45e5e8f32feed7e7665bc6f8f65b94879b8f"
+    },
+    "representative_task": {
+      "path": "benchmark_tasks_v3/fast/text-compressor/TASK.md",
+      "sha256": "f58a98bdab65cb785ff7cf3f6d85ae838546ebd9219ce18771db030fa0bf36cb"
+    },
+    "sealed_ecr4_skip": {
+      "path": "harness_ecr4_results_v8/batches/ecr4-text-b1/MECHANICAL_SKIP.json",
+      "sha256": "58ae1a964e298cebeddfba80c23c94abc2f7d72241d1cdb3e96b3a2c3ec0d0ef"
+    }
+  },
+  "same_configured_60000_token_1800_second_64_tool_envelope_within_pair": true,
+  "native_actual_tokens_are_disclosed_without_clipping": true,
+  "candidate_total_actual_wall_and_tools_are_bounded": true,
+  "reviewer_reject_or_invalid_restores_incoming": true,
+  "promotion_rule_unchanged": true,
+  "first_promotion_completes_research_goal": false,
+  "paired_performance_evidence": false
+}

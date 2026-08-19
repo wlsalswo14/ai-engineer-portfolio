@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr2-live-journal-integration-preparation-v8",
+  "status": "prepared_composition_tested_not_activated_or_actor_launched",
+  "created_at": "2026-07-18T23:50:07+09:00",
+  "extends_ecr2_inner_preparation_sha256": "81fc24182502dfcbb3f1aec2d4d7b5d110ac2e0fdf90690556d01fff10271718",
+  "requires_successor_activation_preparation_sha256": "8efb6e851f8eb81b61f52e5c5901136795126aa8cbbf7beed592cba46970de6f",
+  "mutation_registry_sha256": "3904b23d83b3a4b5b4e5d40f0bd71e4d582d114f4b0c3fb5953112a2f1cdedf8",
+  "current_ecr1_queue_sha256": "ec4ba0f9ebbc74ae24635c844ea6d40546d21b4cb821808991d5e008de0afc85",
+  "ecr1_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "files": {
+    "live_journal_adapter": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR2_LIVE_INTEGRATION.py",
+      "sha256": "1484ab10b780fac80a3a6b32b65d0b49ac03abe3ee9300104277f15d98334f09"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR2_LIVE_STATUS.md",
+      "sha256": "fd63c6c4604797d61a10b603e621f284dbe1638c04070394f62d54cc0ed43fdb"
+    },
+    "tests": {
+      "path": "tests/test_agentloop_ecr2_live_integration_v8.py",
+      "sha256": "d22589eb25d7886aec5d2b04270beec8cd2409a8c4814c4b11bec316c1339dd0"
+    }
+  },
+  "composes_with_preserved_v4_journal": true,
+  "composes_with_promoted_ecr1_evidence_journal": true,
+  "publishes_slots_after_each_actual_public_evaluation": true,
+  "validates_restore_against_host_private_archive_before_next_evaluation": true,
+  "invalid_restore_adds_protocol_violation_and_recovery_debt": true,
+  "secondary_slots_are_branch_points_only": true,
+  "outer_paired_promotion_rule_unchanged": true,
+  "post_activation_queue_and_runner_still_required_before_actor_launch": true,
+  "module_performs_hidden_evaluation": false,
+  "module_launches_actor": false,
+  "paired_performance_evidence": false
+}

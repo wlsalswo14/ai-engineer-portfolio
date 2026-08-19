@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr4-matched-reviewer-preparation-v8",
+  "status": "prepared_not_activated_behind_ecr1_ecr2_and_ecr3",
+  "created_at": "2026-07-18T22:54:56+09:00",
+  "mutation_registry_sha256": "3904b23d83b3a4b5b4e5d40f0bd71e4d582d114f4b0c3fb5953112a2f1cdedf8",
+  "ecr3_preparation_sha256": "2bbd34dbb98e8c71390f28f7646de73f23ca9e663bc1af3dbf78ce2aadec07bf",
+  "current_ecr1_queue_sha256": "ec4ba0f9ebbc74ae24635c844ea6d40546d21b4cb821808991d5e008de0afc85",
+  "ecr1_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "files": {
+    "host_protocol": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_MATCHED_REVIEWER.py",
+      "sha256": "7470ccb783d2387406a4854bd5cad35ab0fff9449f05e80d45577bb62eaa4549"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR4_STATUS.md",
+      "sha256": "568501a65aa0831b422a060d40009d016e65dba7799c89ea82b26bc01fe5009b"
+    },
+    "tests": {
+      "path": "tests/test_agentloop_ecr4_matched_reviewer_v8.py",
+      "sha256": "efa1da8cf0fa7d795c04cea71412fc759a11ec66a8ba11507b248e9391107dcb"
+    }
+  },
+  "incumbent_configured_caps": {
+    "tokens": 60000,
+    "wall_seconds": 1800,
+    "tool_calls": 64
+  },
+  "candidate_actor_configured_caps": {
+    "tokens": 50000,
+    "wall_seconds": 1500,
+    "tool_calls": 52
+  },
+  "candidate_reviewer_configured_caps": {
+    "tokens": 10000,
+    "wall_seconds": 300,
+    "tool_calls": 12
+  },
+  "configured_cap_sums_are_equal": true,
+  "exactly_one_independent_reviewer": true,
+  "reviewer_artifact_access": "read_only",
+  "reviewer_output": "bounded_review_certificate_only",
+  "invalid_or_rejected_review_restores_incoming_champion": true,
+  "repair_or_third_model_call_allowed": false,
+  "actual_usage_is_disclosed_not_forced_to_exhaust_caps": true,
+  "unchanged_outer_promotion_rule_still_required": true,
+  "protocol_performs_artifact_evaluation": false,
+  "protocol_performs_hidden_evaluation": false,
+  "activation_requires_prior_mutation_order": true,
+  "paired_performance_evidence": false
+}

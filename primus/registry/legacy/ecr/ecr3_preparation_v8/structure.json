@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr3-discriminating-probe-preparation-v8",
+  "status": "prepared_not_activated_behind_ecr1_and_ecr2",
+  "created_at": "2026-07-18T22:44:48+09:00",
+  "mutation_registry_sha256": "3904b23d83b3a4b5b4e5d40f0bd71e4d582d114f4b0c3fb5953112a2f1cdedf8",
+  "ecr2_preparation_sha256": "13e8a9be61a483e059972443113c898a48ee46f1a40e3641dd6d062b98197a20",
+  "current_ecr1_queue_sha256": "ec4ba0f9ebbc74ae24635c844ea6d40546d21b4cb821808991d5e008de0afc85",
+  "ecr1_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "files": {
+    "host_protocol": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR3_DISCRIMINATING_PROBE.py",
+      "sha256": "eb26bec2068513100f70ad8dcdbdb0892385c39ef0f176e9cbeefdd99136095b"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR3_STATUS.md",
+      "sha256": "46d24e73219c66d3d9a60556d653b027e09e3f204e796639a8e2b60579fadd0b"
+    },
+    "tests": {
+      "path": "tests/test_agentloop_ecr3_discriminating_probe_v8.py",
+      "sha256": "c8cc05fc3bf8859242028be55bb27da9c7132fa414e7dcda6d6229b416cfa96b"
+    }
+  },
+  "requires_exactly_two_competing_hypotheses": true,
+  "requires_distinct_structured_prediction_vectors": true,
+  "binds_current_artifact_feedback_and_cluster": true,
+  "resolves_from_next_public_receipt": true,
+  "neither_match_creates_divergence_debt": true,
+  "public_validity_regression_blocks_next_mutation": true,
+  "protocol_performs_artifact_evaluation": false,
+  "protocol_performs_hidden_evaluation": false,
+  "activation_requires_prior_mutation_order": true,
+  "paired_performance_evidence": false
+}

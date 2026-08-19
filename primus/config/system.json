@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domains": ["chess", "cache", "coding", "reasoning_tools"],
+  "heavy_lock": "state/heavy-evaluation.lock",
+  "architect_policy": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "max_wall_seconds": 3600,
+    "codex_executable": "codex.cmd",
+    "codex_home_pool": [
+      "C:/Users/jinminjae/.codex-wlsalswo14/wlsalswo14",
+      "C:/Users/jinminjae/.codex-bteamjin14",
+      "C:/Users/jinminjae/.codex-yase80462"
+    ]
+  },
+  "executor_policy": {
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "max_wall_seconds": 2400,
+    "codex_executable": "codex.cmd",
+    "codex_home_pool": [
+      "C:/Users/jinminjae/.codex-wlsalswo14/wlsalswo14",
+      "C:/Users/jinminjae/.codex-bteamjin14",
+      "C:/Users/jinminjae/.codex-yase80462"
+    ]
+  }
+}

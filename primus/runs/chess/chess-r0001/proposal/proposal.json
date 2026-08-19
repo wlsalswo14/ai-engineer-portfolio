@@ -1,0 +1,85 @@
+{
+  "candidate_structure": {
+    "calls": [
+      {
+        "id": "total_state_obligation_compiler",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "public_audit",
+          "hypothesis",
+          "loop_structure"
+        ],
+        "objective": "Inspect the task and champion without using hidden evidence or numeric scores. Emit one exhaustive, deterministic obligation ledger for position construction, UCI move replay, pseudo-legal generation, king-safety legality, make/unmake restoration, castling rights, en-passant state, promotion, clocks, repetition state, terminal positions, and deadline-safe search entry and exit. Ground obligations in chess rules and the public contract, identify every champion state-mutation or reconstruction responsibility, and carry the complete ledger forward. Do not choose benchmark positions, tune parameters, author source, or propose alternative ledgers.",
+        "output_type": "analysis",
+        "role": "score-blind whole-contract state-semantics compiler"
+      },
+      {
+        "id": "shared_transition_architect",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "hypothesis",
+          "loop_structure",
+          "total_state_obligation_compiler"
+        ],
+        "objective": "Consume the complete prior ledger and champion. Define exactly one implementation-ready topology with one authoritative board state and one make/unmake interface whose reversible delta contains every changed square and rule-relevant field. Route UCI replay, legality testing, and recursive search through that interface; eliminate or subordinate competing mutation and reconstruction paths. Specify ownership, invariants, deterministic call order, and compatibility adapters needed to retain the champion's evaluation, ordering, search, and timing behavior. Return one fixed architecture, never a menu, candidate set, parameter sweep, or engine source, and carry the prior ledger forward losslessly.",
+        "output_type": "analysis",
+        "role": "single-topology reversible-kernel architect"
+      },
+      {
+        "id": "transition_invariant_walker",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "hypothesis",
+          "loop_structure",
+          "shared_transition_architect"
+        ],
+        "objective": "Walk the sole architecture once through rule-derived transition classes: ordinary moves, captures, castling, en-passant, promotions, check evasions, terminal positions, UCI position replay, and recursive make/unmake. For each class, prove or reject state restoration, legality equivalence, consumer authority, and retained deadline checkpoints. Resolve each rejection by the first dependency-order correction inside the same architecture, producing one closed realization contract. Do not create fixtures from benchmark openings, alternative architectures, source code, rankings, or selection gates.",
+        "output_type": "analysis",
+        "role": "deterministic fixed-architecture consistency walker"
+      },
+      {
+        "id": "single_kernel_engine_realizer",
+        "inputs": [
+          "task",
+          "champion_artifact",
+          "hypothesis",
+          "loop_structure",
+          "transition_invariant_walker"
+        ],
+        "objective": "Produce exactly one complete standard-library-only engine.py from the closed realization contract. Rework every board mutation and reconstruction so UCI replay, legality checking, and search actually invoke the authoritative reversible kernel; do not satisfy the intervention with wrappers around competing paths. Preserve compatible champion evaluation, ordering, search, and deadline behavior. In the same lineage, run syntax, UCI-sequence, legal-bestmove, transition round-trip, state-restoration, and bounded-movetime checks derived only from the public rules, repairing the earliest failed contract obligation in place. Emit only the final engine, with no provisional engine, alternate candidate, benchmark-specific branch, or evaluator change.",
+        "output_type": "engine",
+        "role": "sole whole-engine author and verifier"
+      }
+    ],
+    "changed_factor": "Replace anchor-native parallel board-transition and reconstruction paths with one authoritative make/unmake kernel used by every state-changing consumer, while retaining the champion's evaluation, move ordering, search policy, and deadline strategy where compatible.",
+    "final_call_id": "single_kernel_engine_realizer",
+    "information_flow": "The public contract, untouched champion, empty-or-present public audit, hypothesis, and loop contract first become a total state-semantic obligation ledger. That ledger is carried forward losslessly into one fixed shared-kernel architecture, then through a deterministic invariant walk that repairs only contradictions in that architecture. The final call realizes the reviewed architecture as one engine lineage and emits the sole artifact.",
+    "name": "Authoritative Reversible-State Kernel Realization",
+    "organization": "sequential",
+    "provenance": {
+      "architect_structure_changed_factor": "All board-changing execution paths are forced through one reversible transition authority instead of preserving and transporting predicates across multiple native representations.",
+      "exploration_operation": "replace",
+      "external_ideas_only": true,
+      "research_source_sha256": []
+    },
+    "structure_id": "loop_ecd2bf8cb1e72b6c"
+  },
+  "changed_factor": "Replace anchor-native parallel board-transition and reconstruction paths with one authoritative make/unmake kernel used by every state-changing consumer, while retaining the champion's evaluation, move ordering, search policy, and deadline strategy where compatible.",
+  "exploration_operation": "replace",
+  "falsifier": "The hypothesis is falsified if the unified kernel is demonstrably used by all mutation consumers yet generic transition checks still diverge, legal or timely response reliability does not improve, or its overhead degrades direct playing performance relative to the incumbent.",
+  "hypothesis": "Unseen opening sequences are more robustly handled when UCI replay, legal-move validation, and search share one authoritative reversible state-transition kernel; eliminating parallel mutation semantics should reduce state drift and illegal decisions while preserving the champion's decision logic and timing policy.",
+  "observed_bottleneck": "With no public failure examples, the incumbent's visible structural bottleneck is its single-failure, anchor-native corridor boundary: inconsistent board mutations or reconstructions outside the selected dependency corridor cannot be reconciled even when UCI replay, legality filtering, and search manipulate the same chess position.",
+  "predicted_observation": "The resulting engine should maintain exact make/unmake round trips across generic castling, en-passant, promotion, counter, and repetition transitions; positions reached through UCI replay should agree with positions reached inside search; every timed command should remain bounded; and direct evaluation should show fewer state-integrity or legality losses without sacrificing decision quality.",
+  "protected_behavior": [
+    "Complete standard-library-only engine.py output",
+    "Legal standard-chess move generation for arbitrary valid positions",
+    "Correct UCI position, move replay, go movetime, stop, and quit behavior",
+    "A legal bestmove emitted before the applicable deadline",
+    "Champion evaluation, move ordering, search policy, and time-allocation behavior except for adaptations strictly required by the shared transition interface",
+    "No opening-set specialization, evaluator modification, replicated candidates, or best-of-N selection"
+  ],
+  "research_sources": []
+}

@@ -1,0 +1,47 @@
+{
+  "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\RSI\\primus\\runs\\chess\\chess-r0001\\screening\\evaluation\\replicate-01\\incumbent\\artifact.json",
+  "case": {
+    "critical": false,
+    "expected": {
+      "format": "complete_engine_file"
+    },
+    "family": "games/chess-engine",
+    "id": "primus-chess-development-bank-01",
+    "metadata": {
+      "adapter_version": "loopsy-standard-chess-windows-adapter-v1",
+      "benchmark_role": "primus_development",
+      "candidate_initial_handshake_timeout_ms": 5000,
+      "candidate_movetime_ms": 100,
+      "candidate_new_game_ready_timeout_ms": 250,
+      "candidate_response_grace_ms": 50,
+      "candidate_total_handshake_wall_cap_ms": 30000,
+      "max_plies": 600,
+      "opening_set_id": "primus-chess-development-a-v1",
+      "openings_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\RSI\\primus\\config\\openings\\chess-development-a.json",
+      "openings_sha256": "ccd511b502a77f01dca4f0e29f0d03ef75e68126d7bca99fb539869f32663b8c",
+      "python_chess_source_tree_sha256": "30bc4286eea8c1d526db5bc8e7cb8ed2fcf8a10d09eebe7c5d6b2ef67843690d",
+      "python_chess_version": "1.11.2",
+      "result_dir": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\V3 lite\\workspace-microswe-v1\\control\\chessbench100-results",
+      "runner_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\research\\agentloop-harness-research\\scripts\\chess_engine_bench.py",
+      "runner_sha256": "aa981f0c2db6eec0691d968b2ca1d44848e51d5e26d90d0634201482e2c740a5",
+      "source_provenance": {
+        "license": "CC0-1.0",
+        "source_id": "primus-chess-opening-split-v1",
+        "source_record_id": "primus-chess-development-a-v1",
+        "source_record_sha256": "ccd511b502a77f01dca4f0e29f0d03ef75e68126d7bca99fb539869f32663b8c",
+        "upstream_commit": "4b8622759e7ae6f93f011cc6c83a3823401ab45e",
+        "upstream_repository": "https://github.com/lichess-org/chess-openings"
+      },
+      "stockfish_path": "C:\\Users\\jinminjae\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Stockfish.Stockfish_Microsoft.Winget.Source_8wekyb3d8bbwe\\stockfish\\stockfish-windows-x86-64-avx2.exe",
+      "stockfish_sha256": "c86215fa1977d53b82ed854540a4c7b025be4cd042276c85ba3de53fb9118911",
+      "task_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\research\\agentloop-harness-research\\benchmark_tasks_v3\\games\\standard-chess\\TASK.md",
+      "task_sha256": "d4229657f5943c0d0e959f9e9114c2d4ab29d2a95aa0465a7cf157f246ea8e0c",
+      "tier_index": 4
+    },
+    "request": "# Task: build and improve a chess engine from scratch\n\nCreate a single Python file named `engine.py`. It must use only the Python standard library and speak enough UCI to play:\n\n```text\nuci\nisready\nucinewgame\nposition startpos [moves ...]\nposition fen <six-field-fen> [moves ...]\ngo movetime <ms>\nquit\n```\n\nFor every `go movetime` command, return exactly one legal `bestmove <uci_move>` before the deadline. Implement the board,\nlegal move generation, state transitions, search, and evaluation yourself. Do not import or inspect `python-chess`, Stockfish,\nSunfish, TSCP, Fairy-Stockfish, LC0, or any other chess engine or chess library.\n\nThis is an offline closed-book task. Do not use web/search, network access, package installation, apps, MCP, plugins,\nsubagents, other repositories, system documentation, or files outside the supplied benchmark workspace. The evaluator's\nStockfish binary, opening list, hidden match output, and other candidates are not visible to you. In a plateau entry you may\ninspect and modify only the explicitly supplied previous `engine.py` and public feedback.\n\nThe official match uses 50 fixed opening positions with colors exchanged for exactly 100 games at each immutable Stockfish\nnode tier. Candidate move time, maximum plies, Stockfish binary, opening bytes, and statistics are evaluator-side frozen\ncontracts. Do not hard-code a supplied opening list or attempt to identify individual evaluation games.\n\nLeave only `engine.py` as the final engine artifact.\n\n\n# V3 Lite complete-file response boundary\n\nThis adapted research track evaluates the engine produced by the active V3 Lite harness. The engine itself remains offline, standard-library-only, and unable to use tools or other files. Return exactly one JSON object and no prose: {\"files\":{\"engine.py\":\"<the complete Python source, JSON escaped>\"}}. Do not return a patch or Markdown fence. The evaluator plays 50 fixed openings with colors exchanged, for exactly 100 games. The evaluation stage and opponent tier are hidden control-plane conditions. Public suite label: screening.",
+    "scorer": "chessbench_100"
+  },
+  "ouroboros_source": "C:/Users/jinminjae/OneDrive/Desktop/Ouroboros/loop-evolution/src",
+  "result_dir": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\RSI\\primus\\runs\\chess\\chess-r0001\\screening\\evaluation\\replicate-01\\incumbent\\benchmark",
+  "split": "development"
+}

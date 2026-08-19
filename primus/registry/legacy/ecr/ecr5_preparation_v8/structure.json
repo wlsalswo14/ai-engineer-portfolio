@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr5-configured-envelope-reviewer-preparation-v8",
+  "status": "prepared_after_ecr4_resource_skip_before_activation_05_or_ecr5_trial_1",
+  "created_at": "2026-07-19T03:44:15+09:00",
+  "source_ecr4_skip_sha256": "58ae1a964e298cebeddfba80c23c94abc2f7d72241d1cdb3e96b3a2c3ec0d0ef",
+  "frozen_v3_standard_sha256": "6a152df01abc41d5934ede8874c4cfc7fda80cec73f689412b68910966dfbe03",
+  "result_informed_only_by_ecr4_resource_enforcement_failure": true,
+  "ecr4_candidate_performance_known": false,
+  "ecr5_candidate_calls_at_preparation": 0,
+  "ecr5_reviewer_calls_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "files": {
+    "configured_reviewer_gate": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR5_CONFIGURED_REVIEWER.py",
+      "sha256": "3da23290f3f90e814ed84a1685569f0393515359ee72d8a96ccf939698ae36a7"
+    },
+    "reviewer_objective": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR5_REVIEWER_GOAL.md",
+      "sha256": "d34ece975ddfea328fe5f7be4872cef9a6d9d308a211fd2f49bf9ee348a55d8f"
+    },
+    "status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR5_STATUS.md",
+      "sha256": "fe9752d3d433c9962f8feae98efe22d41ee7ca08049db3f93c5287c224603976"
+    },
+    "gate_tests": {
+      "path": "tests/test_agentloop_ecr5_configured_reviewer_v8.py",
+      "sha256": "95f06eb02671f77a7b81f5811b5e9bd0e2e88bea841e97dde5ac81de8c6c0aa1"
+    },
+    "frozen_v3_standard": {
+      "path": "AGENTLOOP_BENCHMARK_STANDARD_V3.json",
+      "sha256": "6a152df01abc41d5934ede8874c4cfc7fda80cec73f689412b68910966dfbe03"
+    },
+    "sealed_ecr4_skip": {
+      "path": "harness_ecr4_results_v8/batches/ecr4-text-b1/MECHANICAL_SKIP.json",
+      "sha256": "58ae1a964e298cebeddfba80c23c94abc2f7d72241d1cdb3e96b3a2c3ec0d0ef"
+    }
+  },
+  "incumbent_configured_caps": {"tokens": 60000, "wall_seconds": 1800, "tool_calls": 64},
+  "candidate_actor_configured_caps": {"tokens": 50000, "wall_seconds": 1500, "tool_calls": 52},
+  "candidate_reviewer_configured_caps": {"tokens": 10000, "wall_seconds": 300, "tool_calls": 12},
+  "configured_cap_sums_are_equal": true,
+  "native_actual_tokens_disclosed_not_clipped": true,
+  "native_service_token_overshoot_auto_invalidates": false,
+  "candidate_total_actual_wall_and_tools_remain_bounded": true,
+  "exactly_one_fresh_read_only_reviewer": true,
+  "invalid_or_rejected_review_restores_incoming": true,
+  "repair_or_third_model_call_allowed": false,
+  "unchanged_outer_promotion_rule_required": true,
+  "first_promotion_completes_research_goal": false,
+  "paired_performance_evidence": false
+}

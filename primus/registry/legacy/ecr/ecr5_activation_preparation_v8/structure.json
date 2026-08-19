@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "agentloop-ecr5-post-skip-activation-preparation-v8",
+  "status": "prepared_before_activation_05_or_ecr5_trial_1",
+  "created_at": "2026-07-19T03:44:15+09:00",
+  "extends_ecr5_preparation_sha256": "ef58ddf49faa7dfe12af4a16bf32777f44467ac886ac180db4dce0c4b9d11014",
+  "source_ecr4_skip_sha256": "58ae1a964e298cebeddfba80c23c94abc2f7d72241d1cdb3e96b3a2c3ec0d0ef",
+  "activation_05_receipts_at_preparation": 0,
+  "ecr5_completed_arms_at_preparation": 0,
+  "hidden_evaluator_calls_at_preparation": 0,
+  "files": {
+    "activation_gate": {
+      "path": "scripts/activate_agentloop_harness_ecr5_v8.py",
+      "sha256": "f7aa10ae0162a8257738b0a392c7e11151e34d6981edcb489c7fccc0a9b12bc0"
+    },
+    "activation_status_contract": {
+      "path": "agent_structures_v3/harness_successors_v8/ECR5_ACTIVATION_STATUS.md",
+      "sha256": "756d7c7e3ade6748217ffc54a45274ece27cbb058608d067f7ae7d3244d496a8"
+    },
+    "activation_tests": {
+      "path": "tests/test_agentloop_ecr5_activation_v8.py",
+      "sha256": "fc13da66df00beb119ae265325b89c6ead6e4667e150d9464afc735301404115"
+    },
+    "sealed_ecr4_skip": {
+      "path": "harness_ecr4_results_v8/batches/ecr4-text-b1/MECHANICAL_SKIP.json",
+      "sha256": "58ae1a964e298cebeddfba80c23c94abc2f7d72241d1cdb3e96b3a2c3ec0d0ef"
+    }
+  },
+  "activation_preserves_exact_ecr4_skip_base": true,
+  "activation_is_append_only": true,
+  "activation_launches_models_or_evaluators": false,
+  "first_promotion_completes_research_goal": false,
+  "paired_performance_evidence": false
+}

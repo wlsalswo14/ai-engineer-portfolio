@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+state/primus.db*
+state/*.lock
+# Run directories are named <domain>-r####, so the old runs/*/r*/ globs never matched.
+runs/*/*/work/
+runs/*/*/private/
+runs/_smoke*/
+*.tmp
+*.log
+# Host-specific overrides (codex home pool, external source roots).
+config/local.json
