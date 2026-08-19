@@ -64,8 +64,15 @@ loop-evolution이 **체스 도메인과 결합돼 있고 평가셋이 오염된�
 
 ## 저장소 구성
 
-세 프로젝트는 `git subtree`로 편입되어 **각자의 커밋 이력이 보존**되어 있습니다.
+세 프로젝트는 `git subtree`로 편입되어 **각자의 커밋 이력이 그대로 보존**되어 있습니다.
+각 `Add '<프로젝트>/' from commit ...` 머지 커밋 아래에 해당 프로젝트의 원래 커밋들이 붙어 있습니다.
 
 ```bash
-git log --oneline -- loop-evolution/   # 해당 프로젝트만의 이력
+git log --oneline --graph        # 세 갈래 이력이 합쳐진 전체 그래프
+```
+
+Windows에서 클론할 때는 경로 길이 제한 때문에 아래 설정이 필요합니다.
+
+```bash
+git clone -c core.longpaths=true https://github.com/wlsalswo14/ai-engineer-portfolio.git
 ```
