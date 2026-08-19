@@ -1,0 +1,51 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 5514,
+  "artifact_path": "workspace\\rounds\\R72\\pairs\\pair-02\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "d80c5a262f46a32e7f9d8eb20f0d1b484ad978457060823ea94d07567beb1f71",
+  "display_round": 72,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": false,
+    "violations": [
+      {
+        "call_id": "R72-pair02-candidate-call01-map_provenance_obligations",
+        "reason": "analysis_role_emitted_policy_code",
+        "role_id": "map_provenance_obligations"
+      }
+    ]
+  },
+  "generation_manifest_path": "workspace\\rounds\\R72\\pairs\\pair-02\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "abc33313c11ee0e64debbf31731158e3f538c577c477411af681cc58aa931a5e",
+  "label": "pair-02-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R72-pair02-candidate-call01-map_provenance_obligations\\final-receipt.json",
+      "sha256": "96ea20fad1cdc8c2c1e5f554e96d9ad428a07ea78b453a1f7dba907dea591246"
+    },
+    {
+      "path": "workspace\\model-calls\\R72-pair02-candidate-call02-bind_defeasible_commitment\\final-receipt.json",
+      "sha256": "7b52b7dec626d5998dc394e0cb7caf1bc8ea0d0f55dd32ae39e512bc808a2e7d"
+    },
+    {
+      "path": "workspace\\model-calls\\R72-pair02-candidate-call03-adjudicate_commitment\\final-receipt.json",
+      "sha256": "8841024d16ebd7b254163bb74c94aa023f4ffd62f659921ac3a6b0f6023690e9"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 2,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5514,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T23:45:22Z"
+}

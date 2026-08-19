@@ -1,0 +1,86 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R1-structural-mutation-architect\\final-receipt.json",
+    "sha256": "5efcc05be5daccde0f5b707ffebb8c414df9be635b40f4c1cf69ed9785ada62c"
+  },
+  "architect_response": {
+    "architect_scope": "one-r1-structural-mutation-only",
+    "candidate_structure": {
+      "final_call_id": "independent_terminal_finalizer",
+      "information_flow": "The first call receives the incumbent six external inputs in their original order and emits one provisional policy. The final call consumes that output together with permitted contract context, independently adjudicates its causal and contractual support, and emits one final policy.",
+      "name": "Provisional Policy Handoff to Independent Terminal Falsifier",
+      "organization": "two-role serial lineage",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "provisional_policy_producer",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Produce exactly one provisional policy while keeping its causal claim and supporting audit evidence visible to the successor; do not own terminal acceptance or finalization.",
+              "output_type": "policy",
+              "role": "evidence-exposing provisional policy producer"
+            },
+            {
+              "id": "independent_terminal_finalizer",
+              "inputs": [
+                "provisional_policy_producer",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Independently challenge the immediately preceding provisional policy against the supplied hypothesis, contract, constraints, and evidence flow, then emit exactly one contract-compliant final policy without alternatives, sampling, or repair retries.",
+              "output_type": "policy",
+              "role": "independent causal falsifier and terminal finalizer"
+            }
+          ],
+          "id": "produce_then_falsify",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "one_mutation_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_or_sampling_emitted": false
+    },
+    "mutation": {
+      "after": "One non-branching sequential lineage passes a provisional policy from its producer to an independent terminal falsifier and finalizer.",
+      "before": "One self-contained terminal producer owns provisional construction, causal acceptance, and final emission.",
+      "change_count": 1,
+      "factor": "serial terminal-call role fission",
+      "why_structural": "The call graph changes from one terminal node to two serial nodes, making the provisional artifact and its independent acceptance boundary explicitly visible."
+    },
+    "qualitative_hypothesis": {
+      "causal_change": "Split the terminal producer into a provisional policy producer followed by an independent terminal falsifier and finalizer.",
+      "expected_effect": "The visible sequential handoff should prevent authorship from implicitly serving as acceptance, so final emission reflects an independent review of causal support and contract preservation.",
+      "falsifier": "Falsified unless every artifact in the precommitted matched R0-versus-R1 evaluation is contract-valid and R1 achieves both a strict majority of matched-pair wins and a strictly better median on the precommitted aggregate objective; any invalidity, non-majority, or non-improving median falsifies the claim.",
+      "observed_bottleneck": "The one-call graph makes provisional authorship and post-build causal adjudication inseparable, leaving no independently visible acceptance boundary."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 1,
+  "official_scores_visible": false,
+  "r0_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R1\\source-manifest.json",
+    "sha256": "39d0d9426c32d76b8de62d22e124cbc4895b85f8f16b8eda572b98690decb8eb"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "mutation_factor": "serial terminal-call role fission"
+  }
+}

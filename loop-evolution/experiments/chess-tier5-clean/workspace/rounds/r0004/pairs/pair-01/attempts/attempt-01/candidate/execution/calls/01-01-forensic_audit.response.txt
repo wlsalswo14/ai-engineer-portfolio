@@ -1,0 +1,67 @@
+{
+  "artifact": "immutable_forensic_audit",
+  "scope": "Supplied champion source, metrics, capsule, hypothesis, and loop structure only; no candidate engine emitted.",
+  "raw_observations": [
+    "Champion result: 4 wins, 45 losses, 51 draws, score rate 0.295, Elo -148.002.",
+    "Rounds 1-3 had zero invalid arms; only singleton final-context compression was promoted.",
+    "qsearch uses capture-only moves when not in check; at ply >= 12 it evaluates without searching checking moves.",
+    "Evaluation uses material, simple pawn structure, center terms, bishop pair, and rook-file terms; it ignores castling rights, en-passant state, mobility, attacks, and king safety.",
+    "Position stores halfmove/fullmove counters, but the transposition key contains only board, side, castling rights, and en-passant square. No repetition history is tracked.",
+    "Time checks occur every 32 nodes; search uses 82% of movetime. The UCI loop catches every exception and falls back to the first legal move."
+  ],
+  "ranked_mechanisms": [
+    {
+      "rank": 1,
+      "id": "quiet_check_quiescence_horizon",
+      "inference": "Tactical lines requiring a quiet checking continuation can be truncated at qsearch, producing horizon blunders.",
+      "confidence": "high",
+      "probe": "Enumerate legal non-capture, non-promotion moves that give check at qsearch leaves; compare qsearch's returned value with a harness variant that includes quiet checks. Count omitted checking branches."
+    },
+    {
+      "rank": 2,
+      "id": "state_and_king_safety_evaluation_blindness",
+      "inference": "Positions differing only in castling rights, en-passant availability, or king-safety context can receive identical static scores despite materially different strategic options.",
+      "confidence": "high",
+      "probe": "Call evaluate on identical boards with castling rights KQkq versus - and with halfmove values 0 versus 99; verify equal scores, then compare legal move sets. Separately compare equal-material positions with different attack/mobility maps."
+    },
+    {
+      "rank": 3,
+      "id": "draw_context_absent_from_search",
+      "inference": "Repetition and fifty-move consequences are invisible to search and TT reuse, encouraging inferior perpetual or repeated cycles.",
+      "confidence": "high",
+      "probe": "Construct identical board/side/castling/en-passant states with different halfmove counters and histories; verify identical TT keys and search treatment. Replay a reversible four-ply cycle and record repeated bestmoves."
+    },
+    {
+      "rank": 4,
+      "id": "coarse_deadline_and_masked_failures",
+      "inference": "Sparse deadline checks and broad exception fallback can reduce effective search depth, hide internal failures, and occasionally threaten deadline compliance.",
+      "confidence": "medium",
+      "probe": "Run repeated identical positions at 5, 10, 25, 50, and 100 ms; record wall time, bestmove, node count, and output legality. Flag overruns, depth instability, and unexpected first-legal fallbacks."
+    }
+  ],
+  "invariants": {
+    "legality": [
+      "Every bestmove must belong to the legal move set from the exact parsed position.",
+      "Perft start position must equal depths 1-4: 20, 400, 8902, 197281.",
+      "Test castling through attacked transit squares, en passant removal, all four promotion choices, pins, check evasions, checkmate, and stalemate.",
+      "Position moves must update side, castling rights, en-passant square, halfmove clock, and fullmove number correctly."
+    ],
+    "protocol": [
+      "uci produces uciok; isready produces readyok.",
+      "Each valid go movetime command produces exactly one bestmove before its deadline.",
+      "Repeated identical commands are deterministic within the same timing tolerance.",
+      "ucinewgame and position reset search state without stale board or heuristic corruption."
+    ],
+    "regression": [
+      "No benchmark openings, evaluator details, external engines, libraries, or network evidence.",
+      "Any accepted repair must close its motivating probe while preserving all legality and protocol invariants.",
+      "Retain exact reversible deltas and preserve the champion's terminal singleton-compression audit."
+    ]
+  },
+  "unresolved_ambiguity": [
+    "Aggregate match metrics do not identify whether losses are dominated by tactics, evaluation, time management, or opening choices.",
+    "The supplied workspace exposes the champion as a wrapped source artifact; runtime probes were not executed because Python launch was blocked by local policy.",
+    "Hidden opening positions and evaluator timing tolerances are unavailable.",
+    "The impact of draw-context absence depends on the evaluator's game adjudication and maximum-ply rules."
+  ]
+}

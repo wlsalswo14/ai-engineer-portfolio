@@ -1,0 +1,65 @@
+{
+  "architect_scope": "one-R25-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "predecessor_exclusive_policy_emitter",
+    "information_flow": "The first call forms one self-contained executable closure from all common inputs and removes construction provenance from the handoff. The final call receives only that closure, treats it as the sole causal state, and emits its complete policy artifact.",
+    "name": "Predecessor-Exclusive Closure Relay",
+    "organization": "two-call sequential lineage with the incumbent provenance firewall followed by a predecessor-exclusive emission edge",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_executable_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Form exactly one self-contained executable policy closure from the supplied evidence and public obligations, establish its semantics within that complete state, remove construction provenance from the handoff, and pass the complete executable artifact forward.",
+            "output_type": "executable_policy_closure",
+            "role": "executable semantic closure former"
+          },
+          {
+            "id": "predecessor_exclusive_policy_emitter",
+            "inputs": [
+              "form_executable_closure"
+            ],
+            "objective": "Consume the preceding complete executable closure as the sole causal input and emit its single policy artifact without introducing external evidence or reopening its established semantics.",
+            "output_type": "policy",
+            "role": "predecessor-exclusive policy emitter"
+          }
+        ],
+        "id": "exclusive_closure_relay",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only final-edge causal-source exclusivity changes; closure formation, the two-call lineage, the incumbent provenance firewall, and the complete executable artifact are preserved.",
+    "why_not_repeat_role_fission": "No call is added, split, renamed as a substitute for structure, or arranged as a producer-reviewer-finalizer chain; the mutation changes incoming-edge authority on the existing final node."
+  },
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "causal_change": "Make the completed executable closure the final call's exclusive causal input, eliminating every parallel external edge into policy emission.",
+    "expected_effect": "Preserve the coherence of the evidence-bound executable state by preventing semantic drift after closure formation while retaining a complete policy-bearing lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The incumbent final call has parallel causal access to the completed executable closure and to external contextual evidence, permitting post-closure semantic reopening."
+  },
+  "structural_mutation": {
+    "after": "The final call consumes only the immediately preceding complete executable closure and emits its policy artifact without reopening semantics from external context.",
+    "before": "The final call consumes the executable closure alongside task, anchor contract, task constraints, candidate hypothesis, and loop structure, and may reopen semantics from those parallel inputs.",
+    "change_count": 1,
+    "factor": "exclusive predecessor-only causal input at policy emission",
+    "why_structural": "This removes parallel visibility and control edges into the final node and changes its causal authority from contextual semantic re-derivation to predecessor-exclusive continuation."
+  }
+}

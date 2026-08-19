@@ -1,0 +1,95 @@
+Role: R54 candidate topology role defeasible counter-assumption mapper
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R54,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: map_counter_assumptions
+Role: defeasible counter-assumption mapper
+Objective: Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output Python, policy source, a patch, a diff, alternative policies, or
+a ranked selection. Analyze or transform evidence only for the one lineage.
+
+Visible inputs fixed by this topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "352def21afdd93ee0294fb85cb8e92300a7f6791238f9a1ac2bbe2fa50b37184",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.protected_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R53 champion policy anchor",
+    "artifact_sha256": "352def21afdd93ee0294fb85cb8e92300a7f6791238f9a1ac2bbe2fa50b37184",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Replace the binding executable handoff with one defeasible dual-view handoff: the terminal authority receives a nonbinding counter-assumption analysis alongside a lossless reacquisition of every common input.",
+    "expected_effect": "Joint reconsideration without inherited settlement authority should improve phase-shift adaptation and scan resistance by allowing contract interpretation and behavioral intent to change together.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family prematurely converts shared evidence into a binding executable settlement, forcing downstream reasoning to remain inside inherited contract-versus-behavior authority partitions."
+  },
+  "loop_structure": {
+    "final_call_id": "reacquire_and_unify_authority",
+    "information_flow": "The first call receives every common input and emits only a source-distinguished counter-assumption analysis carrying no policy or settlement authority. The final call consumes that analysis while independently receiving every common input, treats the analysis as defeasible evidence, reconciles both views under undivided authority, and emits one policy.",
+    "name": "Defeasible Dual-View Reacquisition",
+    "organization": "two-call sequential lineage with one nonbinding analysis handoff and terminal lossless evidence reacquisition",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "map_counter_assumptions",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+            "output_type": "analysis",
+            "role": "defeasible counter-assumption mapper"
+          },
+          {
+            "id": "reacquire_and_unify_authority",
+            "inputs": [
+              "map_counter_assumptions",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume map_counter_assumptions together with every common input, treat the analysis as defeasible rather than binding, resolve disagreements through direct evidence comparison, and emit one complete policy under undivided authority.",
+            "output_type": "policy",
+            "role": "raw-evidence-reacquiring unitary policy authority"
+          }
+        ],
+        "id": "dual_view_reacquisition_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

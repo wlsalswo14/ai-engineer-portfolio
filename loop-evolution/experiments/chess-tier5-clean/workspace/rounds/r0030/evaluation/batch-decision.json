@@ -1,0 +1,85 @@
+{
+  "schema_version": 3,
+  "protocol": "OUROBOROS_MATCHED_THREE_DIVERSE_ANCHOR_RELATIVE_V5",
+  "planned_pair_count": 3,
+  "completed_pair_count": 3,
+  "completed_early": false,
+  "anchor_elo": -116.594,
+  "candidate_wins": 3,
+  "candidate_losses": 0,
+  "ties": 0,
+  "invalid_pair_count": 0,
+  "pair_verdicts": [
+    {
+      "pair": 1,
+      "verdict": "candidate_win",
+      "incumbent_elo": -273.527,
+      "candidate_elo": -105.297
+    },
+    {
+      "pair": 2,
+      "verdict": "candidate_win",
+      "incumbent_elo": -132.041,
+      "candidate_elo": -120.412
+    },
+    {
+      "pair": 3,
+      "verdict": "candidate_win",
+      "incumbent_elo": -219.274,
+      "candidate_elo": -101.579
+    }
+  ],
+  "candidate_median_elo": -105.297,
+  "incumbent_median_elo": -219.274,
+  "candidate_median_score_rate": 0.35,
+  "incumbent_median_score_rate": 0.215,
+  "relative_performance_ratio": 1.627906976744186,
+  "median_delta": 113.977,
+  "representative_candidate_pair": 1,
+  "representative_candidate_elo": -105.297,
+  "candidate_invalid_count": 0,
+  "incumbent_invalid_count": 0,
+  "promotion_checks": {
+    "three_valid_pairs_completed": true,
+    "candidate_wins_strictly_exceed_losses": true,
+    "candidate_median_strictly_exceeds_incumbent": true,
+    "candidate_invalid_count_zero": true,
+    "incumbent_invalid_count_zero": true
+  },
+  "promoted": true,
+  "inconclusive": false,
+  "promotion_rule": "complete three valid pairs; candidate wins > losses; candidate median Elo > incumbent median Elo; zero invalid arms on either side",
+  "anchor_policy": "three precommitted diverse anchors; common within each pair",
+  "development_assessment_required": false,
+  "force_complete_pairs": false,
+  "partial_development_assessment": null,
+  "bounded_development_early_stop_applied": false,
+  "irreversible_rejection_early_stop_applied": false,
+  "anchor_panel": [
+    {
+      "pair": 1,
+      "anchor_id": "anchor_4678594f10379ca4",
+      "role": "current_champion",
+      "origin": "champion:package_96689a42f7ea545b",
+      "engine_source_sha256": "4678594f10379ca42c4b310bad377c1fe7f2a36a60bdc39c3445ecfa9a76ce16",
+      "elo": -116.594
+    },
+    {
+      "pair": 2,
+      "anchor_id": "anchor_eaba2e9ff3e678c1",
+      "role": "frozen_lineage_baseline",
+      "origin": "bootstrap:package_ebdecd200797a81e",
+      "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+      "elo": -94.211
+    },
+    {
+      "pair": 3,
+      "anchor_id": "anchor_097756f8df75c0a9",
+      "role": "recent_promotion_alternate",
+      "origin": "round:28:pair:1:candidate",
+      "engine_source_sha256": "097756f8df75c0a9f928adbea46d0799f474aaf5be500a1d0929c44a6bc1131f",
+      "elo": -101.579
+    }
+  ],
+  "distinct_anchor_count": 3
+}

@@ -1,0 +1,42 @@
+{
+  "parsed_response": {
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        if type(capacity_bytes) is not int:\n            raise TypeError(\"capacity_bytes must be an integer\")\n        self.capacity_bytes = max(0, capacity_bytes)\n        self._entries = {}\n        self._probation = OrderedDict()\n        self._protected = OrderedDict()\n        self._used = 0\n        self._protected_used = 0\n\n    def access(self, key, size, now):\n        if type(key) is not int or type(size) is not int or size < 0:\n            return []\n\n        if key in self._entries:\n            entry_size, segment = self._entries[key]\n            if segment == \"probation\":\n                del self._probation[key]\n                self._protected[key] = None\n                self._entries[key] = (entry_size, \"protected\")\n                self._protected_used += entry_size\n                self._rebalance_protected()\n            else:\n                self._protected.move_to_end(key)\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        self._entries[key] = (size, \"probation\")\n        self._probation[key] = None\n        self._used += size\n\n        evicted = []\n        reported = set()\n        while self._used > self.capacity_bytes:\n            if self._probation:\n                victim, _ = self._probation.popitem(last=False)\n            elif self._protected:\n                victim, _ = self._protected.popitem(last=False)\n            else:\n                break\n\n            victim_size, victim_segment = self._entries.pop(victim)\n            self._used -= victim_size\n            if victim_segment == \"protected\":\n                self._protected_used -= victim_size\n            if type(victim) is int and victim not in reported:\n                reported.add(victim)\n                evicted.append(victim)\n\n        return evicted\n\n    def _rebalance_protected(self):\n        protected_limit = (self.capacity_bytes * 3) // 4\n        while self._protected and self._protected_used > protected_limit:\n            key, _ = self._protected.popitem(last=False)\n            size, _ = self._entries[key]\n            self._entries[key] = (size, \"probation\")\n            self._probation[key] = None\n            self._protected_used -= size"
+  },
+  "receipt": {
+    "call_id": "R3-pair01-candidate-call03-rebased_policy_materializer",
+    "duration_seconds": 54.114,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T08:49:05Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "323013df9536c5ae2d434e65910051854364341bd62476fa7dbf72c02e732a43",
+    "raw_events_path": "workspace\\model-calls\\R3-pair01-candidate-call03-rebased_policy_materializer\\raw-events.jsonl",
+    "raw_events_sha256": "f7d24d9e31dbf83fc1d7cb62ae1d18157c5bfef586d9e7865e1481edc54f1eba",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 2,
+    "response_sha256": "202aaf4c0619d295dc6b9bb9a985783cea45d4f374c5e32e636eb34be399ffef",
+    "returncode": 0,
+    "role": "R3 candidate topology role post-transition policy materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T08:48:11Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 12032,
+      "input_tokens": 12956,
+      "output_tokens": 2807,
+      "reasoning_output_tokens": 2241
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,56 @@
+{
+  "artifact_path": "workspace\\champion-r24\\policy.py",
+  "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+  "cache_r101_opened": false,
+  "champion_source": "promoted-candidate",
+  "decision_basis": {
+    "all_six_valid_and_deterministic": true,
+    "candidate_median": 82.9759,
+    "candidate_pairwise_majority": true,
+    "candidate_strict_median_win": true,
+    "candidate_wins": 2,
+    "close_confirmation_passed": true,
+    "close_confirmation_triggered": false,
+    "incumbent_median": 82.0738,
+    "incumbent_wins": 1
+  },
+  "display_round": 24,
+  "evaluation_batch_path": "workspace\\rounds\\R24\\evaluation\\evaluation-batch.json",
+  "evaluation_batch_sha256": "20373452975c7a6c8750af620f366e3c524a94753f6ccabdade8ae4b6b786209",
+  "promoted": true,
+  "promotion_contract": {
+    "all_six_valid_and_replay2_deterministic": true,
+    "candidate_median": "strictly greater than incumbent median",
+    "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+    "failure_action": "retain current champion policy and structure",
+    "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+  },
+  "promotion_contract_passed": true,
+  "representative_pair": 3,
+  "schema_version": 1,
+  "search_control_after": {
+    "completed_mode": "counter_hypothesis",
+    "emergent_failure_count": 0,
+    "local_refinement_count": 0,
+    "next_local_refinement_attempt": 1,
+    "next_proposal_mode": "local_refinement",
+    "promoted": true,
+    "transition": "promotion-reset"
+  },
+  "search_control_before": {
+    "derived_from": "workspace\\rounds\\R23\\state.json",
+    "emergent_failure_count": 2,
+    "local_refinement_attempt": null,
+    "local_refinement_count": 2,
+    "proposal_mode": "counter_hypothesis"
+  },
+  "selected_at": "2026-08-09T17:23:18Z",
+  "source_artifact_path": "workspace\\rounds\\R24\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+  "source_artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+  "source_seal_path": "workspace\\rounds\\R24\\pairs\\pair-03\\candidate\\seal.json",
+  "source_seal_sha256": "fbca364e51ebaed7f7433c10dfeeff5dd41d95cfffd764eea452b0a974f1b46d",
+  "starting_policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+  "starting_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "structure_path": "workspace\\champion-r24\\structure.json",
+  "structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54"
+}

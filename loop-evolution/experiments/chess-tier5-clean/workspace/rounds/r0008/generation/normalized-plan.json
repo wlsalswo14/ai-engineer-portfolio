@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "emergent_exploration",
+  "hypothesis": {
+    "observed_bottleneck": "The promoted round-7 loop improved causal rollback attribution, but its own recorded risks identify a remaining dead end: interacting changes can defeat exact attribution, and an exact rollback can remove useful behavior bundled with the defect. The champion can then only preserve the defective provisional engine or retreat along its existing delta lineage.",
+    "evidence_refs": [
+      "STATE_CAPSULE current_champion structure_summary",
+      "STATE_CAPSULE recent_outcomes round 7: 1W/0L/2T, median delta +15.115",
+      "STATE_CAPSULE round-7 weaknesses: interacting changes can make rollback attribution ambiguous; exact rollback can remove useful behavior contained in the same inseparable delta",
+      "STATE_CAPSULE round-6 result: an added post-integration closure gate was not supported"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Recovery policy when executable causal interventions show that the provisional implementation has no safe exact-rollback path",
+      "before": "The final integrator remains inside the provisional engine's change lineage: it may preserve that engine or apply verifier-certified exact rollbacks.",
+      "after": "A causal-dead-end witness triggers a lineage reset: the final integrator discards the implicated provisional implementation, returns to the champion anchor, and constructs one alternative implementation of the same intended behavior under the verifier's executable constraints.",
+      "why_causal": "This changes the loop's reachable state graph. Causal non-separability is no longer merely an attribution failure that constrains deletion; it becomes a deterministic transition from delta filtering to a single counterexample-constrained resynthesis trajectory. No alternate engine is constructed unless the trigger fires, and no best-of-N selection occurs."
+    },
+    "expected_effect": "On ordinary verifier outcomes, the candidate retains the champion's supported preserve-or-exact-rollback behavior. When a regression and useful behavior are inseparable within the provisional delta lineage, the candidate can recover the useful intent through a different implementation instead of keeping the regression or deleting the whole capability, increasing the chance of valid strength gains.",
+    "falsifier": "After all three matched pairs, falsify the hypothesis if any candidate arm is invalid, or if candidate wins do not exceed candidate losses, or if the candidate median Elo does not exceed the incumbent median Elo. In particular, an observed causal-dead-end transition followed by a non-promoting batch decisively rejects the claim that strategy substitution improves this lineage under the tested conditions.",
+    "behavioral_novelty": "Given an executable failure for which every implicated exact rollback either leaves the failure open or destroys the provisional engine's demonstrated useful behavior, the loop can abandon the entire implicated implementation and emit a newly synthesized, anchor-rooted implementation that closes the failure while restoring that behavior through a different source path.",
+    "emergent_capability": {
+      "capability_family": "causal-dead-end strategy substitution",
+      "champion_limitation": "The champion can only preserve the provisional engine or subtract certified existing deltas; it cannot leave that implementation lineage and reconstruct the intended behavior differently.",
+      "emergent_capability": "The candidate can deterministically discard an unrecoverable provisional strategy and synthesize one alternative implementation from the anchor, constrained by both the reproduced failure and an executable witness of the intended useful behavior.",
+      "trigger": "The verifier reproduces a concrete failure and demonstrates that every bounded exact rollback intervention implicated by that failure either fails to close it or also eliminates the executable intended-behavior witness.",
+      "state_transition": {
+        "before": "A complete provisional engine whose admissible next states are preservation or subtraction of existing source deltas.",
+        "after": "A reset-to-anchor construction state in which the implicated implementation is forbidden and one semantically alternative implementation must satisfy both the failure witness and intended-behavior witness."
+      },
+      "observable_effect": "On the same causal-dead-end evidence, the champion remains within the provisional source lineage, while the candidate removes the implicated implementation wholesale, changes a different source locus starting from the anchor, and emits neither the provisional engine nor a rollback-only descendant of it.",
+      "novelty_probe": "Present a provisional engine with a reproducible failure and a useful-behavior test coupled to the same implicated delta such that removing that delta closes the failure but fails the useful-behavior test. Confirm that the verifier records the causal dead end, then verify that the final engine excludes the implicated implementation, differs from the champion at a different source locus, closes the original failure, and passes the useful-behavior test. Failure to enter this path or emission of a preserve/rollback-only descendant fails the probe.",
+      "not_local_refinement": "The change is not another certificate field, audit, reviewer, packet, or finer rollback. It adds a new trigger-dependent construction regime that expands the reachable implementation lineage from subtracting existing deltas to creating a semantically different solution rooted at the anchor."
+    },
+    "strengths": [
+      "Preserves the promoted producer, independent causal verifier, and exact-rollback path for separable regressions.",
+      "Directly addresses the champion's documented inability to retain useful behavior when it is inseparable from a defective delta.",
+      "Uses executable failure and intended-behavior witnesses to trigger one alternative construction, without replicated candidates or best-of-N selection.",
+      "Avoids repeating the unsupported round-6 terminal-gate family."
+    ],
+    "risks": [
+      "The intended-behavior witness may be too narrow, allowing an alternative implementation that passes the witness but loses unmeasured playing strength.",
+      "A mistaken causal-dead-end determination may discard a provisional implementation that a better exact attribution could have preserved.",
+      "The final alternative construction is not independently inspected after mutation and may introduce a new legal-UCI or strength regression.",
+      "Resetting to the anchor may consume context on reconstructing behavior and yield an overly conservative engine."
+    ]
+  },
+  "structure": {
+    "name": "Triggered Causal-Dead-End Strategy Substitution",
+    "organization": "collaboration",
+    "information_flow": "A constructor produces one complete provisional engine. An independent verifier performs bounded executable failure reproduction and exact rollback interventions, distinguishing safe rollback from causal non-separability. The final integrator preserves or applies certified rollback normally; only a causal-dead-end witness resets it to the anchor for one constrained alternative construction.",
+    "stages": [
+      {
+        "id": "construct",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "provisional_constructor",
+            "role": "provisional engine constructor",
+            "objective": "Starting from the champion anchor, produce one complete legal UCI engine with a bounded strength-oriented change. Preserve executable obligations and do not construct alternative candidates or perform best-of-N selection.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      },
+      {
+        "id": "causal_verification",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "causal_dead_end_verifier",
+            "role": "non-authoring causal intervention verifier",
+            "objective": "Compare the provisional engine with the champion, reproduce concrete regressions, and test only distinct implicated exact rollback interventions. Emit safe exact rollback certificates when available. Emit a causal-dead-end witness only when every bounded implicated rollback either leaves the failure open or destroys an executable witness of the provisional change's intended useful behavior. Do not author an engine or rank candidate variants.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_constructor"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "emit",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "strategy_substitution_integrator",
+            "role": "bounded final engine integrator",
+            "objective": "Produce one complete legal UCI engine. Preserve the provisional engine when no failure is certified, or apply only certified exact rollbacks when a safe rollback exists. If and only if a causal-dead-end witness exists, discard the implicated provisional implementation, reset construction to the champion engine, and synthesize one semantically alternative implementation that closes the executable failure while preserving the executable intended-behavior witness. Do not retain multiple alternatives, score variants, or select best-of-N.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "provisional_constructor",
+              "causal_dead_end_verifier"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "strategy_substitution_integrator"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  },
+  "structure_id": "loop_3947e6cf0fe9be09"
+}

@@ -1,0 +1,161 @@
+## Sole component
+
+```python
+# king_capture_seam.py
+from dataclasses import dataclass
+from typing import Iterable, List, Optional, Sequence, Tuple
+
+
+def king_capture_gate(board: Sequence[str], side: int,
+                      moves: Iterable[int]) -> List[int]:
+    """Primitive: filter anchor-encoded moves that capture the enemy king."""
+    if len(board) != 64 or side not in (0, 1):
+        raise ValueError("invalid anchor state")
+    enemy_king = "k" if side == 0 else "K"
+    result = []
+    for move in moves:
+        if type(move) is not int:
+            raise TypeError("moves must be encoded integers")
+        destination = (move >> 6) & 63
+        if board[destination] != enemy_king:
+            result.append(move)
+    return result
+
+
+@dataclass(frozen=True)
+class AnchorPosition:
+    # Mirrors Position(b, side, cast, ep, half, full).
+    b: Tuple[str, ...]
+    side: int
+    cast: int
+    ep: int
+    half: int
+    full: int
+
+    def ordinary_transition(self, move: int) -> "AnchorPosition":
+        src, dst = move & 63, (move >> 6) & 63
+        board = list(self.b)
+        piece = board[src]
+        board[src], board[dst] = ".", piece
+        return AnchorPosition(
+            tuple(board), self.side ^ 1, self.cast, -1,
+            0 if piece.lower() == "p" else self.half + 1,
+            self.full + (1 if self.side else 0),
+        )
+
+
+class AnchorSeamSurrogate:
+    # Provenance: pseudo() -> legal() -> search()/root() consumer.
+    def __init__(self):
+        self.position: Optional[AnchorPosition] = None
+        self.epoch = 0
+
+    def load(self, position: AnchorPosition) -> None:
+        self.position = position
+        self.epoch += 1
+
+    def run_seam(self, pseudo_moves: Iterable[int]):
+        if self.position is None:
+            raise RuntimeError("position not loaded")
+        # Gate is placed between pseudo() and make() in legal().
+        legal_moves = king_capture_gate(
+            self.position.b, self.position.side, pseudo_moves
+        )
+        # Downstream anchor obligation: mutable ordered encoded move list.
+        downstream = list(legal_moves)
+        return (downstream[0] if downstream else None), downstream
+
+
+def enc(src: int, dst: int) -> int:
+    return src | (dst << 6)
+
+
+def board_with(*pieces):
+    board = ["."] * 64
+    for square, piece in pieces:
+        board[square] = piece
+    return tuple(board)
+
+
+def fixtures():
+    white = AnchorPosition(
+        board_with((4, "K"), (60, "k"), (12, "R")),
+        0, 15, -1, 7, 23,
+    )
+    black = AnchorPosition(
+        board_with((4, "K"), (60, "k"), (52, "r")),
+        1, 15, -1, 9, 24,
+    )
+
+    capture_black_king = enc(12, 60)
+    quiet_move = enc(12, 52)
+    capture_white_king = enc(52, 4)
+
+    seam = AnchorSeamSurrogate()
+    seam.load(white)
+
+    assert seam.run_seam([capture_black_king, quiet_move]) == (
+        quiet_move, [quiet_move]
+    )
+    assert seam.run_seam([quiet_move]) == (quiet_move, [quiet_move])
+
+    transitioned = white.ordinary_transition(quiet_move)
+    assert (transitioned.side, transitioned.cast, transitioned.ep,
+            transitioned.half, transitioned.full) == (1, 15, -1, 8, 23)
+
+    seam.load(black)
+    assert seam.run_seam([capture_white_king, quiet_move]) == (
+        quiet_move, [quiet_move]
+    )
+
+    seam.load(white)
+    first = seam.run_seam([capture_black_king, quiet_move])
+    seam.load(white)
+    second = seam.run_seam([capture_black_king, quiet_move])
+    assert first == second and seam.epoch == 4
+
+    original = white
+    king_capture_gate(original.b, original.side,
+                       [capture_black_king, quiet_move])
+    assert original == white
+
+    assert len(king_capture_gate(
+        white.b, white.side, [quiet_move] * 10000
+    )) == 10000
+
+    print("predicted_effect: PASS")
+    print("null_case: PASS")
+    print("boundary_transitions: PASS")
+    print("repeated_lifecycle: PASS")
+    print("dependency_closure: PASS")
+    print("bounded_work: PASS 10000 moves, O(n)")
+
+
+if __name__ == "__main__":
+    fixtures()
+```
+
+Execution command:
+
+```text
+python king_capture_seam.py
+```
+
+Expected deterministic fixture trace:
+
+```text
+predicted_effect: PASS
+null_case: PASS
+boundary_transitions: PASS
+repeated_lifecycle: PASS
+dependency_closure: PASS
+bounded_work: PASS 10000 moves, O(n)
+```
+
+The local arm permitted inspection but blocked launching Python, so no runtime trace was produced here.
+
+Provenance seam: `pseudo()` emits encoded moves; `legal()` immediately calls `make()` and checks only the moving side’s king; `search()`, `qsearch()`, and `root()` consume the resulting list. The gate belongs once between `pseudo()` and `make()`.
+
+Causal falsifier: if an encoded move whose destination contains the opposing king reaches the downstream legal-move list, the capability is falsified.
+
+Graft invariants: preserve all anchor state fields, move encodings, ordering, and list mutability; remove only enemy-king captures; invoke exactly once in `legal()` for both ordinary and capture generation; make no evaluator, search, timing, or UCI changes.

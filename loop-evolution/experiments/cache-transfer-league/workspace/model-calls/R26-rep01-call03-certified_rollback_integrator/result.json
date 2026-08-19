@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.used_bytes = 0\n        self.target_bytes = self.capacity_bytes // 2\n        self.ghost_bytes = 0\n        self.ghost_clock = 0\n        self.ghost_limit = max(1, self.capacity_bytes)\n\n    def _remove_ghost(self, key):\n        if key in self.b1:\n            size, _ = self.b1.pop(key)\n            self.ghost_bytes -= size\n            return 1\n        if key in self.b2:\n            size, _ = self.b2.pop(key)\n            self.ghost_bytes -= size\n            return 2\n        return 0\n\n    def _add_ghost(self, queue, key, size):\n        self._remove_ghost(key)\n        self.ghost_clock += 1\n        queue[key] = (size, self.ghost_clock)\n        self.ghost_bytes += size\n        while self.ghost_bytes > self.capacity_bytes or len(self.b1) + len(self.b2) > self.ghost_limit:\n            first = next(iter(self.b1.items()), None)\n            second = next(iter(self.b2.items()), None)\n            if first is None:\n                old_queue = self.b2\n            elif second is None:\n                old_queue = self.b1\n            elif first[1][1] <= second[1][1]:\n                old_queue = self.b1\n            else:\n                old_queue = self.b2\n            _, (old_size, _) = old_queue.popitem(last=False)\n            self.ghost_bytes -= old_size\n\n    def _rebalance(self):\n        while self.t2 and self.t2_bytes > self.target_bytes:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self.t1[key] = size\n            self.t1_bytes += size\n\n    def _make_room(self, size, evicted):\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.t1 and (self.t1_bytes >= self.capacity_bytes - self.target_bytes or not self.t2):\n                key, stored = self.t1.popitem(last=False)\n                self.t1_bytes -= stored\n                self.used_bytes -= stored\n                self._add_ghost(self.b1, key, stored)\n            elif self.t2:\n                key, stored = self.t2.popitem(last=False)\n                self.t2_bytes -= stored\n                self.used_bytes -= stored\n                self._add_ghost(self.b2, key, stored)\n            elif self.t1:\n                key, stored = self.t1.popitem(last=False)\n                self.t1_bytes -= stored\n                self.used_bytes -= stored\n                self._add_ghost(self.b1, key, stored)\n            else:\n                break\n            evicted.append(key)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] = stored\n            return []\n\n        if key in self.t1:\n            stored = self.t1.pop(key)\n            self.t1_bytes -= stored\n            if self.target_bytes > 0 and stored <= self.target_bytes:\n                self.t2[key] = stored\n                self.t2_bytes += stored\n                self._rebalance()\n            else:\n                self.t1[key] = stored\n                self.t1_bytes += stored\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        ghost_kind = self._remove_ghost(key)\n        if ghost_kind == 1:\n            self.target_bytes = min(self.capacity_bytes, self.target_bytes + max(1, size))\n        elif ghost_kind == 2:\n            self.target_bytes = max(0, self.target_bytes - max(1, size))\n            self._rebalance()\n\n        evicted = []\n        self._make_room(size, evicted)\n\n        if ghost_kind and self.target_bytes > 0 and size <= self.target_bytes:\n            self.t2[key] = size\n            self.t2_bytes += size\n            self.used_bytes += size\n            self._rebalance()\n        else:\n            self.t1[key] = size\n            self.t1_bytes += size\n            self.used_bytes += size\n\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R26-rep01-call03-certified_rollback_integrator",
+    "duration_seconds": 58.341,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:42:52Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "1890c6cdefd20c1c39a0c80f79f42e84f839ea130b6109afb940f45ba2e1c3e4",
+    "raw_events_sha256": "71b778ff42578ec187b6a9a4eee7a6d908df58e2a7ee2b1e6b1eaee403a8e754",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "83b4691390b02a5ddb6d8baea9cc2c3e1ed4a6256006a7f40a07388425c7a670",
+    "returncode": 0,
+    "role": "constrained final policy emitter",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:41:54Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15277,
+      "output_tokens": 3028,
+      "reasoning_output_tokens": 1944
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

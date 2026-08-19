@@ -1,0 +1,55 @@
+Role: R3 candidate topology role evidence-triggered causal state transformer
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R3,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: responsibility_rebase
+Role: evidence-triggered causal state transformer
+Objective: Consume responsibility_probe and let its non-separability witness trigger a change from anchor-relative repair state to contract-relative joint-responsibility state at the evidenced boundary. Preserve unaffected obligations and evidence provenance, then emit the transitioned construction state.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output Python, policy source, a patch, a diff, alternative policies, or
+a ranked selection. Analyze or transform evidence only for the one lineage.
+
+Visible inputs fixed by this topology:
+{
+  "responsibility_probe": {
+    "analysis_packet": {
+      "certificate": "The inherited miss admission/eviction boundary is causally non-separable: one online transition jointly determines cache membership, returned evictions, and byte accounting. The candidate hypothesis therefore targets a contract-relative joint-responsibility rebase while unrelated constraints remain fixed.",
+      "witnesses": [
+        {
+          "boundary": "online miss admission and eviction",
+          "evidence": "The anchor must select currently cached unique integer keys for return while simultaneously updating membership and used_bytes so capacity is never exceeded; separating these responsibilities can make either the eviction list stale or capacity accounting unsafe.",
+          "held_fixed": [
+            "Python standard-library restriction",
+            "one-access-at-a-time visibility",
+            "interface legality",
+            "no oracle, trace, or benchmark access",
+            "score blindness"
+          ]
+        }
+      ],
+      "obligations": [
+        "Return only currently cached unique integer keys.",
+        "Never exceed capacity_bytes.",
+        "Preserve online one-access-at-a-time operation.",
+        "Maintain the declared Policy interface."
+      ],
+      "exact_actions": [
+        "Inspect the anchor's miss path as the inherited responsibility decomposition.",
+        "Relate eviction selection, cache membership, return legality, and byte safety at the identified boundary.",
+        "Record the construction state as anchor-relative repair pending evidence-triggered contract-relative joint-responsibility synthesis."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "pair": 1,
+  "attempt": 1,
+  "execution_order": [
+    "incumbent",
+    "candidate"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "current_champion",
+    "anchor_id": "anchor_578a4d95f81d0f2c",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0019\\final-output.json",
+    "engine_source_sha256": "578a4d95f81d0f2c11171e55e72b71c2b4613c06a80381b0a03ffbebf228d3d6",
+    "metrics": {
+      "elo": -204.753,
+      "score_rate": 0.23,
+      "wins": 1,
+      "draws": 44,
+      "losses": 55,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0019\\benchmark-result-receipt.json",
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-578a4d95f81d0f2c.json"
+    },
+    "origin": "champion:package_faee07d6265127db"
+  },
+  "incumbent_structure_id": "loop_f7c2f8106612d495",
+  "candidate_structure_id": "loop_9119ae8b813d3665",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\pairs\\pair-01\\attempts\\attempt-01\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:039db5e3075497a816ce2aaacfe20cdfd8f0ccbfc1b34a51ef1d02700f783dba",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.2,
+    "wins": 1,
+    "draws": 38,
+    "losses": 61,
+    "elo": -234.506,
+    "elo_error_95": 124.409,
+    "los": 0.0,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\pairs\\pair-01\\attempts\\attempt-01\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-039db5e3075497a8.json",
+    "benchmark_receipt_sha256": "11b4529f6fdc62b31b4cf0bdbcd966bfecbc94a6bd03e464c4f51a43b506ff4f",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-039db5e3075497a8.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:039db5e3075497a816ce2aaacfe20cdfd8f0ccbfc1b34a51ef1d02700f783dba",
+      "chessbench-wdl:1-38-61"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:745f761c1e4f8593b930962432ffff5261e74c6d02554b5447271943dfc345f9",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.195,
+    "wins": 1,
+    "draws": 37,
+    "losses": 62,
+    "elo": -239.761,
+    "elo_error_95": 125.724,
+    "los": 0.0,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0021\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-745f761c1e4f8593.json",
+    "benchmark_receipt_sha256": "9031acb4d76fb7826fd87c155ab7121aaf01e54e3db59f8b1632e3499b0232a1",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-745f761c1e4f8593.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:745f761c1e4f8593b930962432ffff5261e74c6d02554b5447271943dfc345f9",
+      "chessbench-wdl:1-37-62"
+    ]
+  },
+  "verdict": {
+    "verdict": "candidate_loss",
+    "incumbent_elo": -234.506,
+    "candidate_elo": -239.761
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "anchor_seam_mechanism_construction",
+        "stage_mode": "sequential",
+        "call_id": "anchor_seam_mechanism_foundry",
+        "role": "anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "733b256669ba1e2a6a74c16d2587e34313cf584dc35f063e988b8d4ac77f1251",
+        "response_sha256": "1a876e13fabe802d0f8d7d42c5953e8b4ba0450164fd51c7790eeb70b766dd2e",
+        "usage": {
+          "input_tokens": 50849,
+          "cached_input_tokens": 31232,
+          "output_tokens": 16852,
+          "reasoning_output_tokens": 14243,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_rehearsed_graft",
+        "stage_mode": "sequential",
+        "call_id": "seam_grafting_engine",
+        "role": "single seam-rehearsed component grafting producer",
+        "output_type": "engine",
+        "prompt_sha256": "37f516b61d14e6eef0603220b30166ad5279a8d40a4eeb007fb6cd228f1cc098",
+        "response_sha256": "21574c8db84349d759cfdc1037f4a77cfaae02a0492d557105bb8622cbb09a57",
+        "usage": {
+          "input_tokens": 22699,
+          "cached_input_tokens": 0,
+          "output_tokens": 9857,
+          "reasoning_output_tokens": 3587,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "single_seam_rehearsed_component",
+        "stage_mode": "sequential",
+        "call_id": "seam_rehearsed_component_foundry",
+        "role": "single anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "fca3347503548dfcc6935585ec20cd040e326ca0a5d560982f5da146a8e35ecc",
+        "response_sha256": "4cbe7760699e369725fe5334481d7153fccd79e0375512e6ece5d91eee781b33",
+        "usage": {
+          "input_tokens": 653746,
+          "cached_input_tokens": 601600,
+          "output_tokens": 13358,
+          "reasoning_output_tokens": 8429,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "consumer_originated_query",
+        "stage_mode": "sequential",
+        "call_id": "integration_question_compiler",
+        "role": "non-authoring downstream causal-binding question compiler",
+        "output_type": "analysis",
+        "prompt_sha256": "d03ca6520ff309726fe7c5360e7a4fbb52080feca023b3b3c4b88d53fd8da34d",
+        "response_sha256": "13211f6ba972539b7808ad7be84752d7d5750c48bfb4444226b079ec8e412eaf",
+        "usage": {
+          "input_tokens": 46031,
+          "cached_input_tokens": 31232,
+          "output_tokens": 2691,
+          "reasoning_output_tokens": 2266,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_causal_query_resolution",
+        "stage_mode": "sequential",
+        "call_id": "component_binding_resolver",
+        "role": "single consumer-query causal binding resolver",
+        "output_type": "analysis",
+        "prompt_sha256": "032951c9eb1496a84314515021946576158c8736983727d543a1af32989cc620",
+        "response_sha256": "921ac7eaa8056ba92dfbe1317e92f49349605c2df3ee12d63eba9d441675174d",
+        "usage": {
+          "input_tokens": 47338,
+          "cached_input_tokens": 32256,
+          "output_tokens": 3622,
+          "reasoning_output_tokens": 2934,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_dialogue_resolved_graft",
+        "stage_mode": "sequential",
+        "call_id": "dialogue_resolved_grafting_engine",
+        "role": "single dialogue-resolved component grafting engine producer",
+        "output_type": "engine",
+        "prompt_sha256": "835c60f62b76368c33131e99eabc3adaccc763848c082d0e96cfe01bec5f509f",
+        "response_sha256": "bedad1588ba1d14a71f7facc94fc71009f9161cc5be87cb626d4c26b11fda4b6",
+        "usage": {
+          "input_tokens": 23925,
+          "cached_input_tokens": 12032,
+          "output_tokens": 8889,
+          "reasoning_output_tokens": 2995,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false
+}

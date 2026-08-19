@@ -1,0 +1,56 @@
+{
+  "artifact_path": "workspace\\champion-r78\\policy.py",
+  "artifact_sha256": "3e486c5568ae780df3449a9684b7b0ca6e8909979c03619c8ed26d9c640f7ff1",
+  "cache_r101_opened": false,
+  "champion_source": "retained-r77",
+  "decision_basis": {
+    "all_six_valid_and_deterministic": true,
+    "candidate_median": 85.318,
+    "candidate_pairwise_majority": false,
+    "candidate_strict_median_win": false,
+    "candidate_wins": 1,
+    "close_confirmation_passed": true,
+    "close_confirmation_triggered": true,
+    "incumbent_median": 85.318,
+    "incumbent_wins": 1
+  },
+  "display_round": 78,
+  "evaluation_batch_path": "workspace\\rounds\\R78\\evaluation\\evaluation-batch.json",
+  "evaluation_batch_sha256": "6c3e53462356af604d412013dd17c192aebf7babe0db8499584f7e81c9186492",
+  "promoted": false,
+  "promotion_contract": {
+    "all_six_valid_and_replay2_deterministic": true,
+    "candidate_median": "strictly greater than incumbent median",
+    "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+    "failure_action": "retain current champion policy and structure",
+    "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+  },
+  "promotion_contract_passed": false,
+  "representative_pair": null,
+  "schema_version": 1,
+  "search_control_after": {
+    "completed_mode": "counter_hypothesis",
+    "emergent_failure_count": 2,
+    "local_refinement_count": 2,
+    "next_local_refinement_attempt": null,
+    "next_proposal_mode": "counter_hypothesis",
+    "promoted": false,
+    "transition": "counter-persists-until-promotion"
+  },
+  "search_control_before": {
+    "derived_from": "workspace\\rounds\\R77\\state.json",
+    "emergent_failure_count": 2,
+    "local_refinement_attempt": null,
+    "local_refinement_count": 2,
+    "proposal_mode": "counter_hypothesis"
+  },
+  "selected_at": "2026-08-10T00:41:52Z",
+  "source_artifact_path": "workspace\\champion-r77\\policy.py",
+  "source_artifact_sha256": "3e486c5568ae780df3449a9684b7b0ca6e8909979c03619c8ed26d9c640f7ff1",
+  "source_seal_path": null,
+  "source_seal_sha256": null,
+  "starting_policy_sha256": "3e486c5568ae780df3449a9684b7b0ca6e8909979c03619c8ed26d9c640f7ff1",
+  "starting_structure_sha256": "a04bca9b442a9a31a6a6b1755e7a83938457cb78bd469535a7494a5b7852f6de",
+  "structure_path": "workspace\\champion-r78\\structure.json",
+  "structure_sha256": "a04bca9b442a9a31a6a6b1755e7a83938457cb78bd469535a7494a5b7852f6de"
+}

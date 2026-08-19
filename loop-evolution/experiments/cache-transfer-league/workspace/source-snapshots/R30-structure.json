@@ -1,0 +1,46 @@
+{
+  "final_call_id": "strength_transducer_engine",
+  "information_flow": "One nonbranching executable lineage: champion_engine to semantic_normalizer_engine to strength_transducer_engine. The first call changes representation only; the second performs the sole strength-bearing transformation and emits the final engine.",
+  "name": "Single-Lineage Semantic Transduction",
+  "organization": "collaboration",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "semantic_normalizer_engine",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Transform exactly one supplied anchor engine into exactly one complete runnable canonical engine. Expose UCI handling, legal move generation, make/unmake, hashing, repetition state, evaluation state, and search state through explicit single-source transitions. Use bounded in-call executable equivalence and invariant probes, repairing only this transduction until consistent. Preserve the anchor's search policy and evaluation intent; do not introduce strength changes, alternative implementations, candidate variants, or selection.",
+          "output_type": "engine",
+          "role": "semantic-normal-form transducer"
+        }
+      ],
+      "id": "semantic_normalization",
+      "mode": "sequential"
+    },
+    {
+      "calls": [
+        {
+          "id": "strength_transducer_engine",
+          "inputs": [
+            "task",
+            "semantic_normalizer_engine",
+            "champion_metrics",
+            "state_capsule",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the sole canonical engine and emit exactly one complete production engine. Diagnose one highest-leverage algorithmic weakness using the supplied task, metrics, and bounded evidence; implement one coherent cross-component improvement through the canonical seams; and run bounded legality, UCI, state-integrity, and tactical sanity checks. Repair the same unfinished transformation in place if a check fails. Do not generate alternatives, compare candidate variants, reproduce the official champion loop, invoke an external verifier, attribute exact source deltas, or perform preserve-versus-rollback selection.",
+          "output_type": "engine",
+          "role": "obligation-preserving strength transducer"
+        }
+      ],
+      "id": "forward_strength_transduction",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "architect_scope": "one-R19-structural-factor-only",
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The active repair-and-compress family keeps evidence interpretation, mutation, rollback, and publication under one uninterrupted owner, allowing self-confirming commitments to remain path-dependent.",
+    "causal_change": "Insert an irreversible single-writer ownership-transfer edge carrying a complete executable policy state while preserving common-input visibility and provenance.",
+    "expected_effect": "Successor-owned correction should reduce self-adjudication and path dependence while preserving executable lineage and contract accountability.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "irreversible single-writer ownership-transfer edge for the executable policy state",
+    "before": "One producer retains mutation, rollback, evidence-adjudication, compression, and publication authority throughout a reversible repair stack.",
+    "after": "An origin owner hands a complete executable policy state to a successor; the edge extinguishes the origin owner's authority and grants the successor exclusive mutation and publication authority.",
+    "why_structural": "The mutation changes edge authority and state-transition semantics while preserving anchor visibility, provenance, and constructive successor capability; it is neither role renaming nor terminal-role fission."
+  },
+  "mode_certificate": {
+    "rejected_assumptions": [
+      "One uninterrupted owner should author and adjudicate its own repair trajectory.",
+      "Historical reversibility and terminal causal compression are necessary for final-policy reliability.",
+      "Mutation authority should remain with the originating producer through publication."
+    ],
+    "forbidden_inherited_mechanism": "the self-adjudicated reversible repair-stack mechanism with terminal causal compression",
+    "independent_replacement_principle": "single-writer succession, where executable-state ownership moves irreversibly across the lineage and only the current owner may correct or publish it",
+    "changed_behavioral_dimensions": [
+      "mutation control changes from uninterrupted self-ownership to irreversible successor ownership",
+      "recovery behavior changes from historical rollback and terminal pruning to forward successor-state correction"
+    ],
+    "counter_until_promotion": true
+  },
+  "candidate_structure": {
+    "name": "Irreversible Executable-State Ownership Relay",
+    "organization": "two-call sequential single-writer succession",
+    "information_flow": "The origin owner receives all common inputs and creates one complete executable policy state with its qualitative conformance basis. The successor consumes that state and receives the same common evidence. Visibility and provenance remain intact, but mutation and publication authority migrate irreversibly at the handoff.",
+    "stages": [
+      {
+        "id": "ownership_relay",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "origin_policy_owner",
+            "role": "origin executable-state owner",
+            "objective": "Use the supplied evidence to establish one complete contract-conforming executable policy state and its qualitative conformance basis, then transfer exclusive ownership and relinquish further mutation, rollback, and publication authority.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_state"
+          },
+          {
+            "id": "successor_policy_owner",
+            "role": "successor executable-state owner and sole publisher",
+            "objective": "Consume the predecessor's complete executable state, exercise exclusive current-owner authority to reconcile it with the visible contract evidence through forward correction, and emit one complete contract-compliant policy.",
+            "inputs": [
+              "origin_policy_owner",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "successor_policy_owner"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

@@ -1,0 +1,96 @@
+Role: R66 candidate topology role evidence-responsive normative policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R66,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: transition_authority_and_emit
+Role: evidence-responsive normative policy authority
+Objective: Consume synthesize_causal_conflicts, retain its visibility, irreversibly withdraw its decision authority when it evidences a concrete conflict with visible normative obligations, and emit one complete policy under the resulting authority state.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_causal_conflicts": {
+    "analysis_packet": {
+      "certificate": "The anchor preserves the required interface, standard-library scope, online visibility, integer-key eviction contract, and byte-capacity safety. The candidate hypothesis identifies a conditional authority risk: if an analysis handoff contains contradicted or unsupported generative claims, downstream decision authority could let those claims control policy behavior, conflicting with online-only visibility and the prohibition on oracle or hidden-trace adaptation. No concrete contradictory evidence, score, trace, or majority/median result is visible here, so quarantine cannot be factually triggered from the supplied inputs.",
+      "witnesses": [
+        {
+          "claim": "Anchor policy maintains resident byte accounting and evicts before admitting objects no larger than capacity.",
+          "status": "supporting"
+        },
+        {
+          "claim": "Anchor policy uses only current accesses and local metadata; no external evaluator information is visible in its source.",
+          "status": "supporting"
+        },
+        {
+          "claim": "The delivered synthesis is continuously authoritative in the proposed lineage.",
+          "status": "conditional_risk"
+        },
+        {
+          "claim": "The supplied falsifier is a criterion, not observed evidence.",
+          "status": "unsubstantiated"
+        }
+      ],
+      "obligations": [
+        {
+          "obligation": "Preserve legal Policy interface and list[int] eviction output.",
+          "status": "satisfied_by_anchor"
+        },
+        {
+          "obligation": "Return only currently cached unique integer keys.",
+          "status": "must_remain_in_force"
+        },
+        {
+          "obligation": "Never exceed capacity_bytes.",
+          "status": "satisfied_by_anchor"
+        },
+        {
+          "obligation": "Use only online, standard-library information and avoid oracle adaptation.",
+          "status": "must_remain_in_force"
+        },
+        {
+          "obligation": "Keep analysis visibility while withdrawing its authority only upon concrete qualifying contradiction.",
+          "status": "candidate_topology_requirement"
+        }
+      ],
+      "exact_actions": [
+        "Treat the anchor’s legality and capacity properties as supporting evidence.",
+        "Do not assert that contradiction evidence exists when none is visible.",
+        "Mark the authority risk as conditional on concrete contradiction evidence.",
+        "Preserve the analysis handoff as visible evidence; permit irreversible authority withdrawal only if the downstream stage verifies a concrete conflict with the supplied obligations.",
+        "Emit no policy artifact from this stage."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R65 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

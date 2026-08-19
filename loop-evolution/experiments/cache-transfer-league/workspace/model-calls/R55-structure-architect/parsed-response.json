@@ -1,0 +1,70 @@
+{
+  "architect_scope": "one-R55-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "unify_without_raw_anchor",
+    "information_flow": "The first call receives every common input and emits a source-distinguished non-policy analysis. The final call consumes that analysis and directly receives task, anchor_contract, task_constraints, candidate_hypothesis, and loop_structure, but not anchor_policy; inherited-policy evidence therefore reaches the final call only through the immediate analysis edge.",
+    "name": "Selective Anchor Mediation",
+    "organization": "two-call sequential lineage with asymmetric terminal evidence visibility and one unitary policy authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "map_counter_assumptions",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+            "output_type": "analysis",
+            "role": "defeasible counter-assumption mapper"
+          },
+          {
+            "id": "unify_without_raw_anchor",
+            "inputs": [
+              "map_counter_assumptions",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume map_counter_assumptions, adjudicate its inherited-policy evidence against the directly visible task, contract, constraints, hypothesis, and loop structure, and emit one complete policy under undivided authority.",
+            "output_type": "policy",
+            "role": "anchor-mediated unitary policy authority"
+          }
+        ],
+        "id": "selective_anchor_mediation_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only the direct anchor_policy edge into the terminal call changes; call count, sequential lineage, first-call ingress, non-policy handoff, other direct evidence edges, and unitary terminal policy authority remain unchanged.",
+    "why_not_repeat_role_fission": "The topology retains exactly one analysis call and one policy-emitting call; no policy-producing, reviewing, finalizing, or duplicated terminal role is introduced."
+  },
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "causal_change": "Remove only the direct anchor_policy-to-terminal edge, making the source-preserving analysis the sole path for inherited-policy evidence while retaining direct terminal visibility of every other common input.",
+    "expected_effect": "The terminal authority should weigh inherited-policy evidence only after mediation while preserving independent access to governing evidence and sole responsibility for the final policy.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The terminal call can bypass the defeasible framing because it receives anchor_policy both directly and indirectly through the counter-assumption analysis."
+  },
+  "structural_mutation": {
+    "after": "The final call consumes the preceding analysis and directly reacquires the other five common inputs, while anchor_policy is visible only through the analysis handoff.",
+    "before": "The final call consumes the preceding analysis and directly reacquires all six common inputs, including anchor_policy.",
+    "change_count": 1,
+    "factor": "selective inherited-policy mediation through deletion of the terminal anchor_policy visibility edge",
+    "why_structural": "This deletes one evidence edge and changes terminal visibility and causal ingress without adding, splitting, or renaming roles."
+  }
+}

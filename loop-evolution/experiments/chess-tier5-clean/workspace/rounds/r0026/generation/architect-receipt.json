@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "attempt": 1,
+  "agent_role": "structural_architect",
+  "proposal_policy": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "auth_mode": "codex_subscription",
+    "allow_paid_api": false,
+    "allow_model_fallback": false,
+    "sandbox": "read-only",
+    "max_model_calls": 1,
+    "max_tokens": 120000,
+    "max_wall_seconds": 1800,
+    "codex_executable": "codex.cmd"
+  },
+  "proposal_policy_sha256": "635f29bc92d9e1d7ff6d31ab49f6e9ff4b5928d0ca8f79f544c84cbe6ca0ce31",
+  "execution_provenance": "collaboration_subagent_direct_contingency",
+  "official_codex_backend_invoked": false,
+  "delegated_subagent_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\manual-proposals\\r0026\\subagent-receipt.json",
+  "delegated_subagent_receipt_sha256": "01b637d77ea4d49b6cde7910712a224368dcc8f36f6caca171a72347c34cb4c1",
+  "prompt_sha256": null,
+  "response_sha256": "e7cc107ea9ec18ab79fafb6a228ed4937818468b1bf58de49837c7c9aafd23f2",
+  "usage": {
+    "input_tokens": 0,
+    "cached_input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_output_tokens": 0,
+    "model_calls": 0
+  },
+  "trace_refs": [
+    "collaboration-subagent:gpt-5.6-sol:max"
+  ],
+  "validation": {
+    "passed": true,
+    "mode_source": "workspace/state.json proposal_mode and current state-capsule search_control.proposal_mode",
+    "expected_mode": "general",
+    "state_mode": "general",
+    "capsule_mode": "general",
+    "loader": "LoopPlan.from_payload(payload, expected_mode='general')",
+    "loader_result": "passed",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "search_context_result": "passed",
+    "validated_capsule_file_sha256": "d96d4726e0313de3beffcb75aec43477900c68e1dc8486ca736eaa36ed2d3bd2",
+    "normalized_payload_matches_file": true,
+    "declared_structure_id_matches_recomputed": true,
+    "recomputed_structure_id": "loop_c97a4545a4e80f75",
+    "validated_structure_id": "loop_c97a4545a4e80f75",
+    "validated_call_count": 4,
+    "validated_organization": "collaboration",
+    "validated_stage_ids": [
+      "single_terminal_outcome_commitment",
+      "single_backward_causal_preimage",
+      "single_lifecycle_dominant_preimage_binding",
+      "single_lifecycle_bound_preimage_realization"
+    ],
+    "validated_call_ids": [
+      "terminal_outcome_witness",
+      "causal_preimage_backchainer",
+      "lifecycle_dominant_preimage_binder",
+      "lifecycle_bound_preimage_engine_producer"
+    ],
+    "validated_output_types": [
+      "analysis",
+      "analysis",
+      "analysis",
+      "engine"
+    ],
+    "validated_final_call_id": "lifecycle_bound_preimage_engine_producer",
+    "single_engine_producing_call": true,
+    "exactly_one_final_engine_artifact": true,
+    "runtime_call_budget_respected": true,
+    "active_development_lineage_required": false,
+    "general_schema_fields_complete": true,
+    "exactly_one_causal_change_declared": true,
+    "previously_seen_structure_id": false,
+    "exactly_one_proposal": true,
+    "normalized_plan_revalidated_from_staged_file": true,
+    "active_config_points_to_fast_v2_runtime_policy": true,
+    "runtime_policy_file_sha256_verified": true,
+    "runtime_policy_identity_sha256_verified": true,
+    "continuation_content_hashes_verified": true,
+    "runtime_policy_profile_verified": "gpt-5.6-luna/high with service_tier=fast, request_tier=priority, tier_contract=fast_priority_required"
+  }
+}

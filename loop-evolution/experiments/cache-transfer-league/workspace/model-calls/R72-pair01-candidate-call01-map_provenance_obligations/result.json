@@ -1,0 +1,143 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Source-attributed analysis only: the anchor provides an online standard-library implementation with explicit byte accounting, unique resident keys, ghost provenance, and bounded eviction; the contract and constraints require interface legality, capacity safety, current-key-only evictions, and prohibition of oracle or trace visibility. The candidate hypothesis supports earlier executable commitment and bounded amendment, but no score or trace evidence establishes its expected effect. Preserve provenance, retain conflicts, and defer unresolved obligations to the commitment and adjudication calls.",
+      "exact_actions": [
+        "Record the anchor as inherited executable evidence, not as empirical proof of optimality.",
+        "Record contract and constraint requirements as normative obligations.",
+        "Record the hypothesis's expected effect and falsifier as unverified counter-generative evidence.",
+        "Preserve the absence of scores, traces, and oracle evidence as an explicit disagreement or uncertainty.",
+        "Pass settled obligations, unresolved obligations, provenance, and amendment boundaries to bind_defeasible_commitment.",
+        "Emit no policy artifact from this role."
+      ],
+      "obligations": [
+        {
+          "id": "interface_legality",
+          "provenance": [
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "requirement": "Keep Policy initialization and access signatures and return a list of integer keys.",
+          "status": "settled"
+        },
+        {
+          "id": "capacity_safety",
+          "provenance": [
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "requirement": "Maintain resident byte usage at or below capacity, including oversized and resized requests.",
+          "status": "settled_with_verification"
+        },
+        {
+          "id": "current_unique_evictions",
+          "provenance": [
+            "anchor_policy",
+            "task_constraints"
+          ],
+          "requirement": "Return only unique keys that are resident before eviction and do not expose ghost-only keys.",
+          "status": "settled_with_verification"
+        },
+        {
+          "id": "online_visibility",
+          "provenance": [
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "requirement": "Use only current access arguments and internal history; do not access traces, evaluator state, paths, or oracles.",
+          "status": "settled"
+        },
+        {
+          "id": "behavioral_tradeoffs",
+          "provenance": [
+            "task",
+            "candidate_hypothesis"
+          ],
+          "requirement": "Balance object hit rate, byte hit rate, scan resistance, phase adaptation, and regret without available scores or traces.",
+          "status": "unresolved"
+        },
+        {
+          "id": "provenance_preservation",
+          "provenance": [
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "requirement": "Carry source-specific evidence and disagreements into the executable commitment so later amendment remains obligation-keyed.",
+          "status": "unresolved"
+        },
+        {
+          "id": "amendment_scope",
+          "provenance": [
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "requirement": "Permit the terminal call to alter only explicitly unresolved obligations supported by visible provenance.",
+          "status": "unresolved"
+        }
+      ],
+      "witnesses": [
+        {
+          "evidence": "Uses only collections.OrderedDict, processes one access at a time, tracks resident byte totals, and returns keys removed from resident structures.",
+          "source": "anchor_policy"
+        },
+        {
+          "evidence": "Requires preservation of interface legality, capacity safety, and online-only visibility; score information is withheld.",
+          "source": "anchor_contract"
+        },
+        {
+          "evidence": "Requires standard-library-only execution, unique integer evictions drawn from current cache state, capacity compliance, and no benchmark or oracle adaptation.",
+          "source": "task_constraints"
+        },
+        {
+          "evidence": "Claims coherence benefit from a complete intermediate artifact and bounded terminal amendment; explicitly provides no score-based confirmation.",
+          "source": "candidate_hypothesis"
+        },
+        {
+          "evidence": "Defines sequential provenance flow from analysis to executable commitment to obligation-keyed adjudication.",
+          "source": "loop_structure"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R72-pair01-candidate-call01-map_provenance_obligations",
+    "duration_seconds": 23.955,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:33:11Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "6af1ada8103a3bcd988f530ad171eacab643e120ca461ced0d0ceb1ab98a2797",
+    "raw_events_path": "workspace\\model-calls\\R72-pair01-candidate-call01-map_provenance_obligations\\raw-events.jsonl",
+    "raw_events_sha256": "3382c2272bbfb373e7606ff8e58a329384811d9eedc7d2e9bf7c4e138381424a",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "bd2e2458098ac25d899fac5738ab7c5002929fffef3fe15754a0b2286d241e42",
+    "returncode": 0,
+    "role": "R72 candidate topology role source-attributed obligation mapper",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:32:47Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15127,
+      "output_tokens": 1219,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

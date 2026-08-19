@@ -1,0 +1,56 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "No failure found. draft_policy is byte-for-byte identical to anchor_policy (SHA-256 f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348); no differential behavior is exposed.",
+      "exact_actions": [
+        "Instantiate both policies with identical capacities and replay identical request traces.",
+        "Compare returned eviction lists after every access.",
+        "Probe hits, misses, multi-eviction insertions, oversized objects, exact-capacity fills, and phase-changing traces.",
+        "After each request, verify returned keys were previously cached and tracked byte usage does not exceed capacity.",
+        "Confirm identical source and SHA-256 before any differential evaluation."
+      ],
+      "obligations": [
+        "Preserve Policy(capacity_bytes) and access(key, size, now) -> list[int] interface.",
+        "Return only keys tracked as cached and maintain internal used_bytes <= capacity_bytes.",
+        "Keep oversized objects uncached without evicting existing entries.",
+        "Verify evaluator authoritative state applies returned evictions consistently with internal OrderedDict state.",
+        "Maintain online-only behavior: access decisions use only current request and retained state."
+      ],
+      "witnesses": []
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R24-rep03-call02-postbuild_falsification_packet",
+    "duration_seconds": 12.57,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:38:08Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "3c44a0abec6261b596e3d4a3e84ecf94b41739b243aab024ba25d622e002bd9b",
+    "raw_events_sha256": "eee9fdbc4556fc549a958101bbcf2ed77e69ebf4a620db6dc18030e73dad9815",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "0aa7a919c156e092fded5dd87a59d4abfdb674176044f9451aa6655e5712c05a",
+    "returncode": 0,
+    "role": "independent realized-artifact verifier",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:37:56Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13442,
+      "output_tokens": 482,
+      "reasoning_output_tokens": 236
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

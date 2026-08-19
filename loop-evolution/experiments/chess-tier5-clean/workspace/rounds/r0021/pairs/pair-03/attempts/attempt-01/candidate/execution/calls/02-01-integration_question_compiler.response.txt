@@ -1,0 +1,20 @@
+{
+  "HANDOFF_STATE": "QUERY_OPEN",
+  "predicate": "Persistent repetition-history ownership is bound across ucinewgame, position [moves ...], and go/root.",
+  "anchor_facts_known": [
+    "Position exposes b, side, cast, and ep.",
+    "Engine.root calls Engine.search; search recurses through make(...).",
+    "Engine has no repetition ledger or retained game-history sequence.",
+    "ucinewgame clears TT/heuristic state only; setpos replays moves into one Position and discards the sequence."
+  ],
+  "consumer_trace": {
+    "harness": "deterministic source-only consumer-binding harness",
+    "result": "UNKNOWN",
+    "reason": "The anchor provides no lifecycle owner that resets, seeds, and retains RepetitionLedger game-history counts."
+  },
+  "question": {
+    "type": "causal_binding",
+    "text": "Which anchor lifecycle binding owns persistent repetition-history reset and position-sequence recording across ucinewgame, position [moves ...], and go/root?"
+  },
+  "response_postcondition": "Return one anchor-grounded owner binding for the existing repetition-ledger component, with unchanged causal identity and preservation obligations; otherwise report ADMISSION_FAILURE."
+}

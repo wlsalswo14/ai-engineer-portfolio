@@ -1,0 +1,43 @@
+{
+  "final_call_id": "independent_terminal_finalizer",
+  "information_flow": "The first call receives the incumbent six external inputs in their original order and emits one provisional policy. The final call consumes that output together with permitted contract context, independently adjudicates its causal and contractual support, and emits one final policy.",
+  "name": "Provisional Policy Handoff to Independent Terminal Falsifier",
+  "organization": "two-role serial lineage",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "provisional_policy_producer",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Produce exactly one provisional policy while keeping its causal claim and supporting audit evidence visible to the successor; do not own terminal acceptance or finalization.",
+          "output_type": "policy",
+          "role": "evidence-exposing provisional policy producer"
+        },
+        {
+          "id": "independent_terminal_finalizer",
+          "inputs": [
+            "provisional_policy_producer",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Independently challenge the immediately preceding provisional policy against the supplied hypothesis, contract, constraints, and evidence flow, then emit exactly one contract-compliant final policy without alternatives, sampling, or repair retries.",
+          "output_type": "policy",
+          "role": "independent causal falsifier and terminal finalizer"
+        }
+      ],
+      "id": "produce_then_falsify",
+      "mode": "sequential"
+    }
+  ]
+}

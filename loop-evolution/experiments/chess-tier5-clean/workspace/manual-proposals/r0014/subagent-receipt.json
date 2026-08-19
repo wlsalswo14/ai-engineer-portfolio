@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-08-05T15:14:01.9515540Z",
+  "agent_role": "structural_architect",
+  "provenance": {
+    "canonical_label": "independent gpt-5.6-sol/max structural-architect subagent",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "delegation_task_path": "/root/structure_architect_max"
+  },
+  "round": {
+    "display_round": 33,
+    "internal_round": "r0014",
+    "proposal_mode": "emergent_exploration",
+    "architect_mode": "EMERGENT-EXPLORATION",
+    "emergent_attempt_ordinal": 1
+  },
+  "design_context": {
+    "champion_package_id": "package_a9dd70e3fc84f08d",
+    "champion_structure_id": "loop_b51c38b8268a6c22",
+    "preserved_supported_basis": "single anchor-derived executable semantic-normal-form lineage",
+    "single_causal_factor": "Downstream-falsification control topology of the executable transduction lineage",
+    "emergent_capability_family": "Counterexample-Triggered Semantic Reentry",
+    "local_refinement_count_before": 2,
+    "local_refinement_limit": 2,
+    "emergent_failure_count_before": 0,
+    "emergent_capability_families_already_tested": [],
+    "r0012_bounded_result": "1 candidate win, 1 loss, 1 tie; median delta 0.0; zero invalid arms",
+    "r0013_bounded_result": "0 candidate wins, 2 losses; two valid pairs; formal rejection irreversibly established"
+  },
+  "inputs": {
+    "architect_contract_path": "src/loop_evolution/agents.py",
+    "architect_contract_file_sha256": "42abcc33c9e9e4139b0f13099a466f47afaf8493a0c55cc85c4f7005082c801d",
+    "active_architect_policy_path": "resources/policies/sol-max-independent-structural-architect-1800s.json",
+    "active_architect_policy_file_sha256": "3933d060fa75630ed23f4c64acec99c8f63cbd8b786fd03287c8948f3af2673f",
+    "state_path": "experiments/chess-tier5-clean/workspace/state.json",
+    "state_file_sha256": "9903214b75da77186e921c8b1f24bd1c9886ea00b2a58fbd2ca58e4bf89d61b4",
+    "state_capsule_path": "experiments/chess-tier5-clean/workspace/state-capsule.json",
+    "state_capsule_file_sha256": "06084cd36b9002b738d7e04a5d56e7c74cb7be10a6ce5eea02d4a0cc1ae2f21c",
+    "state_capsule_declared_content_sha256": "263c7141740ec71530a209d305e612555b406674a483af539f95ff3ea08909ce",
+    "champion_structure_path": "experiments/chess-tier5-clean/workspace/champions/p0011/loop-structure.json",
+    "champion_structure_file_sha256": "9fda380d3e2735f8c806cf4738fc858900de096090c503643086d93892d1862a",
+    "r0012_plan_path": "experiments/chess-tier5-clean/workspace/rounds/r0012/generation/normalized-plan.json",
+    "r0012_plan_file_sha256": "6a11b417dffb93af76bdd92022d7d78f1d1922792bb8a0298d31f615e449079f",
+    "r0012_batch_path": "experiments/chess-tier5-clean/workspace/rounds/r0012/evaluation/batch-decision.json",
+    "r0012_batch_file_sha256": "3c1b2267daf6b9357d94d5776a9698831f7767478d2e889326418212471902cb",
+    "r0013_plan_path": "experiments/chess-tier5-clean/workspace/rounds/r0013/generation/normalized-plan.json",
+    "r0013_plan_file_sha256": "9114f90f1b4e33f4a53dd91ff402c346fe2ca4270205124bb3133d4afe998b28",
+    "r0013_batch_path": "experiments/chess-tier5-clean/workspace/rounds/r0013/evaluation/batch-decision.json",
+    "r0013_batch_file_sha256": "8243b07d99bc7c6525c148bd9cca8f51b649f39bc38d45965ac3e72566a693f4",
+    "r0013_pair_summary_file_sha256": {
+      "pair-01": "18326cd852d05e5e7db1da6e00d77e2d607080d6e3344de73d66ad7805a3ede1",
+      "pair-02": "874e753801e69b9e4e0bdd7ca502ba4ba0f4796245435cd4cfad7fd83c49c9fd"
+    }
+  },
+  "evidence_interpretation": {
+    "r0012_pattern_used_as": "bounded evidence that a valid fixed-path local realization can have anchor-sensitive effects",
+    "r0013_pattern_used_as": "bounded evidence that a valid fixed-path realization can be consistently weaker while preserving public correctness",
+    "patterns_not_used_as": "benchmark positions, openings, evaluator internals, anchor-specific engine rules, or hyperparameter targets",
+    "structural_history_basis": "current capsule/state, supported champion plan, R31 and R32 plans, batch decisions, pair summaries, hypothesis frontier, and conditional lessons"
+  },
+  "output": {
+    "normalized_plan_path": "experiments/chess-tier5-clean/workspace/manual-proposals/r0014/normalized-plan.json",
+    "normalized_plan_file_sha256": "9e8f3792754e5766ade7d53c3be4dfeae6da1ceb2c53447d78faefab477f4990",
+    "structure_id": "loop_28426aaed6077e2d",
+    "structure_name": "Counterexample-Reentrant Semantic Transduction",
+    "emergent_capability_family": "Counterexample-Triggered Semantic Reentry"
+  },
+  "validation": {
+    "passed": true,
+    "loader": "LoopPlan.from_payload(payload, expected_mode='emergent_exploration')",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "validated_capsule_file_sha256": "06084cd36b9002b738d7e04a5d56e7c74cb7be10a6ce5eea02d4a0cc1ae2f21c",
+    "normalized_payload_matches_file": true,
+    "validated_structure_id": "loop_28426aaed6077e2d",
+    "validated_call_count": 3,
+    "emergent_schema_fields_complete": true,
+    "capability_family_unique_in_bounded_history": true,
+    "previously_seen_structure_id": false
+  },
+  "constraint_attestation": {
+    "exactly_one_causal_structural_factor": true,
+    "genuine_trigger_based_state_transition": true,
+    "not_a_local_semantic_transduction_refinement": true,
+    "not_a_reviewer_or_gate_only": true,
+    "single_anchor_derived_engine_lineage": true,
+    "reentry_bounded_to_once": true,
+    "replicated_candidates_or_best_of_n": false,
+    "engine_hyperparameter_tuning_as_structure": false,
+    "benchmark_or_evaluator_change": false,
+    "benchmark_hardcoding": false,
+    "active_round_generation_modified": false,
+    "benchmark_executed": false,
+    "writes_limited_to_manual_staging_files": true
+  },
+  "write_scope": [
+    "experiments/chess-tier5-clean/workspace/manual-proposals/r0014/normalized-plan.json",
+    "experiments/chess-tier5-clean/workspace/manual-proposals/r0014/subagent-receipt.json"
+  ]
+}

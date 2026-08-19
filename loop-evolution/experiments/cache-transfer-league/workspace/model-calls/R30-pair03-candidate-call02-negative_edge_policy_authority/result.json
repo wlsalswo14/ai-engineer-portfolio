@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probationary = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.probationary_bytes = 0\n        self.protected_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n        self.ghost_limit = max(32, min(8192, self.capacity_bytes // 64 + 32))\n\n    def _remember(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.ghost_probationary.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance_protected(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self.probationary[old_key] = old_size\n            self.probationary_bytes += old_size\n\n    def _adjust_target(self, key, size):\n        quantum = max(1, self.capacity_bytes // 16)\n        amount = max(quantum, min(size, self.capacity_bytes))\n        if key in self.ghost_probationary:\n            self.protected_target = min(\n                self.capacity_bytes, self.protected_target + amount\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(0, self.protected_target - amount)\n        self._forget(key)\n\n    def _evict_one(self):\n        if self.probationary:\n            old_key, old_size = self.probationary.popitem(last=False)\n            self.probationary_bytes -= old_size\n            self._remember(self.ghost_probationary, old_key, old_size)\n            return old_key\n        if self.protected:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self._remember(self.ghost_protected, old_key, old_size)\n            return old_key\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probationary:\n            stored_size = self.probationary.pop(key)\n            self.probationary_bytes -= stored_size\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance_protected()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        self._adjust_target(key, size)\n        evicted = []\n        while (\n            self.probationary_bytes + self.protected_bytes + size\n            > self.capacity_bytes\n        ):\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probationary[key] = size\n        self.probationary_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-pair03-candidate-call02-negative_edge_policy_authority",
+    "duration_seconds": 45.457,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:09:06Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "2db9ea955fb77196dac2c9c0f458ec7d0718861ff4265a5d5460f63fc7c64798",
+    "raw_events_path": "workspace\\model-calls\\R30-pair03-candidate-call02-negative_edge_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "faa9b34c651d5f4ff55c028bf9bf6b41c58f45f7f14aea7bdef945df9aa8b436",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "14f58c41c8a31b0c4aff6acd4564afde058c49a832d86a01a29fb6814b142f5b",
+    "returncode": 0,
+    "role": "R30 candidate topology role negative-edge independent policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:08:20Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14492,
+      "output_tokens": 3421,
+      "reasoning_output_tokens": 2588
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.hot = OrderedDict()\n        self.used_bytes = 0\n        self.clock = 0\n        self.accesses = 0\n\n    def _age(self):\n        for key in list(self.hot):\n            entry = self.hot[key]\n            entry[1] = max(1, entry[1] // 2)\n            if entry[1] <= 1:\n                self.hot.pop(key)\n                self.recent[key] = entry\n        for entry in self.recent.values():\n            entry[1] = max(1, entry[1] // 2)\n\n    def _evict_one(self):\n        if self.recent:\n            key, entry = self.recent.popitem(last=False)\n        elif self.hot:\n            key = min(self.hot, key=lambda k: (self.hot[k][1], self.hot[k][2]))\n            entry = self.hot.pop(key)\n        else:\n            return None\n        self.used_bytes -= entry[0]\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.clock += 1\n        self.accesses += 1\n        entry = self.hot.get(key)\n        if entry is not None:\n            entry[1] += 1\n            entry[2] = self.clock\n            self.hot.move_to_end(key)\n            if self.accesses % 64 == 0:\n                self._age()\n            return []\n\n        entry = self.recent.get(key)\n        if entry is not None:\n            self.recent.pop(key)\n            entry[1] += 1\n            entry[2] = self.clock\n            self.hot[key] = entry\n            if self.accesses % 64 == 0:\n                self._age()\n            return []\n\n        size = max(0, size)\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            if self.accesses % 64 == 0:\n                self._age()\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                break\n            evicted.append(victim)\n\n        self.recent[key] = [size, 1, self.clock]\n        self.used_bytes += size\n        if self.accesses % 64 == 0:\n            self._age()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R22-pair01-candidate-call02-post_commit_evidence_reconstitution",
+    "duration_seconds": 20.758,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:00:16Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "a8873b4b4806f0ed98bb1f5c7a11065c3b3fea62f7710e6270587b386c3bc7dd",
+    "raw_events_path": "workspace\\model-calls\\R22-pair01-candidate-call02-post_commit_evidence_reconstitution\\raw-events.jsonl",
+    "raw_events_sha256": "f4e2753f412177f231d99fc58c58fefbb5779086ba76c313312acad56ad2fc9e",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "7848daf3046e87b6becdb9f390faa7e12c3dd4116684fe4d986048ddf764699b",
+    "returncode": 0,
+    "role": "R22 candidate topology role post-commit evidence reconstitution producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:59:56Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14764,
+      "output_tokens": 847,
+      "reasoning_output_tokens": 220
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,45 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 6044,
+  "artifact_path": "workspace\\rounds\\R75\\pairs\\pair-02\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "815850e9b7e3debb29981378ebde50f96c9fb26aa0bfaf6e2869aac663c177f6",
+  "display_round": 75,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R75\\pairs\\pair-02\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "e35eb26e7f04b57368c33bcf7fe20b880cca9f2a63a473186a9df59b44a0e550",
+  "label": "pair-02-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R75-pair02-candidate-call01-establish_admissibility_boundary\\final-receipt.json",
+      "sha256": "07f68e7bcb64754207affc28d3b4d48af1f210fdea02e0bd9e871ec99ef78375"
+    },
+    {
+      "path": "workspace\\model-calls\\R75-pair02-candidate-call02-project_boundary_polarity\\final-receipt.json",
+      "sha256": "264a7b899ccf9f47ca673d5ebc37ced6bc40a038c2b9d8784c3d1e0c9312de8a"
+    },
+    {
+      "path": "workspace\\model-calls\\R75-pair02-candidate-call03-construct_from_projected_boundary\\final-receipt.json",
+      "sha256": "c7c70f141e510fb63df1368905d61ee203a3a91ae1bf80f276bb1a5d7bead1c9"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 2,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 6044,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-10T00:07:42Z"
+}

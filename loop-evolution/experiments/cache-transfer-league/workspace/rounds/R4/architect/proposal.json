@@ -1,0 +1,117 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R4-structure-architect\\final-receipt.json",
+    "sha256": "2e4e86544d0487f15f4fe5c5fa5af28dc219e97ae803b00ffcc0cad473caec51"
+  },
+  "architect_response": {
+    "architect_scope": "one-R4-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "continue_active_representation",
+      "information_flow": "The first call establishes one complete executable lineage and its qualitative causal context. The second consumes that lineage and performs the representation transition only when the stated contradiction is evidenced, while preserving the same artifact and route. The final call consumes the transitioned or unchanged executable lineage and emits one policy. Every handoff keeps the complete executable artifact visible, and no alternate lineage is created.",
+      "name": "Evidence-Triggered Representation Phase-Change Lineage",
+      "organization": "three-call single-executable-continuation state machine",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "seed_executable_lineage",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Establish one anchor-grounded executable artifact and retain qualitative causal evidence linking each active change to contract obligations and required validity assumptions; pass that sole complete lineage forward.",
+              "output_type": "policy",
+              "role": "anchor-grounded executable-lineage originator"
+            },
+            {
+              "id": "transduce_causal_representation",
+              "inputs": [
+                "seed_executable_lineage",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the preceding executable lineage and, when an active change negates a validity assumption required by another active change, reconstitute that same sole artifact under a joint contract-invariant representation without the contradicted dependence; otherwise preserve its current state and pass it forward on the same route.",
+              "output_type": "policy",
+              "role": "evidence-triggered causal-representation transducer"
+            },
+            {
+              "id": "continue_active_representation",
+              "inputs": [
+                "transduce_causal_representation",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding executable lineage, continue causal closure under its active representation while preserving interface, authoritative-state, and capacity obligations, and emit exactly one complete policy; emit the anchor unchanged if no valid changed artifact remains.",
+              "output_type": "policy",
+              "role": "representation-conditioned executable-lineage continuator"
+            }
+          ],
+          "id": "representation_phase_change_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "evidence-triggered causal-representation phase change",
+      "champion_limitation": "The champion can remove or restore deltas but cannot abandon delta independence when its own retained evidence invalidates that representation.",
+      "not_local_refinement": "This replaces the causal unit and transformation semantics after evidence fires; it is not an extra reviewer, certificate, gate, field, responsibility rebase, role split, or rename.",
+      "observable_effect": "After the trigger, the downstream handoff contains one executable artifact with reliance on the contradicted assumption removed and the coupled obligations represented jointly.",
+      "state_transition": "The sole executable lineage moves from reversible-delta repair state to joint contract-invariant reconstruction state while continuing through the same nonbranching call chain.",
+      "trigger": "Retained obligation evidence shows that a still-active earlier change relies on a validity assumption negated by a still-active later change, so independent reversal cannot restore a coherent causal account."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Introduce one evidence-triggered representation phase change that transforms the sole executable lineage from independent reversible deltas into a joint contract-invariant reconstruction state.",
+      "expected_effect": "The lineage should escape incoherent local repair accumulation while preserving executable visibility and authoritative-operation validity under interacting obligations.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion can reverse and compress edits but remains in a delta-local representation even when retained obligation evidence shows that active edits have become causally inseparable."
+    },
+    "structural_mutation": {
+      "after": "A fixed three-call policy-bearing lineage contains one mid-line transducer that can change the causal representation of the same sole executable artifact.",
+      "before": "One terminal producer remains in a reversible-delta representation throughout construction and causal compression.",
+      "change_count": 1,
+      "factor": "evidence-triggered repair-representation phase change",
+      "why_structural": "The mutation changes the lineage's causal unit and permitted transformation state rather than adding review, metadata, selection, or a renamed production role."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 4,
+  "incumbent_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "emergent_exploration",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R4\\qualitative-error-notebook.json",
+    "sha256": "17fe0414cf034fa1ca3f05f0a88b3997e772100ac1638507623ce8b7a5d3f852"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R4\\source-manifest.json",
+    "sha256": "da16c3ff4043c302d6ba0265fa5c8daef24d54de10a8666ec7732322c3b2b11c"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 3,
+    "factor": "evidence-triggered repair-representation phase change",
+    "topology_fingerprint": "43144249ba21cbb1e32fe219e04eca466d9bd8d76205b61bf24d3204e14be3ec"
+  }
+}

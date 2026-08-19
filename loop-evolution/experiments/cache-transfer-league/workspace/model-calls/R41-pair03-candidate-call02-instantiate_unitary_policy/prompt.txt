@@ -1,0 +1,60 @@
+Role: R41 candidate topology role sole policy author with predecessor-only visibility
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R41,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: instantiate_unitary_policy
+Role: sole policy author with predecessor-only visibility
+Objective: Consume synthesize_preartifact_charter as the sole visible evidence, exercise undivided authorship to materialize exactly one complete policy, and emit that policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_preartifact_charter": {
+    "analysis_packet": {
+      "certificate": "Evidence reconciled into a policy-free charter; no executable artifact, implementation detail, or policy authorship is included.",
+      "witnesses": [
+        "The interface is a single online access transition returning evicted keys.",
+        "Capacity safety, legal unique integer-key evictions, and current-cache membership are mandatory.",
+        "The anchor separates probationary and protected recency while retaining ghost evidence for adaptation.",
+        "The optimization objectives jointly require hit efficiency, byte efficiency, scan resistance, phase-shift adaptation, and low regret.",
+        "Only standard-library, evaluator-independent, online-visible information may inform behavior.",
+        "The hypothesis identifies premature representation commitment as a coherence bottleneck between scan resistance and adaptation."
+      ],
+      "obligations": [
+        "Preserve the required constructor and access interface.",
+        "Maintain exact capacity accounting for variable-size objects.",
+        "Return only keys that are currently cached, uniquely and as integers.",
+        "Process one request at a time using only information available through prior and current accesses.",
+        "Handle invalid, zero-capacity, and oversized requests without violating safety.",
+        "Balance frequent-object retention against protection from scans and adaptation after workload phase changes.",
+        "Keep all decisions independent of hidden traces, oracle behavior, benchmark paths, external libraries, networking, and subprocesses.",
+        "Materialize exactly one terminal policy after this analysis."
+      ],
+      "exact_actions": [
+        "Treat contract legality and capacity safety as non-negotiable invariants.",
+        "Use the anchor’s recency and ghost-history evidence only as behavioral evidence, not as a required representation.",
+        "Resolve scan resistance and phase adaptation as a single coherent online objective before choosing implementation structures.",
+        "Make byte-aware admission, retention, and eviction decisions while preserving useful frequent objects.",
+        "Use observed access history to adapt across phases without relying on unavailable future information.",
+        "Ensure every reported eviction is of an object actually removed from the evaluator-visible cache state.",
+        "Produce one complete standard-library policy as the sole downstream artifact."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "final_call_id": "emit_regrounded_policy",
+  "information_flow": "The first call receives all common inputs and emits one complete executable policy state. Each later call consumes the immediately preceding complete artifact, directly receives all common inputs, and re-grounds the same single policy lineage without branching or hierarchical veto. The last call emits the resulting complete policy.",
+  "name": "Full-Evidence Executable Re-entry Spine",
+  "organization": "three-call sequential lineage with two coequal executable-state transitions and no adjudicative veto tier",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "instantiate_complete_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile all visible evidence and obligations directly into one complete executable policy state without creating a separate admissibility boundary.",
+          "output_type": "executable_policy_state",
+          "role": "initial executable-state authority"
+        },
+        {
+          "id": "reground_complete_state",
+          "inputs": [
+            "instantiate_complete_state",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume instantiate_complete_state, reconsider the full common evidence against the carried commitments, and emit the same single lineage as one complete executable policy state.",
+          "output_type": "executable_policy_state",
+          "role": "coequal executable-state successor"
+        },
+        {
+          "id": "emit_regrounded_policy",
+          "inputs": [
+            "reground_complete_state",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume reground_complete_state, reconcile the complete carried artifact once more with all common evidence, and emit one complete policy without invoking an upstream veto hierarchy.",
+          "output_type": "policy",
+          "role": "coequal terminal state successor"
+        }
+      ],
+      "id": "executable_reentry_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

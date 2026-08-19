@@ -1,0 +1,70 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "A causal non-separability witness exists at the probation/protected responsibility boundary: a probation hit promotes the object and may demote protected entries, jointly determining both recency protection and future eviction eligibility. Capacity safety and online-only visibility remain fixed, while scan resistance and phase-shift adaptation cannot be assigned independently of this boundary. Current construction state is anchor-relative repair.",
+      "exact_actions": [
+        "retain the evidenced probation/protected boundary as the responsibility witness",
+        "record the candidate-triggered construction transition as contract-relative joint-responsibility synthesis",
+        "leave unrelated interface, visibility, and capacity obligations unchanged"
+      ],
+      "obligations": [
+        "return only currently cached unique integer keys",
+        "never exceed capacity_bytes",
+        "preserve online-only visibility",
+        "support scan resistance",
+        "adapt across phase shifts"
+      ],
+      "witnesses": [
+        {
+          "boundary": "probation-to-protected promotion with protected-to-probation demotion",
+          "evidence": "Policy.access promotes probation hits into protected and _demote_protected moves oldest protected entries back when protected bytes exceed half capacity.",
+          "held_fixed": [
+            "interface legality",
+            "capacity accounting",
+            "capacity safety",
+            "online one-access-at-a-time visibility"
+          ],
+          "non_separability": "The same transition controls protection for repeated objects and eviction exposure for scan or phase-shift objects."
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R3-pair03-candidate-call01-responsibility_probe",
+    "duration_seconds": 15.278,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T08:54:28Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fe123185707af1c56c920b6a5a6aa46b047a7b1039b1846bd4212159d5f5c727",
+    "raw_events_path": "workspace\\model-calls\\R3-pair03-candidate-call01-responsibility_probe\\raw-events.jsonl",
+    "raw_events_sha256": "41ccf432fd23ca4614e1931cd3d1aafc5c164df0589c985f56bd89f4cbde0931",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 2,
+    "response_sha256": "c8015d664ee70eb2e72721c594bd8d3a2c33863452506f68e7d4aa25f7c6aea2",
+    "returncode": 0,
+    "role": "R3 candidate topology role counterfactual responsibility probe",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T08:54:13Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14061,
+      "output_tokens": 662,
+      "reasoning_output_tokens": 398
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

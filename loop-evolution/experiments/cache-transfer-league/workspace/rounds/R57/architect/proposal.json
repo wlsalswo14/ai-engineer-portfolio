@@ -1,0 +1,111 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R57-structure-architect\\final-receipt.json",
+    "sha256": "3b3db80a7d32f377c6cb1446a37b905ef71e353de729eb5c2f802173c848425c"
+  },
+  "architect_response": {
+    "architect_scope": "one-R57-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "transition_and_author_policy",
+      "information_flow": "The first call receives every common input and emits source-distinguished analysis that can establish one causal-demotion trigger without carrying a policy. The final call consumes that analysis while independently receiving every common input, retains direct visibility of all sources, changes the anchor's causal status only when the trigger is established, and emits one complete policy.",
+      "name": "Contradiction-Activated Causal Demotion",
+      "organization": "two-call sequential lineage with one control-bearing non-policy handoff and one state-transitioning unitary policy authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "establish_causal_contradiction",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Determine whether the supplied evidence establishes an incompatibility between an anchor-dependent assumption and a current contract or constraint obligation, preserving the supporting source distinctions without creating a policy artifact.",
+              "output_type": "analysis",
+              "role": "source-distinguished causal contradiction authority"
+            },
+            {
+              "id": "transition_and_author_policy",
+              "inputs": [
+                "establish_causal_contradiction",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume establish_causal_contradiction with every common input, retain direct source visibility, demote the anchor to counterfactual-only evidence exactly when the established contradiction triggers the causal-state transition, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "state-transitioning unitary policy authority"
+            }
+          ],
+          "id": "causal_demotion_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "evidence-triggered causal-source demotion with preserved observational visibility",
+      "champion_limitation": "The champion's defeasible analysis can describe a contradiction but cannot alter which visible source remains causally eligible during policy authorship.",
+      "not_local_refinement": "The mutation installs causal state-transition authority on the handoff itself; it is neither an acceptance gate nor an added reviewer, certificate, field, role rename, terminal fission, or local evidence-order adjustment.",
+      "observable_effect": "After the transition, the final policy may inspect the anchor as counterevidence but cannot use it as a generative premise.",
+      "state_transition": "The terminal authority begins in anchor-generative state and, upon the trigger, moves for the remainder of the lineage to anchor-counterfactual-only state while retaining direct anchor visibility.",
+      "trigger": "Source-distinguished evidence establishes that an anchor-dependent assumption and a current contract or constraint obligation cannot both hold."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Give the analysis edge authority to trigger a terminal state transition that retains anchor visibility while demoting the anchor from causally eligible design source to counterfactual evidence when a source-distinguished contradiction is established.",
+      "expected_effect": "Contradicted inherited assumptions cease shaping the final policy, while uncontested inherited evidence remains reusable and directly visible.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion can expose contradictions in inherited assumptions, but its nonbinding handoff cannot change the anchor's causal authority during terminal policy formation."
+    },
+    "structural_mutation": {
+      "after": "The same visible evidence lineage gives the analysis edge authority to move the terminal call from anchor-generative state to anchor-counterfactual-only state when the defined contradiction trigger is established.",
+      "before": "The analysis handoff is nonbinding, and terminal reacquisition leaves the visible anchor causally eligible regardless of identified contradictions.",
+      "change_count": 1,
+      "factor": "contradiction-triggered causal-source demotion across the analysis-to-policy edge",
+      "why_structural": "This changes causal control and state-transition authority on an existing edge without adding a call, role split, field, certificate, reviewer, or visibility deletion."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 57,
+  "incumbent_structure_sha256": "d724448a08628609077256da53038ddf4c29aca1745344795a4442bea91a21e7",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "emergent_exploration",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R57\\qualitative-error-notebook.json",
+    "sha256": "6c50e18beed6e2d3ec2ae0e3eb67b8fbf11e313734f80958f7099a33e379dc62"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R57\\source-manifest.json",
+    "sha256": "f8f8eb1f68fae07c6f9d8ecb4a05ebf8ff24f040813591cadf28cb7341c42e0c"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": {
+      "coarse_topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c",
+      "matches_incumbent_coarse_shape": true,
+      "mere_role_fission_or_rename": false,
+      "reason": "coarse call shape reused with a novel certified edge/control semantic factor"
+    },
+    "factor": "contradiction-triggered causal-source demotion across the analysis-to-policy edge",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "292f5adcbe98fdad2cc3762ce2109a2f829993ad5a63f3ba25009e2b9dd42147",
+    "topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c"
+  }
+}

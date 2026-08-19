@@ -1,0 +1,28 @@
+{
+  "final_call_id": "terminal_engine_producer",
+  "information_flow": "One self-contained producer starts from the champion engine, preserves raw audit evidence, follows the champion's ordered transactional A-B-A-B repair process, records every accepted edit as an exactly reversible delta, and then causally compresses that provisional stack in the assembled final context before emitting one complete engine.",
+  "name": "Solo Provisional Repair Stack with Terminal Causal Compression",
+  "organization": "solo",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "terminal_engine_producer",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "champion_metrics",
+            "state_capsule",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Starting only from the champion engine and built-ins, audit before divergence and construct one ordered repair trajectory. For every minimal proposed edit, retain the champion's identical-reproducer checkpoint-patch-checkpoint-patch intervention, regression replay, exact rollback, and validity safeguards. Record each accepted edit as an exactly reversible delta with its immutable motivating evidence, treating acceptance as provisional. After construction, perform bounded terminal causal compression on the single assembled engine: examine retained deltas in reverse order, remove exactly one delta, replay its motivating reproductions and the precommitted general regression and UCI-legality obligations, permanently delete the delta only if all motivating failures remain closed and no obligation worsens, and otherwise restore it byte-identically. When a permanent deletion invalidates evidence for affected retained deltas, replay only that affected suffix within the fixed bound. Do not generate alternative engines for selection, replicate calls or samples, tune engine hyperparameters as the structural mechanism, or use ChessBench-specific knowledge. Emit the resulting complete legal UCI engine; if no modified state remains valid, emit the champion engine unchanged.",
+          "output_type": "engine",
+          "role": "evidence-preserving transactional engine producer"
+        }
+      ],
+      "id": "produce_and_compress",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n\n    def _rebalance_protected(self):\n        target = (self.capacity_bytes * 3) // 4\n        while self.protected_bytes > target and self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probationary[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probationary:\n            stored_size = self.probationary.pop(key)\n            self.probationary[key] = stored_size\n            return []\n\n        incoming_size = max(0, int(size))\n        if self.capacity_bytes <= 0 or incoming_size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes:\n            if self.probationary:\n                old_key, old_size = self.probationary.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probationary[key] = incoming_size\n        self.used_bytes += incoming_size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R26-rep03-call03-certified_rollback_integrator",
+    "duration_seconds": 24.525,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:42:05Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "9819221f16f30e1ae5e31936b309f97345bfca1b11e196987c3f70a29e15f4f8",
+    "raw_events_sha256": "162b86387b8dc2d837443286f7a723b2e5f637cd1cc41cf0e6a542579ca8f0cf",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "99c6d072a0454b3204f3e3fe46231bf5a3685cef52a491fc823aaf7c18f81e76",
+    "returncode": 0,
+    "role": "constrained final policy emitter",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:41:40Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15623,
+      "output_tokens": 1007,
+      "reasoning_output_tokens": 570
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,68 @@
+{
+  "architect_scope": "one-R64-structural-factor-only",
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The direct generative-source cut can still leave source identity visible through attributed claims on the analysis handoff, permitting source-conditioned terminal deference.",
+    "causal_change": "Seal generative-source provenance on the sole handoff while preserving claim substance, conflict relations, and normative grounding.",
+    "expected_effect": "The terminal authority evaluates inherited and counter-generative claims symmetrically against directly visible obligations without losing their substantive evidence.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "source-origin anonymity on the sole analysis handoff",
+    "before": "The terminal call lacks direct generative-source edges, but the analysis handoff may retain attribution linking claims to their generative origins.",
+    "after": "The existing direct-source cut remains, and the sole analysis edge additionally withholds generative-source attribution while carrying source-anonymous claims, conflicts, and normative grounding.",
+    "why_structural": "This changes the evidence visibility semantics of an existing causal edge and therefore changes the terminal evidence set without adding calls, roles, or a decision gate."
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only provenance visibility on the existing analysis handoff changes; call count, sequence, direct external edges, terminal authority, and output kinds remain unchanged.",
+    "why_not_repeat_role_fission": "The lineage retains the same two distinct calls and introduces no duplicated producer, reviewer, finalizer, or terminal role."
+  },
+  "candidate_structure": {
+    "name": "Provenance-Sealed Source Cut",
+    "organization": "two-call sequential lineage with the champion external-source cut and one provenance-visibility mask on the sole handoff",
+    "information_flow": "The first call receives every common input and emits a source-anonymous analysis preserving substantive claims, conflict relations, and normative grounding. The final call consumes that analysis, directly receives task, anchor_contract, and task_constraints, remains unable to access anchor_policy, candidate_hypothesis, or loop_structure directly or recover their attribution from the handoff, and emits one complete policy.",
+    "stages": [
+      {
+        "id": "provenance_sealed_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "synthesize_and_seal_provenance",
+            "role": "provenance-sealing evidence synthesizer",
+            "objective": "Reconcile generative claims against normative obligations, preserve substantive distinctions and conflicts, withhold attribution to cut generative sources, and emit only an analysis.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          },
+          {
+            "id": "emit_from_provenance_sealed_evidence",
+            "role": "source-anonymous normative policy authority",
+            "objective": "Consume synthesize_and_seal_provenance, evaluate its source-anonymous evidence against the directly visible normative inputs, and emit one complete policy without recovering cut-source provenance.",
+            "inputs": [
+              "synthesize_and_seal_provenance",
+              "task",
+              "anchor_contract",
+              "task_constraints"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "emit_from_provenance_sealed_evidence"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

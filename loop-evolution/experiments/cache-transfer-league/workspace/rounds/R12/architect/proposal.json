@@ -1,0 +1,116 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R12-structure-architect\\final-receipt.json",
+    "sha256": "f855c588b96e4b029a59e45703ad83f11c0f8d16ae4920027dbaf412b9e20cf5"
+  },
+  "architect_response": {
+    "architect_scope": "one-R12-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "anchor_blind_successor",
+      "information_flow": "The founder receives all six common inputs and may use the anchor only as non-authoritative evidence, then emits one complete executable state without anchor-relative edit provenance. The successor immediately consumes that state plus listed public obligations; it has no anchor_policy edge, owns the rebased state as its sole executable ancestry, and emits the sole outward policy.",
+      "name": "Executable Genesis Rebase with Anchor-Blind Successor",
+      "organization": "Two-call single-lineage succession in which an executable genesis rebase, rather than review or role fission, transfers sole constructive authority.",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "independent_genesis_materializer",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Use the common public evidence to materialize one complete contract-compliant executable policy state as a new lineage root. Give the anchor no source, edit, or fallback authority, and carry no anchor-relative edit ledger, review record, alternatives, or parameter choices into the handoff.",
+              "output_type": "executable_policy_state",
+              "role": "de novo executable lineage founder"
+            },
+            {
+              "id": "anchor_blind_successor",
+              "inputs": [
+                "independent_genesis_materializer",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Treat the immediately preceding executable state as the sole policy ancestry. Using only the listed public obligations, exercise whole-state constructive authority and emit one complete contract-compliant policy without anchor-relative comparison, reviewer verdicts, delta replay, rollback, compression, alternatives, or hidden evidence.",
+              "output_type": "policy",
+              "role": "whole-state successor owner"
+            }
+          ],
+          "id": "executable_genesis_rebase",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "scan-resistance behavior formed without inherited anchor genealogy",
+        "phase-shift adaptation behavior formed without inherited anchor genealogy"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "anchor-rooted reversible-delta repair with replay, rollback, or terminal causal compression",
+      "independent_replacement_principle": "A complete executable genesis state becomes the sole policy root before an anchor-blind successor receives constructive custody.",
+      "rejected_assumptions": [
+        "Final policy quality must be expressed as reversible modifications of the anchor.",
+        "Retained per-edit evidence and terminal deletion are necessary for coherent policy construction."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Introduce an executable-genesis lineage rebase: the first call materializes a complete policy state as a new root, and the second receives that executable root plus public obligations but no anchor-policy visibility or edit provenance.",
+      "expected_effect": "The independent root should allow scan-resistance and phase-shift adaptation behavior to be formed coherently outside the anchor genealogy while preserving a directly executable lineage.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion assumes every useful behavior must remain reachable as reversible edits of the anchor, so terminal compression can remove edits but cannot escape the anchor's coupled behavioral commitments."
+    },
+    "structural_mutation": {
+      "after": "A founder materializes one complete executable state as a new lineage root, then an anchor-blind successor takes sole constructive custody of that state and emits the final policy.",
+      "before": "One anchor-rooted producer retains reversible edit provenance and simplifies the resulting stack through terminal causal compression.",
+      "change_count": 1,
+      "factor": "executable-genesis lineage rebase",
+      "why_structural": "The rebase changes lineage origin, edge visibility, constructive authority, and state-transition semantics rather than splitting or renaming terminal roles."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 12,
+  "incumbent_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R12\\qualitative-error-notebook.json",
+    "sha256": "7d5e114a43d18aa9be56ca3d407dd447d36072289a371ce8ba82a833a0a92c7f"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R12\\source-manifest.json",
+    "sha256": "9d797e1b99f0454e820e21695a2a9a255a0f2b335c94baa9f5a187d969dfca13"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "executable-genesis lineage rebase",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "independent_genesis_materializer",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      }
+    ],
+    "semantic_topology_fingerprint": "6ff1c3219645c739e2615cea427c86016e5f2a747beae8d50af58f9881f40f68",
+    "topology_fingerprint": "03fdd7abec13c7a5026b4ccab5ee34de5e3c342188f6ed0e07b11111d1243ffa"
+  }
+}

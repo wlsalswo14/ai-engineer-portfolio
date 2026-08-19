@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "executor_epoch_id": "luna-fast-priority-e1",
+  "effective_at_display_round": 6,
+  "authorized_display_rounds": [6, 7, 8, 9, 10, 11],
+  "stop_after_display_round": 11,
+  "cache_r12_permitted": false,
+  "authority": "latest user rule overriding only the Luna executor service tier for the active R6-R11 continuation",
+  "superseded_contract_binding": {
+    "path": "EVOLUTION-R6-R11-CONTRACT.json",
+    "sha256": "71036fd0a79d3d92ce68993176d52e0462c5bac1f0f4da791b46cf463f19dada",
+    "preserved_fields": "all fields except model_boundary.all_inner_roles.service_tier/request_tier"
+  },
+  "effective_structure_architect_boundary": {
+    "calls_per_round": 1,
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "policy_code": false
+  },
+  "effective_inner_model_boundary": {
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "direct_model_substitution": false
+  },
+  "r6_restart_binding": {
+    "classification": "user-mandated executor epoch change; not best-of-N and not a topology retry",
+    "single_sol_proposal": {
+      "path": "workspace/rounds/R6/architect/proposal.json",
+      "sha256": "eb898af9835883c14613f3d1781d0e22fe892b529df1dd82da6dd247e32e208f",
+      "reused_immutably": true,
+      "additional_sol_call_permitted": false
+    },
+    "single_sol_receipt": {
+      "path": "workspace/model-calls/R6-structure-architect/final-receipt.json",
+      "sha256": "4948204e47b6ff11fe3cf1e6e02e0aaf25fab43b5fcec85123fc5c43c102b83e"
+    },
+    "hypothesis": {
+      "path": "workspace/rounds/R6/architect/hypothesis.json",
+      "sha256": "4f7802ffa5564b6f857211e4d2ce4a417e672c1dba4146dd8df3fc30d343d225"
+    },
+    "proposed_structure": {
+      "path": "workspace/rounds/R6/architect/proposed-structure.json",
+      "sha256": "fc8fcf3f8c8d495d0bea3e973dfb9cff04b85d9b9680cac1fb04e3a1825b4db1"
+    },
+    "pre_epoch_source_manifest": {
+      "path": "workspace/rounds/R6/source-manifest.json",
+      "sha256": "b5b1d964ff4e1556566c65a0d977e0a52c2dd72df9a0dc664fdf382a2f64c264"
+    },
+    "pre_epoch_round_contract": {
+      "path": "workspace/rounds/R6/round-contract.json",
+      "sha256": "817b5f15f537257eaf19922e09940b742763893760802aef5d1fd4567a21e47d"
+    },
+    "quarantine_manifest": {
+      "path": "workspace/quarantine/aborted-pre-luna-fast-policy/R6/quarantine-manifest.json",
+      "sha256": "96186808e58a3be80ae75d4a1e34a514d625c6ecb9c89ac9463a4ec04d6c74db",
+      "status": "aborted-pre-luna-fast-policy",
+      "seal_score_selection_eligible": false
+    },
+    "restart_invariants": {
+      "same_current_champion_anchor": true,
+      "same_score_blind_hypothesis": true,
+      "same_role_prompts": true,
+      "same_incumbent_and_candidate_structures": true,
+      "restart_all_six_arms": true,
+      "official_fast_luna_calls": 9,
+      "pre_fast_outputs_visible_to_restart": false
+    }
+  },
+  "accounting": {
+    "discarded_pre_fast_usage_recorded_separately": true,
+    "discarded_usage_in_official_round_total": false,
+    "transport_and_incomplete_attempts_preserved": true,
+    "paid_api_spend_usd": 0.0
+  },
+  "git_commit_permitted": false
+}

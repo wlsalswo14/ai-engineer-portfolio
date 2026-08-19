@@ -1,0 +1,208 @@
+## Compact artifact
+
+Capability: transactional root-incumbent continuity. It preserves the last fully completed iterative-deepening root result across timeout and orders the next root search around it.
+
+```python
+import json
+import math
+
+
+class RootIncumbent:
+    """One bounded, transactional iterative-deepening root incumbent."""
+
+    def __init__(self):
+        self._state = None
+        self._generation = 0
+        self.last_work = 0
+
+    def begin(self, position_key, legal_moves, fallback):
+        moves = tuple(legal_moves)
+        if self._state is not None and self._state["phase"] != "closed":
+            raise RuntimeError("previous search is still active")
+        if not moves or fallback not in moves:
+            raise ValueError("fallback must be legal")
+        self._generation += 1
+        self._state = {
+            "key": position_key,
+            "moves": moves,
+            "best": fallback,
+            "depth": 0,
+            "score": None,
+            "phase": "active",
+        }
+        self.last_work = 1
+        return ("begin", self._generation, position_key, fallback)
+
+    def _active(self, key):
+        if self._state is None or self._state["key"] != key:
+            raise RuntimeError("inactive position")
+        if self._state["phase"] == "closed":
+            raise RuntimeError("search closed")
+        return self._state
+
+    def order(self, key, moves):
+        state = self._active(key)
+        if state["phase"] != "active":
+            raise RuntimeError("root is not active")
+        supplied = tuple(moves)
+        if len(supplied) != len(state["moves"]) or set(supplied) != set(state["moves"]):
+            raise ValueError("root move dependency changed")
+        best = state["best"]
+        self.last_work = len(supplied) + 1
+        return (best,) + tuple(move for move in supplied if move != best)
+
+    def commit(self, key, depth, score, move):
+        state = self._active(key)
+        if state["phase"] != "active":
+            raise RuntimeError("cannot commit after stop")
+        if not isinstance(depth, int) or depth <= state["depth"]:
+            raise ValueError("depth must increase")
+        if move not in state["moves"]:
+            raise ValueError("committed move is illegal")
+        if not isinstance(score, (int, float)) or not math.isfinite(score):
+            raise ValueError("score must be finite")
+        state.update(best=move, depth=depth, score=score)
+        return ("commit", depth, score, move)
+
+    def stop(self, key, reason):
+        state = self._active(key)
+        if state["phase"] != "active":
+            raise RuntimeError("search already stopped")
+        if reason not in ("timeout", "cancel", "complete"):
+            raise ValueError("invalid stop reason")
+        state["phase"] = "stopped"
+        return ("stop", reason, state["best"])
+
+    def finish(self, key):
+        state = self._active(key)
+        if state["phase"] != "stopped":
+            raise RuntimeError("finish requires stop")
+        if state["best"] not in state["moves"]:
+            raise AssertionError("downstream legality violated")
+        state["phase"] = "closed"
+        return ("finish", state["best"], state["depth"])
+
+
+class AnchorThinkSeam:
+    """Bounded surrogate for Engine.think -> root -> UCI bestmove."""
+
+    def __init__(self, ledger):
+        self.ledger = ledger
+
+    def run(self, key, legal_moves, completed_roots, interrupt_before=None):
+        moves = tuple(legal_moves)
+        trace = [self.ledger.begin(key, moves, moves[0])]
+
+        for depth, score, move in completed_roots:
+            self.ledger.order(key, moves)
+            if depth == interrupt_before:
+                trace.append(self.ledger.stop(key, "timeout"))
+                trace.append(self.ledger.finish(key))
+                return trace
+            trace.append(self.ledger.commit(key, depth, score, move))
+
+        trace.append(self.ledger.stop(key, "complete"))
+        trace.append(self.ledger.finish(key))
+        return trace
+
+
+def fixtures():
+    moves = ("a", "b", "c")
+    traces = {}
+
+    ledger = RootIncumbent()
+    traces["predicted_effect"] = [
+        ledger.begin("p", moves, "a"),
+        ledger.commit("p", 1, 4, "b"),
+        ledger.order("p", moves),
+        ledger.stop("p", "timeout"),
+        ledger.finish("p"),
+    ]
+    assert traces["predicted_effect"][-1][1] == "b"
+    assert traces["predicted_effect"][2] == ("b", "a", "c")
+
+    ledger = RootIncumbent()
+    traces["null_case"] = [
+        ledger.begin("n", moves, "a"),
+        ledger.stop("n", "timeout"),
+        ledger.finish("n"),
+    ]
+    assert traces["null_case"][-1][1] == "a"
+
+    ledger = RootIncumbent()
+    boundary = [ledger.begin("b", moves, "a")]
+    for action in (
+        lambda: ledger.commit("b", 1, 0, "z"),
+        lambda: ledger.commit("b", 1, 0, "b"),
+        lambda: ledger.commit("b", 0, 0, "b"),
+    ):
+        try:
+            action()
+        except (ValueError, RuntimeError) as exc:
+            boundary.append(("reject", type(exc).__name__))
+        else:
+            raise AssertionError("invalid transition accepted")
+    boundary += [
+        ledger.commit("b", 1, 0, "b"),
+        ledger.stop("b", "complete"),
+        ledger.finish("b"),
+    ]
+    traces["boundary_transitions"] = boundary
+
+    ledger = RootIncumbent()
+    traces["seam"] = AnchorThinkSeam(ledger).run(
+        "r1", moves, [(1, 2, "b"), (2, 3, "c")], interrupt_before=2
+    )
+    traces["repeated_lifecycle"] = [
+        traces["seam"][-1],
+        AnchorThinkSeam(ledger).run("r2", moves, [], None)[-1],
+    ]
+    assert traces["seam"][-1][1] == "b"
+    assert traces["repeated_lifecycle"][-1][1] == "a"
+
+    ledger = RootIncumbent()
+    dep = ("c", "a", "b")
+    ledger.begin("d", dep, "c")
+    ledger.commit("d", 1, 1, "b")
+    ordered = ledger.order("d", dep)
+    traces["dependency_closure"] = {
+        "input": dep,
+        "ordered": ordered,
+        "same_members": set(dep) == set(ordered),
+        "work": ledger.last_work,
+    }
+    assert ordered == ("b", "c", "a")
+
+    ledger = RootIncumbent()
+    bounded = tuple("m%03d" % i for i in range(64))
+    ledger.begin("w", bounded, bounded[0])
+    ledger.commit("w", 1, 0, bounded[17])
+    ordered = ledger.order("w", bounded)
+    traces["bounded_work"] = {
+        "move_count": len(bounded),
+        "work": ledger.last_work,
+        "output_count": len(ordered),
+    }
+    assert len(ordered) == 64 and ledger.last_work <= 65
+
+    traces["agreement"] = {
+        "primitive_result": "b",
+        "seam_result": traces["seam"][-1][1],
+        "agree": traces["seam"][-1][1] == "b",
+    }
+    return traces
+
+
+if __name__ == "__main__":
+    print(json.dumps(fixtures(), sort_keys=True, separators=(",", ":")))
+```
+
+Provenance: `inputs/anchor-engine.txt`, specifically `Engine.think()` initializing `best`, `root()` returning completed results, timeout preservation, and downstream `notation(best)`/`bestmove`.
+
+Expected deterministic traces include: committed `b` survives timeout; null timeout returns fallback `a`; illegal/stale commits reject; repeated searches reset; move-set dependencies remain closed; 64 moves require 65 bounded bookkeeping units; primitive and seam results both return `b`.
+
+Graft invariants: preserve the anchor source; instantiate once per `think`; call `begin` after `legal(self.pos)`; call `commit` only after a complete `root()` return; call `stop`/`finish` on timeout; pass the unchanged legal move set; emit exactly one legal `bestmove`; no evaluator, TT, benchmark, or hyperparameter dependencies.
+
+Causal falsifier: reject the component if a partial root result replaces the incumbent, a timeout returns an illegal move, state leaks between searches, the legal move set changes, or primitive and seam results diverge.
+
+Runtime limitation: the read-only arm rejected even `python -c "print(1)"` before launch, so no runtime trace could be honestly claimed. The required Wikia memory POST was attempted twice and both attempts were blocked by the same policy.

@@ -1,0 +1,34 @@
+{
+  "arm": "incumbent",
+  "artifact_bytes": 5352,
+  "artifact_path": "workspace\\rounds\\R65\\pairs\\pair-02\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "d1c38c134c51169de6b20ccc47996729d0c90a92558c312091695fa8c1b190d3",
+  "display_round": 65,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_manifest_path": "workspace\\rounds\\R65\\pairs\\pair-02\\incumbent\\generation-manifest.json",
+  "generation_manifest_sha256": "bd33e25b761d468dd1a27c58c10c992517da83c4b021d357c59cdb8ae5bed90e",
+  "label": "pair-02-incumbent",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R65-pair02-incumbent-call01-synthesize_cut_sources\\final-receipt.json",
+      "sha256": "766ff5499453c66b9553a746fe498d97cb18d83587522e0abf8407b8c704b148"
+    },
+    {
+      "path": "workspace\\model-calls\\R65-pair02-incumbent-call02-emit_under_normative_visibility\\final-receipt.json",
+      "sha256": "945b106a68bfb23d57e149c7c68f9997241a0655c57988f1c074a39b4e2bc6f4"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 2,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5352,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T22:29:06Z"
+}

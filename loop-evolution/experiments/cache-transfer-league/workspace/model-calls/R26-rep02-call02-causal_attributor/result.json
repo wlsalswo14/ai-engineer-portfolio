@@ -1,0 +1,155 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "No eviction-validity or interface-protocol failure reproduced. One bounded replacement-decision regression is witnessed against the anchor.",
+      "exact_actions": [
+        {
+          "causal_result": "Removal closes the witness and restoration reopens it; certify rollback of the implicated segmented replacement delta only.",
+          "delta": "segmented probation/protected replacement delta, including protected quota, promotion/demotion, and probation-only eviction",
+          "intervention": "A-B-A: evaluate the visible provisional policy (A); remove this exact segmented replacement delta and restore the anchor replacement behavior (B); restore the delta unchanged (A).",
+          "replay": {
+            "A_before": [
+              2,
+              3,
+              4
+            ],
+            "A_final_evictions": [
+              5
+            ],
+            "A_restored_final_evictions": [
+              5
+            ],
+            "B_final_evictions": []
+          }
+        }
+      ],
+      "obligations": [
+        "Returned eviction lists remain unique integer keys that were cached before the request.",
+        "Every replay preserves byte accounting and never exceeds capacity.",
+        "Rollback replay must close the final-step divergence; restoration must reopen it.",
+        "Diagnostic rollback artifacts must not be promoted as policy candidates."
+      ],
+      "witnesses": [
+        {
+          "anchor_evictions": [
+            [],
+            [],
+            [],
+            [],
+            [
+              2
+            ],
+            [
+              3
+            ],
+            [
+              1
+            ],
+            []
+          ],
+          "capacity_bytes": 3,
+          "failure": "At the final request for key 4, the provisional policy misses and evicts key 5 while the anchor retains key 4 as a hit. The implicated changed delta is segmented probation/protected replacement with probation-only eviction and promotion of probation hits.",
+          "kind": "replacement_decision_regression",
+          "provisional_evictions": [
+            [],
+            [],
+            [],
+            [],
+            [
+              2
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ],
+            [
+              5
+            ]
+          ],
+          "trace": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              1,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ],
+            [
+              5,
+              1,
+              5
+            ],
+            [
+              6,
+              1,
+              6
+            ],
+            [
+              4,
+              1,
+              7
+            ]
+          ]
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R26-rep02-call02-causal_attributor",
+    "duration_seconds": 84.533,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:49:27Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "7807273bc18ec9e1fbec25b8143f8970f82dc45a87752bdb9eabf468f02e3046",
+    "raw_events_path": "workspace\\model-calls\\R26-rep02-call02-causal_attributor\\raw-events.jsonl",
+    "raw_events_sha256": "dfcba72713a05aff9c504c65e0316dcd40b88c24849f43d9410a382ccf87d973",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 1,
+    "response_sha256": "350047edab6434c01faceb4b7c0bebf0c1d5bdb71721c0c512080697ec57f93a",
+    "returncode": 0,
+    "role": "independent terminal falsifier and delta attributor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:48:02Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14708,
+      "output_tokens": 4524,
+      "reasoning_output_tokens": 4142
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

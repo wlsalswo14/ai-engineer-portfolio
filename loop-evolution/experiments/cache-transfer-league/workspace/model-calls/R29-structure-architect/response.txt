@@ -1,0 +1,80 @@
+{
+  "architect_scope": "one-R29-structural-factor-only",
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The active family leaves executable semantics provisional until a provenance-blind terminal authority reinterprets them, separating final commitments from the evidence that originally made them coherent.",
+    "causal_change": "Reverse semantic authority across the lineage edge: the first call makes the sole irrevocable semantic commitment, and the final call receives read-only semantic authority.",
+    "expected_effect": "Origin-locked semantics should reduce handoff drift and move contract reconciliation from terminal reinterpretation to evidence-visible policy formation.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "origin-bound semantic authority enforced by an irreversible semantic write barrier",
+    "before": "The first call forms a provisional executable closure, while the provenance-blind final call holds sole authority to reconcile and revise its semantics.",
+    "after": "The first call holds sole semantic authority when forming one complete executable state; the lineage edge makes those semantics immutable, and the final call may only expose that state as policy.",
+    "why_structural": "The mutation reverses control authority on the only inter-call edge and changes its state-transition semantics from revisable transfer to identity-preserving transfer."
+  },
+  "mode_certificate": {
+    "rejected_assumptions": [
+      "A terminal call requires independent semantic discretion after a complete executable artifact already exists.",
+      "Separating final semantic commitment from formation-time evidence improves reconciliation."
+    ],
+    "forbidden_inherited_mechanism": "post-construction provenance-blind terminal semantic authority",
+    "independent_replacement_principle": "Semantic intent becomes irrevocable where the complete executable state is formed, and every downstream transition preserves that intent by identity.",
+    "changed_behavioral_dimensions": [
+      "location and timing of semantic commitment",
+      "terminal response to perceived contract tension",
+      "semantic stability across the handoff"
+    ],
+    "counter_until_promotion": true
+  },
+  "candidate_structure": {
+    "name": "Origin-Locked Semantic Relay",
+    "organization": "two-call sequential lineage with upstream-exclusive semantic authority and one downstream semantic write barrier",
+    "information_flow": "The first call sees all common evidence and forms exactly one complete executable policy state whose semantics are final. The second call consumes that state with public obligations visible but without anchor-policy visibility; it has no authority to reinterpret, replace, or revise the inherited semantics and emits the contained policy through an identity-preserving transition.",
+    "stages": [
+      {
+        "id": "origin_locked_relay",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "commit_executable_state",
+            "role": "origin-bound semantic authority",
+            "objective": "Use the supplied evidence to resolve public obligations and form exactly one complete executable policy state whose semantics constitute the lineage's sole final commitment.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_state"
+          },
+          {
+            "id": "expose_committed_policy",
+            "role": "read-only policy exposer",
+            "objective": "Consume the immediately preceding complete executable state, verify its correspondence to the visible public obligations without semantic reinterpretation, and emit exactly its committed policy.",
+            "inputs": [
+              "commit_executable_state",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "expose_committed_policy"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

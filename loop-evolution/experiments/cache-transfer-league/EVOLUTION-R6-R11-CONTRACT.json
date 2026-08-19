@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "authorized_display_rounds": [6, 7, 8, 9, 10, 11],
+  "stop_after_display_round": 11,
+  "cache_r12_permitted": false,
+  "authoritative_start": {
+    "display_round": 5,
+    "atomic_state_path": "workspace/rounds/R5/R5-ATOMIC-COMMIT.json",
+    "atomic_state_sha256": "5b8659c966e017ed268a36562370156ae181096607f002c189d5cbce05c74b3b",
+    "state_path": "workspace/rounds/R5/state.json",
+    "state_sha256": "a10a598e404371ea68c4b4606bac25592ee69bc41a620b49a418f84fdc479a5a",
+    "champion_policy_path": "workspace/champion-r5/policy.py",
+    "champion_policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "champion_structure_path": "workspace/champion-r5/structure.json",
+    "champion_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+    "selection_receipt_path": "workspace/champion-r5/selection-receipt.json",
+    "selection_receipt_sha256": "3cd9415423739cbdc5c0120f490d3c71fce4fed2475431607ba609a163bb5be2",
+    "proposal_mode_after": "counter_hypothesis",
+    "local_refinement_count": 2,
+    "emergent_failure_count": 2,
+    "r5_outcome": "counter hypothesis did not promote"
+  },
+  "state_machine": {
+    "r6_mode": "counter_hypothesis",
+    "counter_nonpromotion": "counter_hypothesis persists until promotion",
+    "promotion_reset": {
+      "local_refinement_count": 0,
+      "emergent_failure_count": 0,
+      "next_mode": "local_refinement",
+      "next_local_refinement_attempt": 1
+    },
+    "local_refinement_limit": 2,
+    "emergent_failure_limit": 2,
+    "derivation_rule": "Every round after R6 derives its exact mode only from the immediately preceding immutable atomic outcome."
+  },
+  "model_boundary": {
+    "structure_architect_per_round": {
+      "completed_calls": 1,
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "policy_code": false,
+      "official_numeric_scores_or_traces": false,
+      "mass_sampling_or_hardcoding": false
+    },
+    "all_inner_roles": {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "service_tier": "default",
+      "direct_model_substitution": false
+    }
+  },
+  "duel": {
+    "pair_count": 3,
+    "arms": ["incumbent", "candidate"],
+    "same_current_champion_anchor_and_hypothesis": true,
+    "independent_arm_execution": true,
+    "routing": {
+      "pair_1": {"incumbent_home_slot": 0, "candidate_home_slot": 2},
+      "pair_2": {"incumbent_home_slot": 2, "candidate_home_slot": 0},
+      "pair_3": {"incumbent_home_slot": 0, "candidate_home_slot": 2}
+    },
+    "seal_before_score": "all six policies and all model receipts"
+  },
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "seed": 20260605,
+    "scale": 3,
+    "trace_count": 9,
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "replays": 2
+  },
+  "promotion": {
+    "all_six_valid_and_replay2_deterministic": true,
+    "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+    "candidate_median": "strictly greater than incumbent median",
+    "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256",
+    "failure_action": "retain current champion policy and structure"
+  },
+  "close_confirmation": {
+    "absolute_threshold": 0.25,
+    "trigger": "absolute median gap <= 0.25 or any valid non-tied pair gap <= 0.25",
+    "action": "frozen replay3 for all six sealed arms",
+    "pass": "each replay3 normalized result equals both corresponding replay1 and replay2 results"
+  },
+  "architect_evidence": {
+    "source": "bounded qualitative notebook only",
+    "official_numeric_scores": false,
+    "trace_contents": false,
+    "hardcoding": false,
+    "best_of_n": false
+  },
+  "coordination": {
+    "heavy_lock": "experiments/.heavy-evaluation.lock.json",
+    "fresh_chess_go_before_every_scorer": true,
+    "stockfish_overlap": false
+  },
+  "spend": {
+    "billing_mode": "ChatGPT subscription via Codex login",
+    "paid_api_spend_usd": 0.0,
+    "estimated_api_spend_usd": null
+  },
+  "git_commit_permitted": false
+}

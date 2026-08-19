@@ -1,0 +1,81 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "All mandatory obligations are represented by inherited semantics; no evidenced omission triggers authority inversion.",
+      "exact_actions": [
+        "retain inherited authority state",
+        "do not activate authority inversion",
+        "pass the unchanged inherited state to the executable author"
+      ],
+      "obligations": [
+        "preserve interface legality",
+        "never exceed capacity",
+        "operate online one access at a time",
+        "return only currently cached unique integer keys",
+        "use only the standard library",
+        "avoid prohibited evaluator or benchmark access"
+      ],
+      "witnesses": [
+        {
+          "evidence": "Policy defines the required constructor and access methods with the required return shape.",
+          "obligation": "interface_legality"
+        },
+        {
+          "evidence": "Resident byte accounting and eviction make-room logic prevent stored usage from exceeding capacity; oversized objects are rejected.",
+          "obligation": "capacity_safety"
+        },
+        {
+          "evidence": "Behavior depends only on per-access inputs and internal state, with no external or evaluator-side visibility.",
+          "obligation": "online_only_visibility"
+        },
+        {
+          "evidence": "Evictions are drawn from resident OrderedDict entries, each resident key has one membership, and returned keys are integer-normalized.",
+          "obligation": "valid_unique_evictions"
+        },
+        {
+          "evidence": "The anchor uses only collections.OrderedDict and contains no networking, subprocesses, external libraries, traces, paths, or oracle adaptation.",
+          "obligation": "stdlib_and_prohibitions"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R96-pair03-candidate-call01-establish_omission_authority_state",
+    "duration_seconds": 22.463,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T04:03:35Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "6d3e04915e62236c893c7f4175ffd7979f80d638e4aeb8511a70d13969a9b5cb",
+    "raw_events_path": "workspace\\model-calls\\R96-pair03-candidate-call01-establish_omission_authority_state\\raw-events.jsonl",
+    "raw_events_sha256": "ec7b140384fedb1c15213cddfa7ec1e946f47c646b879a6f36a3a0276bbb35cd",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "5c5917a4f1aa4a91447355ab57af59db2f4a86e767d5ac479c5cbd06bc3b5a39",
+    "returncode": 0,
+    "role": "R96 candidate topology role pre-artifact semantic-authority controller",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T04:03:13Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15034,
+      "output_tokens": 1439,
+      "reasoning_output_tokens": 1168
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

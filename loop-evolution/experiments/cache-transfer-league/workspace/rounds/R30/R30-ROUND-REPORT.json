@@ -1,0 +1,423 @@
+{
+  "aggregate": {
+    "all_six_valid_and_deterministic": false,
+    "candidate_median": 86.0126,
+    "candidate_pairwise_majority": true,
+    "candidate_scores": [
+      86.9751,
+      86.0126,
+      82.9759
+    ],
+    "candidate_strict_median_win": true,
+    "candidate_wins": 2,
+    "incumbent_median": 73.105,
+    "incumbent_scores": [
+      86.1887,
+      73.105,
+      11.1111
+    ],
+    "incumbent_wins": 0,
+    "invalid_pairs": 1,
+    "ties": 0
+  },
+  "architect": {
+    "candidate_structure_path": "workspace\\rounds\\R30\\architect\\proposed-structure.json",
+    "candidate_structure_sha256": "3ad9637dc174d8423307e901f0e581d266c2a38868d1653be96822a46a2ccb0e",
+    "candidate_topology_fingerprint": "77f3f01e91c941ec17b784361bf133c53e6607cca68a98d73254b0630be50d58",
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "terminal deference to predecessor semantics",
+        "evidence polarity of the inter-call handoff",
+        "timing of independent semantic construction"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "presumptive positive semantic inheritance from the predecessor executable closure",
+      "independent_replacement_principle": "negative-edge independent rederivation: keep the predecessor artifact fully visible as disconfirming evidence while grounding final semantic authority independently in the other visible public inputs",
+      "rejected_assumptions": [
+        "A complete executable predecessor should be presumptively authoritative at policy emission.",
+        "Preserving executable-lineage visibility requires positive inheritance of predecessor semantics.",
+        "Terminal reconciliation should begin from the predecessor's semantic commitments."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "proposal_path": "workspace\\rounds\\R30\\architect\\proposal.json",
+    "proposal_sha256": "d6f4e6ab791833c5dac52ae59811b281a20f8c5246bfbbbeae350c535f1930fc",
+    "structural_mutation": {
+      "after": "The final call sees the same complete closure only as disconfirming evidence and grants semantic authority solely to commitments independently grounded in its other visible inputs.",
+      "before": "The final call treats the predecessor closure's current semantics as the positively authoritative starting state for reconciliation.",
+      "change_count": 1,
+      "factor": "unconditional negative-evidence polarity of the predecessor executable-closure edge",
+      "why_structural": "This changes the causal authority of the sole inter-call edge without changing call count, artifact completeness, or external-input visibility; it is unconditional edge semantics rather than role renaming or conditional revocation."
+    }
+  },
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "runner_sha256": "636304977bc178f9e675f59c39d9b24c32874c964b944a3c0275e13f6408efbc",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "cache_r101_opened": false,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "close_confirmation": {
+    "confirmations": [],
+    "passed": true,
+    "threshold": 0.25,
+    "triggered": false
+  },
+  "completed_at": "2026-08-09T18:12:25Z",
+  "display_round": 30,
+  "final_audit": {
+    "all_six_sealed_before_score": true,
+    "cache_r101_opened": false,
+    "checks": [
+      "prior-atomic-champion-chain-unchanged",
+      "one-score-blind-sol-max-fast-architect",
+      "all-six-sealed-with-luna-high-only",
+      "luna-high-fast-priority-executor-epoch-bound",
+      "frozen-replay2-close-and-promotion-recomputed",
+      "champion-policy-and-structure-bound-to-decision",
+      "state-machine-transition-and-stop-contract",
+      "cache-r101-unopened"
+    ],
+    "display_round": 30,
+    "frozen_replay2_recomputed": true,
+    "git_commit_created": false,
+    "passed": true,
+    "schema_version": 1,
+    "state_machine_recomputed": true,
+    "strict_model_split_passed": true,
+    "test_receipt_path": "workspace\\rounds\\R30\\test-receipt.json",
+    "test_receipt_sha256": "cf720ac7b974ee4eb13bda5415081ca07d12a9772a6b075e139df1ff38c6a375",
+    "verified_at": "2026-08-09T18:12:25Z"
+  },
+  "git_commit_created": false,
+  "invalids": [
+    {
+      "arm": "incumbent",
+      "pair": 3,
+      "reasons": [
+        "official_replay_invalid"
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "02e8ee24a3b7c51b5309fb38970e8e55c6da8e62b462aa0138cf22195823011d",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "e832ee3345a0bf34058026836b4577a16101a36f720a36a62724782ee878048f",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R30\\evaluation\\pair-01\\candidate\\replay-01.json",
+          "workspace\\rounds\\R30\\evaluation\\pair-01\\candidate\\replay-02.json"
+        ],
+        "score": 86.9751,
+        "valid": true
+      },
+      "candidate_minus_incumbent": 0.7864000000000004,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "1dcef6565ffd6ea7c6ff6078d99464811a7d575ded7f503ae5016c65da4b282d",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "a4e39889fe33e4bae27ae20a8b9a71768ccc8ed48950ab455d9470cfd0b2c363",
+        "pair": 1,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R30\\evaluation\\pair-01\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R30\\evaluation\\pair-01\\incumbent\\replay-02.json"
+        ],
+        "score": 86.1887,
+        "valid": true
+      },
+      "pair": 1,
+      "verdict": "candidate_win"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "bc09496a015673c38665fa34cf42a23ffc2b1cbd358752bcdb711a7d90d4f976",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "b5f734942edbd46005410be590cc1067651c15a124e78a36c41719a5c41e24a8",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R30\\evaluation\\pair-02\\candidate\\replay-01.json",
+          "workspace\\rounds\\R30\\evaluation\\pair-02\\candidate\\replay-02.json"
+        ],
+        "score": 86.0126,
+        "valid": true
+      },
+      "candidate_minus_incumbent": 12.907600000000002,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "a8f0b770273a8084f0fde1a331f623d44b39a62b2ab67579fb24e64048a16173",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "ad6bc30c9203db61dcc987c41672a11765078bf0c261d8e28d635e7574984b36",
+        "pair": 2,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R30\\evaluation\\pair-02\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R30\\evaluation\\pair-02\\incumbent\\replay-02.json"
+        ],
+        "score": 73.105,
+        "valid": true
+      },
+      "pair": 2,
+      "verdict": "candidate_win"
+    },
+    {
+      "candidate": {
+        "arm": "candidate",
+        "artifact_sha256": "b2a4faf3091c1a2767dc1801ea6578fdd939f310bc1c947f80b461cadfa3bab9",
+        "invalid_reasons": [],
+        "normalized_result_sha256": "2404805bb4ba6c5fbcec5573f144343ddfd28f013511615744f0e0eed7c7af10",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R30\\evaluation\\pair-03\\candidate\\replay-01.json",
+          "workspace\\rounds\\R30\\evaluation\\pair-03\\candidate\\replay-02.json"
+        ],
+        "score": 82.9759,
+        "valid": true
+      },
+      "candidate_minus_incumbent": 71.8648,
+      "incumbent": {
+        "arm": "incumbent",
+        "artifact_sha256": "c03a774a0c24af659b92b8ee1ca8d42596f8f046a64de35e744d0f3a416020f6",
+        "invalid_reasons": [
+          "official_replay_invalid"
+        ],
+        "normalized_result_sha256": "5a54128da39ff66bae2c09ee78c95d7ae2d1bb318084c78ba04e692b80138a28",
+        "pair": 3,
+        "replay_deterministic": true,
+        "replay_paths": [
+          "workspace\\rounds\\R30\\evaluation\\pair-03\\incumbent\\replay-01.json",
+          "workspace\\rounds\\R30\\evaluation\\pair-03\\incumbent\\replay-02.json"
+        ],
+        "score": 11.1111,
+        "valid": false
+      },
+      "pair": 3,
+      "verdict": "invalid_pair"
+    }
+  ],
+  "promotion": {
+    "contract_passed": false,
+    "selection": {
+      "artifact_path": "workspace\\champion-r30\\policy.py",
+      "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+      "cache_r101_opened": false,
+      "champion_source": "retained-r29",
+      "decision_basis": {
+        "all_six_valid_and_deterministic": false,
+        "candidate_median": 86.0126,
+        "candidate_pairwise_majority": true,
+        "candidate_strict_median_win": true,
+        "candidate_wins": 2,
+        "close_confirmation_passed": true,
+        "close_confirmation_triggered": false,
+        "incumbent_median": 73.105,
+        "incumbent_wins": 0
+      },
+      "display_round": 30,
+      "evaluation_batch_path": "workspace\\rounds\\R30\\evaluation\\evaluation-batch.json",
+      "evaluation_batch_sha256": "eb4e4f7dc3a2585173dd48fd1ad631c208714f4fbf1d4ae3ae7ddaee7a430f39",
+      "promoted": false,
+      "promotion_contract": {
+        "all_six_valid_and_replay2_deterministic": true,
+        "candidate_median": "strictly greater than incumbent median",
+        "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+        "failure_action": "retain current champion policy and structure",
+        "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+      },
+      "promotion_contract_passed": false,
+      "representative_pair": null,
+      "schema_version": 1,
+      "search_control_after": {
+        "completed_mode": "counter_hypothesis",
+        "emergent_failure_count": 2,
+        "local_refinement_count": 2,
+        "next_local_refinement_attempt": null,
+        "next_proposal_mode": "counter_hypothesis",
+        "promoted": false,
+        "transition": "counter-persists-until-promotion"
+      },
+      "search_control_before": {
+        "derived_from": "workspace\\rounds\\R29\\state.json",
+        "emergent_failure_count": 2,
+        "local_refinement_attempt": null,
+        "local_refinement_count": 2,
+        "proposal_mode": "counter_hypothesis"
+      },
+      "selected_at": "2026-08-09T18:12:22Z",
+      "source_artifact_path": "workspace\\champion-r29\\policy.py",
+      "source_artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+      "source_seal_path": null,
+      "source_seal_sha256": null,
+      "starting_policy_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+      "starting_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+      "structure_path": "workspace\\champion-r30\\structure.json",
+      "structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54"
+    }
+  },
+  "schema_version": 1,
+  "sealed_before_frozen_evaluation": true,
+  "search_control_after": {
+    "completed_mode": "counter_hypothesis",
+    "emergent_failure_count": 2,
+    "local_refinement_count": 2,
+    "next_local_refinement_attempt": null,
+    "next_proposal_mode": "counter_hypothesis",
+    "promoted": false,
+    "transition": "counter-persists-until-promotion"
+  },
+  "search_control_before": {
+    "derived_from": "workspace\\rounds\\R29\\state.json",
+    "emergent_failure_count": 2,
+    "local_refinement_attempt": null,
+    "local_refinement_count": 2,
+    "proposal_mode": "counter_hypothesis"
+  },
+  "starting_champion": {
+    "policy_path": "workspace\\champion-r29\\policy.py",
+    "policy_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "selection_receipt_path": "workspace\\champion-r29\\selection-receipt.json",
+    "selection_receipt_sha256": "45863d8bc2fb0fcde1baf7570017dcae807767c1a7d49f8dc01a72cb1b78af80",
+    "structure_path": "workspace\\champion-r29\\structure.json",
+    "structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+    "topology_fingerprint": "77f3f01e91c941ec17b784361bf133c53e6607cca68a98d73254b0630be50d58"
+  },
+  "status": "atomic-state-ready",
+  "tests": {
+    "display_round": 30,
+    "finished_at": "2026-08-09T18:12:25Z",
+    "passed": true,
+    "returncode": 0,
+    "schema_version": 1,
+    "started_at": "2026-08-09T18:12:23Z",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "99637fed520cb77d0628b8fee59431a3b11f13d0bfe0fe8662d965240e887494",
+    "summary": ".............                                                            [100%]\n13 passed in 0.65s"
+  },
+  "token_accounting": {
+    "architect": {
+      "cached_input_tokens": 0,
+      "effective_tokens": 21627,
+      "input_tokens": 14568,
+      "model_calls": 1,
+      "output_tokens": 7059,
+      "reasoning_output_tokens": 6108,
+      "total_tokens": 21627,
+      "uncached_input_tokens": 14568
+    },
+    "completed_model_calls": 13,
+    "discarded_executor_epoch": null,
+    "display_round": 30,
+    "failed_transport_attempts": 0,
+    "receipt_paths": [
+      {
+        "call_id": "R30-pair01-candidate-call01-form_visible_executable_closure",
+        "path": "workspace\\model-calls\\R30-pair01-candidate-call01-form_visible_executable_closure\\final-receipt.json",
+        "sha256": "da176e265f22157e19631403abeb5dfa97bb9530644aeb8ed69bd6291ca05dc4"
+      },
+      {
+        "call_id": "R30-pair01-candidate-call02-negative_edge_policy_authority",
+        "path": "workspace\\model-calls\\R30-pair01-candidate-call02-negative_edge_policy_authority\\final-receipt.json",
+        "sha256": "bfb5e1c6596743e99c9a924f4d0eec85ad0729dc1b6df98daa5887ef0ef262dd"
+      },
+      {
+        "call_id": "R30-pair01-incumbent-call01-form_executable_closure",
+        "path": "workspace\\model-calls\\R30-pair01-incumbent-call01-form_executable_closure\\final-receipt.json",
+        "sha256": "d440cdb2e8736155b653dac3c2c43d4d37df52b7aa7be538f71db6df6ce912e7"
+      },
+      {
+        "call_id": "R30-pair01-incumbent-call02-provenance_blind_policy_authority",
+        "path": "workspace\\model-calls\\R30-pair01-incumbent-call02-provenance_blind_policy_authority\\final-receipt.json",
+        "sha256": "a6cd1377a3e98030a3551a11a77ff87d5f52ced8b3ffb5ed7102c947e4b23478"
+      },
+      {
+        "call_id": "R30-pair02-candidate-call01-form_visible_executable_closure",
+        "path": "workspace\\model-calls\\R30-pair02-candidate-call01-form_visible_executable_closure\\final-receipt.json",
+        "sha256": "dfc5894b64e368e608abe3a6e01bc068c13d57aa14168e4b9a547ff0ed3d79e4"
+      },
+      {
+        "call_id": "R30-pair02-candidate-call02-negative_edge_policy_authority",
+        "path": "workspace\\model-calls\\R30-pair02-candidate-call02-negative_edge_policy_authority\\final-receipt.json",
+        "sha256": "d277d573d69ad44459babc223ced0ea19889dc9d803a31ff4e60778555a0a0cc"
+      },
+      {
+        "call_id": "R30-pair02-incumbent-call01-form_executable_closure",
+        "path": "workspace\\model-calls\\R30-pair02-incumbent-call01-form_executable_closure\\final-receipt.json",
+        "sha256": "b6a16cc2b4b7c2e1a2f3f310e3891b6eaeb0ff456c046769232f07c5c58a0485"
+      },
+      {
+        "call_id": "R30-pair02-incumbent-call02-provenance_blind_policy_authority",
+        "path": "workspace\\model-calls\\R30-pair02-incumbent-call02-provenance_blind_policy_authority\\final-receipt.json",
+        "sha256": "3a65eb01e666cb960cbf5851ecbc51b31c3d8f2142f41836e70401d48014baf8"
+      },
+      {
+        "call_id": "R30-pair03-candidate-call01-form_visible_executable_closure",
+        "path": "workspace\\model-calls\\R30-pair03-candidate-call01-form_visible_executable_closure\\final-receipt.json",
+        "sha256": "65a045b4ab4e9b91bf18a0be31f491670e5550db486bddcc34123df7bd4004ed"
+      },
+      {
+        "call_id": "R30-pair03-candidate-call02-negative_edge_policy_authority",
+        "path": "workspace\\model-calls\\R30-pair03-candidate-call02-negative_edge_policy_authority\\final-receipt.json",
+        "sha256": "8b17f191d09f15b140421f0f44869d63f97208fbb7b701fa26ab7850980e5785"
+      },
+      {
+        "call_id": "R30-pair03-incumbent-call01-form_executable_closure",
+        "path": "workspace\\model-calls\\R30-pair03-incumbent-call01-form_executable_closure\\final-receipt.json",
+        "sha256": "1eed7f70fc9643364e77fdc572c1449d7177c1b867764b7588abc84d5a0c6d79"
+      },
+      {
+        "call_id": "R30-pair03-incumbent-call02-provenance_blind_policy_authority",
+        "path": "workspace\\model-calls\\R30-pair03-incumbent-call02-provenance_blind_policy_authority\\final-receipt.json",
+        "sha256": "df84d06c6b0c4d1aa55b37be7499b3b73109e728854d111d6b3e91b84e82e363"
+      },
+      {
+        "call_id": "R30-structure-architect",
+        "path": "workspace\\model-calls\\R30-structure-architect\\final-receipt.json",
+        "sha256": "5eff952f6b3b4abcde4fa23e4a0aaef1358f4924f9c44e9d0a5dbed424e9e238"
+      }
+    ],
+    "round_model_calls": {
+      "cached_input_tokens": 89600,
+      "effective_tokens": 151253,
+      "input_tokens": 184945,
+      "model_calls": 13,
+      "output_tokens": 55908,
+      "reasoning_output_tokens": 43053,
+      "total_tokens": 240853,
+      "uncached_input_tokens": 95345
+    },
+    "rule": {
+      "effective_tokens": "input_tokens - cached_input_tokens + output_tokens",
+      "reasoning_output_tokens": "subset of output tokens",
+      "total_tokens": "input_tokens + output_tokens"
+    },
+    "schema_version": 1,
+    "spend": {
+      "billing_mode": "ChatGPT subscription via Codex login",
+      "estimated_api_spend_usd": null,
+      "paid_api_spend_usd": 0.0,
+      "paid_api_used": false
+    },
+    "topology_inner_roles": {
+      "cached_input_tokens": 89600,
+      "effective_tokens": 129626,
+      "input_tokens": 170377,
+      "model_calls": 12,
+      "output_tokens": 48849,
+      "reasoning_output_tokens": 36945,
+      "total_tokens": 219226,
+      "uncached_input_tokens": 80777
+    },
+    "transport_attempts": 13,
+    "transport_failures": []
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "display_round": 96,
+  "audited_at": "2026-08-10T04:07:52Z",
+  "status": "terminal-clean-stopped-after-r96",
+  "atomic_commit": {
+    "path": "workspace\\rounds\\R96\\R96-ATOMIC-COMMIT.json",
+    "sha256": "30f67a666af23f1086844c19ac844862715268504a82f9ae7be99a9bf89db0c1"
+  },
+  "state": {
+    "path": "workspace\\rounds\\R96\\state.json",
+    "sha256": "bfeb2954a479c5e53e02fb4f568c110997a2d25989776c2496ff1841dfe07993",
+    "status": "stopped-after-display-r96",
+    "next_round_permitted": false,
+    "cache_r97_opened": false
+  },
+  "stop_contract": {
+    "amendment_path": "STOP-AFTER-R96-AMENDMENT.json",
+    "amendment_sha256": "37e7d058a4e45334e038fc5803b68cadf4820922cdb42f08f15d5f400e985e8a",
+    "binding_path": "workspace\\rounds\\R96\\stop-after-current-binding.json",
+    "binding_sha256": "526a90b8e7e854c21d0e575d2012f1c31a30a54642be33e87cc67a8dd1a5ecf1"
+  },
+  "final_reports": {
+    "json_path": "R6-R96-FINAL-REPORT.json",
+    "json_sha256": "ab07276c96e563b5ff4371fad2a9a8bf27f29fa77d90259e82ece5c9c45ccf74",
+    "markdown_path": "R6-R96-FINAL-REPORT.md",
+    "markdown_sha256": "a462522cb5c2775bf083d390f35c9aee0af2d234c671fcd3d2735bd4d10ff6a9"
+  },
+  "contract_tests": {
+    "command_scope": "bootstrap + R1 + evolution contract suites",
+    "passed": true,
+    "tests_passed": 25,
+    "tests_failed": 0,
+    "r96_test_receipt_path": "workspace\\rounds\\R96\\test-receipt.json",
+    "r96_test_receipt_sha256": "edde79c5d099d391beb178257e3dfaf85f957bb6b8823deb2acd304e291e009a",
+    "r96_verification_receipt_path": "workspace\\rounds\\R96\\verification-receipt.json",
+    "r96_verification_receipt_sha256": "5cb0be810278a55858bc9c44a3e7dfc135aa774f4f4268219b1400a37b1e9fd4"
+  },
+  "compile_audit": {
+    "passed": true,
+    "files": [
+      "run_bootstrap.py",
+      "run_evolution.py",
+      "test_evolution_contract.py"
+    ]
+  },
+  "process_and_lock_audit": {
+    "cache_processes": [],
+    "shared_heavy_lock_present": false,
+    "shared_heavy_lock_owner": null,
+    "round_r97_present": false,
+    "champion_r97_present": false,
+    "round_r101_present": false,
+    "champion_r101_present": false
+  },
+  "model_and_token_audit": {
+    "completed_rounds_r6_through_r96": 91,
+    "completed_official_calls": 1243,
+    "transport_attempts": 1244,
+    "transport_failures": 1,
+    "official_total_tokens": 21622903,
+    "official_effective_tokens": 12432759,
+    "discarded_transport_failure_total_tokens": 22482,
+    "discarded_transport_failure_effective_tokens": 3282,
+    "strict_fast_priority_receipts": true
+  },
+  "validity_semantics": {
+    "preseal_generic_validity": "diagnostic only",
+    "promotion_gate": "official replay validity AND generation-contract validity for all six arms, replay determinism, candidate pairwise majority, strict candidate median, and any triggered close confirmation"
+  },
+  "scoped_git_status": [
+    "?? experiments/cache-transfer-league/"
+  ],
+  "git_commit_created": false
+}

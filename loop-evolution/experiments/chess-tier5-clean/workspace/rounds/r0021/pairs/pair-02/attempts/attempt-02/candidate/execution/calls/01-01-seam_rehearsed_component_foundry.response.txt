@@ -1,0 +1,346 @@
+Artifact: `see-quiescence-frontier.v1`
+
+Causal target: SEE-guided ordering of the anchor’s quiescence capture frontier. Candidate membership, legality, and state transitions remain unchanged.
+
+Seam: `legal(p, captures=True) → qsearch` move ordering.
+
+Evidence status: deterministic self-test embedded below. Direct interpreter execution was blocked by the read-only command policy before execution.
+
+```python
+from dataclasses import dataclass
+import json
+
+IDENTITY = "see-quiescence-frontier.v1"
+VALUE = {"p": 100, "n": 320, "b": 330, "r": 500, "q": 900, "k": 20000}
+MAX_EXCHANGE_PLIES = 12
+MAX_CANDIDATES = 64
+
+
+@dataclass(frozen=True)
+class Move:
+    source: int
+    target: int
+    promotion: str = ""
+
+
+def _validate(board, side, move):
+    if (not isinstance(board, str) or len(board) != 64 or
+            any(x not in ".PNBRQKpnbrqk" for x in board)):
+        raise ValueError("invalid board")
+    if side not in (0, 1):
+        raise ValueError("invalid side")
+    if not isinstance(move, Move) or not (0 <= move.source < 64 and 0 <= move.target < 64):
+        raise ValueError("invalid move")
+    piece = board[move.source]
+    if piece == "." or piece.isupper() != (side == 0):
+        raise ValueError("wrong-side source")
+    target = board[move.target]
+    if target != "." and target.isupper() == (side == 0):
+        raise ValueError("friendly target")
+    if move.promotion and move.promotion not in "nbrq":
+        raise ValueError("invalid promotion")
+    if move.promotion and (piece.lower() != "p" or move.target // 8 not in (0, 7)):
+        raise ValueError("invalid promotion square")
+
+
+def _attacks(board, source, target):
+    piece = board[source]
+    if piece == "." or source == target:
+        return False
+    sr, sf = divmod(source, 8)
+    tr, tf = divmod(target, 8)
+    dr, df = tr - sr, tf - sf
+    kind = piece.lower()
+
+    if kind == "p":
+        return dr == (1 if piece.isupper() else -1) and abs(df) == 1
+    if kind == "n":
+        return (abs(dr), abs(df)) in ((1, 2), (2, 1))
+    if kind == "k":
+        return max(abs(dr), abs(df)) == 1
+
+    diagonal = abs(dr) == abs(df) and dr != 0
+    straight = (dr == 0) != (df == 0)
+    if kind == "b" and not diagonal:
+        return False
+    if kind == "r" and not straight:
+        return False
+    if kind == "q" and not (diagonal or straight):
+        return False
+
+    step_r = 0 if dr == 0 else (1 if dr > 0 else -1)
+    step_f = 0 if df == 0 else (1 if df > 0 else -1)
+    r, f = sr + step_r, sf + step_f
+    while (r, f) != (tr, tf):
+        if board[r * 8 + f] != ".":
+            return False
+        r += step_r
+        f += step_f
+    return True
+
+
+def _attackers(board, target, side):
+    return sorted(
+        (VALUE[board[s].lower()], s)
+        for s in range(64)
+        if board[s] != "." and board[s].isupper() == (side == 0)
+        and _attacks(board, s, target)
+    )
+
+
+def _apply(board, side, move, ep_square):
+    b = list(board)
+    piece = b[move.source]
+    captured = b[move.target]
+
+    if (captured == "." and ep_square == move.target and
+            piece.lower() == "p" and abs(move.target - move.source) in (7, 9)):
+        cap = move.target - 8 if side == 0 else move.target + 8
+        if not (0 <= cap < 64) or b[cap].lower() != "p" or b[cap].isupper() == (side == 0):
+            raise ValueError("invalid en-passant dependency")
+        captured = b[cap]
+        b[cap] = "."
+
+    b[move.source] = "."
+    b[move.target] = piece
+    if move.promotion:
+        b[move.target] = move.promotion.upper() if side == 0 else move.promotion
+    return "".join(b), captured
+
+
+def _gives_check(board, side):
+    king = "k" if side == 0 else "K"
+    target = board.find(king)
+    return target >= 0 and any(
+        board[s] != "." and board[s].isupper() == (side == 0)
+        and _attacks(board, s, target)
+        for s in range(64)
+    )
+
+
+def primitive(board, side, move, ep_square=-1):
+    _validate(board, side, move)
+    target = board[move.target]
+    en_passant = (
+        target == "." and ep_square == move.target and
+        board[move.source].lower() == "p" and
+        abs(move.target - move.source) in (7, 9)
+    )
+    capture = target != "." or en_passant
+    promotion = bool(move.promotion)
+
+    if not capture and not promotion:
+        return {
+            "component": IDENTITY,
+            "kind": "null",
+            "eligible": False,
+            "gain": 0,
+            "plies": 0,
+            "forced": False,
+            "priority": 0,
+            "work_units": 1,
+        }
+
+    after, captured = _apply(board, side, move, ep_square)
+    gains = [VALUE[captured.lower()] if captured != "." else 0]
+    if promotion:
+        gains[0] += VALUE[move.promotion] - VALUE["p"]
+
+    work = 1
+    attacker_side = side ^ 1
+
+    for _ in range(MAX_EXCHANGE_PLIES):
+        attackers = _attackers(after, move.target, attacker_side)
+        work += 64
+        if not attackers:
+            break
+
+        _, source = attackers[0]
+        victim = after[move.target]
+        attacker = after[source]
+        b = list(after)
+        b[source] = "."
+        b[move.target] = attacker
+        after = "".join(b)
+
+        gains.append(VALUE[victim.lower()] - gains[-1])
+        attacker_side ^= 1
+
+    for i in range(len(gains) - 2, -1, -1):
+        gains[i] = -max(-gains[i], gains[i + 1])
+
+    forced = promotion or _gives_check(
+        _apply(board, side, move, ep_square)[0], side
+    )
+
+    return {
+        "component": IDENTITY,
+        "kind": "capture" if capture else "promotion",
+        "eligible": True,
+        "gain": gains[0],
+        "plies": len(gains) - 1,
+        "forced": forced,
+        "priority": gains[0] * 100 + (50 if forced else 0),
+        "work_units": work,
+    }
+
+
+class QuiescenceCaptureSeam:
+    def __init__(self):
+        self.state = "IDLE"
+        self.generation = 0
+        self.records = []
+
+    def begin(self, board, side, ep_square, moves):
+        if self.state not in ("IDLE", "DONE"):
+            raise RuntimeError("overlapping lifecycle")
+        if len(moves) > MAX_CANDIDATES:
+            raise ValueError("candidate bound exceeded")
+        self.board = board
+        self.side = side
+        self.ep_square = ep_square
+        self.moves = tuple(moves)
+        self.records = []
+        self.generation += 1
+        self.state = "ACTIVE"
+
+    def consume(self):
+        if self.state != "ACTIVE":
+            raise RuntimeError("consume requires ACTIVE")
+        self.records = [
+            primitive(self.board, self.side, move, self.ep_square)
+            for move in self.moves
+        ]
+        order = [
+            i for i, record in enumerate(self.records)
+            if record["eligible"]
+        ]
+        order.sort(key=lambda i: (
+            -self.records[i]["priority"],
+            self.moves[i].source,
+            self.moves[i].target,
+            self.moves[i].promotion,
+        ))
+        self.state = "CONSUMED"
+        return {
+            "component": IDENTITY,
+            "state": self.state,
+            "generation": self.generation,
+            "ordered_indices": order,
+            "records": tuple(self.records),
+            "candidate_count": len(self.moves),
+            "eligible_count": len(order),
+            "work_units": sum(x["work_units"] for x in self.records),
+        }
+
+    def finish(self):
+        if self.state != "CONSUMED":
+            raise RuntimeError("finish requires CONSUMED")
+        result = {
+            "component": IDENTITY,
+            "state": "DONE",
+            "generation": self.generation,
+            "candidate_count": len(self.moves),
+            "eligible_count": sum(x["eligible"] for x in self.records),
+            "work_units": sum(x["work_units"] for x in self.records),
+        }
+        self.state = "DONE"
+        return result
+
+
+def square(name):
+    return ord(name[0]) - 97 + 8 * (int(name[1]) - 1)
+
+
+def self_test():
+    safe = "4k3/8/8/3p4/4Q3/8/8/4K3"
+    negative = "3k4/8/8/2rpQ3/8/8/8/4K3"
+    equal = "3k4/8/8/2rrR3/8/8/8/4K3"
+    check = "4k3/8/8/4p3/4Q3/8/8/4K3"
+    ep_board = "4k3/8/8/3pP3/8/8/8/4K3"
+    promotion = "4k3/P7/8/8/8/8/8/4K3"
+
+    traces = {
+        "positive": primitive(safe, 0, Move(square("e4"), square("d5"))),
+        "null": primitive(safe, 0, Move(square("e4"), square("e5"))),
+        "boundary_negative": primitive(
+            negative, 0, Move(square("e5"), square("d5"))
+        ),
+        "boundary_zero": primitive(
+            equal, 0, Move(square("e5"), square("d5"))
+        ),
+        "forced_check": primitive(
+            check, 0, Move(square("e4"), square("e5"))
+        ),
+        "dependency_en_passant": primitive(
+            ep_board, 0, Move(square("e5"), square("d6")), square("d6")
+        ),
+        "promotion_boundary": primitive(
+            promotion, 0, Move(square("a7"), square("a8"), "q")
+        ),
+    }
+
+    assert traces["positive"]["gain"] == 100
+    assert not traces["null"]["eligible"]
+    assert traces["boundary_negative"]["gain"] == -800
+    assert traces["boundary_zero"]["gain"] == 0
+    assert traces["forced_check"]["forced"]
+    assert traces["dependency_en_passant"]["gain"] == 100
+    assert traces["promotion_boundary"]["gain"] == 800
+
+    seam_board = "4k3/8/2p1p3/2rpQ3/8/8/8/4K3"
+    moves = (
+        Move(square("e5"), square("d5")),
+        Move(square("e5"), square("e6")),
+        Move(square("e5"), square("e4")),
+    )
+
+    seam = QuiescenceCaptureSeam()
+    seam.begin(seam_board, 0, -1, moves)
+    first = seam.consume()
+    finish_one = seam.finish()
+
+    seam.begin(seam_board, 0, -1, moves)
+    second = seam.consume()
+    finish_two = seam.finish()
+
+    assert first["ordered_indices"] == [1, 0]
+    assert first["records"] == second["records"]
+    assert first["ordered_indices"] == second["ordered_indices"]
+    assert finish_one["work_units"] == finish_two["work_units"]
+    assert finish_one["generation"] == 1
+    assert finish_two["generation"] == 2
+
+    traces["seam"] = {
+        "state_trace": [
+            "IDLE", "ACTIVE", "CONSUMED", "DONE",
+            "ACTIVE", "CONSUMED", "DONE"
+        ],
+        "ordered_indices": first["ordered_indices"],
+        "eligible_count": first["eligible_count"],
+        "replay_records_identical": first["records"] == second["records"],
+        "work_units": first["work_units"],
+    }
+    traces["dependency_closure"] = {
+        "inputs": ["board[64]", "side", "ep_square", "Move"],
+        "external_state": "none",
+        "max_exchange_plies": MAX_EXCHANGE_PLIES,
+        "max_candidates": MAX_CANDIDATES,
+        "maximum_work_units": MAX_CANDIDATES * (1 + 64 * MAX_EXCHANGE_PLIES),
+    }
+    return traces
+
+
+if __name__ == "__main__":
+    print(json.dumps(self_test(), sort_keys=True))
+```
+
+Binding claims:
+
+- Anchor qsearch seam: observed in supplied source.
+- State mapping `p.b → board`, `p.side → side`, `p.ep → ep`, encoded move → `Move`: derived and executable.
+- Candidate preservation: guaranteed by ordering only; no pruning.
+- Legal move/state authority remains `legal` and `make`: preserved.
+- Full-engine timing/UCI regression: unverified; no engine was emitted or modified.
+
+Graft invariants: identity unchanged, one component only, no candidate removal, no legality mutation, deterministic ordering, bounded work, and no dependency on external state.

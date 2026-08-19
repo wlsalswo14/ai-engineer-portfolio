@@ -1,0 +1,32 @@
+Role: R60 candidate topology role artifact-only non-revising emitter
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R60,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_bound_artifact
+Role: artifact-only non-revising emitter
+Objective: Consume bind_executable_authority as the sole visible evidence, preserve its complete executable artifact and settled commitments without reinterpretation or alternate construction, and emit that artifact as the one policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "bind_executable_authority": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.recent_ghost = OrderedDict()\n        self.frequent_ghost = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.target = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _drop_ghost(self, key):\n        self.recent_ghost.pop(key, None)\n        self.frequent_ghost.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._drop_ghost(key)\n        ghost[key] = max(1, int(size))\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _remove_live(self, key):\n        if key in self.recent:\n            size = self.recent.pop(key)\n            self.recent_bytes -= size\n            return size, 1\n        if key in self.frequent:\n            size = self.frequent.pop(key)\n            self.frequent_bytes -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, frequent_ghost_hit):\n        prefer_recent = self.recent_bytes > self.target\n        if frequent_ghost_hit and self.recent_bytes >= self.target:\n            prefer_recent = True\n        if prefer_recent and self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember(self.recent_ghost, key, size)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self._remember(self.frequent_ghost, key, size)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember(self.recent_ghost, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, frequent_ghost_hit):\n        evicted = []\n        while self.recent_bytes + self.frequent_bytes + size > self.capacity_bytes:\n            key = self._evict_one(frequent_ghost_hit)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n\n        if requested <= 0:\n            if key in self.recent:\n                self.recent.move_to_end(key)\n            elif key in self.frequent:\n                self.frequent.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._remove_live(key)\n            if segment == 1:\n                self._remember(self.recent_ghost, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.frequent_ghost, key, old_size)\n                return [key]\n            self._drop_ghost(key)\n            return []\n\n        old_size, segment = self._remove_live(key)\n        if segment is not None:\n            evicted = self._make_room(requested, False)\n            self.frequent[key] = requested\n            self.frequent_bytes += requested\n            return evicted\n\n        recent_ghost_hit = key in self.recent_ghost\n        frequent_ghost_hit = key in self.frequent_ghost\n        step = max(1, self.capacity_bytes // 16)\n        if recent_ghost_hit:\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(step, min(requested, self.capacity_bytes)),\n            )\n        elif frequent_ghost_hit:\n            self.target = max(\n                0,\n                self.target - max(step, min(requested, self.capacity_bytes)),\n            )\n\n        self._drop_ghost(key)\n        evicted = self._make_room(requested, frequent_ghost_hit)\n        if recent_ghost_hit or frequent_ghost_hit:\n            self.frequent[key] = requested\n            self.frequent_bytes += requested\n        else:\n            self.recent[key] = requested\n            self.recent_bytes += requested\n        return evicted\n",
+    "sha256": "f1ad940e2b98ce4ae89aa50272b890cfe00798add60205b31cde432b92e15d1d"
+  }
+}

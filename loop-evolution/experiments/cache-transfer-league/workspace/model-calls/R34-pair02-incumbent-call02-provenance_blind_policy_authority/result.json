@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.ghost_limit = 4096\n        self.recent_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n\n    def _remember(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _discard_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _evict_one(self):\n        if self.recent and (self.recent_bytes > self.recent_target or not self.frequent):\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember(self.ghost_recent, key, size)\n        elif self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self._remember(self.ghost_frequent, key, size)\n        elif self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember(self.ghost_recent, key, size)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def _adapt(self, key, size):\n        if key in self.ghost_recent:\n            pressure = max(1, len(self.ghost_frequent) // max(1, len(self.ghost_recent)))\n            delta = max(self.capacity_bytes // 16, min(size, self.capacity_bytes) * pressure)\n            self.recent_target = min(self.capacity_bytes, self.recent_target + delta)\n        elif key in self.ghost_frequent:\n            pressure = max(1, len(self.ghost_recent) // max(1, len(self.ghost_frequent)))\n            delta = max(self.capacity_bytes // 16, min(size, self.capacity_bytes) * pressure)\n            self.recent_target = max(0, self.recent_target - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored = self.frequent.pop(key)\n            self.frequent[key] = stored\n            return []\n\n        if key in self.recent:\n            stored = self.recent.pop(key)\n            self.recent_bytes -= stored\n            self.frequent[key] = stored\n            self.frequent_bytes += stored\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        self._adapt(key, size)\n        self._discard_ghost(key)\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.recent[key] = int(size)\n        self.recent_bytes += int(size)\n        self.used_bytes += int(size)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R34-pair02-incumbent-call02-provenance_blind_policy_authority",
+    "duration_seconds": 31.617,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:33:41Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "53b07ee92f7d56c8701443117ec8bcee1ad68c41ec0a9d316604d50e34d6ff2c",
+    "raw_events_path": "workspace\\model-calls\\R34-pair02-incumbent-call02-provenance_blind_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "ce710659f47c31ee248d87fb0c7390698c5b3c4ba94d76ead5bcbdae3409d8f4",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "1e584d45bc4abfbdd3a1189268fa3f927867766dafd41ef7612b14e817ac34eb",
+    "returncode": 0,
+    "role": "R34 incumbent topology role provenance-blind final semantic authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:33:10Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14605,
+      "output_tokens": 1853,
+      "reasoning_output_tokens": 1034
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

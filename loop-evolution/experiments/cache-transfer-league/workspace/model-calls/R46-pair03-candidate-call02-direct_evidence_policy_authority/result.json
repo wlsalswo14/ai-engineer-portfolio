@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used_bytes = 0\n        self.frequent_target = self.capacity_bytes // 2\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.ghost_limit = 4096\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _rebalance(self):\n        while self.frequent and self.frequent_bytes > self.frequent_target:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.recent[key] = size\n            self.recent_bytes += size\n\n    def _evict_one(self):\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember(self.ghost_recent, key)\n        elif self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self._remember(self.ghost_frequent, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_recent:\n            self.frequent_target = min(\n                self.capacity_bytes,\n                self.frequent_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_frequent:\n            self.frequent_target = max(\n                0,\n                self.frequent_target - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget(key)\n        self._rebalance()\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                break\n            evicted.append(victim)\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R46-pair03-candidate-call02-direct_evidence_policy_authority",
+    "duration_seconds": 46.446,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:00:23Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "b9af11d3315d210af2b3eb7bd0eebffbd7f9c4c2ed52b229e1c42bd81f41b9ae",
+    "raw_events_path": "workspace\\model-calls\\R46-pair03-candidate-call02-direct_evidence_policy_authority\\raw-events.jsonl",
+    "raw_events_sha256": "35ecefc045e4dc46273a52e94444002cdc52f9d03acec4b5b242173e7b242fd4",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "1a0d9f95720e28651af25733210f218fd791002223b0a522d6b89d427ccffd70",
+    "returncode": 0,
+    "role": "R46 candidate topology role sole holistic policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:59:37Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14842,
+      "output_tokens": 3529,
+      "reasoning_output_tokens": 2770
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

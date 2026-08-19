@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "contract_id": "chess-display-r40-to-r43-20260809",
+  "created_at_utc": "2026-08-09T13:47:00.5505383Z",
+  "authorization": "resume authoritative chess state after completed display R40; complete exactly display R41, R42, and R43; do not open R44",
+  "prior_stop_boundary": {
+    "status": "completed",
+    "run_id": "38c68d64864a46fba9efad1e7c1946d8",
+    "display_round": 40,
+    "internal_round": 21,
+    "target_display_round": 40,
+    "campaign_control_sha256": "62bec546010ee404a93553f9e5e3204e29a86707342db017914690febc2d4493"
+  },
+  "authoritative_precontinuation_state": {
+    "display_round": 40,
+    "internal_round": 21,
+    "state_sha256": "5e068aa5d3e04b7f7da9933ddfe48ac3cce429895b4085eda241b2a6f78c43e2",
+    "state_capsule_sha256": "4e17cecdb2971f0c9f993d04846fbda2bb6fac0a39c0a79dabc61d59f79de15e",
+    "round_summary_sha256": "30f06be4666b26bf8cc075ec5aaebf30cbffe4f120fc1be3a5fd503ed07e9f16",
+    "archive_file_sha256": "1f938a2f80c8bc79e54f81f50b2615db1cb0cedc82c08d6137d55da6247a571c",
+    "archive_last_record_sha256": "88797b65582ab0650828fdd4bec983048c34a5a29f397dbe08b479eed8b0b4b4",
+    "champion_package_id": "package_faee07d6265127db",
+    "champion_structure_id": "loop_f7c2f8106612d495",
+    "champion_elo": -204.753,
+    "proposal_mode": "emergent_exploration",
+    "local_refinement_count": 2,
+    "emergent_failure_count": 1
+  },
+  "continuation_target": {
+    "first_display_round": 41,
+    "last_display_round": 43,
+    "first_internal_round": 22,
+    "last_internal_round": 24,
+    "forbid_opening_display_round": 44,
+    "atomic_round_count": 3
+  },
+  "round_contract": {
+    "proposal_mode_source": "derive independently before each round from newly committed state and outcome",
+    "architect": "fresh gpt-5.6-sol max priority/Fast collaboration subagent per round; exactly one structural proposal",
+    "runtime": "all internal execution roles gpt-5.6-luna high",
+    "evaluation": "frozen matched three diverse anchors; invalid retry contract unchanged",
+    "promotion": "three valid accepted pairs; candidate wins strictly exceed losses; candidate median Elo strictly exceeds incumbent median Elo; zero invalid accepted arms",
+    "forbidden": [
+      "best-of-N or replicated candidate generation",
+      "benchmark hardcoding",
+      "engine hyperparameter tuning as the structural change",
+      "evaluator, Elo, model, budget, or promotion-rule changes"
+    ]
+  },
+  "coordination": {
+    "heavy_lock": "experiments/.heavy-evaluation.lock.json",
+    "generation_may_overlap_cache": true,
+    "cache_scoring_may_not_overlap_stockfish": true
+  },
+  "preservation": {
+    "delete_or_rewrite_prior_state": false,
+    "delete_or_rewrite_prior_archive": false,
+    "clear_only_completed_control_boundary_by_new_campaign_run": true,
+    "git_commit": false
+  },
+  "content_sha256": "6f9edcca702f7b20876c8e98c2a8d1955ae58e1de9e6df744d7b888ba4ac7eff"
+}

@@ -1,0 +1,137 @@
+{
+  "aggregate_sha256": "7d8107348d21eefe20aa7c3b106b0d9e3b9f9edbce664c6102ad094ae5529a7d",
+  "architect": {
+    "calls": 1,
+    "model": "gpt-5.6-sol",
+    "policy_code_emitted": false,
+    "proposal_path": "workspace\\rounds\\R4\\architect\\proposal.json",
+    "proposal_sha256": "7f45ee5f84255d5c3f8558d9ec179228c50c253858d6d0858841265e006c7c0b",
+    "reasoning_effort": "max",
+    "receipt_path": "workspace\\model-calls\\R4-structure-architect\\final-receipt.json",
+    "receipt_sha256": "2e4e86544d0487f15f4fe5c5fa5af28dc219e97ae803b00ffcc0cad473caec51",
+    "request_tier": "priority",
+    "service_tier": "fast"
+  },
+  "arm_count": 6,
+  "benchmark_identity": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "cache_r6_opened": false,
+  "common_inputs": {
+    "anchor_policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "hypothesis_sha256": "d68c760da2f77919746f65f85bdc9761f80d54cca92a90edb7c168e871e88f17",
+    "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb"
+  },
+  "display_round": 4,
+  "entries": [
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R4\\pairs\\pair-01\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "46e79d9f47f274e46cd4d9bd9e91c9546717c73e83d8b1f92f156650dc18441f",
+      "generic_valid": true,
+      "label": "pair-01-incumbent",
+      "pair": 1,
+      "seal_path": "workspace\\rounds\\R4\\pairs\\pair-01\\incumbent\\seal.json",
+      "seal_sha256": "5fc25516ffafe1f2832110c163ba80e30cf21e7224c30621837f5c84226aba72"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R4\\pairs\\pair-01\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "9eb3d1aec08d354a2343f5781a261ee546285bbd621b9575e50d08076b07265f",
+      "generic_valid": true,
+      "label": "pair-01-candidate",
+      "pair": 1,
+      "seal_path": "workspace\\rounds\\R4\\pairs\\pair-01\\candidate\\seal.json",
+      "seal_sha256": "4a84f2f98214bf12a48ad0a1044442e8ad4eb70718f00242e66c29725c3bb463"
+    },
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R4\\pairs\\pair-02\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+      "generic_valid": true,
+      "label": "pair-02-incumbent",
+      "pair": 2,
+      "seal_path": "workspace\\rounds\\R4\\pairs\\pair-02\\incumbent\\seal.json",
+      "seal_sha256": "2dfd83268a82acab13c099492925459b2d1ce4c33c3397c6bc17cb9657554110"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R4\\pairs\\pair-02\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "b0332df00a9175f842c8f8afe550074df800b132410f4565f22b258d789eba58",
+      "generic_valid": true,
+      "label": "pair-02-candidate",
+      "pair": 2,
+      "seal_path": "workspace\\rounds\\R4\\pairs\\pair-02\\candidate\\seal.json",
+      "seal_sha256": "0d79050f4b47cf01e025556432fd7335f753bc46f414d87654c37aaf5cd087de"
+    },
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R4\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "33f8a136b141d365e75e7a7d639461cb5f8cf6f010b4a71450095ccb342ddeb0",
+      "generic_valid": true,
+      "label": "pair-03-incumbent",
+      "pair": 3,
+      "seal_path": "workspace\\rounds\\R4\\pairs\\pair-03\\incumbent\\seal.json",
+      "seal_sha256": "cf8d8268ff2eb8c912b2c7532039f86fc3332e7fef5d925429f79bb88c0c677f"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R4\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "510960ae444c506d382f0cdde0451ca874ca2e7c5e5af666a83a73ee902f4a5c",
+      "generic_valid": true,
+      "label": "pair-03-candidate",
+      "pair": 3,
+      "seal_path": "workspace\\rounds\\R4\\pairs\\pair-03\\candidate\\seal.json",
+      "seal_sha256": "c99f389c2598e184a0595d1864d689b6f8847d2a434548450f76a2c87a8d11d7"
+    }
+  ],
+  "inner_roles": {
+    "calls": 12,
+    "direct_substitution": false,
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "service_tier": "default"
+  },
+  "pair_count": 3,
+  "proposal_mode": "emergent_exploration",
+  "schema_version": 1,
+  "score_blind_generation": true,
+  "sealed_at": "2026-08-09T09:10:15Z",
+  "sealed_before_any_frozen_evaluation": true,
+  "selection_contract": {
+    "close_confirmation": {
+      "absolute_threshold": 0.25,
+      "action": "frozen replay3 for all six sealed arms",
+      "pass": "each replay3 normalized result equals both corresponding replay1 and replay2 results",
+      "trigger": "absolute median gap <= 0.25 or any valid non-tied pair gap <= 0.25"
+    },
+    "pair_ties": "exact equality is a tie and never a candidate win",
+    "predeclared_before_score_reveal": true,
+    "promotion": {
+      "all_six_valid_and_replay2_deterministic": true,
+      "candidate_median": "strictly greater than incumbent median",
+      "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+      "failure_action": "retain current champion policy and structure",
+      "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+    }
+  },
+  "selection_contract_sha256": "08b263329c42ee69020ab1d71df14448ec473eb3bae599c7891207c7992f4a7b",
+  "structures": {
+    "candidate": {
+      "call_count": 3,
+      "path": "workspace\\rounds\\R4\\architect\\proposed-structure.json",
+      "sha256": "48f37a2914b31dc2a20e39f3bfa211d3aaeedaa6f82b7c3e564afa6530144a3c",
+      "topology_fingerprint": "43144249ba21cbb1e32fe219e04eca466d9bd8d76205b61bf24d3204e14be3ec"
+    },
+    "incumbent": {
+      "call_count": 1,
+      "path": "workspace\\champion-r3\\structure.json",
+      "sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+      "topology_fingerprint": "5ba36af5c6cac26efd3050e9284c760ec7c35dda00673d521acf69fac95a5c31"
+    }
+  }
+}

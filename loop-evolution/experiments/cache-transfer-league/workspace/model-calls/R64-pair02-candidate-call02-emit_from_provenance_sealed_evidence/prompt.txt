@@ -1,0 +1,115 @@
+Role: R64 candidate topology role source-anonymous normative policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R64,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_from_provenance_sealed_evidence
+Role: source-anonymous normative policy authority
+Objective: Consume synthesize_and_seal_provenance, evaluate its source-anonymous evidence against the directly visible normative inputs, and emit one complete policy without recovering cut-source provenance.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_and_seal_provenance": {
+    "analysis_packet": {
+      "certificate": "Source-anonymous synthesis: retain the substantive adaptive two-segment cache evidence while treating interface legality, online visibility, unique-current-resident evictions, and byte-capacity safety as binding obligations. Resolve performance tradeoffs only within those constraints; no attribution or source identity is material to evaluation.",
+      "witnesses": [
+        {
+          "claim": "Resident entries are separated into recency-oriented and frequency-oriented groups with bounded ghost records for recently evicted entries.",
+          "evidence": "The behavior tracks resident byte totals, a tunable recency target, and bounded metadata for both eviction categories.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Resident hits refresh the entry and promote it into the frequency-oriented group, while ghost hits adjust the recency target and enter the frequency-oriented group.",
+          "evidence": "Observed transitions distinguish resident hits, recent-ghost hits, and frequent-ghost hits.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Eviction selects the oldest eligible resident entry and records its category for future adaptation.",
+          "evidence": "Eviction order is category-aware and oldest-first within each ordered resident group.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Oversized new objects are not admitted; oversized resident updates are removed and reported as evicted.",
+          "evidence": "Admission and update handling explicitly test object size against capacity.",
+          "status": "substantive"
+        },
+        {
+          "claim": "The request timestamp is not required for legality or adaptation.",
+          "evidence": "All decisions can be made from the current key, size, and maintained online state.",
+          "status": "substantive"
+        },
+        {
+          "claim": "Recency adaptation, scan resistance, phase-shift response, and hit-rate optimization can conflict.",
+          "evidence": "Increasing recency allocation protects scans and new working sets, while increasing frequency retention protects repeated accesses and may resist scans.",
+          "status": "conflict requiring normative resolution"
+        }
+      ],
+      "obligations": [
+        {
+          "priority": "binding",
+          "requirement": "Implement the exact Policy constructor and access interface using only the Python standard library."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Operate online, one access at a time, using only current request data and policy-maintained state."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Never exceed capacity_bytes, including after updates and evictions."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Return only unique integer keys that are currently cached and evicted by the current request."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Do not use benchmark traces, evaluator references, oracle decisions, external libraries, networking, subprocesses, or hidden paths."
+        },
+        {
+          "priority": "optimization",
+          "requirement": "Balance object hit rate, byte hit rate, scan resistance, phase-shift adaptation, and regret without violating binding obligations."
+        }
+      ],
+      "exact_actions": [
+        "Use the source-anonymous behavioral evidence as non-authoritative design evidence; do not recover, infer, or disclose its generative attribution.",
+        "Preserve explicit admission, update, eviction, and capacity invariants for zero, positive, and oversized objects.",
+        "Maintain byte accounting consistently across every resident transition and ensure every returned key is resident immediately before its eviction.",
+        "Use bounded online metadata only when it cannot violate capacity safety or return-value legality.",
+        "Resolve performance conflicts in favor of the binding contract, then apply conservative adaptive behavior to balance recency and repeated-access retention.",
+        "Emit exactly one complete policy implementation conforming to the task interface and restrictions."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R63 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

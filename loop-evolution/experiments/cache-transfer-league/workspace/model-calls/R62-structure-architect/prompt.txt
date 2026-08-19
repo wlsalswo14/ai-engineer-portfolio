@@ -1,0 +1,257 @@
+Role: score-blind R62 counter_hypothesis structure architect; never policy code
+
+You are the sole STRUCTURE ARCHITECT for Cache display R62, operating in
+`counter_hypothesis` mode. Design exactly one structural mutation from the current champion
+topology. Output only one qualitative score-blind hypothesis, one structural
+factor, topology roles/visibility, a causal falsifier, and the required mode
+certificate. Never output policy code, pseudocode, cache-algorithm instructions,
+implementation parameters, official scores, trace contents, benchmark-specific
+constants, variants, hardcoding, sampling, voting, or best-of-N. Do not use
+tools or inspect files; everything allowed is inline.
+
+Propose an independent counter-hypothesis that rejects the active structure
+family rather than extending it. It must name rejected assumptions, forbid one
+inherited mechanism, replace it with one independent principle, and change at
+least two behavioral dimensions as consequences of the single structural
+factor. This mode persists until promotion. mode_certificate must contain
+`rejected_assumptions` (nonempty list), `forbidden_inherited_mechanism`,
+`independent_replacement_principle`, `changed_behavioral_dimensions` (at least
+two distinct strings), and `counter_until_promotion`: true.
+
+Return exactly one candidate. It must have two to four calls in one sequential,
+nonbranching lineage. The first call receives the six common inputs below in
+their exact order. Each later call consumes the immediately preceding call and
+may also receive common external inputs. The final call is last and emits one
+policy. Every nonfinal output is consumed by the next call. The structural
+factor must differ from the incumbent and every tested factor in the notebook.
+Prefer a new topology graph shape. A previously tested coarse call shape is
+permissible only when the single mutation changes concrete edge authority,
+control, visibility, evidence timing, or state-transition semantics; mere role
+renaming/fission remains forbidden. Objectives describe role evidence/action
+only and must not prescribe a cache algorithm.
+Every output_type must be exactly one of `analysis`, `policy`,
+`policy_capsule`, `executable_policy_state`, or `executable_policy_closure`.
+The latter three policy-bearing kinds must carry one complete executable policy
+artifact on the single lineage; only `analysis` is non-policy.
+
+Common external inputs:
+["task", "anchor_policy", "anchor_contract", "task_constraints", "candidate_hypothesis", "loop_structure"]
+
+Return one strict JSON object and no prose:
+{
+  "architect_scope": "one-R62-structural-factor-only",
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "...",
+    "causal_change": "...",
+    "expected_effect": "...",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "one factor only",
+    "before": "...",
+    "after": "...",
+    "why_structural": "..."
+  },
+  "mode_certificate": {"rejected_assumptions":["..."],"forbidden_inherited_mechanism":"...","independent_replacement_principle":"...","changed_behavioral_dimensions":["...","..."],"counter_until_promotion":true},
+  "candidate_structure": {
+    "name": "...",
+    "organization": "...",
+    "information_flow": "...",
+    "stages": [{"id":"...","mode":"sequential","calls":[
+      {"id":"...","role":"...","objective":"...","inputs":["task", "anchor_policy", "anchor_contract", "task_constraints", "candidate_hypothesis", "loop_structure"],"output_type":"analysis"},
+      {"id":"...","role":"...","objective":"...","inputs":["previous_call_id"],"output_type":"policy"}
+    ]}],
+    "final_call_id": "..."
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}
+
+Generic Cache Policy objective and interface:
+---
+# Candidate Task: Cache Policy
+
+Write `policy.py` using only the Python standard library.
+
+```python
+class Policy:
+    def __init__(self, capacity_bytes: int):
+        ...
+
+    def access(self, key: int, size: int, now: int) -> list[int]:
+        """
+        Process one object request and return the keys evicted by this request.
+        """
+```
+
+The evaluator owns the authoritative cache state. Your policy should return only
+keys that are currently cached and should never exceed `capacity_bytes`.
+
+Optimize for:
+
+- object hit rate;
+- byte hit rate;
+- scan resistance;
+- phase-shift adaptation;
+- regret against an offline optimum.
+
+Do not copy, import, invoke, inspect, or adapt evaluator-side reference
+implementations, hidden traces, oracle decisions, benchmark source paths, or
+external cache libraries. Do not use networking, subprocesses, or non-stdlib
+packages.
+
+---
+
+Bounded qualitative error notebook; it deliberately contains no numeric score:
+{
+  "evidence_scope": "bounded qualitative outcomes only",
+  "explicitly_forbidden_repetition": [
+    "serial terminal-call role fission",
+    "mere producer-reviewer-finalizer split or role rename",
+    "best-of-N, voting, replicated candidates, or parameter sweep"
+  ],
+  "factor_frontier": [
+    {
+      "display_round": 56,
+      "factor": "constraint-first temporal partitioning of evidence reacquisition through one non-policy constraint-latching transition",
+      "semantic_topology_fingerprint": "1a61125c60deb6e65da79c9789b698ee73cc7968bbcbb3807b6db7171618f1ef",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "bda2e4f6af2e63a9e6d70e6bc0a4ec175f53b28d8804cbcbb705bbe36a1f9173"
+    },
+    {
+      "display_round": 57,
+      "factor": "contradiction-triggered causal-source demotion across the analysis-to-policy edge",
+      "semantic_topology_fingerprint": "292f5adcbe98fdad2cc3762ce2109a2f829993ad5a63f3ba25009e2b9dd42147",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c"
+    },
+    {
+      "display_round": 58,
+      "factor": "evidence-triggered dependency-directed rollback authority on the executable handoff",
+      "semantic_topology_fingerprint": "f9c86c320059c69a292054e441e0a4ca11b25bddf83e64dee2010b256d0ebfad",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "4a0fcf0b5ae0781281e30b3851f1b41adb1e15c63d4f1b54bc493afc17b52d11"
+    },
+    {
+      "display_round": 59,
+      "factor": "complete post-intake evidence closure",
+      "semantic_topology_fingerprint": "deb8d8c955e000d9982a85a40bc1821bcb52ecaa855ef3a8f268a2b7e78efa5a",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "f1e759b7b03f0e4cc9fbf08d002249d278a161740427e7b46d06767caccc2c77"
+    },
+    {
+      "display_round": 60,
+      "factor": "binding executable authority inversion across the sole handoff",
+      "semantic_topology_fingerprint": "879f7e992f07194a9b7d2f9c5cea7d21103915e97e15b2036f399c89e1b76a22",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "4c1d70f13a7282f6a0df9666a667f0c7f44485049af1b730f533ad10706a6545"
+    },
+    {
+      "display_round": 61,
+      "factor": "contract-scoped mutable executable baton across the sole handoff",
+      "semantic_topology_fingerprint": "303b25d41ec377d6c1e768dcbcfe643262e6c0289c2226e297ec70f3db020690",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "8af561d73aa32da7f792edc1366aa1fb66046b8c74320ef58bdc349ebe4f2cab"
+    }
+  ],
+  "for_display_round": 62,
+  "official_numeric_scores_included": false,
+  "recent_outcomes": [
+    {
+      "aggregate_relation": "incumbent_median_higher",
+      "bounded_lesson": "Some sealed outputs violated authoritative operation validity. The analysis-only handoff plausibly deprived final materialization of a directly executable policy lineage; preserve executable lineage visibility without exposing cases, traces, or scores.",
+      "display_round": 59,
+      "paired_pattern": [
+        "invalid",
+        "incumbent_better",
+        "invalid"
+      ],
+      "promotion_outcome": "not_promoted",
+      "proposal_mode": "counter_hypothesis",
+      "structural_factor": "complete post-intake evidence closure",
+      "validity": "one_or_more_arms_invalid_or_nondeterministic"
+    },
+    {
+      "aggregate_relation": "medians_equal",
+      "bounded_lesson": "Some sealed outputs violated authoritative operation validity. The analysis-only handoff plausibly deprived final materialization of a directly executable policy lineage; preserve executable lineage visibility without exposing cases, traces, or scores.",
+      "display_round": 60,
+      "paired_pattern": [
+        "candidate_better",
+        "invalid",
+        "equal"
+      ],
+      "promotion_outcome": "not_promoted",
+      "proposal_mode": "counter_hypothesis",
+      "structural_factor": "binding executable authority inversion across the sole handoff",
+      "validity": "one_or_more_arms_invalid_or_nondeterministic"
+    },
+    {
+      "aggregate_relation": "medians_equal",
+      "bounded_lesson": "Some sealed outputs violated authoritative operation validity. The analysis-only handoff plausibly deprived final materialization of a directly executable policy lineage; preserve executable lineage visibility without exposing cases, traces, or scores.",
+      "display_round": 61,
+      "paired_pattern": [
+        "candidate_better",
+        "invalid",
+        "equal"
+      ],
+      "promotion_outcome": "not_promoted",
+      "proposal_mode": "counter_hypothesis",
+      "structural_factor": "contract-scoped mutable executable baton across the sole handoff",
+      "validity": "one_or_more_arms_invalid_or_nondeterministic"
+    }
+  ],
+  "schema_version": 1,
+  "trace_contents_included": false
+}
+
+Current champion topology; no outcome data:
+{
+  "final_call_id": "reacquire_and_unify_authority",
+  "information_flow": "The first call receives every common input and emits only a source-distinguished counter-assumption analysis carrying no policy or settlement authority. The final call consumes that analysis while independently receiving every common input, treats the analysis as defeasible evidence, reconciles both views under undivided authority, and emits one policy.",
+  "name": "Defeasible Dual-View Reacquisition",
+  "organization": "two-call sequential lineage with one nonbinding analysis handoff and terminal lossless evidence reacquisition",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "map_counter_assumptions",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+          "output_type": "analysis",
+          "role": "defeasible counter-assumption mapper"
+        },
+        {
+          "id": "reacquire_and_unify_authority",
+          "inputs": [
+            "map_counter_assumptions",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume map_counter_assumptions together with every common input, treat the analysis as defeasible rather than binding, resolve disagreements through direct evidence comparison, and emit one complete policy under undivided authority.",
+          "output_type": "policy",
+          "role": "raw-evidence-reacquiring unitary policy authority"
+        }
+      ],
+      "id": "dual_view_reacquisition_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

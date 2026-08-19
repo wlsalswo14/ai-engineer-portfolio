@@ -1,0 +1,88 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "The public contract requires legal online behavior, capacity safety, unique currently cached integer evictions, and adaptation across workload phases; the anchor provides only behavioral evidence, not a binding semantic specification.",
+      "exact_actions": [],
+      "obligations": [
+        {
+          "obligation": "Preserve the declared constructor and access interfaces."
+        },
+        {
+          "obligation": "Use only information available through the current online request and policy-maintained history."
+        },
+        {
+          "obligation": "Return only unique integer keys that are currently cached and evicted by the current request."
+        },
+        {
+          "obligation": "Never exceed the supplied byte capacity."
+        },
+        {
+          "obligation": "Remain standard-library-only and avoid external traces, oracles, benchmark paths, and reference implementations."
+        },
+        {
+          "obligation": "Reconcile performance tradeoffs without treating the anchor's internal mechanisms as authoritative."
+        }
+      ],
+      "witnesses": [
+        {
+          "evidence": "Repeated accesses favor retention while one-pass or shifting demand can make recency-derived protection stale.",
+          "tension": "Hit preservation versus scan resistance and phase-shift responsiveness."
+        },
+        {
+          "evidence": "Capacity is measured in bytes, so size-aware retention can improve bytes served while displacing more objects.",
+          "tension": "Byte hit rate versus object hit rate."
+        },
+        {
+          "evidence": "Requests larger than capacity and incomplete fit scenarios require behavior consistent with the evaluator-owned cache state.",
+          "tension": "Immediate capacity legality versus admission and eviction uncertainty."
+        },
+        {
+          "evidence": "The anchor assumes probation/protected classes, ghost histories, and adaptive protection targeting; their causal benefit is unverified because scores and traces are withheld.",
+          "tension": "Anchor-derived segmentation assumptions versus workload-neutral terminal judgment."
+        },
+        {
+          "evidence": "Ghost-derived adjustments may encode workload-history signals whose reliability and phase-shift timing are unknown.",
+          "tension": "Deterministic online adaptation versus overreaction to sparse evidence."
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R34-pair01-candidate-call01-map_obligation_tensions",
+    "duration_seconds": 9.397,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:31:05Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ecca0c9b2a23f3c5ccbb6032607d1b65ddddc639add18ca28a58fe9d16343b86",
+    "raw_events_path": "workspace\\model-calls\\R34-pair01-candidate-call01-map_obligation_tensions\\raw-events.jsonl",
+    "raw_events_sha256": "3746ceb4de103c357b665e338e42c069b937d2d2aef5a0e0aa2912817c27a20c",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "8d873759776efeea57d9a8dda2f4e72cfda953dbf90f106a7268e0bcfa3e75b2",
+    "returncode": 0,
+    "role": "R34 candidate topology role non-policy obligation evidence mapper",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:30:56Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14345,
+      "output_tokens": 486,
+      "reasoning_output_tokens": 120
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,114 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R76-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "exercise_triggered_regrounding",
+      "information_flow": "The first call receives every common input and emits exactly one complete executable policy state. The final call consumes that state, directly sees every common input, uses contradiction evidence as the transition trigger, re-grounds the same single artifact when triggered, and emits one policy.",
+      "name": "Triggered Causal Re-grounding Lineage",
+      "organization": "two-call sequential lineage with one complete executable policy state and terminal causal-reset authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "instantiate_causally_live_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Integrate all visible evidence into one complete executable policy state whose initial commitments have an inspectable causal relationship to the anchor, contract, constraints, hypothesis, and loop structure.",
+              "output_type": "executable_policy_state",
+              "role": "single-artifact executable-state originator"
+            },
+            {
+              "id": "exercise_triggered_regrounding",
+              "inputs": [
+                "instantiate_causally_live_state",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume instantiate_causally_live_state, reconcile its commitments against directly visible obligations, use contradiction of a shared inherited premise to transition the single artifact to contract-and-constraint grounding, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "causal-basis transition authority"
+            }
+          ],
+          "id": "causal_regrounding_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "post-construction evidence-triggered causal re-grounding",
+      "champion_limitation": "The champion can prohibit commitments but cannot reset the shared causal basis of an already complete executable artifact.",
+      "not_local_refinement": "This adds a post-construction causal-state reset absent from exclusion authority, ownership transfer, semantic closure, provenance defeasibility, serialization, and exclusion projection; it is not a reviewer, gate, role split, field, or rename.",
+      "observable_effect": "The emitted policy remains one complete artifact while commitments supported only by the contradicted shared premise cease to govern it.",
+      "state_transition": "The single artifact transitions from anchor-continuous grounding to contract-and-constraint grounding, with the contradicted premise losing causal authority before emission.",
+      "trigger": "A successor-visible contradiction between an explicit contract or constraint obligation and a shared anchor-derived premise supporting multiple commitments in the predecessor artifact."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the static exclusion-analysis edge with one executable causal-state edge whose successor can reset the artifact's governing basis when post-construction reconciliation exposes that contradiction.",
+      "expected_effect": "The lineage can coherently decommit from a stale premise family while retaining one directly executable artifact and preserving contract-grounded completeness.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Binding exclusions can remove isolated unsupported commitments, but correlated commitments may survive when their shared anchor-derived causal premise becomes contradicted only after a complete policy artifact exists."
+    },
+    "structural_mutation": {
+      "after": "The sole edge carries one complete executable policy state, and the terminal call may transition that artifact from anchor-continuous grounding to contract-and-constraint grounding when a shared inherited premise is contradicted.",
+      "before": "The sole edge carries binding negative analysis, and the terminal call constructs a policy within the remaining admissible space.",
+      "change_count": 1,
+      "factor": "evidence-triggered causal-basis reset authority on the sole executable policy-state edge",
+      "why_structural": "This replaces static constraint transmission with a causally live executable-state transition and gives the successor transformative authority over the governing basis of the single artifact."
+    }
+  },
+  "receipt": {
+    "call_id": "R76-structure-architect",
+    "duration_seconds": 96.518,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:10:27Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fd5770f6b1301b754fb5e0ce503490707dd8ea0c80fa92a1b8f8ae7833ff0d1f",
+    "raw_events_path": "workspace\\model-calls\\R76-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "718121204f4a4376376c6365c52507cb88103a0a2be76d7c12505a58e7ea30fe",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "341c158388bff45d699201999cbbfdc7da1eddea26f9d876105a662bb4648896",
+    "returncode": 0,
+    "role": "score-blind R76 emergent_exploration structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:08:50Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14445,
+      "output_tokens": 4822,
+      "reasoning_output_tokens": 3840
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

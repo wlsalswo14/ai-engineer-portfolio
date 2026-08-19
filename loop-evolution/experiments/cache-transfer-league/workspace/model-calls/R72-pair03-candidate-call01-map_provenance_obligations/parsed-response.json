@@ -1,0 +1,159 @@
+{
+  "analysis_packet": {
+    "certificate": "Evidence is online-only and score-blind. Preserve interface legality, capacity safety, unique currently cached integer evictions, standard-library constraints, and provenance visibility. Treat the anchor as inherited evidence, the hypothesis as counter-generative evidence, and retain disagreements rather than silently resolving them.",
+    "exact_actions": [
+      {
+        "action": "Carry every settled obligation into the policy capsule with its source attribution."
+      },
+      {
+        "action": "Record the four unresolved obligations explicitly; do not silently treat them as settled."
+      },
+      {
+        "action": "For each unresolved obligation, compare anchor behavior with directly visible task, contract, constraint, hypothesis, and loop evidence."
+      },
+      {
+        "action": "Create no policy source or alternative artifact in this mapper stage."
+      },
+      {
+        "action": "Pass the analysis and provenance intact to bind_defeasible_commitment for one complete commitment."
+      }
+    ],
+    "obligations": [
+      {
+        "id": "interface_legality",
+        "provenance": [
+          "task",
+          "anchor_contract",
+          "task_constraints"
+        ],
+        "statement": "Maintain the required Policy constructor and access signature and emit one policy-compatible result.",
+        "status": "settled"
+      },
+      {
+        "id": "capacity_safety",
+        "provenance": [
+          "task",
+          "anchor_contract",
+          "task_constraints"
+        ],
+        "statement": "Never retain more bytes than capacity and handle nonpositive capacity and oversized objects without violating evaluator-state legality.",
+        "status": "settled"
+      },
+      {
+        "id": "eviction_legality",
+        "provenance": [
+          "task",
+          "task_constraints"
+        ],
+        "statement": "Return only unique integer keys that are currently cached and evicted by the current request.",
+        "status": "settled"
+      },
+      {
+        "id": "online_visibility",
+        "provenance": [
+          "task",
+          "anchor_contract",
+          "task_constraints"
+        ],
+        "statement": "Base decisions only on the current request and policy-maintained history; do not use hidden traces, references, scores, oracle decisions, benchmark paths, networking, subprocesses, or non-stdlib packages.",
+        "status": "settled"
+      },
+      {
+        "id": "objective_tradeoffs",
+        "provenance": [
+          "task",
+          "candidate_hypothesis"
+        ],
+        "statement": "Seek object and byte hit rate, scan resistance, phase-shift adaptation, and low regret through defensible online state rather than unverifiable benchmark-specific assumptions.",
+        "status": "settled"
+      },
+      {
+        "id": "provenance_completeness",
+        "provenance": [
+          "candidate_hypothesis",
+          "loop_structure"
+        ],
+        "statement": "Preserve the source and rationale for each commitment, including disagreements between inherited behavior and the proposed causal change.",
+        "status": "settled"
+      },
+      {
+        "id": "single_commitment",
+        "provenance": [
+          "task_constraints",
+          "loop_structure"
+        ],
+        "statement": "Bind the evidence into exactly one complete executable policy capsule and ultimately one policy artifact.",
+        "status": "settled"
+      },
+      {
+        "id": "bounded_amendment",
+        "provenance": [
+          "candidate_hypothesis",
+          "loop_structure"
+        ],
+        "statement": "Permit downstream amendment only when an obligation is explicitly unresolved and the amendment is supported by directly visible source evidence.",
+        "status": "settled"
+      },
+      {
+        "id": "oversize_and_zero_size_semantics",
+        "provenance": [
+          "anchor_policy",
+          "task",
+          "task_constraints"
+        ],
+        "statement": "Resolve whether oversized and zero-sized requests should be represented, rejected, or immediately reported while preserving evaluator-state and eviction legality.",
+        "status": "unresolved"
+      },
+      {
+        "id": "resident_reclassification",
+        "provenance": [
+          "anchor_policy",
+          "candidate_hypothesis"
+        ],
+        "statement": "Resolve whether every resident hit should promote to frequent status and how replacement-size changes affect accounting and adaptation without violating settled contracts.",
+        "status": "unresolved"
+      },
+      {
+        "id": "ghost_replay_semantics",
+        "provenance": [
+          "anchor_policy",
+          "candidate_hypothesis"
+        ],
+        "statement": "Resolve how recent-versus-frequent ghost reappearance should adjust targets and replacement preference while retaining provenance and bounded memory.",
+        "status": "unresolved"
+      },
+      {
+        "id": "now_parameter_use",
+        "provenance": [
+          "task",
+          "anchor_policy"
+        ],
+        "statement": "Resolve whether the unused now parameter is intentionally irrelevant or whether temporal recency requires an online, contract-safe use.",
+        "status": "unresolved"
+      }
+    ],
+    "witnesses": [
+      {
+        "evidence": "The artifact must preserve interface legality, capacity safety, and online-only visibility.",
+        "source": "anchor_contract"
+      },
+      {
+        "evidence": "The policy must use only standard-library facilities, process one access at a time, return only currently cached unique integer keys, never exceed capacity, and avoid traces, oracle adaptation, benchmark paths, and scores.",
+        "source": "task_constraints"
+      },
+      {
+        "evidence": "The inherited design uses byte-aware recent/frequent residents, ghost histories, adaptive recent targeting, and explicit eviction tracking; its behavior is evidence but not an immutable behavioral mandate.",
+        "source": "anchor_policy"
+      },
+      {
+        "evidence": "The proposed causal change favors an early complete executable commitment followed by terminal amendment limited to explicitly unresolved obligations.",
+        "source": "candidate_hypothesis"
+      },
+      {
+        "evidence": "The mapper emits analysis only; the binder creates one complete policy capsule; the adjudicator preserves settled commitments and may amend only unresolved obligations supported by visible provenance.",
+        "source": "loop_structure"
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

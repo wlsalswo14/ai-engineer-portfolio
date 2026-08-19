@@ -1,0 +1,43 @@
+{
+  "final_call_id": "exercise_full_context_sovereignty",
+  "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule and reopens every common input simultaneously. The capsule remains visible as evidence but carries no preservation authority; the final call emits the lineage's single policy.",
+  "name": "Defeasible Predecessor Sovereignty Edge",
+  "organization": "two-call sequential lineage with one complete executable predecessor and one terminal full-context authority reset",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_defeasible_predecessor",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the initially visible evidence and obligations into one complete executable policy artifact whose commitments remain explicitly open to terminal reconsideration.",
+          "output_type": "policy_capsule",
+          "role": "defeasible executable originator"
+        },
+        {
+          "id": "exercise_full_context_sovereignty",
+          "inputs": [
+            "originate_defeasible_predecessor",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume originate_defeasible_predecessor with all common evidence co-visible, treat inherited commitments as defeasible evidence rather than preserved state, resolve visible conflicts once, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "terminal full-context policy authority"
+        }
+      ],
+      "id": "single_sovereignty_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

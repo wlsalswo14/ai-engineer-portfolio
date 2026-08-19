@@ -1,0 +1,117 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R70-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "succeed_transferred_state",
+      "information_flow": "The first call receives every common input and originates one complete executable policy state. That single artifact moves across the sole edge to the final call, which also receives task, anchor_contract, and task_constraints, assumes exclusive successor authority, and emits one policy from the inherited state.",
+      "name": "Move-Only State Succession",
+      "organization": "two-call sequential lineage with exclusive successor ownership of a complete executable policy state",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "originate_transferable_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile all visible evidence and normative obligations into one complete executable policy state whose action authority is transferable as a single lineage artifact.",
+              "output_type": "executable_policy_state",
+              "role": "fully informed executable-state originator"
+            },
+            {
+              "id": "succeed_transferred_state",
+              "inputs": [
+                "originate_transferable_state",
+                "task",
+                "anchor_contract",
+                "task_constraints"
+              ],
+              "objective": "Consume originate_transferable_state as the transferred complete artifact, reconcile directly visible normative evidence with its embodied action commitments, exercise the sole successor transition, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "exclusive successor policy authority"
+            }
+          ],
+          "id": "move_only_state_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "scan-resistance behavior",
+        "phase-shift adaptation behavior"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "fresh terminal policy origination from an analysis-only handoff under a source-class cut",
+      "independent_replacement_principle": "move-only executable-state ownership in which one complete artifact transfers once and only its successor may perform the terminal state transition",
+      "rejected_assumptions": [
+        "Terminal source-class deprivation is the productive cause of disciplined policy authority.",
+        "An analysis-only handoff preserves all action semantics required for terminal policy origination.",
+        "Policy authority must be either terminal-originated or permanently bound to the fully informed first call."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace visibility-governed reconstruction with a move-only handoff of one complete executable policy state whose authority transfers to the terminal successor.",
+      "expected_effect": "Executable continuity should preserve operation-valid action coherence while jointly changing scan-resistance behavior and phase-shift adaptation behavior because both remain embodied in one inherited state instead of being re-derived after the handoff.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion makes terminal policy coherence depend on reconstructing executable action semantics from a non-policy analysis while treating a terminal source-class cut as the basis of disciplined authority."
+    },
+    "structural_mutation": {
+      "after": "One complete executable_policy_state crosses the edge under move-only ownership, and the terminal call receives exclusive successor authority over that same artifact before emitting the single policy.",
+      "before": "An advisory analysis crosses the edge, and the source-restricted terminal call originates the policy by reconstructing action semantics.",
+      "change_count": 1,
+      "factor": "move-only successor ownership of one complete executable policy state on the sole lineage edge",
+      "why_structural": "The mutation changes concrete edge ownership and state-transition authority rather than role labels: authority moves with a policy-bearing artifact, is not retained solely by the fully informed first call, and cannot be recreated from analysis or exercised as rollback."
+    }
+  },
+  "receipt": {
+    "call_id": "R70-structure-architect",
+    "duration_seconds": 188.524,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:16:00Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ff0069b13af53fd617de61d471d5a308625bc9e52e527198ea943fafc3bc4499",
+    "raw_events_path": "workspace\\model-calls\\R70-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "062204c1fdfdb672ade1c188bf01415ce8d63b766d297bda2819f8163779f6f2",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "42770be6316de7d5b818eac9b61a04b724fb67cede570b59d7521d9efb9eed04",
+    "returncode": 0,
+    "role": "score-blind R70 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:12:51Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14497,
+      "output_tokens": 9632,
+      "reasoning_output_tokens": 8707
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

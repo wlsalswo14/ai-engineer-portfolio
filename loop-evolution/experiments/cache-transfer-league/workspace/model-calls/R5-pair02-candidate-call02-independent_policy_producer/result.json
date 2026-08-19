@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self._capacity = capacity_bytes if type(capacity_bytes) is int and capacity_bytes > 0 else 0\n        self._probationary = OrderedDict()\n        self._protected = OrderedDict()\n        self._probationary_bytes = 0\n        self._protected_bytes = 0\n        self._total = 0\n        self._protected_target = max(1, (self._capacity * 7) // 10) if self._capacity else 0\n        self._scores = {}\n        self._meta_order = OrderedDict()\n        self._ghost_limit = 2048\n        self._step = 0\n        self._last_now = None\n\n    def _resident(self, key):\n        return key in self._probationary or key in self._protected\n\n    def _trim_metadata(self):\n        limit = len(self._probationary) + len(self._protected) + self._ghost_limit\n        while len(self._meta_order) > limit:\n            key = next(iter(self._meta_order))\n            if self._resident(key):\n                self._meta_order.move_to_end(key)\n            else:\n                self._meta_order.pop(key, None)\n                self._scores.pop(key, None)\n\n    def _touch_score(self, key):\n        self._scores[key] = min(15, self._scores.get(key, 0) + 1)\n        self._meta_order.pop(key, None)\n        self._meta_order[key] = None\n        self._trim_metadata()\n\n    def _decay(self):\n        for key in tuple(self._scores):\n            value = self._scores[key] // 2\n            if value:\n                self._scores[key] = value\n            else:\n                self._scores.pop(key, None)\n                self._meta_order.pop(key, None)\n\n    def _rebalance_protected(self):\n        while self._protected_bytes > self._protected_target and len(self._protected) > 1:\n            key, value = self._protected.popitem(last=False)\n            self._protected_bytes -= value\n            self._probationary[key] = value\n            self._probationary_bytes += value\n\n    def _remove(self, key, evicted):\n        if key in self._probationary:\n            value = self._probationary.pop(key)\n            self._probationary_bytes -= value\n        elif key in self._protected:\n            value = self._protected.pop(key)\n            self._protected_bytes -= value\n        else:\n            return\n        self._total -= value\n        evicted.append(key)\n\n    def _victims(self):\n        candidates = []\n        for age, (key, value) in enumerate(self._probationary.items()):\n            candidates.append((self._scores.get(key, 0), 0, age, key, value))\n        for age, (key, value) in enumerate(self._protected.items()):\n            candidates.append((self._scores.get(key, 0), 1, age, key, value))\n        candidates.sort(key=lambda item: (item[0], item[1], item[2]))\n        return candidates\n\n    def _check(self, prior, evicted):\n        probationary_keys = list(self._probationary)\n        protected_keys = list(self._protected)\n        all_keys = probationary_keys + protected_keys\n        if len(set(all_keys)) != len(all_keys):\n            raise RuntimeError('duplicate resident key')\n        if self._probationary_bytes != sum(self._probationary.values()):\n            raise RuntimeError('probationary byte accounting error')\n        if self._protected_bytes != sum(self._protected.values()):\n            raise RuntimeError('protected byte accounting error')\n        if self._total != self._probationary_bytes + self._protected_bytes:\n            raise RuntimeError('total byte accounting error')\n        if self._total < 0 or self._total > self._capacity:\n            raise RuntimeError('capacity invariant violated')\n        if len(set(evicted)) != len(evicted):\n            raise RuntimeError('duplicate eviction')\n        current = set(all_keys)\n        if any(type(key) is not int or key not in prior or key in current for key in evicted):\n            raise RuntimeError('invalid eviction report')\n\n    def _finish(self, prior, evicted):\n        self._check(prior, evicted)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        prior = set(self._probationary)\n        prior.update(self._protected)\n        evicted = []\n        self._step += 1\n        if self._step % 256 == 0:\n            self._decay()\n        if type(now) is int:\n            self._last_now = now\n        if type(key) is not int or type(size) is not int or size <= 0:\n            return self._finish(prior, evicted)\n        self._touch_score(key)\n        if key in self._protected:\n            value = self._protected.pop(key)\n            self._protected[key] = value\n            return self._finish(prior, evicted)\n        if key in self._probationary:\n            value = self._probationary.pop(key)\n            self._probationary_bytes -= value\n            self._protected[key] = value\n            self._protected_bytes += value\n            self._rebalance_protected()\n            return self._finish(prior, evicted)\n        if self._capacity == 0 or size > self._capacity:\n            return self._finish(prior, evicted)\n        required = self._total + size - self._capacity\n        selected = []\n        freed = 0\n        if required > 0:\n            candidate_score = self._scores.get(key, 0)\n            for score, segment, age, victim, victim_size in self._victims():\n                if score < candidate_score:\n                    selected.append(victim)\n                    freed += victim_size\n                    if freed >= required:\n                        break\n            if freed < required:\n                return self._finish(prior, evicted)\n        for victim in selected:\n            self._remove(victim, evicted)\n        self._probationary[key] = size\n        self._probationary_bytes += size\n        self._total += size\n        return self._finish(prior, evicted)\n"
+  },
+  "receipt": {
+    "call_id": "R5-pair02-candidate-call02-independent_policy_producer",
+    "duration_seconds": 163.005,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:16:46Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "39e6aedcee6c5f59a76eab97bad9ff66dff670d1873970767b8c7ff2863a061b",
+    "raw_events_path": "workspace\\model-calls\\R5-pair02-candidate-call02-independent_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "65b874a67a5df08e29878354d9125ee9901d1ab4d516e649c275e05f643c9582",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 0,
+    "response_sha256": "64850ad68d4c8530725b43583333f695c7f5a0d71ef158578835c421a5a60f39",
+    "returncode": 0,
+    "role": "R5 candidate topology role contract-grounded policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:14:03Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13208,
+      "output_tokens": 8638,
+      "reasoning_output_tokens": 7138
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

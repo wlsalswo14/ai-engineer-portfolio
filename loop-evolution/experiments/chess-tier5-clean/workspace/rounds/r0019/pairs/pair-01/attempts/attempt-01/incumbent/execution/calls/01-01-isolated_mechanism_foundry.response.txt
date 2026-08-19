@@ -1,0 +1,142 @@
+Artifact: `isolated_capability.py`
+
+Capability: bounded quiet-threat frontier extension with monotonic branch-local credits and one-ply forcing resolution.
+
+```python
+import json
+
+MAX_CREDITS = 2
+MAX_TARGETS = 32
+VALID_TARGETS = frozenset(("minor", "major"))
+
+State = tuple[int, int, bool]
+Event = tuple[int, int, bool, bool, bool, tuple[str, ...]]
+
+
+def initial_state() -> State:
+    return (MAX_CREDITS, -1, False)
+
+
+def _validate(state: State, event: Event) -> None:
+    if not isinstance(state, tuple) or len(state) != 3:
+        raise ValueError("state-shape")
+    credits, last_ply, armed = state
+    if not isinstance(credits, int) or not 0 <= credits <= MAX_CREDITS:
+        raise ValueError("state-credits")
+    if not isinstance(last_ply, int) or last_ply < -1:
+        raise ValueError("state-ply")
+    if type(armed) is not bool:
+        raise ValueError("state-armed")
+
+    if not isinstance(event, tuple) or len(event) != 6:
+        raise ValueError("event-shape")
+    ply, depth_left, capture, promotion, gives_check, targets = event
+    if not isinstance(ply, int) or ply != last_ply + 1:
+        raise ValueError("non-contiguous-ply")
+    if not isinstance(depth_left, int) or depth_left < 0:
+        raise ValueError("depth-left")
+    if any(type(x) is not bool for x in
+           (capture, promotion, gives_check)):
+        raise ValueError("event-flags")
+    if not isinstance(targets, tuple) or len(targets) > MAX_TARGETS:
+        raise ValueError("target-bound")
+    if any(x not in VALID_TARGETS for x in targets):
+        raise ValueError("target-class")
+
+
+def advance(state: State, event: Event) -> tuple[State, int, str]:
+    _validate(state, event)
+    credits, _, armed = state
+    ply, depth_left, capture, promotion, gives_check, targets = event
+    quiet = not (capture or promotion or gives_check)
+    quiet_threat = quiet and bool(targets)
+    frontier = depth_left <= 1
+
+    if quiet_threat and credits:
+        if frontier:
+            return (credits - 1, ply, False), 1, "direct-frontier-threat"
+        return (credits, ply, True), 0, "arm-quiet-threat"
+
+    if armed and (capture or promotion or gives_check):
+        if frontier and credits:
+            return (credits - 1, ply, False), 1, \
+                   "armed-forcing-resolution"
+
+    return (credits, ply, False), 0, "none"
+
+
+def _event(ply, depth, capture=False, promotion=False,
+           check=False, targets=()):
+    return (ply, depth, capture, promotion, check, tuple(targets))
+
+
+def fixture_suite():
+    cases = [
+        ("predicted_direct", initial_state(),
+         [_event(0, 1, targets=("major",))]),
+        ("predicted_armed_resolution", initial_state(),
+         [_event(0, 2, targets=("minor",)),
+          _event(1, 1, capture=True)]),
+        ("null_quiet", initial_state(), [_event(0, 1)]),
+        ("state_boundary_clears_arm", initial_state(),
+         [_event(0, 2, targets=("major",)), _event(1, 1)]),
+        ("state_boundary_nonquiet", initial_state(),
+         [_event(0, 1, check=True)]),
+        ("budget_exhaustion", initial_state(),
+         [_event(0, 1, targets=("major",)),
+          _event(1, 1, targets=("minor",)),
+          _event(2, 1, targets=("major",))]),
+        ("work_safety_reject", initial_state(),
+         [_event(0, 1, targets=("minor",) * (MAX_TARGETS + 1))]),
+    ]
+
+    traces = []
+    for name, state, events in cases:
+        rows = []
+        try:
+            for event in events:
+                before = state
+                state, extension, reason = advance(state, event)
+                rows.append((before, event, state, extension, reason))
+            traces.append((name, "ok", rows))
+        except ValueError as exc:
+            traces.append((name, "rejected", str(exc),
+                           state == initial_state()))
+    return traces
+
+
+if __name__ == "__main__":
+    first = fixture_suite()
+    assert first == fixture_suite()
+    print(json.dumps({"deterministic": True, "traces": first}))
+```
+
+Causal prediction: preserve tactical search budget across harmless quiet moves, detect delayed quiet-threat resolutions, and prevent repeated credit refills.
+
+Falsifier: reject if direct threats fail to extend, delayed forcing resolutions fail, null/nonquiet moves extend, credits refill, invalid target lists exceed bounded work, or repeated runs differ.
+
+Trace summary:
+
+- Direct frontier threat: extension `1`, credits `2→1`.
+- Delayed quiet threat then forcing resolution: extensions `0→1`, credits `2→1`.
+- Null quiet move: extension `0`, credits unchanged.
+- Armed state followed by null/nonquiet move: arm cleared, extension `0`.
+- Budget exhaustion: extensions `1,1,0`.
+- 33 targets: rejected with `target-bound`; state unchanged.
+- Determinism: `True`.
+
+Execution command:
+
+```text
+python isolated_capability.py
+```
+
+The managed sandbox blocked Python process execution, so the transition logic was additionally checked deterministically in the available execution host; no workspace files were modified.
+
+Integration invariants:
+
+- Pass immutable branch-local state; never reset credits on quiet null moves.
+- Include `credits` and `armed` in transposition-table keys.
+- Add the returned extension exactly once to remaining depth.
+- Start every sibling branch with `initial_state()`.
+- Adapter supplies only primitive capture, promotion, check, and newly-attacked target facts; move legality remains unchanged.

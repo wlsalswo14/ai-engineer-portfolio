@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n\n    def _demote(self):\n        limit = self.capacity_bytes // 2\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > limit:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n            protected_bytes -= size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored = self.protected.pop(key)\n            self.protected[key] = stored\n            return []\n\n        if key in self.probation:\n            stored = self.probation.pop(key)\n            self.protected[key] = stored\n            self._demote()\n            return []\n\n        if self.capacity_bytes == 0 or not isinstance(size, int) or size < 0 or size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R20-pair03-candidate-call02-atomic_policy_committer",
+    "duration_seconds": 21.664,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:42:33Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "a0e62dfb41ccecb613fc54c66399d9a525d2831c72f6cc647736feb25e6f2c2d",
+    "raw_events_path": "workspace\\model-calls\\R20-pair03-candidate-call02-atomic_policy_committer\\raw-events.jsonl",
+    "raw_events_sha256": "ac6b0ca87a4c1a29f41c79ade3c7f367de5b54457aa3f9b6645f7f04d482c3f1",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "b33d52cd5ea8f4d7eb4102f81c54bb36121e9fce8469ad48c2369124d60ceaf6",
+    "returncode": 0,
+    "role": "R20 candidate topology role history-free whole-artifact policy materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:42:11Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14543,
+      "output_tokens": 1450,
+      "reasoning_output_tokens": 1034
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

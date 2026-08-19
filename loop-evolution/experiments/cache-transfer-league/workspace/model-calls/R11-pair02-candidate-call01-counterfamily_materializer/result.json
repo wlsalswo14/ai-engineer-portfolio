@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = max(64, min(2048, self.capacity_bytes // 1024 + 64))\n        self.hits = {}\n        self.used_bytes = 0\n        self.protected_bytes = 0\n\n    def _remember(self, key, protected):\n        target = self.ghost_protected if protected else self.ghost_probation\n        other = self.ghost_probation if protected else self.ghost_protected\n        other.pop(key, None)\n        target.pop(key, None)\n        target[key] = None\n        while len(target) > self.ghost_limit:\n            target.popitem(last=False)\n\n    def _demote_protected(self):\n        target = (self.capacity_bytes * 2) // 3\n        while len(self.protected) > 1 and self.protected_bytes > target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self, evicted):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self._remember(key, False)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self._remember(key, True)\n        else:\n            return False\n        self.used_bytes -= size\n        self.hits.pop(key, None)\n        evicted.append(key)\n        return True\n\n    def _make_room(self, size, evicted):\n        while self.used_bytes + size > self.capacity_bytes:\n            if not self._evict_one(evicted):\n                break\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            self.hits[key] = min(self.hits.get(key, 1) + 1, 1 << 30)\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self.hits[key] = min(self.hits.get(key, 1) + 1, 1 << 30)\n            self._demote_protected()\n            return []\n\n        incoming = max(0, int(size))\n        if self.capacity_bytes == 0 or incoming > self.capacity_bytes:\n            return []\n\n        promoted = key in self.ghost_protected\n        self.ghost_protected.pop(key, None)\n        self.ghost_probation.pop(key, None)\n\n        evicted = []\n        self._make_room(incoming, evicted)\n        if self.used_bytes + incoming > self.capacity_bytes:\n            return evicted\n\n        if promoted:\n            self.protected[key] = incoming\n            self.protected_bytes += incoming\n        else:\n            self.probation[key] = incoming\n        self.hits[key] = 1\n        self.used_bytes += incoming\n        self._demote_protected()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R11-pair02-candidate-call01-counterfamily_materializer",
+    "duration_seconds": 50.784,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:10:33Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "15af21d64525989859a5bdc3ab7ff7d64a3297e50c7790f2030601a30a63897b",
+    "raw_events_path": "workspace\\model-calls\\R11-pair02-candidate-call01-counterfamily_materializer\\raw-events.jsonl",
+    "raw_events_sha256": "cafb92252e11a6e70a4744ff314b89e32e326d52f240f5becc31d261221ee059",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "3b7f375f025f9fbd794972f19835203ed4de58d31735faed2d9e5d66aec7f006",
+    "returncode": 0,
+    "role": "R11 candidate topology role whole-state counter-family conjecture materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:09:42Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13469,
+      "output_tokens": 3849,
+      "reasoning_output_tokens": 3018
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

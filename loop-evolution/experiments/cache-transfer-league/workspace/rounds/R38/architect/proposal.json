@@ -1,0 +1,108 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R38-structure-architect\\final-receipt.json",
+    "sha256": "2e780dcbc05aae2e2060b685288dbf3302d79574be859e8f8fae4f7bddc213df"
+  },
+  "architect_response": {
+    "architect_scope": "one-R38-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "contract_bounded_behavior_authority",
+      "information_flow": "The first call receives all common evidence, creates one complete executable closure, and binds public-contract conformance as immutable. The terminal call consumes that closure together with the existing public evidence and a direct read-only anchor_policy edge, retains no authority to alter the locked conformance boundary, revises only behavior-bearing semantics, and emits one policy.",
+      "name": "Contract-Locked Source-Visible Behavioral Relay",
+      "organization": "two-call sequential lineage with one contract-locked executable handoff and direct read-only source visibility at the terminal behavioral authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "lock_contract_closure",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Form exactly one complete executable policy closure from the supplied evidence, bind public-contract conformance as an immutable authority boundary, delegate only behavior-semantic revision, and pass the complete artifact forward.",
+              "output_type": "executable_policy_closure",
+              "role": "contract-lock authority"
+            },
+            {
+              "id": "contract_bounded_behavior_authority",
+              "inputs": [
+                "lock_contract_closure",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume lock_contract_closure and the supplied public evidence, use direct anchor_policy visibility only as source evidence for authorized behavior-semantic revision, preserve locked contract conformance, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "contract-bounded behavioral authority"
+            }
+          ],
+          "id": "contract_locked_relay",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only the direct read-only anchor_policy edge into the existing terminal call is added; every role, authority boundary, call, output kind, and other evidence edge remains unchanged.",
+      "why_not_repeat_role_fission": "No call or role is added, split, renamed, or reassigned; the mutation is solely a new evidence-visibility edge between an existing common input and an existing authority."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Add one read-only anchor_policy evidence edge to the existing terminal behavioral authority while preserving the immutable contract boundary and all existing authorities.",
+      "expected_effect": "Direct source-artifact visibility should reduce unintended behavioral drift during terminal revision without reopening contract-conformance authority.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The terminal behavioral authority receives the transformed executable closure but lacks direct visibility into the source policy evidence from which that closure was formed."
+    },
+    "structural_mutation": {
+      "after": "anchor_policy also reaches contract_bounded_behavior_authority through one direct read-only evidence edge",
+      "before": "anchor_policy is visible only to lock_contract_closure and reaches the terminal call solely through the transformed executable closure",
+      "change_count": 1,
+      "factor": "direct read-only anchor-policy visibility at terminal behavioral authority",
+      "why_structural": "The added edge changes terminal evidence visibility and timing while leaving call count, role allocation, contract authority, and executable lineage unchanged."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 38,
+  "incumbent_structure_sha256": "6d86bef367251508b3b25489be0cb4e54f42cc76ca7d557e842f23d6846c7696",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "local_refinement",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R38\\qualitative-error-notebook.json",
+    "sha256": "6d04ff6944d160b3848f4a72772b93990722deae2c16c22bee1cd06399bc09be"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R38\\source-manifest.json",
+    "sha256": "2e1f1782054abdc7bc574b6629da38b54dd7c232bb7e09bccf968e54f23dc66b"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "direct read-only anchor-policy visibility at terminal behavioral authority",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "lock_contract_closure",
+        "executor_semantics": "self-contained executable policy artifact crossing a provenance-blind closure edge",
+        "output_type": "executable_policy_closure"
+      }
+    ],
+    "semantic_topology_fingerprint": "d5e80d9ca7eb5e498eb266634f65954faced395dff8cb2a5c77d7d9ef805e299",
+    "topology_fingerprint": "4926f616b6cdcdea6bb56d66153ef167e6e0d97900303de56f4ca7446ea030dc"
+  }
+}

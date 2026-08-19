@@ -1,0 +1,40 @@
+{
+  "final_call_id": "rollback_on_normative_witness",
+  "information_flow": "The first call receives every common input and emits one complete executable policy closure with a single active state and reversible candidate-caused transformation. The final call consumes that closure, directly receives only task, anchor_contract, and task_constraints, and emits the same lineage as one complete policy after preserving or causally rolling back its active transformation.",
+  "name": "Transactional Causal Rollback Edge",
+  "organization": "two-call sequential nonbranching lineage carrying one reversible executable closure through an evidence-triggered terminal state transition",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "construct_reversible_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the available evidence and obligations into one complete executable policy closure whose candidate-caused transformation is reversible within the same sole artifact, without creating parallel alternatives.",
+          "output_type": "executable_policy_closure",
+          "role": "transactional executable-state constructor"
+        },
+        {
+          "id": "rollback_on_normative_witness",
+          "inputs": [
+            "construct_reversible_closure",
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "objective": "Consume construct_reversible_closure and the visible normative inputs, preserve its active state unless a specific normative contradiction is causally attributable to its transformation, and on that evidence transition the same artifact to its restored state before emitting one complete policy.",
+          "output_type": "policy",
+          "role": "causal rollback policy authority"
+        }
+      ],
+      "id": "reversible_executable_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "artifact": "frozen_behavioral_contract",
+  "scope": "General chess/UCI behavior only; no benchmark positions, openings, evaluator details, or source-template reuse.",
+  "anchor_evidence": {
+    "runtime": "Not executed: local Python/Node launches were rejected by workspace policy.",
+    "static_support": [
+      "Implements required uci, isready, ucinewgame, position, go movetime, and quit commands.",
+      "Supports standard start position, six-field FEN parsing, coordinate UCI moves, promotions, castling, and en passant.",
+      "Legal filtering checks whether the moving side's king remains unattacked."
+    ],
+    "static_risks": [
+      "Invalid position moves are silently ignored.",
+      "Terminal positions emit bestmove 0000 rather than a legal move; this is acceptable only when no legal move exists.",
+      "Root search uses a narrowed alpha-beta window without explicit fail-high re-search.",
+      "Deadline checks occur only every 32 nodes and not during legal-move generation.",
+      "Broad exception handling can mask search defects by returning the first legal move."
+    ]
+  },
+  "obligations": [
+    {
+      "id": "P0-UCI",
+      "requirement": "Complete the required UCI handshake and command protocol with no extraneous output.",
+      "probe": "Send uci, isready, ucinewgame, position startpos, go movetime 20, quit.",
+      "pass": "Exactly one uciok, one readyok, one bestmove response, and clean termination."
+    },
+    {
+      "id": "P0-LEGAL",
+      "requirement": "Every nonterminal bestmove must be legal in the exact supplied position.",
+      "probe": "Decode each bestmove and compare it against independently enumerated legal moves.",
+      "pass": "Zero illegal moves, malformed coordinates, stale-state moves, or duplicate bestmove responses."
+    },
+    {
+      "id": "P0-GENERATION",
+      "requirement": "Generate complete legal moves, excluding self-check and including ordinary moves, captures, promotions, castling, and en passant.",
+      "probe": "Run start-position perft at depths 1, 2, and 3; exercise check, pin, promotion, castling, and en-passant micropositions.",
+      "pass": "Start perft equals 20, 400, and 8902; all special-move cases match legal chess rules."
+    },
+    {
+      "id": "P0-STATE",
+      "requirement": "Apply moves without corrupting board, side, castling rights, en-passant target, halfmove clock, or fullmove number.",
+      "probe": "Replay mixed legal move sequences and compare each resulting state with an independent state model.",
+      "pass": "Zero discrepancies; en passant expires after one reply; rook captures and king moves update rights correctly."
+    },
+    {
+      "id": "P0-DEADLINE",
+      "requirement": "For every valid nonterminal go movetime command, return exactly one legal bestmove before the external deadline.",
+      "probe": "Use movetime values 1, 5, 20, and 100 ms across quiet, tactical, checking, and special-move positions.",
+      "pass": "No timeout, hang, missing response, late response, exception, or illegal fallback."
+    },
+    {
+      "id": "P0-FEN",
+      "requirement": "Accept valid six-field FEN positions for either side and all legal castling/en-passant states.",
+      "probe": "Load generated legal FENs, issue go, and validate the reply against that FEN.",
+      "pass": "Correct side-to-move and state-dependent legality in every case."
+    },
+    {
+      "id": "P1-DETERMINISM",
+      "requirement": "Repeated identical transcripts produce stable legal behavior and no state leakage.",
+      "probe": "Replay each transcript after ucinewgame and in fresh processes; compare bestmoves when the same search depth completes.",
+      "pass": "Identical completed-search results, or documented timing-only variation with all responses legal."
+    },
+    {
+      "id": "P1-SEARCH-SAFETY",
+      "requirement": "Search, quiescence, transposition data, and evaluation must preserve legality and terminal correctness.",
+      "probe": "Exercise checkmate, stalemate, forced checks, captures, promotions, and repeated state keys.",
+      "pass": "Correct mate/stalemate classification, no crashes, no illegal king captures, and no state-dependent TT corruption."
+    }
+  ],
+  "preservation_invariants": [
+    "Use only Python standard-library facilities and one final engine.py artifact.",
+    "Preserve the required UCI tokens, lowercase coordinate notation, promotion suffixes, and one-response-per-go behavior.",
+    "Never hard-code benchmark openings, positions, answers, match results, or evaluator behavior.",
+    "A probe failure invalidates the current construction until repaired and all higher-priority probes are rerun.",
+    "Do not conceal internal failures with an unverified fallback move."
+  ],
+  "interacting_failure_cases": [
+    "En-passant capture that removes a shielding pawn and exposes the moving king.",
+    "Castling with nominal rights but a missing rook, attacked origin, attacked transit square, or attacked destination.",
+    "Promotion capture that simultaneously gives check or changes material state.",
+    "Double check and adjacent kings, where only king moves or no moves are legal.",
+    "Rook capture followed by castling-rights evaluation.",
+    "Move counters combined with pawn moves, captures, castling, and black-to-white transitions.",
+    "Transposition reuse across positions differing only in side, castling rights, or en-passant target.",
+    "Search timeout during a root move or legal generation, requiring preservation of the last completed legal result."
+  ],
+  "explicit_pass_criteria": {
+    "hard_gate": "All P0 obligations pass with zero invalid responses, zero hangs, zero crashes, and zero unexplained state discrepancies.",
+    "regression_gate": "All preservation invariants and previously passing probes remain passing after any repair.",
+    "quality_gate": "P1 determinism and search-safety probes pass on general-purpose positions without benchmark-specific knowledge.",
+    "terminal_rule": "A terminal position may return 0000 only when the legal-move set is empty; otherwise 0000 is a failure."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "analysis_packet": {
+    "certificate": "No failure found. draft_policy is byte-for-byte identical to anchor_policy (SHA-256 f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348); no differential behavior is exposed.",
+    "exact_actions": [
+      "Instantiate both policies with identical capacities and replay identical request traces.",
+      "Compare returned eviction lists after every access.",
+      "Probe hits, misses, multi-eviction insertions, oversized objects, exact-capacity fills, and phase-changing traces.",
+      "After each request, verify returned keys were previously cached and tracked byte usage does not exceed capacity.",
+      "Confirm identical source and SHA-256 before any differential evaluation."
+    ],
+    "obligations": [
+      "Preserve Policy(capacity_bytes) and access(key, size, now) -> list[int] interface.",
+      "Return only keys tracked as cached and maintain internal used_bytes <= capacity_bytes.",
+      "Keep oversized objects uncached without evicting existing entries.",
+      "Verify evaluator authoritative state applies returned evictions consistently with internal OrderedDict state.",
+      "Maintain online-only behavior: access decisions use only current request and retained state."
+    ],
+    "witnesses": []
+  },
+  "artifact_kind": "analysis_only"
+}

@@ -1,0 +1,117 @@
+Role: R63 candidate topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R63,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "Anchor evidence indicates a byte-weighted two-segment adaptive recency policy with ghost histories and online target adjustment. It is interface-legal and generally capacity-safe, but its behavior exposes tradeoffs between recency promotion, scan resistance, variable-size replacement, and phase adaptation. The terminal source cut should preserve normative contract reasoning while preventing direct inheritance of anchor-specific implementation choices.",
+      "witnesses": [
+        {
+          "claim": "Positive-size requests no larger than capacity are admitted only after evicting enough currently resident bytes.",
+          "support": "The anchor repeatedly evicts until resident bytes plus requested size fit, then inserts the key."
+        },
+        {
+          "claim": "Oversized requests are not retained, and an already resident oversized-request key is returned as evicted.",
+          "support": "The anchor removes the key from either resident segment and records it in the corresponding ghost history."
+        },
+        {
+          "claim": "Resident hits are promoted or refreshed in the frequent segment and can trigger replacement when the requested size changes.",
+          "support": "Both resident segments are removed before room-making and reinserted into the second segment."
+        },
+        {
+          "claim": "Ghost hits adapt the target toward the segment associated with the missed key and admit the key into the frequent segment.",
+          "support": "B1 increases the target and B2 decreases it before insertion into the second segment."
+        },
+        {
+          "claim": "The anchor has no direct recency aging beyond ordered-segment movement and ghost-limit truncation.",
+          "support": "The visible implementation contains no time-based use of now."
+        }
+      ],
+      "obligations": [
+        {
+          "requirement": "Preserve the exact Policy constructor and access interface using only the standard library.",
+          "risk": "Any emitted design must remain a single online policy and cannot depend on unavailable evaluator state."
+        },
+        {
+          "requirement": "Return only unique integer keys that are currently cached and are evicted by the current request.",
+          "risk": "Eviction bookkeeping must remove each returned key from resident state exactly once; ghost entries are not returnable."
+        },
+        {
+          "requirement": "Never exceed capacity_bytes, including variable object sizes and replacements.",
+          "risk": "Room-making must account for requested size after removing an existing copy, and oversized objects must not remain resident."
+        },
+        {
+          "requirement": "Use only information available through prior accesses and the current access.",
+          "risk": "now may be ignored or used only as an online timestamp; no future trace, oracle, benchmark path, or reference implementation may influence decisions."
+        },
+        {
+          "requirement": "Optimize across hit rate, byte hit rate, scan resistance, phase adaptation, and regret without assuming a score.",
+          "risk": "Recency promotion, admission, segment balance, ghost evidence, and variable-size effects must remain explicit tradeoffs rather than unsupported claims."
+        },
+        {
+          "requirement": "Do not reacquire the cut generative sources at terminal emission.",
+          "risk": "The downstream authority should validate synthesized claims against task, contract, and constraints rather than copy anchor-specific structure."
+        }
+      ],
+      "exact_actions": [
+        {
+          "action": "Treat the anchor as evidence and a source of candidate invariants, not as a mandatory implementation template."
+        },
+        {
+          "action": "Retain the distinctions among resident hits, ghost hits, cold misses, oversized requests, nonpositive sizes, and size-changing replacements."
+        },
+        {
+          "action": "Prioritize invariant checks for resident-byte accounting, duplicate prevention, legal eviction reporting, and post-access capacity."
+        },
+        {
+          "action": "Evaluate scan resistance and phase adaptation separately from basic recency behavior; ghost feedback is evidence, not proof of optimal target movement."
+        },
+        {
+          "action": "Make any admission, promotion, or recency-aging choice explainable solely from online history and current request data."
+        },
+        {
+          "action": "Pass forward unresolved tradeoffs and failure risks, especially variable-size churn and dominance of inherited recency assumptions, for normative reconciliation at emission."
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R62 champion policy anchor",
+    "artifact_sha256": "ec1ccb464a5e08c51726868594c64fb5e3c6de895d8e852c00ea7d4c5741dc6c",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

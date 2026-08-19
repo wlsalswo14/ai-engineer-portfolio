@@ -1,0 +1,43 @@
+{
+  "final_call_id": "atomic_policy_committer",
+  "information_flow": "The first call sees all common inputs and emits only a relational map of objective interactions and validity obligations. The final call consumes that map with the common inputs, evaluates obligations against one complete artifact, and emits one policy without exposing or retaining intermediate policy states.",
+  "name": "Relational Evidence to Atomic Policy Commit",
+  "organization": "two-call sequential chain with a nonconstructive evidence role followed by one atomic materialization role",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "relational_evidence_mapper",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Identify relationships, tensions, and validity obligations present in the supplied evidence without proposing edits, an implementation recipe, or a candidate artifact; emit one relational coherence map for downstream consumption.",
+          "output_type": "analysis",
+          "role": "nonconstructive cross-objective evidence mapper"
+        },
+        {
+          "id": "atomic_policy_committer",
+          "inputs": [
+            "relational_evidence_mapper",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding relational coherence map and visible common evidence, materialize one complete contract-compliant artifact as a single candidate-state commit, evaluate interface and authoritative-state obligations on the complete artifact, and emit one policy without an accepted-edit ledger or retrospective causal compression.",
+          "output_type": "policy",
+          "role": "history-free whole-artifact policy materializer"
+        }
+      ],
+      "id": "map_then_commit",
+      "mode": "sequential"
+    }
+  ]
+}

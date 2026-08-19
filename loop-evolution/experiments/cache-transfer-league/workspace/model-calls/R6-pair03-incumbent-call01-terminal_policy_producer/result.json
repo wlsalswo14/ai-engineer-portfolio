@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.used_bytes = 0\n        self.target_t1_bytes = self.capacity_bytes // 2\n\n    def _forget_ghost(self, key):\n        if key in self.b1:\n            self.b1_bytes -= self.b1.pop(key)\n            return\n        if key in self.b2:\n            self.b2_bytes -= self.b2.pop(key)\n\n    def _remember(self, ghost, key, size):\n        self._forget_ghost(key)\n        ghost[key] = size\n        if ghost is self.b1:\n            self.b1_bytes += size\n            while self.b1_bytes > self.capacity_bytes and self.b1:\n                old_key, old_size = self.b1.popitem(last=False)\n                self.b1_bytes -= old_size\n        else:\n            self.b2_bytes += size\n            while self.b2_bytes > self.capacity_bytes and self.b2:\n                old_key, old_size = self.b2.popitem(last=False)\n                self.b2_bytes -= old_size\n\n    def _replace(self, incoming_size):\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes:\n            choose_t1 = bool(self.t1) and (\n                self.t1_bytes > self.target_t1_bytes\n                or (self.t1_bytes == self.target_t1_bytes and not self.t2)\n            )\n            if choose_t1 or not self.t2:\n                if not self.t1:\n                    break\n                old_key, old_size = self.t1.popitem(last=False)\n                self.t1_bytes -= old_size\n                self.used_bytes -= old_size\n                self._remember(self.b1, old_key, old_size)\n            else:\n                old_key, old_size = self.t2.popitem(last=False)\n                self.t2_bytes -= old_size\n                self.used_bytes -= old_size\n                self._remember(self.b2, old_key, old_size)\n            evicted.append(old_key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if self.capacity_bytes == 0 or size < 0 or size > self.capacity_bytes:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            self.target_t1_bytes = min(\n                self.capacity_bytes,\n                self.target_t1_bytes + max(1, min(size, self.capacity_bytes)),\n            )\n        elif in_b2:\n            self.target_t1_bytes = max(\n                0,\n                self.target_t1_bytes - max(1, min(size, self.capacity_bytes)),\n            )\n\n        if in_b1 or in_b2:\n            self._forget_ghost(key)\n            evicted = self._replace(size)\n            self.t2[key] = size\n            self.t2_bytes += size\n        else:\n            evicted = self._replace(size)\n            self.t1[key] = size\n            self.t1_bytes += size\n\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R6-pair03-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 51.907,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:09:22Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "44ef66e486dd4e041a622e7ae585b9797a5550e846a29ce5db3a6421aa5359c4",
+    "raw_events_path": "workspace\\model-calls\\R6-pair03-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "dcbe1bdf2292a98b9b84ba3674a5a2b24b999912e55814bea95e21b735c32ff8",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "631e43882cc1bf2c37a8cfde0256b683e40aca8c0580cda5544c00f04b987dcc",
+    "returncode": 0,
+    "role": "R6 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:08:30Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13618,
+      "output_tokens": 4027,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

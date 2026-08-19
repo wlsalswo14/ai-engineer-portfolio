@@ -1,0 +1,43 @@
+{
+  "final_call_id": "author_under_inverted_authority",
+  "information_flow": "The first call sees all common inputs and emits the authority analysis consumed by the final call. The final call also sees all common evidence, applies the omission-triggered authority state before any artifact exists, and emits the lineage's only complete policy.",
+  "name": "Omission-Activated Authority Inversion Dyad",
+  "organization": "two-call sequential nonbranching lineage with one non-policy semantic-authority controller followed by the sole executable author",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "establish_omission_authority_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Determine from jointly visible evidence whether every mandatory obligation is represented by inherited semantics and establish the single authority-state transition when an evidenced obligation is absent.",
+          "output_type": "analysis",
+          "role": "pre-artifact semantic-authority controller"
+        },
+        {
+          "id": "author_under_inverted_authority",
+          "inputs": [
+            "establish_omission_authority_state",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the established authority state, reconcile it with jointly visible common evidence, exercise de novo semantic authority only when the omission trigger has changed the state, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "sole post-transition executable authority"
+        }
+      ],
+      "id": "single_preartifact_authority_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

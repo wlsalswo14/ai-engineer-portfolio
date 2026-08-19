@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        try:\n            capacity = int(capacity_bytes)\n        except Exception:\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self._target = 0\n        self._t1 = OrderedDict()\n        self._t2 = OrderedDict()\n        self._b1 = OrderedDict()\n        self._b2 = OrderedDict()\n        self._resident_bytes = 0\n        self._ghost_limit = 1024\n\n    @staticmethod\n    def _size(value):\n        try:\n            value = int(value)\n        except Exception:\n            value = 0\n        return max(0, value)\n\n    def _remove_resident(self, key):\n        if key in self._t1:\n            size = self._t1.pop(key)\n            self._resident_bytes -= size\n            return size, 1\n        if key in self._t2:\n            size = self._t2.pop(key)\n            self._resident_bytes -= size\n            return size, 2\n        return None\n\n    def _add_resident(self, table, key, size):\n        self._b1.pop(key, None)\n        self._b2.pop(key, None)\n        table[key] = size\n        self._resident_bytes += size\n\n    def _remember_ghost(self, key, size, class_id):\n        self._b1.pop(key, None)\n        self._b2.pop(key, None)\n        table = self._b1 if class_id == 1 else self._b2\n        table[key] = size\n        while len(self._b1) + len(self._b2) > self._ghost_limit:\n            if self._b1 and (not self._b2 or len(self._b1) >= len(self._b2)):\n                self._b1.popitem(last=False)\n            elif self._b2:\n                self._b2.popitem(last=False)\n\n    def _adapt(self, from_b1):\n        source = self._b1 if from_b1 else self._b2\n        other = self._b2 if from_b1 else self._b1\n        source_weight = sum(max(1, value) for value in source.values())\n        other_weight = sum(max(1, value) for value in other.values())\n        delta = max(1, other_weight // max(1, source_weight))\n        if from_b1:\n            self._target = min(self.capacity_bytes, self._target + delta)\n        else:\n            self._target = max(0, self._target - delta)\n\n    def _choose_victim_table(self, from_b2):\n        t1_bytes = sum(self._t1.values())\n        if self._t1 and (t1_bytes > self._target or (from_b2 and t1_bytes == self._target)):\n            return self._t1, 1\n        if self._t2:\n            return self._t2, 2\n        if self._t1:\n            return self._t1, 1\n        return None, 0\n\n    def _make_room(self, incoming_size, from_b2=False):\n        evicted = []\n        while self._resident_bytes + incoming_size > self.capacity_bytes:\n            table, class_id = self._choose_victim_table(from_b2)\n            if table is None:\n                break\n            key, size = table.popitem(last=False)\n            self._resident_bytes -= size\n            evicted.append(key)\n            self._remember_ghost(key, size, class_id)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = self._size(size)\n        resident = self._remove_resident(key)\n        if resident is not None:\n            old_size, old_class = resident\n            if size > self.capacity_bytes:\n                self._remember_ghost(key, old_size, old_class)\n                return [key]\n            evicted = self._make_room(size)\n            self._add_resident(self._t2, key, size)\n            return evicted\n\n        if size > self.capacity_bytes:\n            return []\n\n        if key in self._b1:\n            self._adapt(True)\n            self._b1.pop(key, None)\n            evicted = self._make_room(size, True)\n            self._add_resident(self._t2, key, size)\n            return evicted\n\n        if key in self._b2:\n            self._adapt(False)\n            self._b2.pop(key, None)\n            evicted = self._make_room(size, True)\n            self._add_resident(self._t2, key, size)\n            return evicted\n\n        evicted = self._make_room(size, False)\n        self._add_resident(self._t1, key, size)\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R69-pair02-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 81.408,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:09:20Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "ac02b0c0f00dcb256460622f23bb07abd90d9ef22069b7b486f98e1f405f1be9",
+    "raw_events_path": "workspace\\model-calls\\R69-pair02-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "9998b9757ea5b36e9db1486dddadce6bbeef00019a630c4ca02a70e2ec86dca5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "0fe50cd4e223b355f302e445311cf010bfc3c95b705c26924994ffe334c4243e",
+    "returncode": 0,
+    "role": "R69 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:07:58Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13635,
+      "output_tokens": 6162,
+      "reasoning_output_tokens": 5009
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

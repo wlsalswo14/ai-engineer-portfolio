@@ -1,0 +1,40 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self._where = {}\n        self.used_bytes = 0\n        self._protected_bytes = 0\n        self.request_count = 0\n        self.hit_count = 0\n        self.miss_count = 0\n        self.eviction_count = 0\n        self.promotion_count = 0\n\n    def _protected_limit(self):\n        if self.capacity_bytes <= 0:\n            return 0\n        return max(1, (self.capacity_bytes * 3) // 5)\n\n    def _trim_protected(self):\n        limit = self._protected_limit()\n        while self._protected_bytes > limit and len(self.protected) > 1:\n            old_key, old_size = self.protected.popitem(last=False)\n            self._protected_bytes -= old_size\n            self.probationary[old_key] = old_size\n            self._where[old_key] = 0\n\n    def _remove_oldest(self, segment):\n        old_key, old_size = segment.popitem(last=False)\n        self._where.pop(old_key, None)\n        self.used_bytes -= old_size\n        if segment is self.protected:\n            self._protected_bytes -= old_size\n        self.eviction_count += 1\n        return old_key\n\n    def _make_room(self, size, evicted):\n        self._trim_protected()\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probationary:\n                evicted.append(self._remove_oldest(self.probationary))\n            elif self.protected:\n                evicted.append(self._remove_oldest(self.protected))\n            else:\n                break\n\n    def _promote(self, key):\n        stored_size = self.probationary.pop(key)\n        self.protected[key] = stored_size\n        self._where[key] = 1\n        self._protected_bytes += stored_size\n        self.promotion_count += 1\n        self._trim_protected()\n\n    def _touch_protected(self, key):\n        stored_size = self.protected.pop(key)\n        self.protected[key] = stored_size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.request_count += 1\n        location = self._where.get(key)\n        if location == 1:\n            self._touch_protected(key)\n            self.hit_count += 1\n            return []\n        if location == 0:\n            self._promote(key)\n            self.hit_count += 1\n            return []\n\n        self.miss_count += 1\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        self._make_room(size, evicted)\n        self.probationary[key] = size\n        self._where[key] = 0\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-rep01-call02-strength_transducer_policy",
+    "duration_seconds": 80.164,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:44:35Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message",
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "1b04609accc9d183a2005ae1c80c6c0888b682aacd7b3b9f36b719e60026ffc4",
+    "raw_events_sha256": "1eaf90d087477825e7b3bd86017abb023669b3ff7787b37145cb0df5a824df20",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "5cee32d6ef4ef26bdbbe13ce250080acf92f024ed905dc246771ba7787dafe39",
+    "returncode": 0,
+    "role": "obligation-preserving performance transducer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:43:15Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13592,
+      "output_tokens": 4185,
+      "reasoning_output_tokens": 3430
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

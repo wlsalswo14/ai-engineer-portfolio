@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "amendment_id": "chess-display-r43-stop-extension-to-r50-20260809",
+  "created_at_utc": "2026-08-09T14:33:14.1440787Z",
+  "parent_contract_path": "experiments/chess-tier5-clean/workspace/continuations/display-r40-to-r43-20260809.json",
+  "parent_contract_content_sha256": "6f9edcca702f7b20876c8e98c2a8d1955ae58e1de9e6df744d7b888ba4ac7eff",
+  "fast_tier_amendment_path": "experiments/chess-tier5-clean/workspace/continuations/display-r41-r43-fast-tier-amendment.json",
+  "fast_tier_amendment_content_sha256": "238cb63eacd718c5b0bc5bc543a063c045783ee0adaab3b4e9dfbd8fc3fb7126",
+  "authorization": "Preserve the active display R41 campaign and extend the prior display R43 stop boundary through exactly display R50; complete display R41 through R50 sequentially and do not open display R51.",
+  "active_campaign_at_amendment": {
+    "run_id": "3dc6b29553de4967bed5cba86cab1fc1",
+    "target_display_round": 41,
+    "target_internal_round": 22,
+    "status": "running",
+    "preserve_without_restart": true
+  },
+  "boundary_extension": {
+    "prior_last_display_round": 43,
+    "prior_last_internal_round": 24,
+    "new_last_display_round": 50,
+    "new_last_internal_round": 31,
+    "forbid_opening_display_round": 51,
+    "forbid_opening_internal_round": 32,
+    "additional_atomic_round_count": 7,
+    "total_authorized_round_count_from_display_r41": 10,
+    "prior_contract_remains_immutable": true,
+    "supersedes_prior_stop_only": true
+  },
+  "round_contract": {
+    "one_round_per_campaign_process": true,
+    "proposal_mode_source": "derive independently before each round from the immediately preceding atomic committed state and outcome, including emergent-to-counter transitions and promotion resets",
+    "architect": {
+      "fresh_collaboration_subagent_per_round": true,
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "exact_structural_proposals": 1,
+      "receipt_required": true,
+      "missing_or_default_tier_action": "fail_closed"
+    },
+    "runtime": {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "high",
+      "service_tier": "fast",
+      "request_tier": "priority",
+      "tier_contract": "fast_priority_required",
+      "per_call_receipt_required": true,
+      "missing_or_default_tier_action": "fail_closed"
+    },
+    "evaluation": "frozen matched three diverse anchors; current invalid retry contract unchanged",
+    "promotion": "three valid accepted pairs; candidate wins strictly exceed losses; candidate median Elo strictly exceeds incumbent median Elo; zero invalid accepted arms",
+    "forbidden": [
+      "best-of-N or replicated candidate generation",
+      "benchmark hardcoding",
+      "engine hyperparameter tuning as the structural change",
+      "evaluator, Elo, model, budget, or promotion-rule changes"
+    ]
+  },
+  "coordination": {
+    "heavy_lock": "experiments/.heavy-evaluation.lock.json",
+    "generation_may_overlap_cache": true,
+    "cache_scoring_may_not_overlap_stockfish": true
+  },
+  "preservation": {
+    "rewrite_parent_contract": false,
+    "rewrite_fast_tier_amendment": false,
+    "delete_or_rewrite_prior_state": false,
+    "delete_or_rewrite_prior_archive": false,
+    "git_commit": false
+  },
+  "terminal_audit": {
+    "after_display_round": 50,
+    "verify_state_control_archive": true,
+    "verify_tests": true,
+    "verify_no_live_campaign_or_benchmark_process": true,
+    "verify_shared_heavy_lock_absent": true,
+    "verify_display_r51_absent": true
+  },
+  "content_sha256": "1579e258b16c4ca881273ff152799c34e70a6c198b9de0e6145027af9850abac"
+}

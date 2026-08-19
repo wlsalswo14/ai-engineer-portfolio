@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_limit = (self.capacity_bytes * 2) // 3\n        self.ghost_limit = 4096\n\n    def _remember_evicted(self, key, size):\n        self.ghost.pop(key, None)\n        self.ghost[key] = size\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n\n    def _demote_protected(self):\n        while self.protected and self.protected_bytes > self.protected_limit:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self, evicted):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n        else:\n            return False\n        self.used_bytes -= size\n        self._remember_evicted(key, size)\n        evicted.append(key)\n        return True\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._demote_protected()\n            return []\n\n        if self.capacity_bytes == 0:\n            return []\n\n        size = max(0, size)\n        if size > self.capacity_bytes:\n            return []\n\n        ghost_hit = key in self.ghost\n        self.ghost.pop(key, None)\n        self._demote_protected()\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if not self._evict_one(evicted):\n                break\n\n        if self.used_bytes + size > self.capacity_bytes:\n            return evicted\n\n        if ghost_hit:\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used_bytes += size\n            self._demote_protected()\n        else:\n            self.probation[key] = size\n            self.used_bytes += size\n\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R5-pair01-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 59.567,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:13:40Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "14e14f4378de702286eb4a5870752115db3e74e4dd3876496a0629eb8f148061",
+    "raw_events_path": "workspace\\model-calls\\R5-pair01-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "b1b25d3c9a4a10364b6a849e46e3e96a2147b277e92884ad64f96d97b9f06d49",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 0,
+    "response_sha256": "e1ef3a9f332ed034e01b5c08f202e42ac2a927c383f90e23d05dea64e70a2828",
+    "returncode": 0,
+    "role": "R5 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:12:40Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13572,
+      "output_tokens": 3108,
+      "reasoning_output_tokens": 2448
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

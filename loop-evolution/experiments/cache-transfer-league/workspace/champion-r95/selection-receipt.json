@@ -1,0 +1,56 @@
+{
+  "artifact_path": "workspace\\champion-r95\\policy.py",
+  "artifact_sha256": "23a2eb77605a9dd21f7083e42d8d0d441cc1a7a53267bc45ff286239fa9c6832",
+  "cache_r101_opened": false,
+  "champion_source": "retained-r94",
+  "decision_basis": {
+    "all_six_valid_and_deterministic": true,
+    "candidate_median": 85.318,
+    "candidate_pairwise_majority": false,
+    "candidate_strict_median_win": false,
+    "candidate_wins": 1,
+    "close_confirmation_passed": true,
+    "close_confirmation_triggered": true,
+    "incumbent_median": 85.318,
+    "incumbent_wins": 0
+  },
+  "display_round": 95,
+  "evaluation_batch_path": "workspace\\rounds\\R95\\evaluation\\evaluation-batch.json",
+  "evaluation_batch_sha256": "1d54d7f78b120dccc0b1074955a8444f260692b02a3849cf93b5dabc65faa0b9",
+  "promoted": false,
+  "promotion_contract": {
+    "all_six_valid_and_replay2_deterministic": true,
+    "candidate_median": "strictly greater than incumbent median",
+    "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+    "failure_action": "retain current champion policy and structure",
+    "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+  },
+  "promotion_contract_passed": false,
+  "representative_pair": null,
+  "schema_version": 1,
+  "search_control_after": {
+    "completed_mode": "emergent_exploration",
+    "emergent_failure_count": 1,
+    "local_refinement_count": 2,
+    "next_local_refinement_attempt": null,
+    "next_proposal_mode": "emergent_exploration",
+    "promoted": false,
+    "transition": "next-emergent-exploration"
+  },
+  "search_control_before": {
+    "derived_from": "workspace\\rounds\\R94\\state.json",
+    "emergent_failure_count": 0,
+    "local_refinement_attempt": null,
+    "local_refinement_count": 2,
+    "proposal_mode": "emergent_exploration"
+  },
+  "selected_at": "2026-08-10T03:58:59Z",
+  "source_artifact_path": "workspace\\champion-r94\\policy.py",
+  "source_artifact_sha256": "23a2eb77605a9dd21f7083e42d8d0d441cc1a7a53267bc45ff286239fa9c6832",
+  "source_seal_path": null,
+  "source_seal_sha256": null,
+  "starting_policy_sha256": "23a2eb77605a9dd21f7083e42d8d0d441cc1a7a53267bc45ff286239fa9c6832",
+  "starting_structure_sha256": "c907cfebd2011c00c4a17d4a12a8f25f0f76ab7dbda9b969287a07383677fcb7",
+  "structure_path": "workspace\\champion-r95\\structure.json",
+  "structure_sha256": "c907cfebd2011c00c4a17d4a12a8f25f0f76ab7dbda9b969287a07383677fcb7"
+}

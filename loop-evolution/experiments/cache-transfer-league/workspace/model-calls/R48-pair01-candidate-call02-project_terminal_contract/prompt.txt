@@ -1,0 +1,48 @@
+Role: R48 candidate topology role terminal contract-projection authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R48,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: project_terminal_contract
+Role: terminal contract-projection authority
+Objective: Consume settle_behavior_first_state and the supplied public obligations, apply only conformance-caused changes to the complete artifact, preserve settled behavioral authorship, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "settle_behavior_first_state": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.protected_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _adapt(self, key, size):\n        step = max(1, self.capacity_bytes // 32)\n        delta = max(step, min(size, self.capacity_bytes))\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + delta,\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - delta,\n            )\n        self._forget_ghost(key)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key, size)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self._remember(self.ghost_protected, key, size)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        self._adapt(key, size)\n        self._rebalance()\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n",
+    "sha256": "385c1405677d07531a0c7c7b7aef4f32d49d7be57027f159969040c56f2283ea"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R47 champion policy anchor",
+    "artifact_sha256": "352def21afdd93ee0294fb85cb8e92300a7f6791238f9a1ac2bbe2fa50b37184",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 5045,
+  "artifact_path": "workspace\\rounds\\R87\\pairs\\pair-01\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "0cc348f9182d91d08103f7ec1e986ef64111c07905f23af8298e7dfebaba2ef7",
+  "display_round": 87,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R87\\pairs\\pair-01\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "526b750842e0de2592ee58e6271e08155e748727ba1ee534cbe924915f290a77",
+  "label": "pair-01-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R87-pair01-candidate-call01-originate_executable_capsule\\final-receipt.json",
+      "sha256": "8ac13d0008d957703668f6acbf6407acd79c8cb90c4934db097725335f4ecd42"
+    },
+    {
+      "path": "workspace\\model-calls\\R87-pair01-candidate-call02-anchor_polarity_transition\\final-receipt.json",
+      "sha256": "8707ad3ebce60eb240a41fefd3d72493e74661d95c160130c0f6aded95bf425a"
+    },
+    {
+      "path": "workspace\\model-calls\\R87-pair01-candidate-call03-constraint_structure_transition\\final-receipt.json",
+      "sha256": "3dbef318d99c4bdefe41ca9df4fe6e5062cbb9d46dc706efbc7caf36af5076c7"
+    },
+    {
+      "path": "workspace\\model-calls\\R87-pair01-candidate-call04-task_hypothesis_emit\\final-receipt.json",
+      "sha256": "f8c54ac43af282a07a083a2971f725fdb26561b3e2831efb054c4b4a322fee50"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 1,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5045,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-10T02:38:57Z",
+  "transport_resumes": [
+    {
+      "attempt_01_raw_events_path": "workspace\\model-calls\\R87-pair01-candidate-call01-originate_executable_capsule\\raw-events.jsonl",
+      "attempt_01_raw_events_sha256": "4c095ab785b49e02f0a68d44134432554e6ecf6cc2b16e8fb649db771b03c3ad",
+      "call_id": "R87-pair01-candidate-call01-originate_executable_capsule",
+      "discarded_attempt_usage": {
+        "cached_input_tokens": 19200,
+        "input_tokens": 20915,
+        "output_tokens": 1567,
+        "reasoning_output_tokens": 0
+      },
+      "failure_receipt_path": "workspace\\model-calls\\R87-pair01-candidate-call01-originate_executable_capsule\\failure-receipt.json",
+      "failure_receipt_sha256": "3d3890cefea5d40e92ffb1666eb56ae8784697138ca60806b3bfc049f082335f",
+      "manifest_path": "workspace\\model-calls\\R87-pair01-candidate-call01-originate_executable_capsule\\transport-resume-manifest.json",
+      "manifest_sha256": "e630f2fc9ab1630567c91ad44bd8cd447dcdbdf1bff23441bc09e739f8e3bdf3"
+    }
+  ]
+}

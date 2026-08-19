@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self.meta = {}\n        self.window = 32.0\n        self.last_now = None\n        self.touches = 0\n\n    def _observe(self, key, now):\n        if self.last_now is not None:\n            gap = max(1, now - self.last_now)\n            self.window = min(4096.0, max(4.0, self.window * 0.875 + gap * 0.125))\n        self.last_now = now\n        record = self.meta.get(key)\n        if record is None:\n            heat = 1.0\n        else:\n            elapsed = max(0, now - record[1])\n            heat = record[0] / (1.0 + elapsed / self.window) + 1.0\n        self.meta[key] = (min(1000000.0, heat), now)\n        self.touches += 1\n        if self.touches % 257 == 0 and len(self.meta) > 4096:\n            resident = set(self.probation) | set(self.protected)\n            stale = [(value[1], item) for item, value in self.meta.items() if item not in resident]\n            stale.sort()\n            for _, item in stale[:len(self.meta) - 4096]:\n                self.meta.pop(item, None)\n\n    def _utility(self, key, size, now, protected=False):\n        record = self.meta.get(key)\n        if record is None:\n            return 0.0\n        elapsed = max(0, now - record[1])\n        heat = record[0] / (1.0 + elapsed / self.window)\n        ratio = size / float(max(1, self.capacity_bytes))\n        segment_bonus = 1.14 if protected else 1.0\n        return segment_bonus * heat * (0.55 + 0.45 / (1.0 + ratio))\n\n    def _demote_protected(self):\n        target = self.capacity_bytes * 0.7\n        while self.protected and self.protected_bytes > target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        now = int(now)\n        item_size = max(0, int(size))\n        self._observe(key, now)\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._demote_protected()\n            return []\n\n        if self.capacity_bytes == 0 or item_size > self.capacity_bytes:\n            return []\n\n        needed = self.used_bytes + item_size - self.capacity_bytes\n        selected = []\n        if needed > 0:\n            candidates = []\n            for victim, victim_size in self.probation.items():\n                candidates.append((self._utility(victim, victim_size, now), victim, victim_size))\n            for victim, victim_size in self.protected.items():\n                candidates.append((self._utility(victim, victim_size, now, True), victim, victim_size))\n            candidates.sort(key=lambda entry: (entry[0], entry[1]))\n            freed = 0\n            for entry in candidates:\n                selected.append(entry)\n                freed += entry[2]\n                if freed >= needed:\n                    break\n            if freed < needed:\n                return []\n            candidate_score = self._utility(key, item_size, now)\n            if candidate_score <= max(entry[0] for entry in selected):\n                return []\n\n        evicted = []\n        for _, victim, victim_size in selected:\n            if victim in self.probation:\n                del self.probation[victim]\n            else:\n                del self.protected[victim]\n                self.protected_bytes -= victim_size\n            self.used_bytes -= victim_size\n            evicted.append(victim)\n\n        self.probation[key] = item_size\n        self.used_bytes += item_size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R18-pair03-candidate-call02-forward_policy_materializer",
+    "duration_seconds": 71.44,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:21:49Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "0eeddb882968e4ce5de3d2b6dc4d0a3b69cf598d63fb3a92ff6e134383669871",
+    "raw_events_path": "workspace\\model-calls\\R18-pair03-candidate-call02-forward_policy_materializer\\raw-events.jsonl",
+    "raw_events_sha256": "8eece3363ce91fc30f1a865a6ea4ad7bc6cdf8f8a1d38b7b01ac489e35ed8c7d",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "5dafec8335af9e03dd5c2a1da7cdca0b9fb68f0678ee596005346ed1885c3a4f",
+    "returncode": 0,
+    "role": "R18 candidate topology role forward-only policy materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:20:38Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14717,
+      "output_tokens": 5394,
+      "reasoning_output_tokens": 4313
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

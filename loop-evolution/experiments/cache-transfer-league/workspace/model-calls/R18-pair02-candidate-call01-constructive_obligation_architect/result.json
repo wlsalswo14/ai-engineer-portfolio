@@ -1,0 +1,94 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Committed constructive-obligation state derived solely from the supplied task, immutable anchor contract, constraints, hypothesis, and relay structure; provenance anchor_sha256=294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60.",
+      "exact_actions": [
+        "Forward this single committed obligation state unchanged to forward_policy_materializer.",
+        "Require one complete policy materialization satisfying all obligations simultaneously.",
+        "Reject any materialization that introduces alternatives, anchor-local repair logic, postconstruction pruning, forbidden information sources, illegal evictions, or capacity overflow."
+      ],
+      "obligations": [
+        {
+          "commitment": "Materialize exactly one standard-library policy implementing the required constructor and access interface with the required return type.",
+          "id": "contract_legality"
+        },
+        {
+          "commitment": "After every access, tracked resident bytes must be nonnegative and at most capacity_bytes; objects larger than capacity must not become resident.",
+          "id": "capacity_invariant"
+        },
+        {
+          "commitment": "Every returned eviction must identify one unique integer key resident immediately before that request's eviction transition.",
+          "id": "eviction_legality"
+        },
+        {
+          "commitment": "Use only constructor state and the current request history observed online; do not use traces, oracle decisions, benchmark paths, external libraries, networking, or subprocesses.",
+          "id": "online_visibility"
+        },
+        {
+          "commitment": "Use one coherent resident-state transition that jointly balances object hits and byte hits while distinguishing scan pollution from reusable recency and adapting online when access phases change.",
+          "id": "coupled_adaptation"
+        },
+        {
+          "commitment": "Treat this obligation set as immutable controlling evidence for the immediately following materialization; do not reopen, rank, roll back, prune, or replace it.",
+          "id": "provenance_lock"
+        }
+      ],
+      "witnesses": [
+        {
+          "evidence": "Policy exposes Policy(capacity_bytes) and access(key, size, now) -> list[int], using only the Python standard library.",
+          "source": "task"
+        },
+        {
+          "evidence": "Interface legality, capacity safety, and online-only visibility must be preserved.",
+          "source": "anchor_contract"
+        },
+        {
+          "evidence": "Each access is processed online; returned keys must be unique integer keys currently cached; capacity must never be exceeded; forbidden evaluator knowledge and external dependencies are excluded.",
+          "source": "task_constraints"
+        },
+        {
+          "evidence": "One immutable constructive typestate edge must couple object-hit, byte-hit, scan-resistance, and phase-shift commitments before materialization.",
+          "source": "candidate_hypothesis"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R18-pair02-candidate-call01-constructive_obligation_architect",
+    "duration_seconds": 13.059,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:18:53Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "95451728e9b049bd4dcb608be97c03e65fbdc09efa5b2a19a1edf8056bb370be",
+    "raw_events_path": "workspace\\model-calls\\R18-pair02-candidate-call01-constructive_obligation_architect\\raw-events.jsonl",
+    "raw_events_sha256": "8bc97fa3533fca620d3b5205ca76a813f7c04448753b745fd19f59e80e4b7793",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "57f65129ddf0514de1972be327d6fac3114688a813a4e6a000b107d2bb14908b",
+    "returncode": 0,
+    "role": "R18 candidate topology role constructive obligation architect",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:18:40Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13380,
+      "output_tokens": 760,
+      "reasoning_output_tokens": 257
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

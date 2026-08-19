@@ -1,0 +1,130 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R43-structure-architect\\final-receipt.json",
+    "sha256": "172b21cea473a7170c0315418f5ba333024e6418e6246ae531c18fac1c6a7b99"
+  },
+  "architect_response": {
+    "architect_scope": "one-R43-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "independent_terminal_adjudication",
+      "information_flow": "The first call sees all common inputs and emits one complete executable policy state with only provisional commitments. The rebase sees solely that state, preserves its complete executable artifact, and nullifies all inherited normative authority. The terminal call sees the rebased state and public non-anchor evidence, jointly adjudicates conformance and behavior without predecessor authority, and emits one policy.",
+      "name": "Authority-Nullifying Executable Rebase",
+      "organization": "three-call sequential lineage with one mandatory authority-reset transition",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "provisional_executable_synthesis",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Form one complete executable policy state from the supplied evidence and expose its contract and behavioral commitments as provisional evidence for mandatory rebasing.",
+              "output_type": "executable_policy_state",
+              "role": "provisional evidence synthesizer"
+            },
+            {
+              "id": "authority_nullifying_rebase",
+              "inputs": [
+                "provisional_executable_synthesis"
+              ],
+              "objective": "Consume provisional_executable_synthesis, preserve its complete executable artifact, extinguish predecessor-granted normative authority, and emit one authority-neutral complete executable policy state.",
+              "output_type": "executable_policy_state",
+              "role": "normative-authority reset transition"
+            },
+            {
+              "id": "independent_terminal_adjudication",
+              "inputs": [
+                "authority_nullifying_rebase",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume authority_nullifying_rebase and the supplied public evidence, jointly reconcile public-contract conformance and behavioral evidence without inheriting predecessor commitments, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "independent terminal policy authority"
+            }
+          ],
+          "id": "authority_discontinuous_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "scan-resistance response",
+        "phase-shift adaptation"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "persistent inheritance of an upstream immutable contract lock into terminal behavior-only authority",
+      "independent_replacement_principle": "executable continuity with normative-authority discontinuity through an unconditional rebase before terminal adjudication",
+      "rejected_assumptions": [
+        "Executable continuity requires continuity of predecessor authority.",
+        "Public-contract conformance must be irreversibly bound before terminal behavioral judgment."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Insert one mandatory authority-nullifying executable rebase that preserves the complete policy artifact while extinguishing inherited normative authority before terminal adjudication.",
+      "expected_effect": "Separating artifact continuity from authority continuity should let terminal judgment coordinate scan resistance and phase-shift adaptation without inherited commitment inertia.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion couples executable continuity to persistent upstream authority, causing an early contract commitment to constrain later cross-objective reconciliation."
+    },
+    "structural_mutation": {
+      "after": "A complete executable state crosses a mandatory rebase that preserves the artifact but nullifies predecessor authority before terminal holistic adjudication.",
+      "before": "A contract-locked executable closure transfers persistent conformance authority to a terminal call restricted to behavioral revision.",
+      "change_count": 1,
+      "factor": "mandatory authority-nullifying executable rebase",
+      "why_structural": "The mutation inserts a distinct state transition and changes edge-authority persistence while retaining one sequential, nonbranching executable lineage."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 43,
+  "incumbent_structure_sha256": "6d86bef367251508b3b25489be0cb4e54f42cc76ca7d557e842f23d6846c7696",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R43\\qualitative-error-notebook.json",
+    "sha256": "9cd68f1d1cdef837248b03c6de5eb26d93c8977b7667d4c92bc3094473933f01"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R43\\source-manifest.json",
+    "sha256": "4b7b7081bc288d98745797cc53fe136086bfdc0102f0f470a28cec4dfa1469b3"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 3,
+    "coarse_topology_collision_override": null,
+    "factor": "mandatory authority-nullifying executable rebase",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "provisional_executable_synthesis",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      },
+      {
+        "call_id": "authority_nullifying_rebase",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      }
+    ],
+    "semantic_topology_fingerprint": "91313e0ac6c75b206b353a9f0aab1742f0b3e7193fc69d27f4e24b1756581f49",
+    "topology_fingerprint": "8290f42a957aaf63394b20af6d8207daec0d54503f00f721f510a5a212980196"
+  }
+}

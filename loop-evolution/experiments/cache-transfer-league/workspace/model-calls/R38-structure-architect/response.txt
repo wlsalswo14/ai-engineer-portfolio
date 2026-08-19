@@ -1,0 +1,71 @@
+{
+  "architect_scope": "one-R38-structural-factor-only",
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The terminal behavioral authority receives the transformed executable closure but lacks direct visibility into the source policy evidence from which that closure was formed.",
+    "causal_change": "Add one read-only anchor_policy evidence edge to the existing terminal behavioral authority while preserving the immutable contract boundary and all existing authorities.",
+    "expected_effect": "Direct source-artifact visibility should reduce unintended behavioral drift during terminal revision without reopening contract-conformance authority.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "direct read-only anchor-policy visibility at terminal behavioral authority",
+    "before": "anchor_policy is visible only to lock_contract_closure and reaches the terminal call solely through the transformed executable closure",
+    "after": "anchor_policy also reaches contract_bounded_behavior_authority through one direct read-only evidence edge",
+    "why_structural": "The added edge changes terminal evidence visibility and timing while leaving call count, role allocation, contract authority, and executable lineage unchanged."
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only the direct read-only anchor_policy edge into the existing terminal call is added; every role, authority boundary, call, output kind, and other evidence edge remains unchanged.",
+    "why_not_repeat_role_fission": "No call or role is added, split, renamed, or reassigned; the mutation is solely a new evidence-visibility edge between an existing common input and an existing authority."
+  },
+  "candidate_structure": {
+    "name": "Contract-Locked Source-Visible Behavioral Relay",
+    "organization": "two-call sequential lineage with one contract-locked executable handoff and direct read-only source visibility at the terminal behavioral authority",
+    "information_flow": "The first call receives all common evidence, creates one complete executable closure, and binds public-contract conformance as immutable. The terminal call consumes that closure together with the existing public evidence and a direct read-only anchor_policy edge, retains no authority to alter the locked conformance boundary, revises only behavior-bearing semantics, and emits one policy.",
+    "stages": [
+      {
+        "id": "contract_locked_relay",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "lock_contract_closure",
+            "role": "contract-lock authority",
+            "objective": "Form exactly one complete executable policy closure from the supplied evidence, bind public-contract conformance as an immutable authority boundary, delegate only behavior-semantic revision, and pass the complete artifact forward.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_closure"
+          },
+          {
+            "id": "contract_bounded_behavior_authority",
+            "role": "contract-bounded behavioral authority",
+            "objective": "Consume lock_contract_closure and the supplied public evidence, use direct anchor_policy visibility only as source evidence for authorized behavior-semantic revision, preserve locked contract conformance, and emit one complete policy.",
+            "inputs": [
+              "lock_contract_closure",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "contract_bounded_behavior_authority"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

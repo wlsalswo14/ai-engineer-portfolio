@@ -1,0 +1,69 @@
+{
+  "architect_scope": "one-R37-structural-factor-only",
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The incumbent gives candidate_hypothesis direct causal authority during both executable-closure construction and terminal behavioral revision, allowing the same intent to be independently reinterpreted twice.",
+    "causal_change": "Delete only the direct candidate_hypothesis input edge to the terminal call, making its influence single-use upstream while preserving indirect visibility through the complete executable closure.",
+    "expected_effect": "The terminal authority should preserve executable lineage and contract conformance while avoiding semantic drift caused by a second independent interpretation of the mutation intent.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "single-use candidate-hypothesis authority through deletion of its direct terminal evidence edge",
+    "before": "candidate_hypothesis is directly visible to both lock_contract_closure and contract_bounded_behavior_authority",
+    "after": "candidate_hypothesis is directly visible only to lock_contract_closure and reaches contract_bounded_behavior_authority solely through the complete executable closure",
+    "why_structural": "This removes one evidence edge and changes terminal visibility, evidence timing, and causal authority without adding or splitting roles."
+  },
+  "mode_certificate": {
+    "scope_boundary": "The incumbent two-call contract-locked executable lineage is retained; only the direct candidate_hypothesis-to-terminal edge is removed.",
+    "why_not_repeat_role_fission": "No call or role is added, renamed, divided, or replicated; the mutation changes one existing evidence edge rather than partitioning terminal work."
+  },
+  "candidate_structure": {
+    "name": "Single-Use Hypothesis Contract Relay",
+    "organization": "two-call sequential lineage with one contract-locked executable handoff and upstream-only direct hypothesis visibility",
+    "information_flow": "The first call receives all common evidence, forms one complete executable closure, and binds public-contract conformance as immutable. The final call consumes that closure and retained public evidence without a direct candidate_hypothesis edge, preserves the locked boundary, revises behavior-bearing semantics using the predecessor artifact as the sole carrier of hypothesis influence, and emits one policy.",
+    "stages": [
+      {
+        "id": "single_use_hypothesis_relay",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "lock_contract_closure",
+            "role": "contract-lock authority",
+            "objective": "Form exactly one complete executable policy closure from the supplied evidence, bind public-contract conformance as an immutable authority boundary, delegate only behavior-semantic revision, and pass the complete artifact forward.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_closure"
+          },
+          {
+            "id": "contract_bounded_behavior_authority",
+            "role": "contract-bounded behavioral authority",
+            "objective": "Consume lock_contract_closure and the retained public evidence, treat the predecessor artifact as the sole carrier of hypothesis influence, preserve its locked contract conformance, exercise authority only over behavior-bearing semantics within that boundary, and emit one complete policy.",
+            "inputs": [
+              "lock_contract_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "contract_bounded_behavior_authority"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

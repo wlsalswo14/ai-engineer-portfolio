@@ -1,0 +1,28 @@
+{
+  "final_call_id": "terminal_policy_producer",
+  "information_flow": "One self-contained producer starts from the anchor policy, preserves raw audit evidence, follows the anchor's ordered transactional A-B-A-B repair process, records every accepted edit as an exactly reversible delta, and then causally compresses that provisional stack in the assembled final context before emitting one complete policy artifact.",
+  "name": "Solo Provisional Policy Repair Stack with Terminal Causal Compression",
+  "organization": "solo",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "terminal_policy_producer",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Starting only from the anchor policy and standard library, audit before divergence and construct one ordered repair trajectory. For every minimal proposed edit, retain the anchor's identical-reproducer checkpoint-patch-checkpoint-patch intervention, regression replay, exact rollback, and validity safeguards. Record each accepted edit as an exactly reversible delta with immutable motivating evidence and provisional acceptance. After construction, perform bounded terminal causal compression on the assembled policy: examine retained deltas in reverse order, remove exactly one delta, replay its motivating reproductions and the precommitted regression, interface, authoritative-state, and capacity obligations, permanently delete it only if all motivating failures remain closed and no obligation regresses, and otherwise restore it exactly. When deletion invalidates evidence for affected retained deltas, replay only that affected suffix within the fixed bound. Do not generate alternatives, replicate calls or samples, use parameter tuning as the structural mechanism, or use privileged workload knowledge. Emit exactly one complete contract-compliant policy artifact; if no modified state remains valid, emit the anchor policy unchanged.",
+          "output_type": "policy",
+          "role": "evidence-preserving transactional policy producer"
+        }
+      ],
+      "id": "produce_and_compress",
+      "mode": "sequential"
+    }
+  ]
+}

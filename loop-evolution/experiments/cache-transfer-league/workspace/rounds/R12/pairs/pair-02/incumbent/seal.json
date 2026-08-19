@@ -1,0 +1,30 @@
+{
+  "arm": "incumbent",
+  "artifact_bytes": 3233,
+  "artifact_path": "workspace\\rounds\\R12\\pairs\\pair-02\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "2ce37ffda572a78c383bf885f73825a13bfe0d00cf493aa498a863314bc8fe91",
+  "display_round": 12,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_manifest_path": "workspace\\rounds\\R12\\pairs\\pair-02\\incumbent\\generation-manifest.json",
+  "generation_manifest_sha256": "e368e5730559b7b124aa125536d1d57bf36160ebba2d476a69c7df0f490a25cb",
+  "label": "pair-02-incumbent",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R12-pair02-incumbent-call01-terminal_policy_producer\\final-receipt.json",
+      "sha256": "3e633f618e157f83ec6a15cc15aad9d862d0925b54fb09a43f09aec110f943bf"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 2,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 38, in replay\n    raise AssertionError(\"insufficient eviction\")\nAssertionError: insufficient eviction\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 3233,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T15:25:56Z"
+}

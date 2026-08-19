@@ -1,0 +1,25 @@
+{
+  "analysis_packet": {
+    "certificate": "Nonbinding source-distinguished analysis: the supplied candidate hypothesis conflicts with the declared topology. The first call is authorized only to emit analysis, not a complete executable capsule; the handoff contains defeasible analysis rather than binding commitments; and the terminal call retains direct access to all common inputs and revising policy authority. The anchor is already a complete executable policy, so delayed commitment is not established by the visible evidence. The contract requires legality, capacity safety, and online-only behavior, while no score evidence is available.",
+    "exact_actions": [
+      "Record the topology-versus-hypothesis authority mismatch.",
+      "Record the mismatch between capsule-only handoff claims and the actual analysis handoff with terminal evidence reacquisition.",
+      "Record the unsupported score-based falsifier under the no-score constraint.",
+      "Emit only this analysis packet for the lineage."
+    ],
+    "obligations": [
+      "Preserve the distinction between anchor, contract, task constraints, hypothesis, and topology evidence.",
+      "Treat this analysis as defeasible evidence only; do not authorize, settle, or emit a policy artifact.",
+      "Keep unresolved the causal claim that terminal anchor recapture is the bottleneck because direct comparative score evidence is withheld.",
+      "Require any downstream policy authority to verify interface legality, current-key-only unique evictions, capacity safety, and online-only visibility directly from the common inputs."
+    ],
+    "witnesses": [
+      "loop_structure assigns map_counter_assumptions output_type analysis and explicitly denies policy or settlement authority.",
+      "loop_structure gives reacquire_and_unify_authority independent access to every common input and undivided emission authority.",
+      "candidate_hypothesis describes a capsule-binding first call, non-revising terminal authority, and terminal capsule-only input, contradicting the declared information flow.",
+      "anchor_policy is already a complete policy artifact, weakening the claim that executable commitment is delayed.",
+      "candidate_hypothesis.falsifier invokes matched-majority and strict-median outcomes while task_constraints state that scores are unavailable."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

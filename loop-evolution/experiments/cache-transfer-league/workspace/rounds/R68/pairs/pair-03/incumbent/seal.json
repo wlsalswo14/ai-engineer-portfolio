@@ -1,0 +1,34 @@
+{
+  "arm": "incumbent",
+  "artifact_bytes": 5231,
+  "artifact_path": "workspace\\rounds\\R68\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "d2338ba66e081797a0da656a9bb3c67830a179f76b1d152f6b49c6459cd3e6dc",
+  "display_round": 68,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_manifest_path": "workspace\\rounds\\R68\\pairs\\pair-03\\incumbent\\generation-manifest.json",
+  "generation_manifest_sha256": "d5c484882eaee1c372947260b440a68ef8b397a017acad55a08e8def4cadcb63",
+  "label": "pair-03-incumbent",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R68-pair03-incumbent-call01-synthesize_cut_sources\\final-receipt.json",
+      "sha256": "4c32311ef9160b6ed1924c88d2556e321b5eecb32046a2cce433730a8dfe9e9b"
+    },
+    {
+      "path": "workspace\\model-calls\\R68-pair03-incumbent-call02-emit_under_normative_visibility\\final-receipt.json",
+      "sha256": "557a98187c8323416c017c0c09b7dec9af1cdd78f866c0ade6f0f7225ad2ca27"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 25, in replay\n    evicted = policy.access(key,size,now)\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R68\\pairs\\pair-03\\incumbent\\artifact\\policy.py\", line 149, in access\n    self.t1_bytes += size\n    ^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 't1_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5231,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T23:04:14Z"
+}

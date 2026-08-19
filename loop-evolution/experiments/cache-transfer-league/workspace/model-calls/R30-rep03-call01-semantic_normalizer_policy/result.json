@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n        self.request_count = 0\n        self.hit_count = 0\n        self.miss_count = 0\n        self.repeat_count = 0\n        self.eviction_count = 0\n        self.last_key = None\n        self.last_evictions = ()\n\n    def _contains(self, key):\n        return key in self.cache\n\n    def _touch(self, key):\n        stored_size = self.cache.pop(key)\n        self.cache[key] = stored_size\n        return stored_size\n\n    def _remove(self, key):\n        stored_size = self.cache.pop(key)\n        self.used_bytes -= stored_size\n        return stored_size\n\n    def _restore(self, key, size):\n        self.cache[key] = size\n        self.used_bytes += size\n\n    def _eviction_decision(self, incoming_size):\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes and self.cache:\n            old_key = next(iter(self.cache))\n            old_size = self._remove(old_key)\n            evicted.append(old_key)\n        return evicted\n\n    def _insert(self, key, size):\n        self.cache[key] = size\n        self.used_bytes += size\n\n    def _state_snapshot(self):\n        return OrderedDict(self.cache), self.used_bytes\n\n    def _state_reverse(self, snapshot):\n        self.cache, self.used_bytes = OrderedDict(snapshot[0]), snapshot[1]\n\n    def _invariants_hold(self):\n        return self.used_bytes == sum(self.cache.values())\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.request_count += 1\n        if key == self.last_key:\n            self.repeat_count += 1\n        self.last_key = key\n\n        if self._contains(key):\n            stored_size = self._touch(key)\n            self.hit_count += 1\n            self.last_evictions = ()\n            if not self._invariants_hold():\n                raise RuntimeError(\"cache state invariant violated\")\n            return []\n\n        self.miss_count += 1\n        if size > self.capacity_bytes:\n            self.last_evictions = ()\n            if not self._invariants_hold():\n                raise RuntimeError(\"cache state invariant violated\")\n            return []\n\n        snapshot = self._state_snapshot()\n        evicted = self._eviction_decision(size)\n        self._insert(key, size)\n        if not self._invariants_hold():\n            self._state_reverse(snapshot)\n            raise RuntimeError(\"cache state invariant violated\")\n\n        self.eviction_count += len(evicted)\n        self.last_evictions = tuple(evicted)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-rep03-call01-semantic_normalizer_policy",
+    "duration_seconds": 43.73,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:42:49Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "49d601b3642e648a9f7f7edc8c5cd9d348f9f55f58312b678a09d0aaad407ac0",
+    "raw_events_sha256": "74a53b4be093117e34cd05e6039248a6659c0e656fb75359e3e4f0afdc352bee",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "729a371fab6d520486ec9926a2d8266c4e6f9bb54cf7314831a0c5b091e21bde",
+    "returncode": 0,
+    "role": "semantic-normal-form transducer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:42:05Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13728,
+      "output_tokens": 2238,
+      "reasoning_output_tokens": 1552
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

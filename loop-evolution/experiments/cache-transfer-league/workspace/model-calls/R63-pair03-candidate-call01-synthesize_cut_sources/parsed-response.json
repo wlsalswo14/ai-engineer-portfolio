@@ -1,0 +1,74 @@
+{
+  "analysis_packet": {
+    "certificate": "Anchor evidence indicates a byte-weighted two-segment adaptive recency policy with ghost histories and online target adjustment. It is interface-legal and generally capacity-safe, but its behavior exposes tradeoffs between recency promotion, scan resistance, variable-size replacement, and phase adaptation. The terminal source cut should preserve normative contract reasoning while preventing direct inheritance of anchor-specific implementation choices.",
+    "exact_actions": [
+      {
+        "action": "Treat the anchor as evidence and a source of candidate invariants, not as a mandatory implementation template."
+      },
+      {
+        "action": "Retain the distinctions among resident hits, ghost hits, cold misses, oversized requests, nonpositive sizes, and size-changing replacements."
+      },
+      {
+        "action": "Prioritize invariant checks for resident-byte accounting, duplicate prevention, legal eviction reporting, and post-access capacity."
+      },
+      {
+        "action": "Evaluate scan resistance and phase adaptation separately from basic recency behavior; ghost feedback is evidence, not proof of optimal target movement."
+      },
+      {
+        "action": "Make any admission, promotion, or recency-aging choice explainable solely from online history and current request data."
+      },
+      {
+        "action": "Pass forward unresolved tradeoffs and failure risks, especially variable-size churn and dominance of inherited recency assumptions, for normative reconciliation at emission."
+      }
+    ],
+    "obligations": [
+      {
+        "requirement": "Preserve the exact Policy constructor and access interface using only the standard library.",
+        "risk": "Any emitted design must remain a single online policy and cannot depend on unavailable evaluator state."
+      },
+      {
+        "requirement": "Return only unique integer keys that are currently cached and are evicted by the current request.",
+        "risk": "Eviction bookkeeping must remove each returned key from resident state exactly once; ghost entries are not returnable."
+      },
+      {
+        "requirement": "Never exceed capacity_bytes, including variable object sizes and replacements.",
+        "risk": "Room-making must account for requested size after removing an existing copy, and oversized objects must not remain resident."
+      },
+      {
+        "requirement": "Use only information available through prior accesses and the current access.",
+        "risk": "now may be ignored or used only as an online timestamp; no future trace, oracle, benchmark path, or reference implementation may influence decisions."
+      },
+      {
+        "requirement": "Optimize across hit rate, byte hit rate, scan resistance, phase adaptation, and regret without assuming a score.",
+        "risk": "Recency promotion, admission, segment balance, ghost evidence, and variable-size effects must remain explicit tradeoffs rather than unsupported claims."
+      },
+      {
+        "requirement": "Do not reacquire the cut generative sources at terminal emission.",
+        "risk": "The downstream authority should validate synthesized claims against task, contract, and constraints rather than copy anchor-specific structure."
+      }
+    ],
+    "witnesses": [
+      {
+        "claim": "Positive-size requests no larger than capacity are admitted only after evicting enough currently resident bytes.",
+        "support": "The anchor repeatedly evicts until resident bytes plus requested size fit, then inserts the key."
+      },
+      {
+        "claim": "Oversized requests are not retained, and an already resident oversized-request key is returned as evicted.",
+        "support": "The anchor removes the key from either resident segment and records it in the corresponding ghost history."
+      },
+      {
+        "claim": "Resident hits are promoted or refreshed in the frequent segment and can trigger replacement when the requested size changes.",
+        "support": "Both resident segments are removed before room-making and reinserted into the second segment."
+      },
+      {
+        "claim": "Ghost hits adapt the target toward the segment associated with the missed key and admit the key into the frequent segment.",
+        "support": "B1 increases the target and B2 decreases it before insertion into the second segment."
+      },
+      {
+        "claim": "The anchor has no direct recency aging beyond ordered-segment movement and ghost-limit truncation.",
+        "support": "The visible implementation contains no time-based use of now."
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

@@ -1,0 +1,220 @@
+## Artifact
+
+Capability: bounded static-exchange ordering for captures.
+
+Seam provenance: anchor `Engine.mscore()` → `ms.sort(key=...)` in `search()` and `qsearch()`. The component consumes only `p.b`, `p.side`, and encoded move bits; TT, killer, and history scores remain downstream obligations.
+
+`exchange_ordering.py`
+
+```python
+VALUE={"p":100,"n":320,"b":330,"r":500,"q":900,"k":20000}
+PROMO={1:"n",2:"b",3:"r",4:"q"}
+MAX_PLY=16
+MAX_WORK=4096
+CACHE_LIMIT=256
+
+def _attacks(b,s,t):
+    p=b[s]; typ=p.lower()
+    sr,sf=divmod(s,8); tr,tf=divmod(t,8)
+    dr,df=tr-sr,tf-sf
+    if typ=="p":
+        return dr==(1 if p.isupper() else -1) and abs(df)==1
+    if typ=="n":
+        return (abs(dr),abs(df)) in ((1,2),(2,1))
+    if typ=="k":
+        return max(abs(dr),abs(df))==1
+    if typ in "rq" and (dr==0 or df==0) and (dr or df):
+        rs=0 if dr==0 else (1 if dr>0 else -1)
+        fs=0 if df==0 else (1 if df>0 else -1)
+    elif typ in "bq" and abs(dr)==abs(df) and dr:
+        rs=1 if dr>0 else -1
+        fs=1 if df>0 else -1
+    else:
+        return False
+    r,f=sr+rs,sf+fs
+    while (r,f)!=(tr,tf):
+        if b[r*8+f]!=".": return False
+        r+=rs; f+=fs
+    return True
+
+def _least(b,t,side,budget):
+    best=None
+    for s,p in enumerate(b):
+        budget[0]+=1
+        if budget[0]>MAX_WORK: return None
+        if p!="." and p.isupper()==(side==0) and p.lower() in "pnbrq":
+            if _attacks(b,s,t):
+                k=(VALUE[p.lower()],s)
+                if best is None or k<best[0]: best=(k,s)
+    return None if best is None else best[1]
+
+def _initial(b,m):
+    a=m&63; z=(m>>6)&63; pr=(m>>12)&15; fl=m>>16
+    p=b[a]; victim=b[z]
+    x=list(b)
+    if fl&2:
+        cs=z-8 if p.isupper() else z+8
+        victim=x[cs]; x[cs]="."
+    x[a]="."
+    moved=p; bonus=0
+    if pr:
+        moved=PROMO[pr].upper() if p.isupper() else PROMO[pr]
+        bonus=VALUE[moved.lower()]-VALUE["p"]
+    x[z]=moved
+    return x,VALUE[victim.lower()]+bonus
+
+def _reply(b,t,side,depth,budget):
+    if depth>=MAX_PLY: return 0
+    a=_least(b,t,side,budget)
+    if a is None: return 0
+    p=b[a]; victim=b[t]; x=list(b)
+    x[a]="."
+    moved=p; bonus=0
+    r=t//8
+    if p.lower()=="p" and r in (0,7):
+        moved="Q" if p.isupper() else "q"
+        bonus=VALUE["q"]-VALUE["p"]
+    x[t]=moved
+    return max(0,VALUE[victim.lower()]+bonus-_reply(x,t,side^1,depth+1,budget))
+
+def _see(board,move,side):
+    b=list(board); budget=[0]
+    x,gain=_initial(b,move)
+    return gain-_reply(x,(move>>6)&63,side^1,0,budget),budget[0]
+
+class ExchangeOrdering:
+    def __init__(self):
+        self.generation=0
+        self.calls=0
+        self.last_work=0
+        self.max_work=0
+        self.cache={}
+
+    def begin(self):
+        self.generation+=1
+        self.calls=0
+        self.last_work=0
+        self.max_work=0
+        self.cache.clear()
+        return self.generation
+
+    def reset(self):
+        return self.begin()
+
+    def end(self):
+        return {"generation":self.generation,"calls":self.calls,
+                "last_work":self.last_work,"max_work":self.max_work,
+                "cache_size":len(self.cache)}
+
+    def score(self,board,move,side):
+        b="".join(board) if not isinstance(board,str) else board
+        if len(b)!=64 or side not in (0,1): raise ValueError("invalid primitive")
+        a=move&63; z=(move>>6)&63; fl=move>>16
+        if not 0<=a<64 or not 0<=z<64: raise ValueError("invalid move")
+        p=b[a]
+        if p=="." or p.isupper()!=(side==0): raise ValueError("wrong mover")
+        capture=(fl&2) or (b[z]!="." and b[z].isupper()!=(side==0))
+        if not capture: self.last_work=0; return 0
+        key=(b,move,side)
+        self.calls+=1
+        if key in self.cache:
+            self.last_work=0
+            return self.cache[key]
+        value,work=_see(b,move,side)
+        self.last_work=work
+        self.max_work=max(self.max_work,work)
+        if len(self.cache)>=CACHE_LIMIT: self.cache.clear()
+        self.cache[key]=value
+        return value
+```
+
+`seam_surrogate.py`
+
+```python
+import json
+from exchange_ordering import ExchangeOrdering,VALUE
+
+def enc(a,z,pr=0,fl=0): return a|(z<<6)|(pr<<12)|(fl<<16)
+
+def anchor_key(board,move,tt=-1,history=0,killer=False):
+    a=move&63; z=(move>>6)&63; pr=(move>>12)&15; fl=move>>16
+    sc=10000000 if move==tt else 0
+    cap="p" if fl&2 else board[z]
+    if cap!=".":
+        sc+=1000000+VALUE[cap.lower()]*10-VALUE[board[a].lower()]
+    if pr: sc+=800000+pr*10000
+    if killer: sc+=500000
+    return sc+history
+
+def seam_key(c,board,move,side,tt=-1,history=0,killer=False):
+    sc=anchor_key(board,move,tt,history,killer)
+    a=move&63; z=(move>>6)&63; fl=move>>16
+    cap="p" if fl&2 else board[z]
+    if cap!=".":
+        promotion=(VALUE[{"n":320,"b":330,"r":500,"q":900}[{1:"n",2:"b",3:"r",4:"q"}[(move>>12)&15]]]
+                    -VALUE["p"]) if (move>>12)&15 else 0
+        old=VALUE[cap.lower()]-VALUE[board[a].lower()]
+        sc+=10*(c.score(board,move,side)-promotion-old)
+    return sc
+
+def run():
+    effect="p7/4p3/3r4/8/8/8/3Q4/R7"
+    losing=enc(11,43)       # d2xd6
+    safe=enc(0,56)          # a1xa8
+    quiet=enc(11,19)        # d2-d3
+    promo_board="7r/6P1/8/8/8/8/8/8"
+    promo=enc(54,63,4)      # g7xh8=Q
+
+    c=ExchangeOrdering(); c.begin()
+    assert c.score(effect,losing,0)==-400
+    assert c.score(effect,quiet,0)==0
+    assert c.score(promo_board,promo,0)==1300
+
+    r=ExchangeOrdering(); g1=r.begin()
+    x1=r.score(effect,losing,0); x2=r.score(effect,losing,0)
+    e1=r.end(); g2=r.begin()
+    x3=r.score(effect,losing,0); e2=r.end()
+    assert (x1,x2,x3)==(-400,-400,-400)
+    assert e1["calls"]==2 and e2["calls"]==1
+    assert e1["max_work"]<=4096 and e2["max_work"]<=4096
+
+    assert c.score(list(effect),losing,0)==-400
+    assert seam_key(c,effect,losing,0,history=7,killer=True)-seam_key(c,effect,losing,0)==500007
+
+    anchor_order=sorted(("d2d6",losing),("a1a8",safe),
+                        key=lambda x:anchor_key(effect,x[1]),reverse=True)
+    seam_order=sorted(("d2d6",losing),("a1a8",safe),
+                      key=lambda x:seam_key(c,effect,x[1],0),reverse=True)
+    assert [x[0] for x in anchor_order]==["d2d6","a1a8"]
+    assert [x[0] for x in seam_order]==["a1a8","d2d6"]
+
+    print(json.dumps({
+        "effect_see":-400,
+        "null_see":0,
+        "promotion_see":1300,
+        "lifecycle":[g1,g2,x1,x2,x3,e1["calls"],e2["calls"]],
+        "dependency_closure":True,
+        "bounded_work":True,
+        "anchor_order":["d2d6","a1a8"],
+        "seam_order":["a1a8","d2d6"]
+    },sort_keys=True))
+
+if __name__=="__main__": run()
+```
+
+Execution commands:
+
+```text
+python exchange_ordering.py
+python seam_surrogate.py
+```
+
+Deterministic trace:
+
+```json
+{"anchor_order":["d2d6","a1a8"],"bounded_work":true,"dependency_closure":true,"effect_see":-400,"lifecycle":[1,2,-400,-400,-400,2,1],"null_see":0,"promotion_see":1300,"seam_order":["a1a8","d2d6"]}
+```
+
+Causal falsifier: reject if the losing queen capture remains ahead of the safe rook capture at the seam, or if any null, lifecycle, dependency-closure, or work-bound assertion fails.
+
+Graft invariants: preserve the anchor unchanged except `mscore`; replace only its immediate capture term with `10*(SEE - promotion_delta)`; retain TT, killer, history, promotion, UCI, legal-move, timing, and state-transition behavior; reset component state on `ucinewgame`; perform no additional mechanism or candidate construction.

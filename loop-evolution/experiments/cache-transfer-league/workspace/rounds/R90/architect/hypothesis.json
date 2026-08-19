@@ -1,0 +1,6 @@
+{
+  "causal_change": "Restore only the anchor_contract authority edge at the final call after one intervening transition where it remains hidden.",
+  "expected_effect": "Terminal changes become directly accountable to the same contract that governed the earlier anchor transition, changing both evidence timing and final authority while preserving one executable lineage.",
+  "falsifier": "all-valid matched majority and strict-median contract, with no score",
+  "observed_bottleneck": "Mutually exclusive one-touch downstream windows let contract authority expire before the terminal task-hypothesis transition, leaving its final reconciliation without direct contract visibility."
+}

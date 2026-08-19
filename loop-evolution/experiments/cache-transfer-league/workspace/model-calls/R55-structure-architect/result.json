@@ -1,0 +1,109 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R55-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "unify_without_raw_anchor",
+      "information_flow": "The first call receives every common input and emits a source-distinguished non-policy analysis. The final call consumes that analysis and directly receives task, anchor_contract, task_constraints, candidate_hypothesis, and loop_structure, but not anchor_policy; inherited-policy evidence therefore reaches the final call only through the immediate analysis edge.",
+      "name": "Selective Anchor Mediation",
+      "organization": "two-call sequential lineage with asymmetric terminal evidence visibility and one unitary policy authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "map_counter_assumptions",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+              "output_type": "analysis",
+              "role": "defeasible counter-assumption mapper"
+            },
+            {
+              "id": "unify_without_raw_anchor",
+              "inputs": [
+                "map_counter_assumptions",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume map_counter_assumptions, adjudicate its inherited-policy evidence against the directly visible task, contract, constraints, hypothesis, and loop structure, and emit one complete policy under undivided authority.",
+              "output_type": "policy",
+              "role": "anchor-mediated unitary policy authority"
+            }
+          ],
+          "id": "selective_anchor_mediation_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only the direct anchor_policy edge into the terminal call changes; call count, sequential lineage, first-call ingress, non-policy handoff, other direct evidence edges, and unitary terminal policy authority remain unchanged.",
+      "why_not_repeat_role_fission": "The topology retains exactly one analysis call and one policy-emitting call; no policy-producing, reviewing, finalizing, or duplicated terminal role is introduced."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Remove only the direct anchor_policy-to-terminal edge, making the source-preserving analysis the sole path for inherited-policy evidence while retaining direct terminal visibility of every other common input.",
+      "expected_effect": "The terminal authority should weigh inherited-policy evidence only after mediation while preserving independent access to governing evidence and sole responsibility for the final policy.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The terminal call can bypass the defeasible framing because it receives anchor_policy both directly and indirectly through the counter-assumption analysis."
+    },
+    "structural_mutation": {
+      "after": "The final call consumes the preceding analysis and directly reacquires the other five common inputs, while anchor_policy is visible only through the analysis handoff.",
+      "before": "The final call consumes the preceding analysis and directly reacquires all six common inputs, including anchor_policy.",
+      "change_count": 1,
+      "factor": "selective inherited-policy mediation through deletion of the terminal anchor_policy visibility edge",
+      "why_structural": "This deletes one evidence edge and changes terminal visibility and causal ingress without adding, splitting, or renaming roles."
+    }
+  },
+  "receipt": {
+    "call_id": "R55-structure-architect",
+    "duration_seconds": 95.892,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:55:16Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "12953375540abf7bc7dd33a6614dcf252687888404bdc9c5a7c4e04998938a09",
+    "raw_events_path": "workspace\\model-calls\\R55-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "ff0de76dbe926e201d75648471d2fcc46a9850b035275132075a6d8632768ff2",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "eb855fa91152c88fcf6adb29f2834d94ae0f010c2462077bc07dbddf7a9332e6",
+    "returncode": 0,
+    "role": "score-blind R55 local_refinement structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:53:40Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14447,
+      "output_tokens": 5277,
+      "reasoning_output_tokens": 4431
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

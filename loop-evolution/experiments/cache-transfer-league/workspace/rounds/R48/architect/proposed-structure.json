@@ -1,0 +1,40 @@
+{
+  "final_call_id": "project_terminal_contract",
+  "information_flow": "The first call receives all common evidence, forms one complete executable policy state, and settles behavior-bearing semantics while treating contract conformance as provisional rather than immutable. The terminal call consumes that complete state with public contract evidence, may change it only where conformance requires, and emits one policy without reopening behavioral authorship.",
+  "name": "Behavior-First Contract Projection",
+  "organization": "two-call sequential lineage with one behavior-settled executable-state edge and terminal contract projection",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "settle_behavior_first_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Use the supplied evidence to settle behavior-bearing semantics in one complete executable policy state, retain provisional public conformance, and pass the complete artifact without creating an immutable contract boundary.",
+          "output_type": "executable_policy_state",
+          "role": "behavior-first integrated authority"
+        },
+        {
+          "id": "project_terminal_contract",
+          "inputs": [
+            "settle_behavior_first_state",
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "objective": "Consume settle_behavior_first_state and the supplied public obligations, apply only conformance-caused changes to the complete artifact, preserve settled behavioral authorship, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "terminal contract-projection authority"
+        }
+      ],
+      "id": "behavior_first_projection_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

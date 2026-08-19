@@ -1,0 +1,8 @@
+WITNESS {
+  "priority_order": ["legality", "protocol_behavior", "bounded_work", "state_integrity", "decision_quality"],
+  "procedure": "Send uci, isready, position fen 7k/6Q1/6K1/8/8/8/8/8 b - - 0 1, go movetime 10, quit; enumerate the black king's legal destinations.",
+  "observed_anchor_trace": ["uciok", "readyok", "legal move set = {}", "bestmove 0000"],
+  "failed_terminal_predicate": "The returned UCI move must belong to the position's legal-move set; 0000 is not a legal chess move.",
+  "preservation_predicates": ["valid UCI handshake", "exactly one bestmove response", "unchanged FEN state during go", "bounded response before the deadline", "legal bestmove on every nonterminal position"],
+  "falsifier": "Falsified if the same bounded replay returns a legal move, or if 0000 is admitted as legal by the task contract."
+}

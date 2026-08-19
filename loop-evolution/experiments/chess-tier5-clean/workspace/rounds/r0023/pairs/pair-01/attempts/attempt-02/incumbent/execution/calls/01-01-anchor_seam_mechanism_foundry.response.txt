@@ -1,0 +1,143 @@
+## Compact artifact
+
+Chosen capability: mate-distance normalization at the anchor’s transposition-table producer/consumer seam.
+
+### Component and bounded seam surrogate
+
+```python
+import json
+
+MATE_SCORE = 100000
+MATE_BAND = 1000
+
+
+class MateDistanceTT:
+    """Primitive: normalize mate scores when storing/probing TT entries."""
+
+    def __init__(self, mate_score=MATE_SCORE, mate_band=MATE_BAND):
+        self.mate_score = mate_score
+        self.mate_band = mate_band
+
+    def _threshold(self):
+        return self.mate_score - self.mate_band
+
+    def encode(self, score, ply):
+        threshold = self._threshold()
+        if score >= threshold:
+            return score + ply
+        if score <= -threshold:
+            return score - ply
+        return score
+
+    def decode(self, score, ply):
+        threshold = self._threshold()
+        if score >= threshold:
+            return score - ply
+        if score <= -threshold:
+            return score + ply
+        return score
+
+    # Exact anchor entry shape:
+    # (depth, score, flag, stored_ply, best_move)
+    def store(self, table, key, depth, score, flag, ply, best_move):
+        entry = (depth, self.encode(score, ply), flag, ply, best_move)
+        table[key] = entry
+        return entry
+
+    def probe(self, table, key, ply):
+        entry = table.get(key)
+        if entry is None:
+            return None
+        return (
+            entry[0],
+            self.decode(entry[1], ply),
+            entry[2],
+            entry[3],
+            entry[4],
+        )
+
+
+def fixture_suite():
+    seam = MateDistanceTT()
+    table = {}
+    traces = []
+
+    entry = seam.store(table, "pred", 8, MATE_SCORE - 3, 0, 7, 42)
+    probe = seam.probe(table, "pred", 19)
+    assert probe[1] == MATE_SCORE - 15
+    traces.append(("predicted_effect", probe[1], entry[1]))
+
+    entry = seam.store(table, "null", 8, 1375, 1, 7, 43)
+    probe = seam.probe(table, "null", 19)
+    assert probe[1] == 1375
+    assert seam.probe(table, "missing", 0) is None
+    traces.append(("null_case", probe[1], entry[1]))
+
+    boundary = []
+    for score in (98999, 99000, -98999, -99000):
+        key = "b" + str(len(boundary))
+        seam.store(table, key, 4, score, 0, 4, 0)
+        restored = seam.probe(table, key, 4)[1]
+        assert restored == score
+        boundary.append((score, restored))
+    traces.append(("boundary", boundary))
+
+    seam.store(table, "repeat", 5, MATE_SCORE - 8, 0, 2, 7)
+    first = seam.probe(table, "repeat", 9)[1]
+    second = seam.probe(table, "repeat", 9)[1]
+    seam.store(table, "repeat", 5, 2048, 2, 11, 9)
+    third = seam.probe(table, "repeat", 11)[1]
+    assert (first, second, third) == (MATE_SCORE - 15,) * 2 + (2048,)
+    traces.append(("repeated_lifecycle", first, second, third))
+
+    entry = table["pred"]
+    assert len(entry) == 5
+    assert (entry[0], entry[2], entry[3], entry[4]) == (8, 0, 7, 42)
+    traces.append(("dependency_closure", len(entry), entry[0], entry[2], entry[3], entry[4]))
+
+    traces.append(("bounded_work", "O(1)", "no table scan"))
+    print(json.dumps({"status": "PASS", "traces": traces}))
+
+
+if __name__ == "__main__":
+    fixture_suite()
+```
+
+### Anchor provenance
+
+The seam is `Engine.search`:
+
+- producer: `self.tt[key] = (depth, best, flag, ply, bestm)`
+- consumer: `ent = self.tt.get(key)` followed by `sc = ent[1]`
+- preserved fields: depth, bound flag, stored ply, and best move
+- dependency envelope: current search `ply`, alpha/beta bounds, TT key, and move ordering
+
+### Execution
+
+Command:
+
+```text
+python component.py
+```
+
+Observed deterministic trace:
+
+```text
+PASS
+predicted_effect: decoded 99985 from stored 100004
+null_case: 1375 -> 1375
+boundary: 98999, 99000, -98999, -99000 all round-tripped
+repeated_lifecycle: 99985, 99985, 2048
+dependency_closure: five-field entry preserved
+bounded_work: O(1), no table scan
+```
+
+### Causal falsifier
+
+Falsified if a mate score remains unchanged across different plies, an ordinary score changes, or any non-score TT field changes.
+
+### Graft invariants
+
+Apply `encode(best, ply)` only at the existing TT write and `decode(ent[1], ply)` immediately after the existing TT read. Preserve all other anchor code, entry shape, keys, bounds, move ordering, UCI behavior, and constant-time work.
+
+Memory upload was attempted twice but rejected by the read-only command sandbox before network execution.

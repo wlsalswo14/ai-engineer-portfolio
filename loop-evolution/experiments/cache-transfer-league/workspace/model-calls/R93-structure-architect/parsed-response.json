@@ -1,0 +1,69 @@
+{
+  "architect_scope": "one-R93-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "proposal_opaque_retract_emit",
+    "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule and directly sees task, anchor_contract, task_constraints, and loop_structure, while anchor_policy and candidate_hypothesis remain visible only through their already-reconciled capsule effects; it may retract unsupported commitments and emits one policy.",
+    "name": "Proposal-Opaque Retraction Dyad",
+    "organization": "two-call sequential lineage with full-evidence executable origination and proposal-opaque retract-only terminal authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "originate_reconciled_executable",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile the visible evidence and obligations into one complete executable policy capsule while retaining semantic authorship over every included commitment.",
+            "output_type": "policy_capsule",
+            "role": "full-evidence executable origin authority"
+          },
+          {
+            "id": "proposal_opaque_retract_emit",
+            "inputs": [
+              "originate_reconciled_executable",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "loop_structure"
+            ],
+            "objective": "Consume originate_reconciled_executable, assess its commitments using the complete artifact and directly visible obligations and structural context, retract only unsupported commitments without adding or substituting policy semantics, preserve executable completeness, and emit one policy.",
+            "output_type": "policy",
+            "role": "proposal-opaque retract-only terminal authority"
+          }
+        ],
+        "id": "proposal_opaque_authority_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only terminal visibility of anchor_policy and candidate_hypothesis changes; call count, sequential lineage, executable origination, retract-only authority, and final emission remain unchanged.",
+    "why_not_repeat_role_fission": "No call is added, split, renamed, or replicated; the incumbent dyad remains intact and the mutation is solely an edge-visibility restriction."
+  },
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "causal_change": "Remove the direct anchor_policy and candidate_hypothesis visibility edges from the terminal call while preserving their first-call visibility and their mediated effects through the executable capsule.",
+    "expected_effect": "Terminal retraction should respond to the completed artifact and directly visible obligations rather than renewed competition between proposal sources, preserving supported reconciled commitments while retaining authoritative constraint visibility.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The incumbent directly reopens anchor_policy and candidate_hypothesis after their commitments have already been reconciled into a complete executable capsule, allowing proposal provenance to influence a terminal authority that can only retract semantics."
+  },
+  "structural_mutation": {
+    "after": "The terminal call consumes the executable capsule plus task, anchor_contract, task_constraints, and loop_structure; anchor_policy and candidate_hypothesis reach it only through the capsule.",
+    "before": "The terminal call consumes the executable capsule and directly reopens all six common inputs.",
+    "change_count": 1,
+    "factor": "proposal-source opacity at the retract-only terminal authority",
+    "why_structural": "This deletes two direct evidence-visibility edges and changes when proposal-source evidence can causally affect terminal retraction, without changing authority type, adding a role, or breaking the executable lineage."
+  }
+}

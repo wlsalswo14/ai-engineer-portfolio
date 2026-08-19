@@ -1,0 +1,111 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R56-structure-architect\\final-receipt.json",
+    "sha256": "a7caf34ae69f01858ff4503d904cb204b69a143a9f52ebca0132d1d1f31aa17e"
+  },
+  "architect_response": {
+    "architect_scope": "one-R56-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "synthesize_after_constraint_latch",
+      "information_flow": "The first call receives every common input and emits non-policy source-distinguished analysis. The second call consumes that analysis and directly reacquires anchor_contract and task_constraints, preserving them in a constraint-latched analysis without accepting, rejecting, or producing a policy. The final call consumes that state, directly reacquires task, anchor_policy, candidate_hypothesis, and loop_structure, resolves remaining defeasible tensions, and emits one policy.",
+      "name": "Constraint-Latched Staggered Reacquisition",
+      "organization": "three-call sequential lineage with source-distinguished analysis, constraint-first evidence-state transition, and one undivided terminal policy authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "map_source_tensions",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Distinguish evidence sources, expose conflicts among inherited assumptions, supplied claims, and authoritative boundaries, preserve unresolved tensions, and emit analysis without policy or settlement authority.",
+              "output_type": "analysis",
+              "role": "defeasible source-tension mapper"
+            },
+            {
+              "id": "latch_constraint_authority",
+              "inputs": [
+                "map_source_tensions",
+                "anchor_contract",
+                "task_constraints"
+              ],
+              "objective": "Consume map_source_tensions with freshly reacquired contract and constraint evidence, establish their source authority within a lossless analysis state, and pass every resulting state forward without policy approval, rejection, or emission.",
+              "output_type": "analysis",
+              "role": "constraint-timing state transducer"
+            },
+            {
+              "id": "synthesize_after_constraint_latch",
+              "inputs": [
+                "latch_constraint_authority",
+                "task",
+                "anchor_policy",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume latch_constraint_authority, reacquire the remaining direct evidence after constraint latching, settle defeasible tensions under sole policy authority, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "unitary post-latch policy authority"
+            }
+          ],
+          "id": "staggered_reacquisition_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "The sole mutation partitions the champion's terminal reacquisition timing for anchor_contract and task_constraints; the source-distinguished first analysis, direct terminal anchor_policy visibility, nonbranching lineage, and single final policy authority remain unchanged.",
+      "why_not_repeat_role_fission": "Neither upstream call emits or reviews a policy: the inserted call performs an all-pass evidence-state transition with exclusive constraint visibility, while only the final call creates the policy."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Relocate direct anchor_contract and task_constraints reacquisition to one intervening non-policy state transition, making those boundaries causally prior to the final call's direct reacquisition of the remaining evidence.",
+      "expected_effect": "Constraint authority should remain salient through final synthesis while direct anchor_policy visibility and undivided terminal policy authority remain intact.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion presents authoritative contract boundaries and policy-shaping evidence to the final authority in one simultaneous reacquisition event, leaving no persistent constraint-first evidence state."
+    },
+    "structural_mutation": {
+      "after": "The analysis handoff first enters a call with exclusive post-handoff direct visibility of anchor_contract and task_constraints; its lossless constraint-latched analysis then enters the final call, which directly reacquires task, anchor_policy, candidate_hypothesis, and loop_structure.",
+      "before": "The analysis handoff enters a final call that directly reacquires all six common inputs simultaneously.",
+      "change_count": 1,
+      "factor": "constraint-first temporal partitioning of evidence reacquisition through one non-policy constraint-latching transition",
+      "why_structural": "This inserts a causally necessary lineage state and relocates concrete visibility edges, changing evidence timing and state-transition semantics without adding policy authority."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 56,
+  "incumbent_structure_sha256": "d724448a08628609077256da53038ddf4c29aca1745344795a4442bea91a21e7",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "local_refinement",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R56\\qualitative-error-notebook.json",
+    "sha256": "6c96c6bc2f142aadabb59434d47db34572f4ccc1e0e99ab25ff9c2f0d22f9fe2"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R56\\source-manifest.json",
+    "sha256": "6c8f5ccadab2259ffec08aac7f98540e84d075a5de5f90652b47e7c70cd6bac2"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 3,
+    "coarse_topology_collision_override": null,
+    "factor": "constraint-first temporal partitioning of evidence reacquisition through one non-policy constraint-latching transition",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "1a61125c60deb6e65da79c9789b698ee73cc7968bbcbb3807b6db7171618f1ef",
+    "topology_fingerprint": "bda2e4f6af2e63a9e6d70e6bc0a4ec175f53b28d8804cbcbb705bbe36a1f9173"
+  }
+}

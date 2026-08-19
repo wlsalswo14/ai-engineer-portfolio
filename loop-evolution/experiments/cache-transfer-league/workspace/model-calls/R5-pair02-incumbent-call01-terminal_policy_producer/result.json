@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.used_bytes = 0\n        self.target_t1_bytes = 0\n\n    def _add_ghost(self, target, key, size):\n        if key in self.b1:\n            self.b1_bytes -= self.b1.pop(key)\n        if key in self.b2:\n            self.b2_bytes -= self.b2.pop(key)\n        target[key] = size\n        if target is self.b1:\n            self.b1_bytes += size\n        else:\n            self.b2_bytes += size\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while self.b1_bytes + self.b2_bytes > self.capacity_bytes:\n            if self.b1 and (not self.b2 or self.b1_bytes >= self.b2_bytes):\n                _, size = self.b1.popitem(last=False)\n                self.b1_bytes -= size\n            elif self.b2:\n                _, size = self.b2.popitem(last=False)\n                self.b2_bytes -= size\n            else:\n                break\n\n    def _replace(self, incoming_size):\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes:\n            if self.t1 and (self.t1_bytes > self.target_t1_bytes or not self.t2):\n                old_key, old_size = self.t1.popitem(last=False)\n                self.t1_bytes -= old_size\n                self.used_bytes -= old_size\n                self._add_ghost(self.b1, old_key, old_size)\n            elif self.t2:\n                old_key, old_size = self.t2.popitem(last=False)\n                self.t2_bytes -= old_size\n                self.used_bytes -= old_size\n                self._add_ghost(self.b2, old_key, old_size)\n            elif self.t1:\n                old_key, old_size = self.t1.popitem(last=False)\n                self.t1_bytes -= old_size\n                self.used_bytes -= old_size\n                self._add_ghost(self.b1, old_key, old_size)\n            else:\n                break\n            evicted.append(old_key)\n        return evicted\n\n    def _increase_target(self):\n        if self.capacity_bytes:\n            delta = max(1, self.b2_bytes // max(1, self.b1_bytes))\n            self.target_t1_bytes = min(\n                self.capacity_bytes, self.target_t1_bytes + delta\n            )\n\n    def _decrease_target(self):\n        if self.capacity_bytes:\n            delta = max(1, self.b1_bytes // max(1, self.b2_bytes))\n            self.target_t1_bytes = max(0, self.target_t1_bytes - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        if key in self.b1:\n            self._increase_target()\n            ghost_size = self.b1.pop(key)\n            self.b1_bytes -= ghost_size\n            evicted = self._replace(size)\n            self.t2[key] = size\n            self.t2_bytes += size\n            self.used_bytes += size\n            return evicted\n\n        if key in self.b2:\n            self._decrease_target()\n            ghost_size = self.b2.pop(key)\n            self.b2_bytes -= ghost_size\n            evicted = self._replace(size)\n            self.t2[key] = size\n            self.t2_bytes += size\n            self.used_bytes += size\n            return evicted\n\n        evicted = self._replace(size)\n        self.t1[key] = size\n        self.t1_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R5-pair02-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 100.837,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:18:15Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "84fb65df54626b7af2b611ef38673abe95a16ca983abc1b2cee12d178beac938",
+    "raw_events_path": "workspace\\model-calls\\R5-pair02-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "74fc5ea841cf8ffe19bd8d6c3e72309430ec177e246444d3a9169d0fd3555c8b",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 2,
+    "response_sha256": "7fb360938395e24a8b14eeac29eb9b583ea00e74407325599c14062655ecc2a7",
+    "returncode": 0,
+    "role": "R5 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:16:34Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14211,
+      "output_tokens": 5404,
+      "reasoning_output_tokens": 4345
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

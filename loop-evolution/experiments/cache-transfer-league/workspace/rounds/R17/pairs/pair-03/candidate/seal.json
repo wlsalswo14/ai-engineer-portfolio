@@ -1,0 +1,34 @@
+{
+  "arm": "candidate",
+  "artifact_bytes": 3083,
+  "artifact_path": "workspace\\rounds\\R17\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+  "artifact_sha256": "c7e341ba70530b27a900569485725961b8dc204f0ff8efc102b779b4a2514739",
+  "display_round": 17,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_manifest_path": "workspace\\rounds\\R17\\pairs\\pair-03\\candidate\\generation-manifest.json",
+  "generation_manifest_sha256": "29cf1680d985a84d4046adb073930e50c896bf54b57bd0acb8b6cb0cfdb04ecb",
+  "label": "pair-03-candidate",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R17-pair03-candidate-call01-subtractive_constitution\\final-receipt.json",
+      "sha256": "045fae0b1702be8bfe6f9eecfb3e02e3c9ed4615bdd7c72a41b71a66493dd051"
+    },
+    {
+      "path": "workspace\\model-calls\\R17-pair03-candidate-call02-independent_policy_originator\\final-receipt.json",
+      "sha256": "2e9576266304c5f6820e18c2c0ecc90dcc55c719c2952b61ef08ab041f72a9b8"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 38, in replay\n    raise AssertionError(\"insufficient eviction\")\nAssertionError: insufficient eviction\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 3083,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T16:11:58Z"
+}

@@ -1,0 +1,33 @@
+{
+  "analysis_packet": {
+    "certificate": "Evidence reconciled into a policy-free charter; no executable artifact, implementation detail, or policy authorship is included.",
+    "exact_actions": [
+      "Treat contract legality and capacity safety as non-negotiable invariants.",
+      "Use the anchor’s recency and ghost-history evidence only as behavioral evidence, not as a required representation.",
+      "Resolve scan resistance and phase adaptation as a single coherent online objective before choosing implementation structures.",
+      "Make byte-aware admission, retention, and eviction decisions while preserving useful frequent objects.",
+      "Use observed access history to adapt across phases without relying on unavailable future information.",
+      "Ensure every reported eviction is of an object actually removed from the evaluator-visible cache state.",
+      "Produce one complete standard-library policy as the sole downstream artifact."
+    ],
+    "obligations": [
+      "Preserve the required constructor and access interface.",
+      "Maintain exact capacity accounting for variable-size objects.",
+      "Return only keys that are currently cached, uniquely and as integers.",
+      "Process one request at a time using only information available through prior and current accesses.",
+      "Handle invalid, zero-capacity, and oversized requests without violating safety.",
+      "Balance frequent-object retention against protection from scans and adaptation after workload phase changes.",
+      "Keep all decisions independent of hidden traces, oracle behavior, benchmark paths, external libraries, networking, and subprocesses.",
+      "Materialize exactly one terminal policy after this analysis."
+    ],
+    "witnesses": [
+      "The interface is a single online access transition returning evicted keys.",
+      "Capacity safety, legal unique integer-key evictions, and current-cache membership are mandatory.",
+      "The anchor separates probationary and protected recency while retaining ghost evidence for adaptation.",
+      "The optimization objectives jointly require hit efficiency, byte efficiency, scan resistance, phase-shift adaptation, and low regret.",
+      "Only standard-library, evaluator-independent, online-visible information may inform behavior.",
+      "The hypothesis identifies premature representation commitment as a coherence bottleneck between scan resistance and adaptation."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

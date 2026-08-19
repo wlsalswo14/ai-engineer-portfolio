@@ -1,0 +1,220 @@
+Artifact: one bounded static-exchange ordering component.
+
+Causal prediction: accurately deprioritizing poisoned captures and prioritizing profitable exchanges improves tactical search ordering while leaving legal move generation and quiet moves unchanged.
+
+```python
+import json
+import sys
+
+VALUE = {"p": 100, "n": 320, "b": 330, "r": 500, "q": 900, "k": 20000}
+PROMOTIONS = {"n", "b", "r", "q"}
+
+
+class ExchangeOrder:
+    def __init__(self, max_ply=32):
+        self.max_ply = max(1, int(max_ply))
+        self.unit = 64 * self.max_ply
+
+    @staticmethod
+    def square(s):
+        if len(s) != 2 or s[0] not in "abcdefgh" or s[1] not in "12345678":
+            raise ValueError("bad square")
+        return ord(s[0]) - 97 + 8 * (ord(s[1]) - 49)
+
+    @classmethod
+    def move(cls, text):
+        if len(text) not in (4, 5):
+            raise ValueError("bad move")
+        a, z = cls.square(text[:2]), cls.square(text[2:4])
+        promotion = text[4].lower() if len(text) == 5 else ""
+        if promotion and promotion not in PROMOTIONS:
+            raise ValueError("bad promotion")
+        return a, z, promotion
+
+    @staticmethod
+    def board(position):
+        rows = position["board"].split("/")
+        if len(rows) != 8 or any(len(row) != 8 for row in rows):
+            raise ValueError("board must contain eight eight-character ranks")
+        return list("".join(reversed(rows)))
+
+    @staticmethod
+    def clear_path(board, a, z, dr, df):
+        r, f = divmod(a, 8)
+        tr, tf = divmod(z, 8)
+        r, f = r + dr, f + df
+        while (r, f) != (tr, tf):
+            if board[r * 8 + f] != ".":
+                return False
+            r, f = r + dr, f + df
+        return True
+
+    @classmethod
+    def attacks(cls, board, a, z):
+        piece = board[a]
+        kind = piece.lower()
+        r, f = divmod(a, 8)
+        tr, tf = divmod(z, 8)
+        dr, df = tr - r, tf - f
+
+        if kind == "p":
+            return dr == (1 if piece.isupper() else -1) and abs(df) == 1
+        if kind == "n":
+            return (abs(dr), abs(df)) in ((1, 2), (2, 1))
+        if kind == "k":
+            return max(abs(dr), abs(df)) == 1
+
+        diagonal = abs(dr) == abs(df) and dr != 0
+        orthogonal = (dr == 0) != (df == 0)
+        if kind == "b" and diagonal:
+            return cls.clear_path(board, a, z, 1 if dr > 0 else -1,
+                                   1 if df > 0 else -1)
+        if kind == "r" and orthogonal:
+            return cls.clear_path(board, a, z, 0 if dr == 0 else (1 if dr > 0 else -1),
+                                   0 if df == 0 else (1 if df > 0 else -1))
+        if kind == "q" and (diagonal or orthogonal):
+            return cls.clear_path(board, a, z, 0 if dr == 0 else (1 if dr > 0 else -1),
+                                   0 if df == 0 else (1 if df > 0 else -1))
+        return False
+
+    @classmethod
+    def attackers(cls, board, target, side):
+        return [
+            sq for sq, piece in enumerate(board)
+            if piece != "." and piece.isupper() == (side == 0)
+            and cls.attacks(board, sq, target)
+        ]
+
+    @staticmethod
+    def apply(board, a, z, promotion, ep):
+        result = board[:]
+        piece = result[a]
+        result[a] = "."
+        if piece.lower() == "p" and z == ep and result[z] == ".":
+            result[z + (-8 if piece.isupper() else 8)] = "."
+        result[z] = piece
+        if promotion:
+            result[z] = promotion.upper() if piece.isupper() else promotion
+        return result
+
+    def tactical(self, position, text):
+        board = self.board(position)
+        a, z, promotion = self.move(text)
+        captured = board[z]
+        piece = board[a]
+        ep = int(position.get("ep", -1))
+        if piece.lower() == "p" and z == ep and captured == ".":
+            captured = board[z + (-8 if piece.isupper() else 8)]
+        return captured != "." or bool(promotion)
+
+    def see(self, position, text):
+        board = self.board(position)
+        side = int(position["side"])
+        ep = int(position.get("ep", -1))
+        a, z, promotion = self.move(text)
+        piece = board[a]
+
+        if piece == "." or piece.isupper() != (side == 0):
+            raise ValueError("move does not belong to side")
+
+        captured = board[z]
+        if piece.lower() == "p" and z == ep and captured == ".":
+            captured = board[z + (-8 if piece.isupper() else 8)]
+
+        gain = [
+            (VALUE[captured.lower()] if captured != "." else 0)
+            + (VALUE[promotion] - VALUE["p"] if promotion else 0)
+        ]
+
+        board = self.apply(board, a, z, promotion, ep)
+        turn = side ^ 1
+
+        for _ in range(self.max_ply):
+            candidates = self.attackers(board, z, turn)
+            if not candidates:
+                break
+            source = min(candidates, key=lambda sq: (VALUE[board[sq].lower()], sq))
+            victim = board[z]
+            attacker = board[source]
+            board[source] = "."
+            board[z] = attacker
+            gain.append(VALUE[victim.lower()] - gain[-1])
+            turn ^= 1
+
+        for i in range(len(gain) - 2, -1, -1):
+            gain[i] = -max(-gain[i], gain[i + 1])
+        return gain[0]
+
+    def order(self, position, moves, state):
+        budget = int(state.get("budget", 0))
+        generation = int(state.get("generation", 0))
+        if budget < 0:
+            raise ValueError("negative budget")
+
+        tactical = [m for m in moves if self.tactical(position, m)]
+        bound = len(tactical) * self.unit
+
+        if budget < bound:
+            return {
+                "moves": list(moves),
+                "scores": [
+                    {"move": m, "see": None if m in tactical else 0, "analyzed": m not in tactical}
+                    for m in moves
+                ],
+                "state": {"budget": budget, "generation": generation + 1},
+                "work": 0,
+                "bound": bound,
+            }
+
+        values = {m: self.see(position, m) for m in tactical}
+        values.update({m: 0 for m in moves if m not in values})
+        ordered = sorted(enumerate(moves), key=lambda x: (-values[x[1]], x[0]))
+
+        return {
+            "moves": [m for _, m in ordered],
+            "scores": [
+                {"move": m, "see": values[m], "analyzed": True}
+                for m in moves
+            ],
+            "state": {"budget": budget - bound, "generation": generation + 1},
+            "work": bound,
+            "bound": bound,
+        }
+
+
+def main():
+    component = ExchangeOrder()
+    for line in sys.stdin:
+        if line.strip():
+            request = json.loads(line)
+            response = component.order(
+                request["position"], request["moves"], request["state"]
+            )
+            print(json.dumps(response, sort_keys=True, separators=(",", ":")))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Interface:
+
+- Input: `position.board` is eight slash-separated ranks, `position.side` is `0/1`, `position.ep` is an internal square or `-1`; `moves` is a legal UCI move list; `state` contains `budget` and `generation`.
+- Output: stable ordered moves, SEE scores, updated state, and explicit work accounting.
+- It never removes moves and is not a legality authority.
+
+Fixtures and expected traces:
+
+- Mixed exchange, budget `4096`: `d1d5` scores `400`, `e1f1` scores `0`, `a1a5` scores `-800`; order becomes `d1d5,e1f1,a1a5`; work `4096`.
+- Same position, budget `2048`: original order is preserved; work `0`; state budget remains `2048`.
+- Null position with only quiet moves: order is unchanged; every score is `0`; work `0`.
+- Repeating any request produces byte-identical JSON.
+- Work invariant: `work <= budget` and `work <= bound`.
+
+Execution command:
+
+```text
+python component.py < fixtures.jsonl
+```
+
+The isolated arm permitted reading the supplied anchor but rejected launching Python or creating files, so the traces above are deterministic expected traces rather than interpreter-observed traces.

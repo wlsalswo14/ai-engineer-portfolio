@@ -1,0 +1,28 @@
+{
+  "status": "no_engine_specific_failure_witness",
+  "source_comparison": {
+    "draft_chars": 12598,
+    "champion_chars": 12598,
+    "identical": true,
+    "changed_regions": []
+  },
+  "runtime_status": "Not executed: sandbox rejected Python/Node execution commands.",
+  "preservation_checks": {
+    "syntax": "not_run",
+    "uci": "not_run",
+    "legal_moves": "not_run",
+    "perft": "not_run",
+    "determinism": "not_run",
+    "timeouts": "not_run"
+  },
+  "reproduction_commands": [
+    "$s=(Get-Content -Raw .\\execution\\calls\\01-01-draft_engine.response.txt|ConvertFrom-Json).files.'engine.py';[IO.File]::WriteAllText('.\\engine.py',$s)",
+    "@'\nuci\nisready\nposition startpos\ngo movetime 20\nquit\n'@ | python .\\engine.py",
+    "python -c \"import engine;f=lambda p,d:1 if d==0 else sum(f(engine.make(p,m),d-1) for m in engine.legal(p));print(f(engine.Position.start(),3))\""
+  ],
+  "expected_perft": {
+    "start_depth_3": 8902,
+    "kiwipete_depth_2": 2039
+  },
+  "memory_upload": "blocked by explicit no-network task constraint and read-only sandbox"
+}

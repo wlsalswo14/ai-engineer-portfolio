@@ -1,0 +1,115 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R96-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "author_under_inverted_authority",
+      "information_flow": "The first call sees all common inputs and emits the authority analysis consumed by the final call. The final call also sees all common evidence, applies the omission-triggered authority state before any artifact exists, and emits the lineage's only complete policy.",
+      "name": "Omission-Activated Authority Inversion Dyad",
+      "organization": "two-call sequential nonbranching lineage with one non-policy semantic-authority controller followed by the sole executable author",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "establish_omission_authority_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Determine from jointly visible evidence whether every mandatory obligation is represented by inherited semantics and establish the single authority-state transition when an evidenced obligation is absent.",
+              "output_type": "analysis",
+              "role": "pre-artifact semantic-authority controller"
+            },
+            {
+              "id": "author_under_inverted_authority",
+              "inputs": [
+                "establish_omission_authority_state",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the established authority state, reconcile it with jointly visible common evidence, exercise de novo semantic authority only when the omission trigger has changed the state, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "sole post-transition executable authority"
+            }
+          ],
+          "id": "single_preartifact_authority_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "open-world omission recovery through pre-artifact semantic-authority inversion",
+      "champion_limitation": "The champion's retract-only terminal authority cannot create a necessary commitment that is absent from the already complete originating capsule.",
+      "not_local_refinement": "This relocates sole artifact genesis behind a new generative authority transition unavailable to the champion; it is not an added reviewer, certificate, gate, field, role split, rename, or terminal refinement.",
+      "observable_effect": "The sole final author can introduce an evidence-grounded commitment for a previously unrepresented obligation and emit one complete policy.",
+      "state_transition": "Before any executable artifact exists, the lineage changes once from anchor-inheritance authority to de novo obligation-synthesis authority on the analysis-to-policy edge.",
+      "trigger": "Joint common evidence establishes a mandatory task obligation that has no represented commitment in the inherited policy semantics, without requiring a contradiction."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Move sole executable authorship after an evidence-triggered authority inversion: evidence that a mandatory obligation is unrepresented by inherited semantics changes the lineage from anchor inheritance to de novo obligation synthesis before artifact creation.",
+      "expected_effect": "The lineage can recover task-general omissions while retaining one coherent executable artifact and one deterministic final author.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion creates the complete executable artifact before terminal adjudication, so its retract-only authority cannot supply a required semantic commitment omitted by the originating artifact."
+    },
+    "structural_mutation": {
+      "after": "A non-policy authority state is established first; evidence of a mandatory obligation absent from inherited semantics triggers an authority inversion before the sole complete policy is authored.",
+      "before": "A complete executable capsule is authored first, after which the terminal authority may only retract existing commitments.",
+      "change_count": 1,
+      "factor": "mandatory-omission-triggered pre-artifact semantic-authority inversion",
+      "why_structural": "The mutation changes the artifact-birth edge from executable handoff under monotone retraction to pre-artifact semantic-authority control with generative omission recovery; the downstream call always executes, so this is neither an admission gate nor terminal role fission."
+    }
+  },
+  "receipt": {
+    "call_id": "R96-structure-architect",
+    "duration_seconds": 81.523,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T04:00:54Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "34c54e8dcb958563e6a1286f8fd73288ae88933402919f11817df8870cff9f95",
+    "raw_events_path": "workspace\\model-calls\\R96-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "4b29b7a639e46ebc53c907fddf9c1145c53576fc1f751ac2331ce02a49525efc",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "f7dc8b496759a2d17465a778e0fb208c34bd968692cd3d58c27bcc11ee098782",
+    "returncode": 0,
+    "role": "score-blind R96 emergent_exploration structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T03:59:33Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 2816,
+      "input_tokens": 14429,
+      "output_tokens": 5056,
+      "reasoning_output_tokens": 4076
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

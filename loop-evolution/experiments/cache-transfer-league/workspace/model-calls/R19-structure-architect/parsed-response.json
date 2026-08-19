@@ -1,0 +1,81 @@
+{
+  "architect_scope": "one-R19-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "successor_policy_owner",
+    "information_flow": "The origin owner receives all common inputs and creates one complete executable policy state with its qualitative conformance basis. The successor consumes that state and receives the same common evidence. Visibility and provenance remain intact, but mutation and publication authority migrate irreversibly at the handoff.",
+    "name": "Irreversible Executable-State Ownership Relay",
+    "organization": "two-call sequential single-writer succession",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "origin_policy_owner",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Use the supplied evidence to establish one complete contract-conforming executable policy state and its qualitative conformance basis, then transfer exclusive ownership and relinquish further mutation, rollback, and publication authority.",
+            "output_type": "executable_policy_state",
+            "role": "origin executable-state owner"
+          },
+          {
+            "id": "successor_policy_owner",
+            "inputs": [
+              "origin_policy_owner",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the predecessor's complete executable state, exercise exclusive current-owner authority to reconcile it with the visible contract evidence through forward correction, and emit one complete contract-compliant policy.",
+            "output_type": "policy",
+            "role": "successor executable-state owner and sole publisher"
+          }
+        ],
+        "id": "ownership_relay",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "changed_behavioral_dimensions": [
+      "mutation control changes from uninterrupted self-ownership to irreversible successor ownership",
+      "recovery behavior changes from historical rollback and terminal pruning to forward successor-state correction"
+    ],
+    "counter_until_promotion": true,
+    "forbidden_inherited_mechanism": "the self-adjudicated reversible repair-stack mechanism with terminal causal compression",
+    "independent_replacement_principle": "single-writer succession, where executable-state ownership moves irreversibly across the lineage and only the current owner may correct or publish it",
+    "rejected_assumptions": [
+      "One uninterrupted owner should author and adjudicate its own repair trajectory.",
+      "Historical reversibility and terminal causal compression are necessary for final-policy reliability.",
+      "Mutation authority should remain with the originating producer through publication."
+    ]
+  },
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "causal_change": "Insert an irreversible single-writer ownership-transfer edge carrying a complete executable policy state while preserving common-input visibility and provenance.",
+    "expected_effect": "Successor-owned correction should reduce self-adjudication and path dependence while preserving executable lineage and contract accountability.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active repair-and-compress family keeps evidence interpretation, mutation, rollback, and publication under one uninterrupted owner, allowing self-confirming commitments to remain path-dependent."
+  },
+  "structural_mutation": {
+    "after": "An origin owner hands a complete executable policy state to a successor; the edge extinguishes the origin owner's authority and grants the successor exclusive mutation and publication authority.",
+    "before": "One producer retains mutation, rollback, evidence-adjudication, compression, and publication authority throughout a reversible repair stack.",
+    "change_count": 1,
+    "factor": "irreversible single-writer ownership-transfer edge for the executable policy state",
+    "why_structural": "The mutation changes edge authority and state-transition semantics while preserving anchor visibility, provenance, and constructive successor capability; it is neither role renaming nor terminal-role fission."
+  }
+}

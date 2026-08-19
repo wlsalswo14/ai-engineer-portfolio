@@ -1,0 +1,42 @@
+{
+  "arm": "incumbent",
+  "artifact_bytes": 5839,
+  "artifact_path": "workspace\\rounds\\R96\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "16a8dc2e604b60a0d277e3b5f6c8cb09cca2d5791fff6af90db2a8405e6aa6c7",
+  "display_round": 96,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_contract": {
+    "direct_substitution": false,
+    "handling": "raw_output_preserved_no_retry_no_substitution",
+    "transport_retry_for_semantic_violation": false,
+    "valid": true,
+    "violations": []
+  },
+  "generation_manifest_path": "workspace\\rounds\\R96\\pairs\\pair-03\\incumbent\\generation-manifest.json",
+  "generation_manifest_sha256": "e7a4c319ccb52c922ed9ce1800b5ead46b4311c066a48adfb927993d37c18ad8",
+  "label": "pair-03-incumbent",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R96-pair03-incumbent-call01-originate_provenanced_executable\\final-receipt.json",
+      "sha256": "23bcc0265ddca5011f59b6148d40cb25b4af0958b6617822c585729599fd4966"
+    },
+    {
+      "path": "workspace\\model-calls\\R96-pair03-incumbent-call02-retract_only_terminal_emit\\final-receipt.json",
+      "sha256": "a8d73022a72bf24000eb5ba524b5ac649642ee411f352e06549192fd70fa8ac9"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 20, in replay\n    if int(getattr(policy, \"capacity_bytes\")) != capacity:\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Policy' object has no attribute 'capacity_bytes'\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 5839,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-10T04:05:04Z",
+  "transport_resumes": []
+}

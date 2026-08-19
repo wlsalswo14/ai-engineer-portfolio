@@ -1,0 +1,111 @@
+{
+  "artifact_type": "frozen_behavioral_contract",
+  "scope": "One clean-room engine.py; standard library only; no benchmark positions, external engines, libraries, files, network, candidate comparison, rollback, or source-template reuse.",
+  "anchor_evidence": {
+    "inspected": true,
+    "runtime_status": "Anchor source was inspected locally; in-memory execution was blocked by the workspace command policy.",
+    "preserve": [
+      "Required UCI handshake and flushing",
+      "start position and valid FEN loading",
+      "legal filtering against own check",
+      "castling, en-passant, promotion, halfmove/fullmove state tracking",
+      "iterative deepening with a legal fallback move"
+    ],
+    "risks_found": [
+      "Malformed FEN and unknown moves are silently accepted or ignored.",
+      "The broad go exception handler can conceal internal defects.",
+      "No explicit repetition or fifty-move draw handling.",
+      "Terminal positions return 0000; nonterminal positions must never do so.",
+      "Time safety depends on periodic checks and may be fragile at very small budgets."
+    ],
+    "metrics_context": {
+      "wins": 4,
+      "draws": 65,
+      "losses": 31,
+      "score_rate": 0.365,
+      "elo": -94.211
+    }
+  },
+  "obligations": [
+    {
+      "id": "P0-uci",
+      "priority": 0,
+      "requirement": "Support uci, isready, ucinewgame, position startpos, position fen with six fields, moves, go movetime, and quit.",
+      "probe": "Send the complete required command forms, including repeated position/go cycles.",
+      "pass": "uciok and readyok are emitted; every go produces exactly one flushed bestmove line and no diagnostic stdout."
+    },
+    {
+      "id": "P0-legality",
+      "priority": 0,
+      "requirement": "Every nonterminal bestmove is legal in the exact current position.",
+      "probe": "Independently parse the position, generate/check legal moves, and validate every returned UCI move.",
+      "pass": "Zero illegal moves across all probes and seeded legal playouts."
+    },
+    {
+      "id": "P0-state",
+      "priority": 0,
+      "requirement": "Correctly apply captures, pawn double moves, promotion, en-passant, castling, side-to-move, castling rights, en-passant target, and move counters.",
+      "probe": "Apply reversible synthetic sequences covering each rule, then validate subsequent legal moves and FEN state.",
+      "pass": "All state fields and generated moves match an independent standard-library checker."
+    },
+    {
+      "id": "P0-check",
+      "priority": 0,
+      "requirement": "Reject moves exposing the moving side's king and generate all legal check evasions.",
+      "probe": "Use single-check, double-check, pinned-piece, discovered-check, and king-capture-edge cases.",
+      "pass": "No self-check move is accepted; mate and stalemate are distinguished."
+    },
+    {
+      "id": "P0-time",
+      "priority": 0,
+      "requirement": "Return before the supplied movetime deadline with a legal fallback even at minimal budgets.",
+      "probe": "Run movetime values 1, 5, 25, and 100 ms over quiet, tactical, checking, and terminal positions.",
+      "pass": "Exactly one response per go, no timeout/hang, and a legal move whenever one exists."
+    },
+    {
+      "id": "P1-determinism",
+      "priority": 1,
+      "requirement": "Identical input and budget produce stable behavior absent intentional randomness.",
+      "probe": "Repeat identical UCI sessions after ucinewgame and compare bestmove and state transitions.",
+      "pass": "No unexplained variation or stale transposition/history state."
+    },
+    {
+      "id": "P1-search",
+      "priority": 1,
+      "requirement": "Search preserves legality while handling mate, tactical captures, promotions, checks, and terminal nodes.",
+      "probe": "Use synthetic tactical positions and shallow independent minimax comparisons.",
+      "pass": "No horizon-induced illegal move, missed forced mate, or failure to escape check."
+    },
+    {
+      "id": "P2-perft",
+      "priority": 2,
+      "requirement": "Move generation is complete on ordinary positions.",
+      "probe": "In-process standard-library harness checks startpos perft targets 20, 400, and 8902 for depths 1, 2, and 3.",
+      "pass": "All three counts match exactly; special-rule probes also pass."
+    }
+  ],
+  "synthetic_interaction_cases": [
+    "Castling rights plus rook capture/movement plus attacked transit squares.",
+    "En-passant capture that opens a rook or bishop line onto the moving king.",
+    "Promotion while in check, including capture-promotion and all four promotion pieces.",
+    "Pinned piece, discovered check, and double-check where capture-only generation is insufficient.",
+    "Transposition identity must include side, castling rights, and en-passant target.",
+    "Mate versus stalemate must return terminal 0000 only when no legal move exists.",
+    "Position move replay followed by ucinewgame must not retain stale board or search state.",
+    "Very short movetime during expensive legal generation must still use a previously verified legal fallback."
+  ],
+  "preservation_invariants": [
+    "Never emit an illegal nonterminal move.",
+    "Never mutate the current position while merely evaluating or ordering moves.",
+    "Every accepted move changes side exactly once and updates irreversible state exactly once.",
+    "Castling and en-passant legality must be checked after the complete state transition.",
+    "Search caches must not override a position with different board, side, rights, or en-passant state.",
+    "No benchmark-specific move, opening, answer, evaluator behavior, or hidden-match assumption may enter the implementation."
+  ],
+  "release_gate": {
+    "mandatory": "All P0 obligations pass with zero invalid moves, zero protocol violations, zero crashes, and zero deadline misses.",
+    "additional": "All P1 obligations and startpos perft targets pass; P2 failures require documented non-correctness impact and must not weaken P0 behavior.",
+    "terminal_rule": "0000 is permitted only for a verified terminal position with no legal moves.",
+    "decision_rule": "Emit exactly one engine artifact only after the single construction trajectory satisfies this contract; no later candidate selection or repair."
+  }
+}

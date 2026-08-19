@@ -1,0 +1,126 @@
+Role: evidence-bound repair and rollback integrator
+
+Execute exactly one role in a fixed historical topology translated to Cache
+Policy vocabulary. This is representative 1 for topology R24.
+It is an independent run: no other representative, candidate, evaluation, or
+score is visible. Do not use tools or inspect the filesystem; use only the inline
+visible inputs below. Do not search, sample variants, or ask another agent.
+
+Role id: final_policy
+Role: evidence-bound repair and rollback integrator
+Objective: Consume the sole draft_policy and postbuild_falsification_packet. If the packet certifies no failure, emit the draft policy unchanged. Otherwise reproduce each witness, apply one minimal packet-grounded repair or exact rollback of the implicated draft delta, replay all packet witnesses and baseline interface, authoritative-state, and capacity checks, and emit exactly one complete contract-compliant policy artifact. Do not reopen broad diagnosis, create alternatives, or select among versions.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and must define class Policy with __init__(capacity_bytes) and
+access(key, size, now). Do not return a diff, multiple variants, benchmark data,
+or evaluator-specific constants. You may reason internally, but return exactly
+one artifact.
+
+Visible inputs, exactly as fixed by the topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "draft_policy": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n",
+    "sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348"
+  },
+  "postbuild_falsification_packet": {
+    "analysis_packet": {
+      "certificate": "No failure found in the visible artifact. The draft is byte-identical to anchor_policy (SHA-256 f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348) and uses only online access observations.",
+      "witnesses": [],
+      "obligations": [
+        "Preserve Policy(capacity_bytes) and access(key, size, now) interfaces.",
+        "Return only currently cached keys in eviction order.",
+        "Maintain byte usage at or below capacity for valid nonnegative sizes.",
+        "Do not cache objects larger than capacity.",
+        "Use no evaluator state, hidden traces, external libraries, networking, or subprocesses."
+      ],
+      "exact_actions": [
+        "Instantiate with capacity 10; access (1,4,0), (2,6,1), (1,4,2), (3,5,3). Expected evictions: [], [], [], [2].",
+        "Instantiate with capacity 10; access (1,4,0), then (9,11,1). Expected evictions: [], []; key 1 remains cached.",
+        "Replay any valid finite trace against both artifacts and compare eviction lists after each access; outputs must match exactly."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "candidate_hypothesis": {
+    "causal_change": "A distinct postbuild verifier supplies bounded evidence that permits either unchanged passage or narrowly grounded repair or rollback.",
+    "expected_effect": "Clean provisional policies should remain unchanged while witnessed defects receive only bounded evidence-grounded intervention.",
+    "falsifier": "Falsified unless the emitted policy artifact is all-valid and satisfies the median promotion contract.",
+    "observed_bottleneck": "Construction-time checks can miss defects observable only in the realized provisional artifact."
+  },
+  "loop_structure": {
+    "final_call_id": "final_policy",
+    "information_flow": "The first call runs the anchor workflow unchanged and emits one complete provisional policy artifact. A distinct verifier converts that realized artifact into a bounded packet of executable counterexamples or a no-failure certificate. The final integrator must emit that same artifact unchanged when the packet is empty; otherwise it performs only packet-grounded repair or exact rollback and emits the single final policy artifact.",
+    "name": "Postbuild Independent Falsification and Bounded Integration",
+    "organization": "collaboration",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "draft_policy",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Starting from anchor_policy, execute the anchor's existing ordered transactional repair, insertion-time intervention, exact-delta rollback, and terminal singleton-ablation workflow without adding a new repair or compression rule. Emit exactly one complete contract-compliant provisional policy artifact; do not generate alternatives.",
+            "output_type": "policy",
+            "role": "anchor-compatible provisional policy constructor"
+          }
+        ],
+        "id": "provisional_construction",
+        "mode": "sequential"
+      },
+      {
+        "calls": [
+          {
+            "id": "postbuild_falsification_packet",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "draft_policy"
+            ],
+            "objective": "Inspect and exercise the single draft_policy against task requirements, interface and authoritative-state obligations, reproducible differential probes against anchor_policy, and failure modes exposed by its realized changes. Return a bounded evidence-only analysis packet containing reproducible witnesses, implicated changed regions, required preservation checks, and exact reproduction procedures; if none are found, return an explicit no-failure certificate. Do not propose another policy, rank alternatives, or author policy code.",
+            "output_type": "analysis",
+            "role": "independent realized-artifact verifier"
+          }
+        ],
+        "id": "independent_terminal_falsification",
+        "mode": "sequential"
+      },
+      {
+        "calls": [
+          {
+            "id": "final_policy",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "draft_policy",
+              "postbuild_falsification_packet",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the sole draft_policy and postbuild_falsification_packet. If the packet certifies no failure, emit the draft policy unchanged. Otherwise reproduce each witness, apply one minimal packet-grounded repair or exact rollback of the implicated draft delta, replay all packet witnesses and baseline interface, authoritative-state, and capacity checks, and emit exactly one complete contract-compliant policy artifact. Do not reopen broad diagnosis, create alternatives, or select among versions.",
+            "output_type": "policy",
+            "role": "evidence-bound repair and rollback integrator"
+          }
+        ],
+        "id": "bounded_integration",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

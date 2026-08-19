@@ -1,0 +1,58 @@
+{
+  "final_call_id": "continue_active_representation",
+  "information_flow": "The first call establishes one complete executable lineage and its qualitative causal context. The second consumes that lineage and performs the representation transition only when the stated contradiction is evidenced, while preserving the same artifact and route. The final call consumes the transitioned or unchanged executable lineage and emits one policy. Every handoff keeps the complete executable artifact visible, and no alternate lineage is created.",
+  "name": "Evidence-Triggered Representation Phase-Change Lineage",
+  "organization": "three-call single-executable-continuation state machine",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "seed_executable_lineage",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Establish one anchor-grounded executable artifact and retain qualitative causal evidence linking each active change to contract obligations and required validity assumptions; pass that sole complete lineage forward.",
+          "output_type": "policy",
+          "role": "anchor-grounded executable-lineage originator"
+        },
+        {
+          "id": "transduce_causal_representation",
+          "inputs": [
+            "seed_executable_lineage",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the preceding executable lineage and, when an active change negates a validity assumption required by another active change, reconstitute that same sole artifact under a joint contract-invariant representation without the contradicted dependence; otherwise preserve its current state and pass it forward on the same route.",
+          "output_type": "policy",
+          "role": "evidence-triggered causal-representation transducer"
+        },
+        {
+          "id": "continue_active_representation",
+          "inputs": [
+            "transduce_causal_representation",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding executable lineage, continue causal closure under its active representation while preserving interface, authoritative-state, and capacity obligations, and emit exactly one complete policy; emit the anchor unchanged if no valid changed artifact remains.",
+          "output_type": "policy",
+          "role": "representation-conditioned executable-lineage continuator"
+        }
+      ],
+      "id": "representation_phase_change_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

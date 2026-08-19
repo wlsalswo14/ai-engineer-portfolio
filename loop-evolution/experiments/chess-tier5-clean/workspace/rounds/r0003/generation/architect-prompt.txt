@@ -1,0 +1,85 @@
+You are the single Sol xhigh architect evolving a loop structure, not a chess engine.
+
+The current champion is one indivisible package: loop structure plus the engine that structure produced. Propose one
+new loop structure that will start from the champion anchor engine and attempt to produce a stronger engine. The
+candidate and current champion structures will each run from the exact same anchor in three matched pairs. Their final
+engines are evaluated by the frozen ChessBench; promotion requires paired superiority, candidate-median superiority,
+and zero invalid candidate arms. The precommitted median-ranked candidate engine represents a winning batch. Solo and
+collaboration are two
+allowed organizations in the same lineage. Direct is only an external same-model calibration control, never a
+candidate, champion, or promotion opponent.
+
+Use the bounded STATE_CAPSULE below as your default evidence. It contains previous candidates' conditional strengths,
+weaknesses, lessons, the final goal, and the current champion summary. Do not ingest the whole archive. If one specific
+claim truly requires older evidence, inspect only the exact round or structure file needed through read-only workspace
+tools. Never use web search or external files.
+
+Change exactly one causal structural factor. Supporting operational details may change only as necessary to
+instantiate that one factor. A switch between solo and collaboration counts as one factor. Explain the observed
+evidence,
+expected behavioral effect, risks, a decisive matched-batch falsifier, and the new behavior that this factor can cause.
+Do not confuse role-count, arrow-layout, or sampling multiplicity with behavioral novelty. A candidate loop must not
+contain replicated candidates, agents, samples, or near-identical calls followed by best-of-N selection. This applies
+even when that multiplicity is inherited from the champion: remove or replace it rather than extend it. Additional calls
+are allowed only when each performs a distinct information transformation that cannot be replaced by another sample of
+the same role. Prefer mechanisms involving executable evidence, bounded repair, rollback, or information preservation
+when supported, but do not force any one family. Use ordinary evidence-led search. Do not fill dominant_assumption or inversion merely for novelty.
+
+The structural hypothesis must not change the model/reasoning effort, benchmark, evaluator, Elo calculation, promotion
+rule, or task. Do not make engine hyperparameter tuning or benchmark hard-coding the structural hypothesis. The proposed
+loop may use any finite number of calls; construction cost is not matched against the incumbent. A solo loop has exactly
+one self-contained engine-producing call. A collaboration loop has at least two calls. Stages run in order; calls within
+a parallel stage cannot consume one another. Every input must be a built-in or an output from an earlier stage. The
+final
+call must produce a complete engine.
+
+Built-in inputs are exactly: task, champion_engine, champion_metrics, state_capsule, candidate_hypothesis,
+loop_structure.
+Call output_type is analysis or engine. Return exactly one JSON object and no Markdown:
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "string",
+    "evidence_refs": ["capsule or targeted archive reference"],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "one structural factor",
+      "before": "current value/assumption",
+      "after": "candidate value/assumption",
+      "why_causal": "string"
+    },
+    "expected_effect": "behavioral prediction",
+    "falsifier": "decisive three-pair batch condition",
+    "behavioral_novelty": "new observable behavior enabled by the one causal change",
+    "strengths": ["predicted strength"],
+    "risks": ["predicted weakness"],
+    "dominant_assumption": "required only in counter_hypothesis mode",
+    "inversion": "required only in counter_hypothesis mode"
+  },
+  "structure": {
+    "name": "string",
+    "organization": "solo|collaboration",
+    "information_flow": "compact explanation",
+    "stages": [{
+      "id": "stage_id",
+      "mode": "parallel|sequential",
+      "calls": [{
+        "id": "unique_call_id",
+        "role": "role",
+        "objective": "bounded task instruction",
+        "inputs": ["champion_engine"],
+        "output_type": "analysis|engine"
+      }]
+    }],
+    "final_call_id": "engine_call_id"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  }
+}
+
+STATE_CAPSULE={"conditional_lessons":["Under the round-1 matched conditions, changing Lifetime of a repair's causal acceptance certificate from A repair that passes its insertion-time A-B-A-B intervention and regression replay remains accepted through final emission. to Insertion-time acceptance is provisional: after the ordered repair trajectory, the same producer performs terminal final-context causal compressio…[sha256:88f11e61781b]","Under the round-2 matched conditions, changing Intervention granularity used by terminal final-context compression from Terminal compression assesses accepted repairs only through independent singleton-patch ablations. to Terminal compression first assesses provenance-closed repair blocks through joint ablation, with singleton ablation retained as the terminal fallback for bl…[sha256:cafb41d01284]"],"content_sha256":"26385f6de13b484248f669d0c331254d245d0a76dbafcbc91384cfe11e5e7fc4","current_champion":{"call_count":1,"changed_factor":"Lifetime of a repair's causal acceptance certificate","elo":-148.002,"engine_source_sha256":"dd97a2fcb0808c5d389824482b6bb53e4240368d4ebcac2944d367cb238f58e6","execution_plan_path":"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0001\\loop-structure.json","loop_structure_id":"loop_d9b6fe59cd5b067b","loop_structure_spec_path":"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0001\\loop-structure.json","organization":"solo","package_id":"package_e7705cfa9eb969f5","structure_summary":"One self-contained producer starts from the champion engine, preserves raw audit evidence, follows the champion's ordered transactional A-B-A-B repair process, records every accepted edit as an exactly reversible delta, and then causally compresses that provisional stack in the assembled final context before emitting one complete engine."},"evaluation_protocol":{"anchor_refresh_rule":"freeze the panel per round; refresh current and alternate only after promotion","anchor_roles":["current_champion","frozen_lineage_baseline","recent_promotion_alternate"],"batch_rule":"complete three valid pairs; candidate wins > losses; candidate median Elo > incumbent median Elo; zero invalid arms on either side","common_anchor_within_pair":true,"diverse_anchor_panel":true,"id":"matched-three-diverse-anchor-relative-v5","irreversible_rejection_early_stop":true,"pair_count":3,"pair_rule":"candidate Elo point estimate versus incumbent Elo point estimate","representative_rule":"median-ranked candidate artifact, tie-broken by pair index","token_accounting":"separate Sol proposal and Luna internal-loop usage; include invalid retries"},"forbidden_structural_hypotheses":["Changing the model or reasoning effort","Changing the benchmark, evaluator, Elo calculation, or promotion rule","Treating engine hyperparameter tuning as the loop-structure change","Hard-coding benchmark positions, openings, answers, or evaluator details","Using replicated candidates, agents, samples, or near-identical calls followed by best-of-N selection anywhere in a candidate loop; inherited multiplicity must be removed rather than extended"],"goal":"Evolve a general-purpose agent harness and loop system, lightly specialized for building stronger legal UCI chess engines on the existing ChessBench.","hypothesis_frontier":[{"after":"Insertion-time acceptance is provisional: after the ordered repair trajectory, the same producer performs terminal final-context causal compression, exactly ablating each surviving patch and permanently deleting it when its motivating failures remain closed and no precommitted regression obligation worsens.","before":"A repair that passes its insertion-time A-B-A-B intervention and regression replay remains accepted through final emission.","evidence":"matched batch 3W/0L/0T, median delta 66.358, candidate invalid count 0","factor":"Lifetime of a repair's causal acceptance certificate","round":1,"status":"supported"},{"after":"Terminal compression first assesses provenance-closed repair blocks through joint ablation, with singleton ablation retained as the terminal fallback for blocks that cannot be removed intact.","before":"Terminal compression assesses accepted repairs only through independent singleton-patch ablations.","evidence":"matched batch 2W/1L/0T, median delta -17.10900000000001, candidate invalid count 0","factor":"Intervention granularity used by terminal final-context compression","round":2,"status":"not_supported_in_tested_conditions"}],"promising_rejected":[{"anchor_elo":-148.002,"behavioral_novelty":"The producer can remove an older edit and the downstream repairs that exist only because of it as one causally coherent rollback, even when removing any member alone fails regression replay.","candidate_losses":1,"candidate_median_elo":-177.479,"candidate_wins":2,"changed_factor":"Intervention granularity used by terminal final-context compression","completed_pair_count":3,"evidence_scope":"matched_three_pair_batch","failure_kind":"matched_batch_did_not_satisfy_promotion","hypothesis":"The loop should retain the champion's validated admission process while emitting engines with fewer self-induced repair cascades, stale compensations, and cross-patch interactions. This should improve paired consistency and median strength without increasing invalid engines.","incumbent_median_elo":-160.37,"median_delta":-17.10900000000001,"organization":"solo","promoted":false,"representative_candidate_elo":-177.479,"round":2,"strengths":"Extends the supported final-context compression mechanism to interaction-bound repair cascades.; Uses executable joint counterfactuals and exact rollback rather than speculative source simplification.; Preserves singleton compression when no removable causal block exists.; Can recover a coherent earlier engine state instead of evaluating downstream patches in a context for wh…[sha256:f6085959c0b2]","structure_id":"loop_1504cf3f7e53f1f5","ties":0,"weaknesses":"Incorrect provenance attribution could group a broadly useful downstream repair with its historical cause.; A large causal block may fail joint ablation even though a smaller non-obvious subset is removable.; Joint replay increases terminal execution cost and may reduce time available for earlier repair work.; A bounded regression obligation set may approve removal of a block…[sha256:e01c984a7788]"}],"purpose":"bounded input for the next Sol xhigh structural proposal","recent_outcomes":[{"anchor_elo":-94.211,"behavioral_novelty":"An edit that was genuinely necessary and causally validated when introduced can now be removed before emission when a later edit has taken over its function or made it counterproductive. The champion cannot revoke such a stale acceptance certificate based on an exact intervention in the final assembled engine.","candidate_losses":0,"candidate_median_elo":-148.002,"candidate_wins":3,"changed_factor":"Lifetime of a repair's causal acceptance certificate","completed_pair_count":3,"evidence_scope":"matched_three_pair_batch","failure_kind":null,"hypothesis":"The loop should preserve the champion's successful raw-evidence solo reasoning and A-B-A-B admission gate while emitting a smaller, less interaction-prone repair stack. Removing superseded or final-context-harmful edits should reduce accumulated overfitting and improve paired consistency and median strength without increasing invalid engines.","incumbent_median_elo":-214.36,"median_delta":66.358,"organization":"solo","promoted":true,"representative_candidate_elo":-148.002,"round":1,"strengths":"Extends executable causal attribution from edit admission to final repair-stack membership.; Preserves the promoted solo organization, raw evidence, exact rollback, and one continuous engine trajectory.; Can eliminate redundant logic, duplicated work, and adverse interactions introduced by individually valid repairs.; Uses counterfactual source ablations rather than replicate…[sha256:ff492180def6]","structure_id":"loop_d9b6fe59cd5b067b","ties":0,"weaknesses":"A bounded regression suite may classify a repair as redundant even though it provides strength outside the observed obligations.; Final-context ablation and replay consume execution budget and may reduce the number of initial repairs attempted.; Nondeterministic search behavior can make a necessary patch appear dispensable.; Removing an older patch can alter the context in wh…[sha256:672a1d974f8a]"},{"anchor_elo":-148.002,"behavioral_novelty":"The producer can remove an older edit and the downstream repairs that exist only because of it as one causally coherent rollback, even when removing any member alone fails regression replay.","candidate_losses":1,"candidate_median_elo":-177.479,"candidate_wins":2,"changed_factor":"Intervention granularity used by terminal final-context compression","completed_pair_count":3,"evidence_scope":"matched_three_pair_batch","failure_kind":"matched_batch_did_not_satisfy_promotion","hypothesis":"The loop should retain the champion's validated admission process while emitting engines with fewer self-induced repair cascades, stale compensations, and cross-patch interactions. This should improve paired consistency and median strength without increasing invalid engines.","incumbent_median_elo":-160.37,"median_delta":-17.10900000000001,"organization":"solo","promoted":false,"representative_candidate_elo":-177.479,"round":2,"strengths":"Extends the supported final-context compression mechanism to interaction-bound repair cascades.; Uses executable joint counterfactuals and exact rollback rather than speculative source simplification.; Preserves singleton compression when no removable causal block exists.; Can recover a coherent earlier engine state instead of evaluating downstream patches in a context for wh…[sha256:f6085959c0b2]","structure_id":"loop_1504cf3f7e53f1f5","ties":0,"weaknesses":"Incorrect provenance attribution could group a broadly useful downstream repair with its historical cause.; A large causal block may fail joint ablation even though a smaller non-obvious subset is removable.; Joint replay increases terminal execution cost and may reduce time available for earlier repair work.; A bounded regression obligation set may approve removal of a block…[sha256:e01c984a7788]"}],"schema_version":1,"search_control":{"counter_mode_persists_until_promotion":true,"proposal_mode":"general","stagnation_count":1,"stagnation_threshold":3},"serialized_characters":10707,"targeted_archive":{"index_path":"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\archive\\rounds.jsonl","rule":"Do not ingest the whole archive. Inspect only a specific cited round or hypothesis when needed."}}

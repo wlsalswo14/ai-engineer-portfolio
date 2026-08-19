@@ -1,0 +1,42 @@
+{
+  "final_call_id": "compose_outer_obligation_supervisor",
+  "information_flow": "The first call forms exactly one complete executable inner policy from all supplied evidence. The second call consumes that artifact intact, retains visibility of its current semantics, and emits one complete policy by exercising terminal authority only through an outer public-obligation supervisory layer.",
+  "name": "Nested Supervisory Policy Composition",
+  "organization": "two-call sequential lineage joined by one non-destructive containment edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_intact_inner_policy",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form exactly one complete executable policy artifact from the supplied task, public obligations, hypothesis, loop context, and anchor evidence, and pass that single artifact forward intact with the evidence needed to identify its public action commitments.",
+          "output_type": "executable_policy_closure",
+          "role": "inner executable policy author"
+        },
+        {
+          "id": "compose_outer_obligation_supervisor",
+          "inputs": [
+            "form_intact_inner_policy",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the preceding complete executable policy as an intact inner component, assess its exposed actions against supplied public obligations, and emit exactly one complete policy through outer mediation without rewriting, replacing, or multiplying the inner artifact.",
+          "output_type": "policy",
+          "role": "outer public-obligation supervisor"
+        }
+      ],
+      "id": "nested_composition",
+      "mode": "sequential"
+    }
+  ]
+}

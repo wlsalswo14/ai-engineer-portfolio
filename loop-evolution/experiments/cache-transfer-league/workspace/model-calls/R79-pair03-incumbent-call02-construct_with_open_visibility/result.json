@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.used = 0\n\n    def _remove_resident(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.used -= value[0]\n            return value\n        value = self.frequent.pop(key, None)\n        if value is not None:\n            self.used -= value[0]\n            return value\n        return None\n\n    def _evict_one(self):\n        if self.recent:\n            key, value = self.recent.popitem(last=False)\n        elif self.frequent:\n            key, value = self.frequent.popitem(last=False)\n        else:\n            return None\n        self.used -= value[0]\n        return key\n\n    def _make_room(self, incoming):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one()\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n\n        resident = key in self.recent or key in self.frequent\n        if resident:\n            value = self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size)\n            self.frequent[key] = (size, value[1] + 1)\n            self.used += size\n            return evicted\n\n        if size <= 0 or size > self.capacity:\n            return []\n\n        evicted = self._make_room(size)\n        self.recent[key] = (size, 1)\n        self.used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R79-pair03-incumbent-call02-construct_with_open_visibility",
+    "duration_seconds": 34.806,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:49:15Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "d4ad95afc72a790b2ac293e15def4c5bb526bd6dc45e0f5a9fc94bbda99ee48e",
+    "raw_events_path": "workspace\\model-calls\\R79-pair03-incumbent-call02-construct_with_open_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "b0349e2f42fa305c39f03a842d20cfc427e211a5c95561895c208cece97b6ad7",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "b1ae0f8438e3e61141b093dbb5abcf493118625e3f265c526acb5a3763e69f76",
+    "returncode": 0,
+    "role": "R79 incumbent topology role bounded constructive policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:48:40Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14941,
+      "output_tokens": 2469,
+      "reasoning_output_tokens": 1976
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

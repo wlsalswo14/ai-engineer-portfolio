@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.target_t1 = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _remember(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _replace(self, from_b2):\n        if self.t1 and (self.t1_bytes > self.target_t1 or (self.t1_bytes == self.target_t1 and not from_b2)):\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _adapt(self, in_b1, ghost_size):\n        if self.capacity_bytes <= 0:\n            return\n        step = max(1, min(self.capacity_bytes, ghost_size or 1))\n        if in_b1:\n            self.target_t1 = min(self.capacity_bytes, self.target_t1 + step)\n        else:\n            self.target_t1 = max(0, self.target_t1 - step)\n\n    def _trim_ghosts(self):\n        while len(self.b1) + len(self.b2) > self.ghost_limit:\n            if self.b1 and (not self.b2 or len(self.b1) >= len(self.b2)):\n                self.b1.popitem(last=False)\n            elif self.b2:\n                self.b2.popitem(last=False)\n            else:\n                break\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored = self.t1.pop(key)\n            self.t1_bytes -= stored\n            self.t2[key] = stored\n            self.t2_bytes += stored\n            return []\n\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] = stored\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        ghost_size = self.b1.get(key, self.b2.get(key, size))\n        if in_b1 or in_b2:\n            self._adapt(in_b1, ghost_size)\n            self.b1.pop(key, None)\n            self.b2.pop(key, None)\n\n        evicted = []\n        while self.t1_bytes + self.t2_bytes + size > self.capacity_bytes:\n            old_key = self._replace(in_b2)\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        if in_b2:\n            self.t2[key] = size\n            self.t2_bytes += size\n        else:\n            self.t1[key] = size\n            self.t1_bytes += size\n\n        self._trim_ghosts()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R51-pair02-candidate-call03-exercise_unlabelled_authority",
+    "duration_seconds": 27.556,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:33:15Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "5e2203b8563cff18033c136aee41e9a77b2df8f3087f5c089bbef90a86077fee",
+    "raw_events_path": "workspace\\model-calls\\R51-pair02-candidate-call03-exercise_unlabelled_authority\\raw-events.jsonl",
+    "raw_events_sha256": "849732158f231527bb1cb2fa13ed9d2857ac01ca4f91586bab82cbbec974afb1",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "ba2c933162e7bb4e8376f0d9a028ca48d513aac6205eeb46daf1c7f958ecedb7",
+    "returncode": 0,
+    "role": "R51 candidate topology role provenance-neutral terminal authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:32:48Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 12874,
+      "output_tokens": 2019,
+      "reasoning_output_tokens": 1122
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

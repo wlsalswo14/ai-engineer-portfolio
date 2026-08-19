@@ -1,0 +1,72 @@
+Role: R68 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R68,
+matched pair 2, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "Anchor is interface-legal and online-only, with explicit resident byte accounting and adaptive recent/frequent ghost evidence; preserve its safety invariants while treating its source-class separation and heuristic polarity as unresolved rather than authoritative. The hypothesis identifies a visibility bottleneck, but its proposed one-time inversion is causal evidence, not a license to violate normative constraints or overfit absent scores.",
+      "witnesses": [
+        "Inherited evidence: OrderedDict resident tracking distinguishes recent and frequent entries, maintains byte totals, returns evicted resident keys, and rejects oversized admissions.",
+        "Inherited evidence: ghost histories and adaptive recent_target provide online phase-shift and scan-resistance signals without benchmark or oracle access.",
+        "Counter-generative evidence: terminal source isolation can force upstream interpretation of inherited-versus-counter-generative tensions, potentially weakening direct resolution of those tensions.",
+        "Conflict: broader terminal visibility may improve evidence reconciliation, but uncontrolled source reintroduction could undermine the intended information-flow cut and encourage redesign beyond the hypothesis.",
+        "No score, trace, benchmark, or matched-pair outcome is available; effectiveness claims remain unverified."
+      ],
+      "obligations": [
+        "Emit exactly one complete policy implementing the specified Policy interface.",
+        "Use only standard-library, online, one-access-at-a-time information.",
+        "Return only unique integer keys that are currently cached and evicted by the request.",
+        "Never exceed capacity_bytes, including replacement, admission, oversized objects, and zero-capacity cases.",
+        "Preserve evaluator-owned state assumptions and avoid imports, networking, subprocesses, external libraries, reference implementations, trace hardcoding, oracle adaptation, and benchmark-path inspection.",
+        "Reconcile the synthesized evidence with the visible task, contract, and constraints without reacquiring the cut generative sources.",
+        "Treat the proposed terminal polarity inversion as a testable hypothesis, not as a guaranteed improvement; retain legality and capacity safety as hard requirements."
+      ],
+      "exact_actions": [
+        "Use the anchor's resident/ghost distinctions and accounting invariants as supporting evidence, while independently checking every transition that emits an eviction.",
+        "Resolve inherited-versus-counter-generative tension at the analysis level: direct terminal responsiveness can be acknowledged, but no unsupported source, score, trace, or oracle may be introduced.",
+        "If altering source-class polarity, make at most the hypothesized single terminal-aperture inversion and ensure it does not change the required contract or expose cut inputs.",
+        "Prefer a conservative online decision rule when evidence is underdetermined, preserving explicit capacity enforcement and valid eviction reporting.",
+        "Emit only the final policy artifact requested by the downstream authority; this packet itself remains analysis-only."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R67 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

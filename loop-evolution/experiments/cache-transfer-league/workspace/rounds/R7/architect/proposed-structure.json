@@ -1,0 +1,43 @@
+{
+  "final_call_id": "obligation_lift_policy_constructor",
+  "information_flow": "The first call receives all six common inputs and emits one non-policy quotient containing observable obligations without granting implementation provenance authority. The final call consumes that quotient plus all six common inputs, retains full evidence visibility, and emits one policy through a single nonbranching lineage.",
+  "name": "Provenance-Quotient Obligation Lift",
+  "organization": "two-call sequential provenance-authority reset",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "provenance_quotient_normalizer",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Extract observable obligations, validity duties, and behavioral tensions from the supplied evidence; neutralize implementation provenance as authority; emit one non-policy obligation quotient without proposing edits, causal repairs, alternatives, or policy logic.",
+          "output_type": "analysis",
+          "role": "source-neutral obligation normalizer"
+        },
+        {
+          "id": "obligation_lift_policy_constructor",
+          "inputs": [
+            "provenance_quotient_normalizer",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding quotient as construction authority and the common inputs as visible contract evidence, then emit exactly one complete contract-compliant policy whose lineage is obligation-derived rather than anchor-edit-derived.",
+          "output_type": "policy",
+          "role": "independent obligation-to-policy constructor"
+        }
+      ],
+      "id": "quotient_then_lift",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "analysis_packet": {
+    "certificate": "Retain only binding interface, capacity, online-visibility, current-key uniqueness, standard-library, and evidence-exclusion constraints; remove affirmative performance framing and conflict resolutions.",
+    "exact_actions": [
+      "Retain binding interface and safety constraints.",
+      "Exclude unavailable evidence and external dependencies from lineage-visible state.",
+      "Remove affirmative framing and conflict resolutions.",
+      "Do not prescribe a policy."
+    ],
+    "obligations": [
+      "Preserve the required interface and return type.",
+      "Enforce nonnegative capacity and never admit objects beyond capacity.",
+      "Return only currently cached unique keys.",
+      "Remain online-only and use standard-library facilities only.",
+      "Exclude scores, traces, oracle adaptation, benchmark inspection, hidden-trace hardcoding, external implementations or libraries, networking, subprocesses, and non-stdlib packages.",
+      "Do not make unsupported performance claims or construct a policy."
+    ],
+    "witnesses": []
+  },
+  "artifact_kind": "analysis_only"
+}

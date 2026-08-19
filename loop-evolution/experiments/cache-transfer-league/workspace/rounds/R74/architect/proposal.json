@@ -1,0 +1,102 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R74-structure-architect\\final-receipt.json",
+    "sha256": "6fe2988ccb39c129bd088d52c3ac091e06034cb0e3ecddf5693a72019b9dda72"
+  },
+  "architect_response": {
+    "architect_scope": "one-R74-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "construct_after_late_boundary",
+      "information_flow": "The first call receives every common input and emits one binding admissibility analysis without producing a policy artifact. The final call receives every common input in its original order, then consumes the immediately preceding analysis as late-bound evidence, honors its exclusions, and emits one complete policy.",
+      "name": "Late-Bound Negative Authority",
+      "organization": "two-call sequential lineage with the binding negative-authority edge serialized last at the policy-emitting call",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "establish_admissibility_boundary",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile all visible evidence with normative obligations, identify unsupported commitments as binding exclusions, and preserve admissible conflicts in one analysis without constructing a policy.",
+              "output_type": "analysis",
+              "role": "negative-authority evidence adjudicator"
+            },
+            {
+              "id": "construct_after_late_boundary",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure",
+                "establish_admissibility_boundary"
+              ],
+              "objective": "Examine the directly visible common evidence, then consume establish_admissibility_boundary as the last-bound input, honor its exclusions, reconcile remaining admissible claims, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "bounded constructive policy authority"
+            }
+          ],
+          "id": "late_bound_negative_authority_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only the serialization position of the existing predecessor edge at the final call changes; no role, output kind, authority scope, visibility set, or lineage count changes.",
+      "why_not_repeat_role_fission": "The topology retains the incumbent's same two calls and distinct adjudication-to-construction lineage, adding no producer, reviewer, gate, or finalizer role."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Serialize the predecessor boundary as the final call's last input while preserving complete common-input visibility and unchanged negative authority.",
+      "expected_effect": "Late-bound exclusions should remain causally proximal to construction, reducing accidental reinstatement without narrowing admissible evidence.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The incumbent presents binding exclusions before reopening all common evidence, allowing later-visible source material to weaken the exclusions' causal salience."
+    },
+    "structural_mutation": {
+      "after": "The final call receives the six directly visible common inputs first and the binding predecessor analysis last.",
+      "before": "The final call receives the binding predecessor analysis first, followed by the six directly visible common inputs.",
+      "change_count": 1,
+      "factor": "late-bound serialization of the binding predecessor edge",
+      "why_structural": "This changes ordered-edge evidence timing at the policy-emitting node while preserving the calls, roles, visibility set, authority polarity, and single lineage."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 74,
+  "incumbent_structure_sha256": "a04bca9b442a9a31a6a6b1755e7a83938457cb78bd469535a7494a5b7852f6de",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "local_refinement",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R74\\qualitative-error-notebook.json",
+    "sha256": "8728db183f4fe5d1c8f9c201c52fb46fcbfa87d19b3bfb4d66d32cf49842975e"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R74\\source-manifest.json",
+    "sha256": "b1469d521cea7e433ca64e1701cf856fac26687b8be7a9206892e537447e9bd9"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "late-bound serialization of the binding predecessor edge",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "9d7db77526adc9d7e9ec89c43c344be31435d5ac649c1389080ea8203c01c80c",
+    "topology_fingerprint": "8ce70cf5140b0292767af15f9af14eacd1bb60d70adfad2263f67b5e0c5849fc"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "analysis_packet": {
+    "certificate": "Authorize intervention only when online observations expose persistent decision-relevant ambiguity between competing causal explanations and a bounded probe can distinguish them without hidden-trace access, oracle adaptation, benchmark inspection, or unsupported commitments. Until that condition holds, retain observation-conditioned control; once satisfied, perform a minimal legal input-conditioned intervention, attribute its observed outcome, update control state, and return to ordinary online adaptation while preserving interface, capacity, uniqueness, and current-residency obligations.",
+    "exact_actions": [
+      "Define an admissible trigger as persistent, decision-relevant causal ambiguity supported solely by online observations plus a bounded legal probe.",
+      "Remain in observation-conditioned control before the trigger; do not intervene on weak, speculative, or unsupported evidence.",
+      "At the trigger, select the smallest input-conditioned probe whose possible outcomes separate the live causal hypotheses without violating task constraints.",
+      "Record the probe context and outcome, attribute the resulting evidence only to that intervention, and update the controller state.",
+      "Resume observation-conditioned adaptation using the attributed evidence, retaining all exclusions and enforcing legality, residency, uniqueness, and capacity invariants."
+    ],
+    "obligations": [
+      "Preserve all unsupported-commitment exclusions before and during construction.",
+      "Use only one-access-at-a-time visible evidence; never inspect traces, benchmark paths, or oracle decisions.",
+      "Keep the emitted policy interface legal and return only currently cached unique integer keys.",
+      "Never exceed capacity_bytes, including during intervention and state transition.",
+      "Emit one complete policy lineage with no branching, voting, retries, or score-based selection."
+    ],
+    "witnesses": [
+      "The anchor is an online-only standard-library policy with adaptive recent/frequent and ghost evidence states.",
+      "The stated bottleneck is unresolved decision-relevant causation after passive observation.",
+      "The hypothesis requires an evidence-triggered transition from observation-conditioned control to intervention-attributed control.",
+      "Scores and evaluator-side reference information are unavailable and must remain unused."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

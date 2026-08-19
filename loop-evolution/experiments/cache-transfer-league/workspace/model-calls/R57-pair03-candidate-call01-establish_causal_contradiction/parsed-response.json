@@ -1,0 +1,26 @@
+{
+  "analysis_packet": {
+    "certificate": "No source-distinguished causal contradiction is established. The anchor's internal cache metadata can remain synchronized through the specified online access protocol, and no supplied evidence shows evaluator-side state divergence. Its standard-library usage, capacity enforcement, unique eviction keys, and online visibility are not incompatible with the stated contract. The anchor therefore remains causally eligible.",
+    "exact_actions": [],
+    "obligations": [
+      "Preserve source distinctions between anchor behavior, contract requirements, and supplied evidence.",
+      "Do not infer a contradiction from the anchor's ignored now parameter or internal metadata alone.",
+      "Do not create or recommend a policy artifact."
+    ],
+    "witnesses": [
+      {
+        "finding": "Maintains ordered resident and ghost metadata, evicts only resident metadata keys, and enforces byte capacity before insertion.",
+        "source": "anchor_policy"
+      },
+      {
+        "finding": "Requires interface legality, capacity safety, and online-only visibility; none is shown to be violated.",
+        "source": "anchor_contract"
+      },
+      {
+        "finding": "Provides no external evaluator mutation, hidden state transition, or trace that would demonstrate stale local metadata.",
+        "source": "task_constraints"
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

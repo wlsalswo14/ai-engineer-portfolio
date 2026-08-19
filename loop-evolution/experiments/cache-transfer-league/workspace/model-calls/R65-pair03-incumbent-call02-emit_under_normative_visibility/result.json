@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.target = 0\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.resident_bytes = 0\n        self.ghost_limit = 4096\n\n    def _trim_ghost(self, table):\n        total = sum(table.values())\n        while table and (total > self.capacity or len(table) > self.ghost_limit):\n            _, value = table.popitem(last=False)\n            total -= value\n\n    def _remember(self, key, size, frequent):\n        if self.capacity <= 0:\n            return\n        size = min(max(0, int(size)), self.capacity)\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n        table = self.ghost_frequent if frequent else self.ghost_recent\n        table[key] = size\n        self._trim_ghost(table)\n\n    def _evict_one(self, result):\n        if self.recent and (self.recent_bytes > self.target or not self.frequent):\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            source_frequent = False\n        elif self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            source_frequent = True\n        elif self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            source_frequent = False\n        else:\n            return False\n        self.resident_bytes -= size\n        self._remember(key, size, source_frequent)\n        result.append(key)\n        return True\n\n    def _make_room(self, size, result):\n        while self.resident_bytes + size > self.capacity:\n            if not self._evict_one(result):\n                break\n\n    def access(self, key, size, now):\n        size = max(0, int(size))\n        result = []\n\n        if key in self.recent:\n            old = self.recent.pop(key)\n            self.recent_bytes -= old\n            self.resident_bytes -= old\n            if size > self.capacity:\n                self._remember(key, size, False)\n                result.append(key)\n                return result\n            self._make_room(size, result)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.resident_bytes += size\n            return result\n\n        if key in self.frequent:\n            old = self.frequent.pop(key)\n            self.frequent_bytes -= old\n            self.resident_bytes -= old\n            if size > self.capacity:\n                self._remember(key, size, True)\n                result.append(key)\n                return result\n            self._make_room(size, result)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.resident_bytes += size\n            return result\n\n        if size > self.capacity:\n            return result\n\n        if key in self.ghost_recent:\n            self.ghost_recent.pop(key)\n            self.target = min(self.capacity, self.target + max(1, min(size, self.capacity)))\n            destination = self.frequent\n            destination_is_frequent = True\n        elif key in self.ghost_frequent:\n            self.ghost_frequent.pop(key)\n            self.target = max(0, self.target - max(1, min(size, self.capacity)))\n            destination = self.frequent\n            destination_is_frequent = True\n        else:\n            destination = self.recent\n            destination_is_frequent = False\n\n        self._make_room(size, result)\n        destination[key] = size\n        if destination_is_frequent:\n            self.frequent_bytes += size\n        else:\n            self.recent_bytes += size\n        self.resident_bytes += size\n        return result\n"
+  },
+  "receipt": {
+    "call_id": "R65-pair03-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 60.121,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:29:06Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "3d135f25a7b9bc94715977c090fe6b8179674951a49135e971b1f75c87823cee",
+    "raw_events_path": "workspace\\model-calls\\R65-pair03-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "2f7af0bf5ff9a86aa223c6b08cfe1c78469a2920d1fd1197e590857c61d298ce",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "117fdc27cbdd4dbc3a9888a82cef7ab7731b1d368ec34457a087593cbac3f405",
+    "returncode": 0,
+    "role": "R65 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:28:06Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12844,
+      "output_tokens": 4717,
+      "reasoning_output_tokens": 3758
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

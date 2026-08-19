@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "pair": 1,
+  "attempt": 1,
+  "execution_order": [
+    "incumbent",
+    "candidate"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "current_champion",
+    "anchor_id": "anchor_4678594f10379ca4",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0028\\final-output.json",
+    "engine_source_sha256": "4678594f10379ca42c4b310bad377c1fe7f2a36a60bdc39c3445ecfa9a76ce16",
+    "metrics": {
+      "elo": -116.594,
+      "score_rate": 0.335,
+      "wins": 5,
+      "draws": 57,
+      "losses": 38,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0028\\benchmark-result-receipt.json",
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4678594f10379ca4.json"
+    },
+    "origin": "champion:package_96689a42f7ea545b"
+  },
+  "incumbent_structure_id": "loop_a9c48886eb3b8abd",
+  "candidate_structure_id": "loop_2ad3e92aad013e37",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0029\\pairs\\pair-01\\attempts\\attempt-01\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0029\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:5fce9fc1202a75906b12a18941c41ab8aa7a2692f1fd8fd1af89659a0f027733",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.285,
+    "wins": 1,
+    "draws": 55,
+    "losses": 44,
+    "elo": -156.206,
+    "elo_error_95": 108.637,
+    "los": 0.00045,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0029\\pairs\\pair-01\\attempts\\attempt-01\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-5fce9fc1202a7590.json",
+    "benchmark_receipt_sha256": "335d22553f00862bb036cb134d621ffe19a293bc2ac54b596e227714c674be29",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-5fce9fc1202a7590.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:5fce9fc1202a75906b12a18941c41ab8aa7a2692f1fd8fd1af89659a0f027733",
+      "chessbench-wdl:1-55-44"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:75b61bd54a13820d0cfa42fe33020f5fcca94d7f413a45cde28cd6af000cd8ed",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.355,
+    "wins": 3,
+    "draws": 65,
+    "losses": 32,
+    "elo": -101.579,
+    "elo_error_95": 101.424,
+    "los": 0.017096,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0029\\pairs\\pair-01\\attempts\\attempt-01\\candidate\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-75b61bd54a13820d.json",
+    "benchmark_receipt_sha256": "661e8ff1bba6f276888aef0f48f2674bc84ea1294c8a2319c6719726d55d3ed3",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-75b61bd54a13820d.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:75b61bd54a13820d0cfa42fe33020f5fcca94d7f413a45cde28cd6af000cd8ed",
+      "chessbench-wdl:3-65-32"
+    ]
+  },
+  "verdict": {
+    "verdict": "candidate_win",
+    "incumbent_elo": -156.206,
+    "candidate_elo": -101.579
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "single_terminal_outcome_commitment",
+        "stage_mode": "sequential",
+        "call_id": "terminal_outcome_witness",
+        "role": "single terminal-outcome witness committer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "1360a29f8793e5ee0a1c6cd2172a2b09c58a9e0443d6e515ca228f32267dd85c",
+        "response_sha256": "ccba550941d8c441ae0a20cfa5b9a5a32163ad74ca92ccf37b2476ff599d1b4a",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 285934,
+          "cached_input_tokens": 254464,
+          "output_tokens": 6070,
+          "reasoning_output_tokens": 4563,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_backward_causal_preimage",
+        "stage_mode": "sequential",
+        "call_id": "causal_preimage_backchainer",
+        "role": "single implementation-neutral causal-preimage backchainer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "cace39a1bf072a05196df1fc5780151abd8e438de93de33f1df3e92864271d36",
+        "response_sha256": "83471be47477fed989b5a26234b4b432e64fddb545a01b0edfecbc88451d7d71",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 24837,
+          "cached_input_tokens": 8960,
+          "output_tokens": 1466,
+          "reasoning_output_tokens": 1034,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_representation_discontinuity_transport",
+        "stage_mode": "sequential",
+        "call_id": "representation_discontinuity_transport_compiler",
+        "role": "single non-authoring representation-discontinuity predicate-transport compiler under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "1ee59e8c2543d88444bf2344a7379095fa36c65b170481807c0a3f74961aea72",
+        "response_sha256": "58c9ba0a68629b71637ede139b132c349f8f0439f764c05de1359a57664adb50",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 53682,
+          "cached_input_tokens": 33280,
+          "output_tokens": 10089,
+          "reasoning_output_tokens": 4558,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_predicate_transport_realization",
+        "stage_mode": "sequential",
+        "call_id": "predicate_transport_preimage_engine_producer",
+        "role": "single predicate-transport outcome-preimage whole-engine producer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "engine",
+        "prompt_sha256": "de99f348de32aa6b65045357f67305ec4741b32236f3d79303eaf729904f600e",
+        "response_sha256": "fb7483ce4217340bc1bb3ee8a1e227ae2eab843ce94d9b5a3457ffbb9cf7e81a",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 30350,
+          "cached_input_tokens": 8960,
+          "output_tokens": 7935,
+          "reasoning_output_tokens": 3381,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "single_terminal_outcome_commitment",
+        "stage_mode": "sequential",
+        "call_id": "terminal_outcome_witness",
+        "role": "single terminal-outcome witness committer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "d590e2d05362c9355d4355da16c2645d4fa6b5a7666c5c1ff2e08a2bb1269435",
+        "response_sha256": "c7f9fd0894028c23e0beb28941457d3e471e90d040613b9ec2b2f627d250a859",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 49591,
+          "cached_input_tokens": 33280,
+          "output_tokens": 7916,
+          "reasoning_output_tokens": 7497,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_backward_causal_preimage",
+        "stage_mode": "sequential",
+        "call_id": "causal_preimage_backchainer",
+        "role": "single implementation-neutral causal-preimage backchainer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "3d6c234690151538639bc0a133d80ff9e281fa61d294fd70b824e83fcdbb97b8",
+        "response_sha256": "232b6aab141cd341be8c6e9b1c1ba35f931c0c70d505aefe1e5642d93b97da0b",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 24632,
+          "cached_input_tokens": 0,
+          "output_tokens": 2241,
+          "reasoning_output_tokens": 1435,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_predicate_quotient_transport_binding",
+        "stage_mode": "sequential",
+        "call_id": "predicate_quotient_transport_binder",
+        "role": "single non-authoring predicate-quotient relational-transport binder under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "analysis",
+        "prompt_sha256": "81a857bcc2141280e4ff36ab1da82a1fc02cb775bbfb573eea5cd3dc180bd7fc",
+        "response_sha256": "d2c8424078aba7961dd543ebd7e845b997cc4f5ce65da9c334f1a62b69f3699a",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 138841,
+          "cached_input_tokens": 114432,
+          "output_tokens": 9929,
+          "reasoning_output_tokens": 3955,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_quotient_certified_transport_realization",
+        "stage_mode": "sequential",
+        "call_id": "quotient_certified_transport_engine_producer",
+        "role": "single quotient-certified predicate-transport outcome-preimage whole-engine producer under gpt-5.6-luna/high Fast-priority runtime",
+        "output_type": "engine",
+        "prompt_sha256": "f86248861c03b737515fe3596bafd23881a59b6c5fea540226ca2025fd2b9d23",
+        "response_sha256": "f94fce03f936328587696f7ba70b0958899328e0bc4914831742871b86267c05",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 30453,
+          "cached_input_tokens": 8960,
+          "output_tokens": 5152,
+          "reasoning_output_tokens": 516,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false
+}

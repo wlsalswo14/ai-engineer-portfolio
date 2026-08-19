@@ -1,0 +1,82 @@
+{
+  "evidence_scope": "bounded qualitative outcomes only",
+  "explicitly_forbidden_repetition": [
+    "serial terminal-call role fission",
+    "mere producer-reviewer-finalizer split or role rename",
+    "best-of-N, voting, replicated candidates, or parameter sweep"
+  ],
+  "factor_frontier": [
+    {
+      "display_round": 1,
+      "factor": "serial terminal-call role fission",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "9d8233fd047dcdab31f88ce388605a432898ae940e9229cee39de576486994ac"
+    },
+    {
+      "display_round": 2,
+      "factor": "upstream pre-mutation causal-evidence precommitment",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c"
+    },
+    {
+      "display_round": 3,
+      "factor": "evidence-triggered causal-responsibility rebasing",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "2de28de9c26ee91c695f64ff8b8038a0336abf9ee2d99c8717e951b213b47a4e"
+    },
+    {
+      "display_round": 4,
+      "factor": "evidence-triggered repair-representation phase change",
+      "status": "not_supported_in_tested_conditions",
+      "topology_fingerprint": "43144249ba21cbb1e32fe219e04eca466d9bd8d76205b61bf24d3204e14be3ec"
+    }
+  ],
+  "for_display_round": 5,
+  "official_numeric_scores_included": false,
+  "recent_outcomes": [
+    {
+      "aggregate_relation": "medians_equal",
+      "bounded_lesson": "The tested factor did not satisfy the full matched promotion contract; do not merely rename, split, or repeat it.",
+      "display_round": 2,
+      "paired_pattern": [
+        "candidate_better",
+        "equal",
+        "candidate_better"
+      ],
+      "promotion_outcome": "not_promoted",
+      "proposal_mode": "local_refinement",
+      "structural_factor": "upstream pre-mutation causal-evidence precommitment",
+      "validity": "all_arms_valid_and_deterministic"
+    },
+    {
+      "aggregate_relation": "incumbent_median_higher",
+      "bounded_lesson": "Some sealed outputs violated authoritative operation validity. The analysis-only handoff plausibly deprived final materialization of a directly executable policy lineage; preserve executable lineage visibility without exposing cases, traces, or scores.",
+      "display_round": 3,
+      "paired_pattern": [
+        "invalid",
+        "incumbent_better",
+        "invalid"
+      ],
+      "promotion_outcome": "not_promoted",
+      "proposal_mode": "emergent_exploration",
+      "structural_factor": "evidence-triggered causal-responsibility rebasing",
+      "validity": "one_or_more_arms_invalid_or_nondeterministic"
+    },
+    {
+      "aggregate_relation": "incumbent_median_higher",
+      "bounded_lesson": "The tested factor did not satisfy the full matched promotion contract; do not merely rename, split, or repeat it.",
+      "display_round": 4,
+      "paired_pattern": [
+        "incumbent_better",
+        "candidate_better",
+        "incumbent_better"
+      ],
+      "promotion_outcome": "not_promoted",
+      "proposal_mode": "emergent_exploration",
+      "structural_factor": "evidence-triggered repair-representation phase change",
+      "validity": "all_arms_valid_and_deterministic"
+    }
+  ],
+  "schema_version": 1,
+  "trace_contents_included": false
+}

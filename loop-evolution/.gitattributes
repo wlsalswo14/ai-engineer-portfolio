@@ -1,0 +1,7 @@
+# resources/manifest.json pins a byte count and a SHA-256 for every frozen
+# resource, and benchmark-results/ filenames are content hashes. Any end-of-line
+# translation changes those bytes: with the default core.autocrlf=true on
+# Windows, a fresh clone checked out policies/luna-high-slot1-chessbench100-v1.json
+# at 800 bytes instead of 776 and test_frozen_resource_hashes failed.
+# Line-ending conversion is therefore disabled repository-wide. Do not narrow this.
+* -text

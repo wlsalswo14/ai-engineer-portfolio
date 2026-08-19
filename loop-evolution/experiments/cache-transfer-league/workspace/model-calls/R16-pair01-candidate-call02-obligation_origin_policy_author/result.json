@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.used_bytes = 0\n        self.clock = 0\n        self.items = {}\n        self.observations = {}\n\n    def _utility(self, entry):\n        size, frequency, last = entry\n        age = self.clock - last\n        return frequency * 1000000000 // (size + 1) - age * 4096\n\n    def _decay(self):\n        for key, count in list(self.observations.items()):\n            reduced = count // 2\n            if reduced > 0:\n                self.observations[key] = reduced\n            elif key in self.items:\n                self.observations[key] = 1\n            else:\n                del self.observations[key]\n        for key, entry in self.items.items():\n            entry[1] = self.observations.get(key, 1)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.clock += 1\n        if self.clock % 512 == 0:\n            self._decay()\n\n        if size < 0:\n            size = 0\n\n        frequency = self.observations.get(key, 0) + 1\n        self.observations[key] = frequency\n\n        entry = self.items.get(key)\n        if entry is not None:\n            entry[1] = frequency\n            entry[2] = self.clock\n            return []\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        if self.used_bytes + size <= self.capacity_bytes:\n            self.items[key] = [size, frequency, self.clock]\n            self.used_bytes += size\n            return []\n\n        incoming = [size, frequency, self.clock]\n        incoming_utility = self._utility(incoming)\n        candidates = sorted(\n            self.items.items(),\n            key=lambda pair: (self._utility(pair[1]), pair[1][2])\n        )\n\n        required = self.used_bytes + size - self.capacity_bytes\n        selected = []\n        freed = 0\n        for old_key, old_entry in candidates:\n            if self._utility(old_entry) >= incoming_utility:\n                return []\n            selected.append(old_key)\n            freed += old_entry[0]\n            if freed >= required:\n                break\n\n        if freed < required:\n            return []\n\n        evicted = []\n        for old_key in selected:\n            old_entry = self.items.pop(old_key)\n            self.used_bytes -= old_entry[0]\n            evicted.append(old_key)\n\n        self.items[key] = incoming\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R16-pair01-candidate-call02-obligation_origin_policy_author",
+    "duration_seconds": 58.868,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:57:25Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fe349e9fbcb6111c494579acf80140fd7fd04f94cf7e94175a74fea08b9e8ff4",
+    "raw_events_path": "workspace\\model-calls\\R16-pair01-candidate-call02-obligation_origin_policy_author\\raw-events.jsonl",
+    "raw_events_sha256": "85e0f3520f019e028c301967b71b1e3c1ac62efa9100c176e9e0e8ada8e79941",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "1d38f5c206922e8a4b20ccc4840f17185c0bc17ff1d5044e6d75d8e244e4501e",
+    "returncode": 0,
+    "role": "R16 candidate topology role obligation-originated terminal policy author",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:56:27Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13983,
+      "output_tokens": 4454,
+      "reasoning_output_tokens": 3792
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

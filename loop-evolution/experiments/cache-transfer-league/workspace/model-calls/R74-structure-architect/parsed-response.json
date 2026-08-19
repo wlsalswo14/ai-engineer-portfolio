@@ -1,0 +1,71 @@
+{
+  "architect_scope": "one-R74-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "construct_after_late_boundary",
+    "information_flow": "The first call receives every common input and emits one binding admissibility analysis without producing a policy artifact. The final call receives every common input in its original order, then consumes the immediately preceding analysis as late-bound evidence, honors its exclusions, and emits one complete policy.",
+    "name": "Late-Bound Negative Authority",
+    "organization": "two-call sequential lineage with the binding negative-authority edge serialized last at the policy-emitting call",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "establish_admissibility_boundary",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile all visible evidence with normative obligations, identify unsupported commitments as binding exclusions, and preserve admissible conflicts in one analysis without constructing a policy.",
+            "output_type": "analysis",
+            "role": "negative-authority evidence adjudicator"
+          },
+          {
+            "id": "construct_after_late_boundary",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure",
+              "establish_admissibility_boundary"
+            ],
+            "objective": "Examine the directly visible common evidence, then consume establish_admissibility_boundary as the last-bound input, honor its exclusions, reconcile remaining admissible claims, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "bounded constructive policy authority"
+          }
+        ],
+        "id": "late_bound_negative_authority_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "scope_boundary": "Only the serialization position of the existing predecessor edge at the final call changes; no role, output kind, authority scope, visibility set, or lineage count changes.",
+    "why_not_repeat_role_fission": "The topology retains the incumbent's same two calls and distinct adjudication-to-construction lineage, adding no producer, reviewer, gate, or finalizer role."
+  },
+  "proposal_mode": "local_refinement",
+  "qualitative_hypothesis": {
+    "causal_change": "Serialize the predecessor boundary as the final call's last input while preserving complete common-input visibility and unchanged negative authority.",
+    "expected_effect": "Late-bound exclusions should remain causally proximal to construction, reducing accidental reinstatement without narrowing admissible evidence.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The incumbent presents binding exclusions before reopening all common evidence, allowing later-visible source material to weaken the exclusions' causal salience."
+  },
+  "structural_mutation": {
+    "after": "The final call receives the six directly visible common inputs first and the binding predecessor analysis last.",
+    "before": "The final call receives the binding predecessor analysis first, followed by the six directly visible common inputs.",
+    "change_count": 1,
+    "factor": "late-bound serialization of the binding predecessor edge",
+    "why_structural": "This changes ordered-edge evidence timing at the policy-emitting node while preserving the calls, roles, visibility set, authority polarity, and single lineage."
+  }
+}

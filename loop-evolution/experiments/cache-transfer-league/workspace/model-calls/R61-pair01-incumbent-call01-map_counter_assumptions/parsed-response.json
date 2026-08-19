@@ -1,0 +1,27 @@
+{
+  "analysis_packet": {
+    "certificate": "Nonbinding, score-blind analysis: the immutable anchor supplies executable behavior, while the contract and constraints supply legality requirements. No trace, benchmark, evaluator result, score, or oracle evidence is available. The hypothesis supports examining commitment timing and correction locality, but does not authorize a policy change. The anchor appears capacity-safe under stated positive-size cases, yet its heuristic effectiveness, phase adaptation, scan resistance, and regret cannot be established from supplied evidence. Unresolved tensions remain between preserving inherited behavior and independently reassessing it under direct contract evidence.",
+    "exact_actions": [
+      "Record the anchor's observable invariants and edge-case behavior without modifying it.",
+      "Separate contract and constraint obligations from heuristic claims about cache quality.",
+      "Flag the absence of traces, scores, benchmark content, and oracle decisions as unresolved evidence gaps.",
+      "Pass this defeasible analysis to the terminal unit for direct comparison with the independently reacquired common inputs."
+    ],
+    "obligations": [
+      "Preserve the required Policy constructor and access interface.",
+      "Verify every returned key is an integer key currently cached immediately before eviction and is returned at most once.",
+      "Maintain capacity safety after every access, including zero, negative, and oversized requests.",
+      "Use only online information available through the current access and permitted state.",
+      "Treat the anchor and this analysis as evidence rather than binding authority, and make no score-based claim.",
+      "Do not create, authorize, or emit a policy artifact."
+    ],
+    "witnesses": [
+      "anchor_policy: segmented recency/frequency state with byte accounting, ghost history, adaptive target, and online eviction",
+      "anchor_contract: interface legality, capacity safety, online-only visibility, and immutable score-blind comparison",
+      "task_constraints: standard-library-only execution, unique currently cached integer-key evictions, no oracle or trace adaptation",
+      "candidate_hypothesis: earlier executable commitment may improve correction locality, but expected effect and falsifier are unverified without scores or traces",
+      "loop_structure: analysis handoff is defeasible; terminal authority must reacquire and compare all common evidence"
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

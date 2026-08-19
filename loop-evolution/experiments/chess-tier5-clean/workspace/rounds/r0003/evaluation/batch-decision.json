@@ -1,0 +1,77 @@
+{
+  "schema_version": 2,
+  "protocol": "OUROBOROS_MATCHED_THREE_DIVERSE_ANCHOR_RELATIVE_V5",
+  "planned_pair_count": 3,
+  "completed_pair_count": 3,
+  "completed_early": false,
+  "anchor_elo": -148.002,
+  "candidate_wins": 1,
+  "candidate_losses": 2,
+  "ties": 0,
+  "invalid_pair_count": 0,
+  "pair_verdicts": [
+    {
+      "pair": 1,
+      "verdict": "candidate_win",
+      "incumbent_elo": -256.13,
+      "candidate_elo": -224.267
+    },
+    {
+      "pair": 2,
+      "verdict": "candidate_loss",
+      "incumbent_elo": -120.412,
+      "candidate_elo": -200.054
+    },
+    {
+      "pair": 3,
+      "verdict": "candidate_loss",
+      "incumbent_elo": -105.297,
+      "candidate_elo": -168.829
+    }
+  ],
+  "candidate_median_elo": -200.054,
+  "incumbent_median_elo": -120.412,
+  "median_delta": -79.642,
+  "representative_candidate_pair": 2,
+  "representative_candidate_elo": -200.054,
+  "candidate_invalid_count": 0,
+  "incumbent_invalid_count": 0,
+  "promotion_checks": {
+    "three_valid_pairs_completed": true,
+    "candidate_wins_strictly_exceed_losses": false,
+    "candidate_median_strictly_exceeds_incumbent": false,
+    "candidate_invalid_count_zero": true,
+    "incumbent_invalid_count_zero": true
+  },
+  "promoted": false,
+  "inconclusive": false,
+  "promotion_rule": "complete three valid pairs; candidate wins > losses; candidate median Elo > incumbent median Elo; zero invalid arms on either side",
+  "anchor_policy": "three precommitted diverse anchors; common within each pair",
+  "anchor_panel": [
+    {
+      "pair": 1,
+      "anchor_id": "anchor_dd97a2fcb0808c5d",
+      "role": "current_champion",
+      "origin": "champion:package_e7705cfa9eb969f5",
+      "engine_source_sha256": "dd97a2fcb0808c5d389824482b6bb53e4240368d4ebcac2944d367cb238f58e6",
+      "elo": -148.002
+    },
+    {
+      "pair": 2,
+      "anchor_id": "anchor_eaba2e9ff3e678c1",
+      "role": "frozen_lineage_baseline",
+      "origin": "bootstrap:package_ebdecd200797a81e",
+      "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+      "elo": -94.211
+    },
+    {
+      "pair": 3,
+      "anchor_id": "anchor_730b29adc4699eed",
+      "role": "recent_promotion_alternate",
+      "origin": "round:1:pair:2:candidate",
+      "engine_source_sha256": "730b29adc4699eed2d0c10ebbd70dc3613a498987ba7578bb32681c9886d8942",
+      "elo": -105.297
+    }
+  ],
+  "distinct_anchor_count": 3
+}

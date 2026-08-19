@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        try:\n            capacity_bytes = int(capacity_bytes)\n        except (TypeError, ValueError):\n            capacity_bytes = 0\n        self.capacity_bytes = max(0, capacity_bytes)\n        self._target = self.capacity_bytes // 2\n        self._resident = {}\n        self._where = {}\n        self._t1 = OrderedDict()\n        self._t2 = OrderedDict()\n        self._b1 = OrderedDict()\n        self._b2 = OrderedDict()\n        self._bytes = 0\n        self._t1_bytes = 0\n        self._t2_bytes = 0\n        self._max_entries = 4096\n        self._max_ghost = 4096\n\n    def _size(self, size):\n        try:\n            size = int(size)\n        except (TypeError, ValueError):\n            size = 0\n        return max(0, size)\n\n    def _remember(self, table, key, size):\n        self._b1.pop(key, None)\n        self._b2.pop(key, None)\n        table[key] = max(0, size)\n        table.move_to_end(key)\n        while len(table) > self._max_ghost:\n            table.popitem(last=False)\n\n    def _remove_resident(self, key, remember=True):\n        if key not in self._resident:\n            return None\n        size = self._resident.pop(key)\n        region = self._where.pop(key)\n        if region == 1:\n            self._t1.pop(key, None)\n            self._t1_bytes -= size\n            if remember:\n                self._remember(self._b1, key, size)\n        else:\n            self._t2.pop(key, None)\n            self._t2_bytes -= size\n            if remember:\n                self._remember(self._b2, key, size)\n        self._bytes -= size\n        if self._bytes < 0:\n            self._bytes = 0\n        if self._t1_bytes < 0:\n            self._t1_bytes = 0\n        if self._t2_bytes < 0:\n            self._t2_bytes = 0\n        return size\n\n    def _oldest_other(self, table, protected):\n        for key in table:\n            if key != protected:\n                return key\n        return None\n\n    def _trim(self, protected=None):\n        evicted = []\n        seen = set()\n        while self._resident and (\n            self._bytes > self.capacity_bytes\n            or len(self._resident) > self._max_entries\n        ):\n            key = None\n            if self._t1 and (self._t1_bytes > self._target or not self._t2):\n                key = self._oldest_other(self._t1, protected)\n                if key is None:\n                    key = self._oldest_other(self._t2, protected)\n            else:\n                key = self._oldest_other(self._t2, protected)\n                if key is None:\n                    key = self._oldest_other(self._t1, protected)\n            if key is None:\n                break\n            self._remove_resident(key, remember=True)\n            if key not in seen:\n                seen.add(key)\n                evicted.append(key)\n        return evicted\n\n    def _adjust_target(self, increase, evidence):\n        if self.capacity_bytes <= 0:\n            self._target = 0\n            return\n        evidence = max(0, evidence)\n        delta = max(1, min(self.capacity_bytes, evidence))\n        if increase:\n            self._target = min(self.capacity_bytes, self._target + delta)\n        else:\n            self._target = max(0, self._target - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = self._size(size)\n        if key in self._resident:\n            old_size = self._resident[key]\n            if size > self.capacity_bytes:\n                self._remove_resident(key, remember=True)\n                return [key]\n            region = self._where[key]\n            self._resident[key] = size\n            self._bytes += size - old_size\n            if region == 1:\n                self._t1.pop(key, None)\n                self._t1_bytes += size - old_size\n                self._t2[key] = size\n                self._t2_bytes += size\n                self._where[key] = 2\n            else:\n                self._t2[key] = size\n                self._t2.move_to_end(key)\n                self._t2_bytes += size - old_size\n            self._b1.pop(key, None)\n            self._b2.pop(key, None)\n            return self._trim(protected=key)\n\n        if size > self.capacity_bytes:\n            return []\n\n        ghost_size = None\n        if key in self._b1:\n            ghost_size = self._b1.pop(key)\n            self._adjust_target(True, max(size, ghost_size))\n        elif key in self._b2:\n            ghost_size = self._b2.pop(key)\n            self._adjust_target(False, max(size, ghost_size))\n\n        if ghost_size is None:\n            self._t1[key] = size\n            self._where[key] = 1\n            self._t1_bytes += size\n        else:\n            self._t2[key] = size\n            self._where[key] = 2\n            self._t2_bytes += size\n        self._resident[key] = size\n        self._bytes += size\n        return self._trim(protected=key)\n"
+  },
+  "receipt": {
+    "call_id": "R64-pair01-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 73.771,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:19:52Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "91b9f5ced0a678d53f989ffc737ee5aa7da061d74428f3bb9811a3f6329e0ae8",
+    "raw_events_path": "workspace\\model-calls\\R64-pair01-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "487b97500540223a871054fc25b9f08c8d9f05fafb560a1ae3c7c681d2371b3b",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "9c2aea237c301e3ecdafaa08ef3d89f4806e68d2ad44ece4f8ad946242e9f30c",
+    "returncode": 0,
+    "role": "R64 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:18:38Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12985,
+      "output_tokens": 5475,
+      "reasoning_output_tokens": 4142
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

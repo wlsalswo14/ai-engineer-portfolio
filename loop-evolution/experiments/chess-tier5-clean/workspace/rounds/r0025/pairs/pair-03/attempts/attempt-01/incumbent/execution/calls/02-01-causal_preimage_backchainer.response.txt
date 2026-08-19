@@ -1,0 +1,58 @@
+{
+  "PREIMAGE_CLOSURE": {
+    "status": "UNSAT_UNDER_LITERAL_PREDICATE",
+    "terminal": {
+      "id": "T0",
+      "type": "terminal_predicate",
+      "predicate": "The emitted bestmove token belongs to the position's legal move set.",
+      "anchor_fact": "The emitted token is 0000 while legal(position) = []."
+    },
+    "nodes": [
+      {
+        "id": "P1",
+        "type": "response_emission",
+        "predicate": "Exactly one bestmove response is emitted from the selected result.",
+        "anchor_fact": "main emits one bestmove from think()."
+      },
+      {
+        "id": "P2",
+        "type": "move_selection",
+        "predicate": "The returned token encodes a move selected from legal(position).",
+        "anchor_fact": "think() returns 0000 when legal(position) is empty."
+      },
+      {
+        "id": "P3",
+        "type": "legal_move_existence",
+        "predicate": "At least one legal move exists in the unchanged terminal position.",
+        "anchor_fact": "The witness records legal(position) = []."
+      },
+      {
+        "id": "P4",
+        "type": "state_legality_computation",
+        "predicate": "The supplied FEN is preserved and legal move generation correctly yields its terminal checkmate state.",
+        "anchor_fact": "The input is a synthetic six-field checkmate FEN with no legal moves."
+      }
+    ],
+    "edges": [
+      "P4 -> P3: the preserved position determines the legal-move set",
+      "P3 -> P2: a legal move must exist before selection can produce a legal token",
+      "P2 -> P1: the selected result is serialized as the sole response",
+      "P1 -> T0: the emitted token must satisfy legal-move membership"
+    ],
+    "preservation_boundary": [
+      "Preserve the supplied terminal FEN and its state.",
+      "Preserve one immediate bestmove response.",
+      "Preserve the declared UCI/FEN protocol.",
+      "Do not change the terminal target or introduce benchmark-specific behavior."
+    ],
+    "dependency_order": [
+      "P4",
+      "P3",
+      "P2",
+      "P1",
+      "T0"
+    ],
+    "first_unmet_node": "P3",
+    "unresolved_assumption": "The literal predicate is impossible for a preserved checkmate position because its legal move set is empty. Satisfiability requires an unstated terminal no-move convention accepting 0000 or a relaxation of the membership predicate."
+  }
+}

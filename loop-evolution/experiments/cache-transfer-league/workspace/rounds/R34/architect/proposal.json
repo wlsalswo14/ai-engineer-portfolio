@@ -1,0 +1,110 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R34-structure-architect\\final-receipt.json",
+    "sha256": "4951bb45aaff1f9299df7f81a3015c6d60cff102d3642a857271d96b9fee578c"
+  },
+  "architect_response": {
+    "architect_scope": "one-R34-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "originate_terminal_policy",
+      "information_flow": "The first call receives all common inputs and emits only provenance-neutral analysis, carrying neither executable semantics nor anchor implementation provenance. The final call consumes that analysis plus public contextual inputs, has no direct anchor-policy visibility, originates the first executable artifact in the lineage, and emits one policy.",
+      "name": "Terminal-Origin Policy Lineage",
+      "organization": "two-call sequential lineage with one analysis-only pre-policy edge",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "map_obligation_tensions",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Identify contract-relevant tensions, causal uncertainties, and anchor-derived behavioral assumptions that require terminal reconciliation; emit one provenance-neutral analysis without forming or prescribing executable policy semantics.",
+              "output_type": "analysis",
+              "role": "non-policy obligation evidence mapper"
+            },
+            {
+              "id": "originate_terminal_policy",
+              "inputs": [
+                "map_obligation_tensions",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the preceding analysis as nonbinding evidence, reconcile its identified tensions against the supplied public obligations, originate the lineage's first and only complete executable policy artifact, and emit one policy.",
+              "output_type": "policy",
+              "role": "terminal-origin policy authority"
+            }
+          ],
+          "id": "terminal_origin_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "anchor-relative behavioral inertia",
+        "responsiveness to conflicting public-obligation evidence"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "handoff of any policy-bearing executable closure, state, or capsule to the terminal call",
+      "independent_replacement_principle": "terminal-origin policy materialization from a provenance-neutral analysis-only obligation map",
+      "rejected_assumptions": [
+        "Provenance removal is sufficient to prevent inherited executable semantics from anchoring terminal judgment.",
+        "A complete executable policy must exist before the terminal authority evaluates public obligations."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the policy-bearing closure relay with an analysis-only handoff and make the terminal call the first origin of executable policy semantics.",
+      "expected_effect": "Deferring executable commitment should reduce anchor-relative behavioral inertia and increase responsiveness to unresolved public-obligation conflicts while preserving one deterministic lineage.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active family assumes that removing provenance neutralizes anchoring, while the inherited executable artifact itself may impose semantic commitment inertia on terminal judgment."
+    },
+    "structural_mutation": {
+      "after": "Only non-policy analysis exists upstream; the terminal authority originates the lineage's first and only executable policy.",
+      "before": "A complete executable policy closure exists upstream and is inherited by the terminal semantic authority.",
+      "change_count": 1,
+      "factor": "terminal-only policy materialization through a non-policy evidence edge",
+      "why_structural": "The mutation changes the predecessor edge from policy-bearing semantic state to non-policy evidence, relocating the policy-existence transition and eliminating inherited executable authority."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 34,
+  "incumbent_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R34\\qualitative-error-notebook.json",
+    "sha256": "2a9041db09183208fc5270bac658b620cff1f03230126e3e321c74aeba769e4f"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R34\\source-manifest.json",
+    "sha256": "819e4a9b21e88ab789e84ecc819bd25c0b2c76af069cc758b0b3d190317e485c"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "terminal-only policy materialization through a non-policy evidence edge",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "2055224f0260c8fbad6cc89fa0926dbb69e8560908edaf6617b10ffe7bf11641",
+    "topology_fingerprint": "a6f024916550debae22571818cb663a5be3d26f4849fb2d29d529740afcafa8a"
+  }
+}

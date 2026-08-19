@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.protected_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R51-pair03-candidate-call01-compose_sourced_capsule",
+    "duration_seconds": 36.171,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:33:38Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "116af0ae5ae52d44ef7d6d7ccb4d066589d13bde9899d30c504481033c049258",
+    "raw_events_path": "workspace\\model-calls\\R51-pair03-candidate-call01-compose_sourced_capsule\\raw-events.jsonl",
+    "raw_events_sha256": "f3c2c10016248a0ff777a2f41874c6f948a80799731c83033d6978d01ed860be",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "6c7479a61a24deceb4d3b421e79ef44799eace2d1a49589a106db7f344811d97",
+    "returncode": 0,
+    "role": "R51 candidate topology role whole-artifact origin authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:33:02Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14400,
+      "output_tokens": 2739,
+      "reasoning_output_tokens": 2005
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

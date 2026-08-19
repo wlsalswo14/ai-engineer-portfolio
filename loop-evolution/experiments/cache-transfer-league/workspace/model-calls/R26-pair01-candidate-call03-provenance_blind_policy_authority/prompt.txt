@@ -1,0 +1,111 @@
+Role: R26 candidate topology role provenance-blind final semantic authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R26,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: provenance_blind_policy_authority
+Role: provenance-blind final semantic authority
+Objective: Consume the preceding complete executable closure and exercise final semantic authority from its current semantics and supplied public obligations. Without anchor-implementation or construction-provenance visibility, reconcile contract validity within that single state and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "form_conditioned_executable_closure": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.entries = {}\n\n    def _remember(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self.probation[old_key] = old_size\n            self.entries[old_key] = (old_size, 0)\n\n    def _evict_one(self):\n        if self.probation:\n            old_key, old_size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, old_key, old_size)\n        elif self.protected:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self._remember(self.ghost_protected, old_key, old_size)\n        else:\n            return None\n        self.entries.pop(old_key, None)\n        self.used_bytes -= old_size\n        return old_key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self.entries[key] = (stored_size, 1)\n            self._rebalance()\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        if key in self.ghost_probation:\n            old_size = self.ghost_probation[key]\n            delta = max(1, min(self.capacity_bytes, old_size))\n            self.protected_target = min(self.capacity_bytes, self.protected_target + delta)\n        elif key in self.ghost_protected:\n            old_size = self.ghost_protected[key]\n            delta = max(1, min(self.capacity_bytes, old_size))\n            self.protected_target = max(0, self.protected_target - delta)\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.entries[key] = (size, 0)\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n",
+    "sha256": "0f93847ffb8ae65701804964014b29b2748c8c6dedae68fff02384d8d098037e"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R25 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Insert one analysis-only causal-frame transition before executable closure formation, requiring construction to consume an already formed causal relationship among the supplied hypothesis, obligations, and anchor-visible evidence.",
+    "expected_effect": "Earlier causal framing should improve coherence of the executable closure while preserving the champion's complete policy-bearing, provenance-blind final relay.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion co-forms executable semantics and their causal rationale in its first call, so the rationale becomes available only during the transition it is meant to discipline."
+  },
+  "loop_structure": {
+    "final_call_id": "provenance_blind_policy_authority",
+    "information_flow": "The first call forms one score-blind causal frame while all common evidence is visible. The second call consumes that frame together with the common evidence, forms one complete executable closure, and removes construction provenance only after completion. The final call consumes that policy-bearing predecessor with public obligations but without anchor-policy visibility and emits one policy.",
+    "name": "Causal-Frame-First Provenance-Blind Closure Relay",
+    "organization": "three-call sequential lineage with one pre-construction causal-frame transition and the incumbent post-construction provenance firewall",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_preconstruction_causal_frame",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Before any policy artifact exists, establish one score-blind causal frame relating the supplied hypothesis, task, anchor evidence, public contract, constraints, and loop structure. Materialize that frame as the causally prior evidence state without selecting an implementation, and pass the analysis forward.",
+            "output_type": "analysis",
+            "role": "preconstruction causal-frame former"
+          },
+          {
+            "id": "form_conditioned_executable_closure",
+            "inputs": [
+              "form_preconstruction_causal_frame",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the immediately preceding causal frame before forming one complete executable policy closure from the supplied evidence. Preserve the frame's causal commitments during construction, justify current semantics against public obligations, remove anchor-relative construction provenance only after closure completion, and pass the complete executable closure forward.",
+            "output_type": "executable_policy_closure",
+            "role": "causal-frame-conditioned executable closure former"
+          },
+          {
+            "id": "provenance_blind_policy_authority",
+            "inputs": [
+              "form_conditioned_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the preceding complete executable closure and exercise final semantic authority from its current semantics and supplied public obligations. Without anchor-implementation or construction-provenance visibility, reconcile contract validity within that single state and emit one complete policy.",
+            "output_type": "policy",
+            "role": "provenance-blind final semantic authority"
+          }
+        ],
+        "id": "causal_frame_closure_relay",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

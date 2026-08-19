@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\nfrom math import isqrt\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity_bytes = int(capacity_bytes)\n        except (TypeError, ValueError):\n            capacity_bytes = 0\n        self.capacity_bytes = max(0, capacity_bytes)\n        self._target = (self.capacity_bytes * 3) // 4\n        self._cache = {}\n        self._probation = OrderedDict()\n        self._protected = OrderedDict()\n        self._ghost_probation = OrderedDict()\n        self._ghost_protected = OrderedDict()\n        self._bytes = 0\n        self._protected_bytes = 0\n        self._tick = 0\n\n    def _normal_size(self, size):\n        try:\n            size = int(size)\n        except (TypeError, ValueError):\n            size = 0\n        return max(0, size)\n\n    def _remember(self, key, protected):\n        self._ghost_probation.pop(key, None)\n        self._ghost_protected.pop(key, None)\n        target = self._ghost_protected if protected else self._ghost_probation\n        target[key] = self._tick\n        limit = max(64, 4 * max(1, len(self._cache)) + 16)\n        while len(self._ghost_probation) + len(self._ghost_protected) > limit:\n            if self._ghost_probation and self._ghost_protected:\n                left = next(iter(self._ghost_probation.items()))\n                right = next(iter(self._ghost_protected.items()))\n                source = self._ghost_probation if left[1] <= right[1] else self._ghost_protected\n            elif self._ghost_probation:\n                source = self._ghost_probation\n            else:\n                source = self._ghost_protected\n            source.pop(next(iter(source)), None)\n\n    def _adapt_from_ghost(self, key, size):\n        if not self.capacity_bytes:\n            self._ghost_probation.pop(key, None)\n            self._ghost_protected.pop(key, None)\n            return\n        step = max(1, self.capacity_bytes // 16)\n        if size > step:\n            step = min(self.capacity_bytes, size)\n        if key in self._ghost_probation:\n            self._ghost_probation.pop(key, None)\n            self._ghost_protected.pop(key, None)\n            self._target = min(self.capacity_bytes, self._target + step)\n        elif key in self._ghost_protected:\n            self._ghost_protected.pop(key, None)\n            self._ghost_probation.pop(key, None)\n            self._target = max(0, self._target - step)\n\n    def _remove_cached(self, key, remember=True):\n        entry = self._cache.pop(key)\n        if entry[3]:\n            self._protected.pop(key, None)\n            self._protected_bytes -= entry[0]\n        else:\n            self._probation.pop(key, None)\n        self._bytes -= entry[0]\n        if remember:\n            self._remember(key, entry[3])\n        return entry\n\n    def _victim(self, pool):\n        chosen = None\n        chosen_score = None\n        for key, entry in pool.items():\n            age = self._tick - entry[2]\n            divisor = max(1, age + 1) * isqrt(entry[0] + 1)\n            score = ((entry[1] + 1) * 1000000) // divisor\n            if chosen_score is None or score < chosen_score:\n                chosen = key\n                chosen_score = score\n        return chosen\n\n    def _demote_protected(self):\n        while self._protected and self._protected_bytes > self._target:\n            key = self._victim(self._protected)\n            entry = self._protected.pop(key)\n            entry[3] = False\n            self._protected_bytes -= entry[0]\n            self._probation[key] = entry\n\n    def _evict_one(self, evicted):\n        pool = self._probation if self._probation else self._protected\n        if not pool:\n            return False\n        key = self._victim(pool)\n        self._remove_cached(key, remember=True)\n        evicted.append(key)\n        return True\n\n    def _ensure_room(self, required, evicted):\n        while self._bytes + required > self.capacity_bytes:\n            if not self._evict_one(evicted):\n                break\n\n    def _trim_ghosts(self):\n        limit = max(64, 4 * max(1, len(self._cache)) + 16)\n        while len(self._ghost_probation) + len(self._ghost_protected) > limit:\n            if self._ghost_probation and self._ghost_protected:\n                left = next(iter(self._ghost_probation.items()))\n                right = next(iter(self._ghost_protected.items()))\n                source = self._ghost_probation if left[1] <= right[1] else self._ghost_protected\n            elif self._ghost_probation:\n                source = self._ghost_probation\n            else:\n                source = self._ghost_protected\n            source.pop(next(iter(source)), None)\n\n    def access(self, key, size, now):\n        size = self._normal_size(size)\n        self._tick += 1\n        evicted = []\n        entry = self._cache.get(key)\n\n        if entry is not None:\n            if size > self.capacity_bytes:\n                self._remove_cached(key, remember=False)\n                evicted.append(key)\n                while self._cache:\n                    self._evict_one(evicted)\n                return evicted\n\n            self._bytes += size - entry[0]\n            entry[0] = size\n            entry[1] = min(entry[1] + 1, 1000000000)\n            entry[2] = self._tick\n            if entry[3]:\n                self._protected.move_to_end(key)\n            else:\n                self._probation.pop(key, None)\n                entry[3] = True\n                self._protected[key] = entry\n                self._protected_bytes += size\n                self._demote_protected()\n            self._ensure_room(0, evicted)\n            self._trim_ghosts()\n            return evicted\n\n        self._adapt_from_ghost(key, size)\n        if size > self.capacity_bytes:\n            while self._cache:\n                self._evict_one(evicted)\n            self._trim_ghosts()\n            return evicted\n\n        entry = [size, 0, self._tick, False]\n        self._cache[key] = entry\n        self._probation[key] = entry\n        self._bytes += size\n        self._ensure_room(0, evicted)\n        self._trim_ghosts()\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R49-pair03-candidate-call02-instantiate_terminal_policy",
+    "duration_seconds": 86.22,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:22:31Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "09a6b839f79174a504ea7709341a7f3c809dba693ad79657887a166865cb2eb3",
+    "raw_events_path": "workspace\\model-calls\\R49-pair03-candidate-call02-instantiate_terminal_policy\\raw-events.jsonl",
+    "raw_events_sha256": "c54a9d4a69ea428d64a07b3557b8cf27d4e2404ca2ebc25de120943f7efb10fb",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "80afcb87eee30a3d15edc0f6820d63f329a096fe6382b3cbbef0cfc47bacb2f8",
+    "returncode": 0,
+    "role": "R49 candidate topology role exclusive policy genesis authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:21:05Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12946,
+      "output_tokens": 6917,
+      "reasoning_output_tokens": 5327
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

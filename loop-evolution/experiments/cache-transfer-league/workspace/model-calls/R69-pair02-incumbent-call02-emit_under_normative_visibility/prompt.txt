@@ -1,0 +1,73 @@
+Role: R69 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R69,
+matched pair 2, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "The proposed authority relocation is not established by this lineage: the upstream call can synthesize evidence but cannot transfer executable closure through an analysis-only terminal edge, while the terminal call lacks direct visibility of the anchor, hypothesis, and topology. Preserve the evidence as non-authoritative guidance and prioritize the visible normative contract.",
+      "witnesses": [
+        "The anchor uses online recency/frequency residency, ghost histories, adaptive partition targeting, and byte-aware eviction; these are inherited behavioral distinctions rather than binding implementation instructions.",
+        "Resident hits remove the old residency, may evict to accommodate the updated size, and promote the object to the frequent class; oversized resident objects are not retained.",
+        "Misses for oversized objects are rejected without insertion; ghost hits adjust the recency target, discard the ghost record, and reinsert into the frequent class.",
+        "The topology intentionally cuts generative sources before the terminal policy call, so analysis cannot guarantee preservation of a complete executable closure or direct reproduction of anchor behavior.",
+        "No score, trace, evaluator result, or matched-pair outcome is visible; the expected effect and falsifier therefore remain unverified."
+      ],
+      "obligations": [
+        "Keep the required Policy constructor and access signature and use only the Python standard library.",
+        "Operate online, one request at a time, using no future requests, evaluator state, hidden traces, oracle decisions, benchmark paths, networking, subprocesses, or external packages.",
+        "Return only unique integer keys that are currently cached and evicted by the current request.",
+        "Never allow resident bytes to exceed capacity_bytes, including after insertions, updates, promotions, and oversized requests.",
+        "Treat the evaluator as authoritative for cache state; maintain only an online decision model consistent with the returned eviction contract.",
+        "Preserve relevant inherited distinctions and conflicts without presenting unsupported performance claims as facts.",
+        "This upstream stage must emit analysis only and must not create, rank, select, or encode a policy artifact."
+      ],
+      "exact_actions": [
+        "Record the anchor's byte-aware two-class residency, ghost evidence, adaptive target, oversized-object handling, and promotion behavior as candidate mechanisms, not executable authority.",
+        "Flag that the hypothesis's claimed executable-continuity improvement is structurally unproven across the permanent source-class cut.",
+        "Tell the terminal authority to reconstruct behavior from the task, contract, constraints, and this evidence packet without attempting to reacquire hidden generative sources.",
+        "Require explicit handling for zero or negative capacities, zero or oversized objects, resident size changes, duplicate evictions, and stale internal bookkeeping.",
+        "Require every emitted eviction key to be an integer corresponding to a resident object removed during the current access.",
+        "Require final validation of capacity safety and online-only visibility before emitting the single terminal policy."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R68 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

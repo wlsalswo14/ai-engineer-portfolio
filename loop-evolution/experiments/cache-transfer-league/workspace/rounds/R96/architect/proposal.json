@@ -1,0 +1,106 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R96-structure-architect\\final-receipt.json",
+    "sha256": "c78ae403a66c2caba53f0a867d3ef476666e955c4a643c5b7c857033e044bc92"
+  },
+  "architect_response": {
+    "architect_scope": "one-R96-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "author_under_inverted_authority",
+      "information_flow": "The first call sees all common inputs and emits the authority analysis consumed by the final call. The final call also sees all common evidence, applies the omission-triggered authority state before any artifact exists, and emits the lineage's only complete policy.",
+      "name": "Omission-Activated Authority Inversion Dyad",
+      "organization": "two-call sequential nonbranching lineage with one non-policy semantic-authority controller followed by the sole executable author",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "establish_omission_authority_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Determine from jointly visible evidence whether every mandatory obligation is represented by inherited semantics and establish the single authority-state transition when an evidenced obligation is absent.",
+              "output_type": "analysis",
+              "role": "pre-artifact semantic-authority controller"
+            },
+            {
+              "id": "author_under_inverted_authority",
+              "inputs": [
+                "establish_omission_authority_state",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the established authority state, reconcile it with jointly visible common evidence, exercise de novo semantic authority only when the omission trigger has changed the state, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "sole post-transition executable authority"
+            }
+          ],
+          "id": "single_preartifact_authority_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "capability_family": "open-world omission recovery through pre-artifact semantic-authority inversion",
+      "champion_limitation": "The champion's retract-only terminal authority cannot create a necessary commitment that is absent from the already complete originating capsule.",
+      "not_local_refinement": "This relocates sole artifact genesis behind a new generative authority transition unavailable to the champion; it is not an added reviewer, certificate, gate, field, role split, rename, or terminal refinement.",
+      "observable_effect": "The sole final author can introduce an evidence-grounded commitment for a previously unrepresented obligation and emit one complete policy.",
+      "state_transition": "Before any executable artifact exists, the lineage changes once from anchor-inheritance authority to de novo obligation-synthesis authority on the analysis-to-policy edge.",
+      "trigger": "Joint common evidence establishes a mandatory task obligation that has no represented commitment in the inherited policy semantics, without requiring a contradiction."
+    },
+    "proposal_mode": "emergent_exploration",
+    "qualitative_hypothesis": {
+      "causal_change": "Move sole executable authorship after an evidence-triggered authority inversion: evidence that a mandatory obligation is unrepresented by inherited semantics changes the lineage from anchor inheritance to de novo obligation synthesis before artifact creation.",
+      "expected_effect": "The lineage can recover task-general omissions while retaining one coherent executable artifact and one deterministic final author.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion creates the complete executable artifact before terminal adjudication, so its retract-only authority cannot supply a required semantic commitment omitted by the originating artifact."
+    },
+    "structural_mutation": {
+      "after": "A non-policy authority state is established first; evidence of a mandatory obligation absent from inherited semantics triggers an authority inversion before the sole complete policy is authored.",
+      "before": "A complete executable capsule is authored first, after which the terminal authority may only retract existing commitments.",
+      "change_count": 1,
+      "factor": "mandatory-omission-triggered pre-artifact semantic-authority inversion",
+      "why_structural": "The mutation changes the artifact-birth edge from executable handoff under monotone retraction to pre-artifact semantic-authority control with generative omission recovery; the downstream call always executes, so this is neither an admission gate nor terminal role fission."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 96,
+  "incumbent_structure_sha256": "c907cfebd2011c00c4a17d4a12a8f25f0f76ab7dbda9b969287a07383677fcb7",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "emergent_exploration",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R96\\qualitative-error-notebook.json",
+    "sha256": "23ecf166a5bcbe34e3715b75a3a42d0a5e05abc764b1cd8ff6f4310b3b4b455d"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R96\\source-manifest.json",
+    "sha256": "d17587a31a97430ba62d6a291babf176f655f150da1277cc0843f6b909d26cbf"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "mandatory-omission-triggered pre-artifact semantic-authority inversion",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "220815d6d23e16a492a53b9400787d176647855b7869e1473535293cd28390ee",
+    "topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c"
+  }
+}

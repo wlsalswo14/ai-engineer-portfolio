@@ -1,0 +1,81 @@
+{
+  "architect_scope": "one-R47-structural-factor-only",
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "Freezing contract-facing semantics before terminal synthesis prevents end-to-end reconciliation when conformance obligations and adaptive behavior interact.",
+    "causal_change": "Replace the immutable authority partition with a revocable, non-nullifying executable-state edge that gives the terminal call whole-artifact authority while preserving lineage continuity.",
+    "expected_effect": "Joint terminal reconciliation should coherently change scan resistance and phase-shift adaptation while improving consistency between object-oriented and byte-oriented behavior.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "revocable non-nullifying whole-artifact authority across the executable-state edge",
+    "before": "The executable handoff freezes contract conformance and delegates only behavior-semantic revision.",
+    "after": "The executable handoff preserves one complete predecessor state without freezing any semantic domain, and the terminal call may reconcile the whole artifact without discarding predecessor authority.",
+    "why_structural": "This changes edge authority and state-transition semantics from immutable partitioned delegation to continuous whole-artifact revision."
+  },
+  "mode_certificate": {
+    "rejected_assumptions": [
+      "Contract-facing semantics must be frozen before terminal behavioral synthesis.",
+      "Upstream contract authority and downstream behavioral authority must remain disjoint.",
+      "Terminal whole-artifact revision requires nullifying or rebasing predecessor authority."
+    ],
+    "forbidden_inherited_mechanism": "contract-locked executable handoff with an immutable conformance boundary",
+    "independent_replacement_principle": "Preserve one complete executable state as authoritative lineage evidence while allowing its successor to revise all semantic domains continuously and non-nullifyingly.",
+    "changed_behavioral_dimensions": [
+      "scan resistance",
+      "phase-shift adaptation",
+      "object-hit versus byte-hit balance"
+    ],
+    "counter_until_promotion": true
+  },
+  "candidate_structure": {
+    "name": "Revocable Whole-Artifact Continuity Relay",
+    "organization": "two-call sequential lineage with one continuously revisable executable-state handoff",
+    "information_flow": "The first call receives all common evidence and emits one complete executable policy state with no frozen semantic partition. The terminal call consumes that state with public non-anchor evidence, retains predecessor continuity, exercises end-to-end revision authority without nullification, and emits one policy.",
+    "stages": [
+      {
+        "id": "revocable_continuity_relay",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "form_revocable_policy_state",
+            "role": "provisional whole-artifact authority",
+            "objective": "Form exactly one complete executable policy state from the supplied evidence, keep contract-facing and behavioral semantics jointly revocable, and pass the complete state forward.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_state"
+          },
+          {
+            "id": "reconcile_continuous_authority",
+            "role": "terminal end-to-end reconciliation authority",
+            "objective": "Consume form_revocable_policy_state and the supplied public evidence, preserve executable lineage continuity, reconcile all policy semantics under the public contract without nullifying predecessor authority, and emit one complete policy.",
+            "inputs": [
+              "form_revocable_policy_state",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "reconcile_continuous_authority"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

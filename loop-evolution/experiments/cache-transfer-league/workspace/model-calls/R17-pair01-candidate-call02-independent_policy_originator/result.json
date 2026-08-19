@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from math import isqrt\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self._entries = {}\n        self._history = {}\n        self._used = 0\n        self._steps = 0\n        self._epoch = 0\n        self._history_limit = 8192\n\n    def _advance(self):\n        self._steps += 1\n        self._epoch = self._steps >> 8\n\n    def _current(self, count, stamp):\n        shift = self._epoch - stamp\n        if shift <= 0:\n            return count\n        if shift >= count.bit_length():\n            return 0\n        return count >> shift\n\n    def _trim_history(self, keep):\n        while len(self._history) > self._history_limit:\n            candidates = ((k, v) for k, v in self._history.items() if k != keep)\n            victim = min(\n                candidates,\n                key=lambda item: (self._current(item[1][0], item[1][1]), item[0]),\n                default=None,\n            )\n            if victim is None:\n                break\n            del self._history[victim[0]]\n\n    def _observe_miss(self, key):\n        record = self._history.get(key)\n        count = 0 if record is None else self._current(record[0], record[1])\n        count += 1\n        self._history[key] = [count, self._epoch]\n        self._trim_history(key)\n        return count\n\n    def _remember(self, key, count):\n        record = self._history.get(key)\n        old = 0 if record is None else self._current(record[0], record[1])\n        self._history[key] = [max(old, count), self._epoch]\n        self._trim_history(key)\n\n    def _entry_count(self, entry):\n        return self._current(entry[1], entry[2])\n\n    def _lower_utility(self, left_key, left, right_key, right):\n        left_value = (self._entry_count(left) + 1) ** 2 * right[0]\n        right_value = (self._entry_count(right) + 1) ** 2 * left[0]\n        if left_value != right_value:\n            return left_value < right_value\n        return left_key < right_key\n\n    def _choose_victim(self, excluded):\n        chosen = None\n        for key, entry in self._entries.items():\n            if key in excluded:\n                continue\n            if chosen is None or self._lower_utility(key, entry, chosen[0], chosen[1]):\n                chosen = (key, entry)\n        return chosen\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._advance()\n\n        entry = self._entries.get(key)\n        if entry is not None:\n            entry[1] = self._entry_count(entry) + 1\n            entry[2] = self._epoch\n            return []\n\n        count = self._observe_miss(key)\n        if size <= 0 or size > self.capacity_bytes:\n            return []\n\n        candidate_weight = (count + 1) ** 2\n        needed = self._used + size - self.capacity_bytes\n        plan = []\n        excluded = set()\n        freed = 0\n\n        while freed < max(0, needed):\n            selected = self._choose_victim(excluded)\n            if selected is None:\n                return []\n            victim_key, victim = selected\n            victim_count = self._entry_count(victim)\n            if candidate_weight * victim[0] <= (victim_count + 1) ** 2 * size:\n                return []\n            plan.append((victim_key, victim))\n            excluded.add(victim_key)\n            freed += victim[0]\n\n        evicted = []\n        for victim_key, victim in plan:\n            del self._entries[victim_key]\n            self._used -= victim[0]\n            self._remember(victim_key, self._entry_count(victim))\n            evicted.append(victim_key)\n\n        self._entries[key] = [size, count, self._epoch]\n        self._used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R17-pair01-candidate-call02-independent_policy_originator",
+    "duration_seconds": 73.16,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:09:43Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c23b2756c5d2e3b0bbf0d8d0219be62ec4dae6242fa617bf78945af4652ba9c1",
+    "raw_events_path": "workspace\\model-calls\\R17-pair01-candidate-call02-independent_policy_originator\\raw-events.jsonl",
+    "raw_events_sha256": "87ededecad68378b3fb8c75ec6b7579ed760d9fc6f0b098f7acae833ee920ad4",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "2c3166d6eb8f6e03fc41880263494b010ed069922b38b15aee400168c7ab53b6",
+    "returncode": 0,
+    "role": "R17 candidate topology role charter-bound sole policy originator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:08:30Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14330,
+      "output_tokens": 5683,
+      "reasoning_output_tokens": 4660
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,107 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Non-authoritative provenance map; claims remain rebuttable and unresolved conflicts are preserved.",
+      "exact_actions": [
+        "Attach each claim to its stated input provenance.",
+        "Record counterclaims symmetrically with supporting claims.",
+        "Mark the causal change, expected effect, and falsifier as unresolved hypotheses.",
+        "Forward validity obligations and uncertainty to the final policy authority without exclusions, mandates, rankings, or policy construction."
+      ],
+      "obligations": [
+        {
+          "requirement": "Expose supporting and opposing provenance without adjudicating commitments.",
+          "source": "role_objective"
+        },
+        {
+          "requirement": "Preserve unresolved conflicts and obligation-relevant uncertainty.",
+          "source": "role_objective"
+        },
+        {
+          "requirement": "Surface interface legality, capacity safety, and online-only visibility requirements.",
+          "source": "anchor_contract"
+        },
+        {
+          "requirement": "Record that no scores, traces, benchmark paths, or oracle information are available.",
+          "source": "task_constraints"
+        }
+      ],
+      "witnesses": [
+        {
+          "claim": "The incumbent provides a standard-library implementation with the required Policy interface and explicit capacity checks.",
+          "provenance": "anchor_contract",
+          "stance": "supporting",
+          "status": "observed"
+        },
+        {
+          "claim": "The incumbent tracks resident and ghost state and returns eviction keys from resident structures.",
+          "provenance": "anchor_contract",
+          "stance": "supporting",
+          "status": "observed"
+        },
+        {
+          "claim": "Premature negative authority could constrain final synthesis before conflicting evidence is resolved.",
+          "provenance": "candidate_hypothesis",
+          "stance": "supporting",
+          "status": "hypothesis"
+        },
+        {
+          "claim": "The proposed causal change and expected improvement have no available score evidence and remain falsifiable.",
+          "provenance": "candidate_hypothesis",
+          "stance": "opposing",
+          "status": "unresolved"
+        },
+        {
+          "claim": "Any final artifact must preserve interface legality, online-only visibility, capacity safety, and unique-current-resident eviction outputs.",
+          "provenance": "task_constraints",
+          "stance": "supporting",
+          "status": "obligation-relevant"
+        },
+        {
+          "claim": "The final policy role may independently reinterpret or reject every transmitted claim, limiting the map's authority.",
+          "provenance": "loop_structure",
+          "stance": "opposing",
+          "status": "unresolved"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R80-pair01-candidate-call01-map_symmetric_provenance",
+    "duration_seconds": 15.177,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:57:00Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "a0e7cfa3df3f797c91b561758a59deaa32de57e63299127bdbda4d6527bfabad",
+    "raw_events_path": "workspace\\model-calls\\R80-pair01-candidate-call01-map_symmetric_provenance\\raw-events.jsonl",
+    "raw_events_sha256": "1143fa9120205232f694a1371f18fe6c71d6a8bc33837ee54ae2d1297b437132",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "1be67c872c64ad8fad511cb2c34d3c7ce6900839c6ade60b3d63949b581d70b4",
+    "returncode": 0,
+    "role": "R80 candidate topology role non-authoritative evidence cartographer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:56:44Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15098,
+      "output_tokens": 859,
+      "reasoning_output_tokens": 441
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

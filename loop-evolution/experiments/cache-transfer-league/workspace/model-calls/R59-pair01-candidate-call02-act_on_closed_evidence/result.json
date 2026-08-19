@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self._items = {}\n        self._probationary = OrderedDict()\n        self._protected = OrderedDict()\n        self._used = 0\n        self._protected_bytes = 0\n        self._protected_target = (self.capacity_bytes * 2) // 3\n\n    def _remove(self, key):\n        entry = self._items.pop(key)\n        size = entry['size']\n        if entry['segment'] == 'protected':\n            self._protected.pop(key, None)\n            self._protected_bytes -= size\n        else:\n            self._probationary.pop(key, None)\n        self._used -= size\n        return size\n\n    def _rebalance(self):\n        while (self._protected_bytes > self._protected_target and\n               len(self._protected) > 1):\n            key, _ = self._protected.popitem(last=False)\n            entry = self._items[key]\n            entry['segment'] = 'probationary'\n            self._probationary[key] = None\n            self._protected_bytes -= entry['size']\n\n    def _victim(self, excluded):\n        for bucket in (self._probationary, self._protected):\n            for key in bucket:\n                if key != excluded:\n                    return key\n        return None\n\n    def _evict_until_fit(self, excluded):\n        evicted = []\n        while self._used > self.capacity_bytes:\n            victim = self._victim(excluded)\n            if victim is None:\n                break\n            self._remove(victim)\n            evicted.append(victim)\n        return evicted\n\n    def access(self, key, size, now):\n        del now\n        incoming_size = max(0, int(size))\n\n        if key in self._items:\n            old_segment = self._items[key]['segment']\n            self._remove(key)\n            if incoming_size > self.capacity_bytes:\n                return [key]\n            if old_segment == 'protected':\n                self._items[key] = {\n                    'size': incoming_size,\n                    'segment': 'protected',\n                }\n                self._protected[key] = None\n                self._protected_bytes += incoming_size\n            else:\n                self._items[key] = {\n                    'size': incoming_size,\n                    'segment': 'protected',\n                }\n                self._protected[key] = None\n                self._protected_bytes += incoming_size\n            self._used += incoming_size\n            self._rebalance()\n            return self._evict_until_fit(key)\n\n        if incoming_size > self.capacity_bytes:\n            return []\n\n        self._items[key] = {\n            'size': incoming_size,\n            'segment': 'probationary',\n        }\n        self._probationary[key] = None\n        self._used += incoming_size\n        return self._evict_until_fit(key)\n"
+  },
+  "receipt": {
+    "call_id": "R59-pair01-candidate-call02-act_on_closed_evidence",
+    "duration_seconds": 60.128,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T21:28:00Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "e3376e78b8e98f5f2274caea44769ea5a822da3957d46db7db68a1b3a8b85971",
+    "raw_events_path": "workspace\\model-calls\\R59-pair01-candidate-call02-act_on_closed_evidence\\raw-events.jsonl",
+    "raw_events_sha256": "14e505ee602ab652492a09d790489fb828cdb2f8fff994ea260632a0a8cd0788",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "7bfe473bcf8c24b34c407cb752d6519c9836f66ce5e35ba31a5b7aa577185e3d",
+    "returncode": 0,
+    "role": "R59 candidate topology role evidence-closed policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T21:27:00Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13267,
+      "output_tokens": 4730,
+      "reasoning_output_tokens": 4016
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probationary = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.probationary_bytes = 0\n        self.protected_bytes = 0\n        self.used = 0\n        self.protected_target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_serial = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n\n    def _forget_ghost(self, key):\n        value = self.ghost_probationary.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_protected.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, protected):\n        self._forget_ghost(key)\n        self.ghost_serial += 1\n        value = (max(1, int(size)), self.ghost_serial)\n        if protected:\n            self.ghost_protected[key] = value\n        else:\n            self.ghost_probationary[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_probationary) + len(self.ghost_protected) > self.ghost_count_limit):\n            oldest_kind = None\n            oldest_serial = None\n            if self.ghost_probationary:\n                oldest_kind = 0\n                oldest_serial = next(iter(self.ghost_probationary.values()))[1]\n            if self.ghost_protected:\n                serial = next(iter(self.ghost_protected.values()))[1]\n                if oldest_serial is None or serial < oldest_serial:\n                    oldest_kind = 1\n            ghosts = self.ghost_protected if oldest_kind else self.ghost_probationary\n            _, value = ghosts.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _adapt(self, kind):\n        if self.capacity <= 0:\n            return\n        if kind == 1:\n            left = self.ghost_probationary_bytes()\n            right = self.ghost_protected_bytes()\n            delta = self.capacity if left == 0 else max(1, min(self.capacity, right // left or 1))\n            self.protected_target = max(0, self.protected_target - delta)\n        else:\n            left = self.ghost_protected_bytes()\n            right = self.ghost_probationary_bytes()\n            delta = self.capacity if left == 0 else max(1, min(self.capacity, right // left or 1))\n            self.protected_target = min(self.capacity, self.protected_target + delta)\n\n    def ghost_probationary_bytes(self):\n        return sum(value[0] for value in self.ghost_probationary.values())\n\n    def ghost_protected_bytes(self):\n        return sum(value[0] for value in self.ghost_protected.values())\n\n    def _remove_resident(self, key):\n        value = self.probationary.pop(key, None)\n        if value is not None:\n            self.probationary_bytes -= value\n            self.used -= value\n            return value, 0\n        value = self.protected.pop(key, None)\n        if value is not None:\n            self.protected_bytes -= value\n            self.used -= value\n            return value, 1\n        return 0, -1\n\n    def _evict_one(self, ghost_kind):\n        recency_target = self.capacity - self.protected_target\n        if ghost_kind == 1 and self.probationary:\n            key, size = self.probationary.popitem(last=False)\n            segment = 0\n        elif self.probationary and (self.probationary_bytes > recency_target or not self.protected):\n            key, size = self.probationary.popitem(last=False)\n            segment = 0\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            segment = 1\n        elif self.probationary:\n            key, size = self.probationary.popitem(last=False)\n            segment = 0\n        else:\n            return None\n        if segment:\n            self.protected_bytes -= size\n        else:\n            self.probationary_bytes -= size\n        self.used -= size\n        self._remember_ghost(key, size, segment == 1)\n        return key\n\n    def _make_room(self, incoming, ghost_kind):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one(ghost_kind)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.probationary:\n            self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used += size\n            return evicted\n\n        if key in self.protected:\n            self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used += size\n            return evicted\n\n        ghost_kind = 1 if key in self.ghost_probationary else 2 if key in self.ghost_protected else 0\n        if size <= 0 or size > self.capacity:\n            self._forget_ghost(key)\n            return []\n\n        if ghost_kind:\n            self._adapt(ghost_kind)\n            self._forget_ghost(key)\n\n        evicted = self._make_room(size, ghost_kind)\n        if ghost_kind == 2:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.probationary[key] = size\n            self.probationary_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R76-pair02-incumbent-call02-construct_with_open_visibility",
+    "duration_seconds": 60.941,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:13:02Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "5b6a1e86ae41f36564aa5cf75aee5e6f7825ba1b9734811b7cb302a156a15dbc",
+    "raw_events_path": "workspace\\model-calls\\R76-pair02-incumbent-call02-construct_with_open_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "f5d38cbb1ebf27236f0c2334238743b14f4b6ac9ac8221bed6dcb48f1fa635f5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "8bf56016542797b72619a3a5c27d081634d237ebc6613fc0a911075b22e549eb",
+    "returncode": 0,
+    "role": "R76 incumbent topology role bounded constructive policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:12:01Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 15546,
+      "output_tokens": 4810,
+      "reasoning_output_tokens": 3236
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

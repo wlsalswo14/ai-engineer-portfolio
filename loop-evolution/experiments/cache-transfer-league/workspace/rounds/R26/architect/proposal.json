@@ -1,0 +1,122 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R26-structure-architect\\final-receipt.json",
+    "sha256": "99639efcebe8722cdc23e495aa2e6987c757035ddea0437acbd0a91356aeffc4"
+  },
+  "architect_response": {
+    "architect_scope": "one-R26-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "provenance_blind_policy_authority",
+      "information_flow": "The first call forms one score-blind causal frame while all common evidence is visible. The second call consumes that frame together with the common evidence, forms one complete executable closure, and removes construction provenance only after completion. The final call consumes that policy-bearing predecessor with public obligations but without anchor-policy visibility and emits one policy.",
+      "name": "Causal-Frame-First Provenance-Blind Closure Relay",
+      "organization": "three-call sequential lineage with one pre-construction causal-frame transition and the incumbent post-construction provenance firewall",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "form_preconstruction_causal_frame",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Before any policy artifact exists, establish one score-blind causal frame relating the supplied hypothesis, task, anchor evidence, public contract, constraints, and loop structure. Materialize that frame as the causally prior evidence state without selecting an implementation, and pass the analysis forward.",
+              "output_type": "analysis",
+              "role": "preconstruction causal-frame former"
+            },
+            {
+              "id": "form_conditioned_executable_closure",
+              "inputs": [
+                "form_preconstruction_causal_frame",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding causal frame before forming one complete executable policy closure from the supplied evidence. Preserve the frame's causal commitments during construction, justify current semantics against public obligations, remove anchor-relative construction provenance only after closure completion, and pass the complete executable closure forward.",
+              "output_type": "executable_policy_closure",
+              "role": "causal-frame-conditioned executable closure former"
+            },
+            {
+              "id": "provenance_blind_policy_authority",
+              "inputs": [
+                "form_conditioned_executable_closure",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the preceding complete executable closure and exercise final semantic authority from its current semantics and supplied public obligations. Without anchor-implementation or construction-provenance visibility, reconcile contract validity within that single state and emit one complete policy.",
+              "output_type": "policy",
+              "role": "provenance-blind final semantic authority"
+            }
+          ],
+          "id": "causal_frame_closure_relay",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only the timing and control edge that serializes one causal frame before executable closure formation is changed; policy semantics, the public interface, post-construction provenance blindness, and final authority remain outside scope.",
+      "why_not_repeat_role_fission": "The added call occurs before any policy artifact exists and creates an analysis-to-executable state transition; it does not split terminal production, review, or finalization duties."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Insert one analysis-only causal-frame transition before executable closure formation, requiring construction to consume an already formed causal relationship among the supplied hypothesis, obligations, and anchor-visible evidence.",
+      "expected_effect": "Earlier causal framing should improve coherence of the executable closure while preserving the champion's complete policy-bearing, provenance-blind final relay.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion co-forms executable semantics and their causal rationale in its first call, so the rationale becomes available only during the transition it is meant to discipline."
+    },
+    "structural_mutation": {
+      "after": "An analysis-only causal frame is formed first and consumed by the closure former; the resulting complete executable closure then crosses the unchanged provenance-blind edge to final authority.",
+      "before": "The first call jointly forms causal justification and a complete executable closure, followed by the provenance-blind final authority.",
+      "change_count": 1,
+      "factor": "pre-construction causal-frame state transition before executable closure formation",
+      "why_structural": "It adds a causally prior state transition and edge before policy construction, changing evidence timing and control flow while leaving the post-construction firewall and final authority intact."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 26,
+  "incumbent_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "local_refinement",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R26\\qualitative-error-notebook.json",
+    "sha256": "7b0a9f06e127e63c9dba088e2f3ec2cf2be1c9fa693aa7b3da2ed9154f033643"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R26\\source-manifest.json",
+    "sha256": "a73312db821e6a8c1bc7b07233a62195c9def6c9df44810123a3f311dddcd327"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 3,
+    "coarse_topology_collision_override": null,
+    "factor": "pre-construction causal-frame state transition before executable closure formation",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "form_conditioned_executable_closure",
+        "executor_semantics": "self-contained executable policy artifact crossing a provenance-blind closure edge",
+        "output_type": "executable_policy_closure"
+      }
+    ],
+    "semantic_topology_fingerprint": "e43c8f3e38b1ef128bc317dccf39514c0b540cacb190996151966c315d23a39b",
+    "topology_fingerprint": "1567224770e56af7f836002d825f8c75b5e1ab71a901e55f63c5b5ef411d0233"
+  }
+}

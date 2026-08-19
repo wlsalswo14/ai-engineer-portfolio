@@ -1,0 +1,37 @@
+{
+  "final_call_id": "closed_world_policy_authority",
+  "information_flow": "The first call receives all common inputs and forms exactly one self-contained executable closure carrying one complete executable policy artifact and its public-obligation justification. The final call consumes only that closure as its sole evidence and control source, exercises final authority within the received state, and emits one policy.",
+  "name": "Closed-World Terminal Cut",
+  "organization": "two-call sequential lineage with one complete executable closure followed by a terminal call having no external side inputs",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_closed_world_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Use the supplied evidence to form exactly one self-contained executable closure carrying one complete executable policy artifact, its current semantic account, and its justification against public obligations.",
+          "output_type": "executable_policy_closure",
+          "role": "closed-world closure former"
+        },
+        {
+          "id": "closed_world_policy_authority",
+          "inputs": [
+            "form_closed_world_closure"
+          ],
+          "objective": "Consume the preceding complete executable closure as the sole available evidence and control source, adjudicate its internal semantic and contract claims, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "closed-world final semantic authority"
+        }
+      ],
+      "id": "closed_world_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

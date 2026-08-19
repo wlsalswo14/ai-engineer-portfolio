@@ -1,0 +1,66 @@
+{
+  "final_call_id": "final_engine",
+  "information_flow": "The first call runs the champion workflow unchanged and emits one complete provisional engine. A distinct verifier converts that realized engine into a bounded packet of executable counterexamples or a no-failure certificate. The final integrator must emit that same engine unchanged when the packet is empty; otherwise it performs only packet-grounded repair or exact rollback and emits the single final engine.",
+  "name": "Postbuild Independent Falsification and Bounded Integration",
+  "organization": "collaboration",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "draft_engine",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "champion_metrics",
+            "state_capsule",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Starting from champion_engine, execute the champion's existing ordered transactional repair, insertion-time intervention, exact-delta rollback, and terminal singleton-ablation workflow without adding a new repair or compression policy. Emit exactly one complete legal UCI engine as the provisional artifact; do not generate alternatives.",
+          "output_type": "engine",
+          "role": "champion-compatible provisional constructor"
+        }
+      ],
+      "id": "provisional_construction",
+      "mode": "sequential"
+    },
+    {
+      "calls": [
+        {
+          "id": "postbuild_falsification_packet",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "champion_metrics",
+            "draft_engine"
+          ],
+          "objective": "Inspect and execute the single draft_engine against task requirements, legal-UCI obligations, reproducible differential probes against champion_engine, and failure modes exposed by its actual source changes. Return a bounded analysis packet containing only reproducible witnesses, implicated changed regions, required preservation checks, and exact reproduction commands; if none are found, return an explicit no-failure certificate. Do not propose another engine or rank alternatives.",
+          "output_type": "analysis",
+          "role": "independent realized-artifact verifier"
+        }
+      ],
+      "id": "independent_terminal_falsification",
+      "mode": "sequential"
+    },
+    {
+      "calls": [
+        {
+          "id": "final_engine",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "draft_engine",
+            "postbuild_falsification_packet",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the sole draft_engine and postbuild_falsification_packet. If the packet certifies no failure, emit the draft engine unchanged. Otherwise reproduce each witness, apply one minimal packet-grounded repair or exact rollback of the implicated draft delta, replay all packet witnesses and baseline legal-UCI checks, and emit exactly one complete engine. Do not reopen broad diagnosis, create alternatives, or select among versions.",
+          "output_type": "engine",
+          "role": "evidence-bound repair and rollback integrator"
+        }
+      ],
+      "id": "bounded_integration",
+      "mode": "sequential"
+    }
+  ]
+}

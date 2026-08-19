@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.used = 0\n        self.resident = {}\n        self.window = OrderedDict()\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_window = OrderedDict()\n        self.ghost_main = OrderedDict()\n        self.frequency = {}\n        self.events = 0\n        self.stamp = 0\n        self.last_now = None\n        self.ghost_limit = 128\n        self.window_target = max(1, self.capacity // 5) if self.capacity else 0\n\n    def _remember(self, ghost, key):\n        ghost[key] = None\n        ghost.move_to_end(key)\n        while len(ghost) > self.ghost_limit:\n            old, _ = ghost.popitem(last=False)\n            if old not in self.resident and old not in self.ghost_window and old not in self.ghost_main:\n                self.frequency.pop(old, None)\n\n    def _record(self, key):\n        self.frequency[key] = min(255, self.frequency.get(key, 0) + 1)\n        self.events += 1\n        if self.events >= 4096:\n            self.events = 0\n            for item in list(self.frequency):\n                value = self.frequency[item] // 2\n                if value:\n                    self.frequency[item] = value\n                elif item in self.resident or item in self.ghost_window or item in self.ghost_main:\n                    self.frequency[item] = 1\n                else:\n                    self.frequency.pop(item, None)\n\n    def _drop(self, key, evicted):\n        record = self.resident.pop(key, None)\n        if record is None:\n            return\n        size, segment = record\n        self.used -= size\n        self.window.pop(key, None)\n        self.probation.pop(key, None)\n        self.protected.pop(key, None)\n        if segment == \"window\":\n            self._remember(self.ghost_window, key)\n        else:\n            self._remember(self.ghost_main, key)\n        if key not in evicted:\n            evicted.append(key)\n\n    def _victim(self, exclude=None):\n        for queue in (self.probation, self.window, self.protected):\n            for key in queue:\n                if key != exclude:\n                    return key\n        return None\n\n    def _make_room(self, extra, exclude, evicted):\n        while self.used + extra > self.capacity:\n            victim = self._victim(exclude)\n            if victim is None:\n                return False\n            self._drop(victim, evicted)\n        return True\n\n    def _touch(self, key):\n        record = self.resident[key]\n        segment = record[1]\n        if segment == \"window\":\n            self.window.move_to_end(key)\n        elif segment == \"probation\":\n            self.probation.pop(key, None)\n            self.protected[key] = None\n            record[1] = \"protected\"\n        else:\n            self.protected.move_to_end(key)\n\n    def _rebalance_protected(self):\n        target = max(1, self.capacity // 2) if self.capacity else 0\n        total = sum(self.resident[key][0] for key in self.protected)\n        while self.protected and total > target:\n            key, _ = self.protected.popitem(last=False)\n            record = self.resident.get(key)\n            if record is not None:\n                record[1] = \"probation\"\n                self.probation[key] = None\n                total -= record[0]\n\n    def _rebalance_window(self, evicted):\n        while self.window and sum(self.resident[key][0] for key in self.window) > self.window_target:\n            candidate, _ = self.window.popitem(last=False)\n            victim = next(iter(self.probation), None)\n            if victim is not None and self.frequency.get(candidate, 0) < self.frequency.get(victim, 0):\n                self._drop(candidate, evicted)\n            else:\n                if victim is not None:\n                    self._drop(victim, evicted)\n                record = self.resident.get(candidate)\n                if record is not None:\n                    record[1] = \"probation\"\n                    self.probation[candidate] = None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = max(0, int(size))\n        self.last_now = now\n        self.stamp += 1\n        evicted = []\n        self._record(key)\n\n        if key in self.resident:\n            record = self.resident[key]\n            if size > self.capacity:\n                for item in list(self.resident):\n                    self._drop(item, evicted)\n                return evicted\n            delta = size - record[0]\n            if delta > 0 and not self._make_room(delta, key, evicted):\n                self._drop(key, evicted)\n                return evicted\n            record[0] = size\n            self.used += delta\n            self._touch(key)\n            self._rebalance_protected()\n            self._rebalance_window(evicted)\n            return evicted\n\n        if self.capacity == 0 or size > self.capacity:\n            for item in list(self.resident):\n                self._drop(item, evicted)\n            return evicted\n\n        in_main_ghost = key in self.ghost_main\n        in_window_ghost = key in self.ghost_window\n        self.ghost_main.pop(key, None)\n        self.ghost_window.pop(key, None)\n        if in_window_ghost:\n            self.window_target = min(self.capacity, self.window_target + max(1, self.capacity // 20))\n        elif in_main_ghost:\n            self.window_target = max(1, self.window_target - max(1, self.capacity // 20))\n\n        self._make_room(size, None, evicted)\n        segment = \"probation\" if in_main_ghost else \"window\"\n        self.resident[key] = [size, segment]\n        self.used += size\n        if segment == \"window\":\n            self.window[key] = None\n        else:\n            self.probation[key] = None\n        self._rebalance_window(evicted)\n        self._rebalance_protected()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R66-pair02-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 95.226,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:37:33Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "1c0bfc5509dafabefde866124d04af011a12bfc0d0f3c92df661f82a4258bdce",
+    "raw_events_path": "workspace\\model-calls\\R66-pair02-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "623dca21556fab5b31fb949105f00eedc845959abb1b41ddf0bf12f33d196720",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "a6112984892fc5941d7a339817d895877c6c73a7cdc92cca955b72b42112caea",
+    "returncode": 0,
+    "role": "R66 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:35:58Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13447,
+      "output_tokens": 7615,
+      "reasoning_output_tokens": 6103
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

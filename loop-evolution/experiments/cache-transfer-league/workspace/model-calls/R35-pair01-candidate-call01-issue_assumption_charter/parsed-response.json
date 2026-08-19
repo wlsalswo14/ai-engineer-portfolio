@@ -1,0 +1,72 @@
+{
+  "analysis_packet": {
+    "certificate": "Non-policy assumption-accountability charter: anchor-derived mechanisms are provisional evidence, while public contract obligations are binding. Candidate claims remain hypotheses until resolved by the downstream materializer. No score, hidden trace, oracle, benchmark path, or external evidence is used.",
+    "exact_actions": [
+      "Classify each inherited anchor behavior as provisional rather than authoritative.",
+      "Map every materialized decision to either a public obligation, an explicitly declared candidate hypothesis, or an unresolved tension.",
+      "Resolve unresolved tensions before release while preserving interface legality, online visibility, return-value legality, and capacity safety.",
+      "Carry this charter's origin and status metadata forward as visible evidence; do not introduce benchmark, score, oracle, or external information.",
+      "Release only one complete executable lineage after all binding obligations are satisfied."
+    ],
+    "obligations": [
+      {
+        "id": "O1",
+        "requirement": "Preserve the required Policy constructor and access interface.",
+        "source": "task_constraints",
+        "tension": "Accountability additions must not alter the public interface."
+      },
+      {
+        "id": "O2",
+        "requirement": "Return only currently cached unique integer keys evicted by the current request.",
+        "source": "task_and_task_constraints",
+        "tension": "Any inherited eviction semantics must be checked against evaluator-owned state."
+      },
+      {
+        "id": "O3",
+        "requirement": "Never exceed capacity_bytes, including variable object sizes and zero or insufficient capacity.",
+        "source": "task_and_task_constraints",
+        "tension": "Adaptive state must not compromise byte safety."
+      },
+      {
+        "id": "O4",
+        "requirement": "Remain online-only, standard-library-only, and free of traces, oracle adaptation, benchmark inspection, networking, subprocesses, and external packages.",
+        "source": "task_constraints",
+        "tension": "Provenance visibility must remain declarative and non-invasive."
+      },
+      {
+        "id": "O5",
+        "requirement": "Keep assumption origin visible through executable materialization and final release.",
+        "source": "candidate_hypothesis",
+        "tension": "Provenance must survive handoff without becoming executable policy content."
+      }
+    ],
+    "witnesses": [
+      {
+        "claim": "The anchor uses probation/protected recency state and ghost histories to adapt its protected allocation.",
+        "origin": "anchor-derived",
+        "status": "inherited assumption, not binding"
+      },
+      {
+        "claim": "The anchor treats positive-size objects fitting within capacity as admissible and returns evictions during online access processing.",
+        "origin": "anchor-derived",
+        "status": "inherited behavior requiring contract reconciliation"
+      },
+      {
+        "claim": "The evaluator owns authoritative cache state; returned keys must be currently cached, unique integers, and only keys evicted by the current request.",
+        "origin": "public-task-and-contract",
+        "status": "binding obligation"
+      },
+      {
+        "claim": "Capacity must never be exceeded, processing is online one access at a time, and implementation must use only the Python standard library.",
+        "origin": "public-task-and-contract",
+        "status": "binding obligation"
+      },
+      {
+        "claim": "Declared provenance may improve accountability by making inherited assumptions challengeable before executable materialization.",
+        "origin": "candidate-hypothesis",
+        "status": "testable hypothesis, not evidence"
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

@@ -1,0 +1,11 @@
+HANDOFF_STATE=QUERY_OPEN
+
+Typed question: `NODE_LIFECYCLE_OWNERSHIP` — Does the downstream consumer own a fresh component node lifecycle per `Engine.search` invocation, distinct from and preserving the anchor’s existing `cap_state`?
+
+Known anchor facts: The seam is the move loop immediately before recursive `self.search(q, nd, ...)`; `cap_state` is passed recursively and updated by `capability_advance`. The component requires `initial → begin → ordered visit* → end`, with closure on cutoff paths.
+
+Consumer-context trace: `depth_left=4, ply=1, legal_count=8`; moves 0–3 are visited, move 3 yields a reduced probe, then fail-high causes the anchor loop to break. The supplied anchor has no component lifecycle owner or `end_node` boundary. Result: `UNKNOWN`.
+
+Harness status: Runtime execution was blocked by the isolated command policy; no component or anchor was modified.
+
+Response postcondition: Return `QUERY_RESOLVED` with the same component identity and causal target, explicit lifecycle ownership, unchanged `cap_state` binding, closed-node evidence for the cutoff trace, and one replay command.

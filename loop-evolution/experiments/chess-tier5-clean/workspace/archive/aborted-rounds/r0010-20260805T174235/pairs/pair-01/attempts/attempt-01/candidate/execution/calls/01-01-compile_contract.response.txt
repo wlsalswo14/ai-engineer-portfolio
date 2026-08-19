@@ -1,0 +1,66 @@
+{
+  "contract": {
+    "scope": "Single standard-library Python engine; benchmark-independent and anchor-relative.",
+    "commands": [
+      "uci -> exactly one uciok",
+      "isready -> exactly one readyok",
+      "ucinewgame -> reset game-dependent state",
+      "position startpos [moves ...]",
+      "position fen <six-field-fen> [moves ...]",
+      "go movetime T -> exactly one legal bestmove before T",
+      "quit -> terminate cleanly"
+    ],
+    "uci_obligations": [
+      "Never emit malformed, duplicate, or delayed bestmove responses.",
+      "Ignore harmless whitespace and remain alive across repeated command sequences.",
+      "Handle legal promotion, castling, en-passant, checkmate, stalemate, and positions with no legal moves.",
+      "Never crash, hang, access external files, use network, or exceed bounded memory."
+    ],
+    "legality_obligations": [
+      "Every generated or returned move is legal in the current position.",
+      "Legal move generation must respect side to move, occupancy, check, pins, castling attacks, promotion, and en-passant.",
+      "A move may not leave the moving side's king attacked.",
+      "Apply and replay transitions must preserve board occupancy, turn, castling rights, en-passant target, halfmove clock, and fullmove number."
+    ],
+    "state_transition_tests": [
+      "Fresh start position and equivalent six-field start FEN must produce equivalent legal move sets.",
+      "Replaying a legal move sequence from startpos must match loading the resulting FEN.",
+      "Repeated position commands must discard prior game state.",
+      "ucinewgame followed by the same position must be behaviorally equivalent to a fresh process.",
+      "Every legal move followed by its inverse reconstruction must restore the original position, excluding irreversible counters where semantically appropriate."
+    ],
+    "semantic_metamorphic_tests": [
+      "Perft counts for bounded depths on startpos and several legal castling, en-passant, promotion, check, and sparse positions must be stable and internally consistent.",
+      "Color-and-rank transformed positions must transform legal move sets correspondingly.",
+      "Equivalent command encodings must yield the same state and deterministic bestmove.",
+      "Repeated identical searches with identical position and movetime must return the same move.",
+      "Changing only irrelevant move-history text must not alter the resulting position."
+    ],
+    "anchor_preservation": [
+      "All anchor-passing UCI, legality, transition, determinism, and resource tests remain passing.",
+      "No retained change may regress anchor behavior on any bounded general-purpose probe.",
+      "Anchor comparison uses only the supplied engine as a behavioral reference; no external engine or benchmark artifact is consulted."
+    ],
+    "strength_change_obligations": [
+      "Each retained strength-oriented mutation must pass every mandatory obligation and improve at least one bounded, non-opening chess probe.",
+      "Improvement evidence must be executable and task-general: mate-in-one selection, forced-mate recognition, immediate-mate avoidance, material-winning tactic selection, or equivalent legal tactical behavior.",
+      "A change must not trade a tactical improvement for any legality, state, determinism, timeout, or anchor-preservation regression.",
+      "Search or evaluation changes must not reduce legal coverage or materially increase resource use beyond the declared bound.",
+      "No benchmark openings, evaluator details, hard-coded game answers, replicated candidates, or alternative selection may be used."
+    ],
+    "transaction_policy": {
+      "working_trees": 1,
+      "commit_unit": "one intended modification",
+      "precommit_gate": "Run all mandatory obligations plus the modification's strength witness.",
+      "pass": "Commit the modification only if every mandatory test passes and at least one strength obligation improves.",
+      "failure": "Restore the last passing state; permit at most one bounded repair of the same intended modification.",
+      "repair_failure": "Discard the uncommitted modification and continue from the last passing state.",
+      "emission": "Emit only the final single working state after all retained transitions pass."
+    },
+    "acceptance": [
+      "Zero invalid protocol, legality, transition, determinism, or resource-safety results.",
+      "All retained modifications have explicit passing strength evidence.",
+      "Final artifact is one complete engine.py and no auxiliary artifacts."
+    ]
+  }
+}

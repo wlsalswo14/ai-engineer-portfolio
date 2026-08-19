@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.ghost_limit = max(128, min(8192, self.capacity_bytes // 64 + 128))\n        self.frequent_target = self.capacity_bytes // 2\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _rebalance(self):\n        while self.frequent and self.frequent_bytes > self.frequent_target:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.recent[key] = size\n            self.recent_bytes += size\n\n    def _evict_one(self):\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self._remember(self.ghost_recent, key)\n        elif self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self._remember(self.ghost_frequent, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            self._rebalance()\n            return []\n\n        size = int(size)\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        delta = max(step, min(size, self.capacity_bytes))\n        if key in self.ghost_recent:\n            self.frequent_target = min(self.capacity_bytes, self.frequent_target + delta)\n        elif key in self.ghost_frequent:\n            self.frequent_target = max(0, self.frequent_target - delta)\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R40-pair02-candidate-call02-contingent_reconstitution_authority",
+    "duration_seconds": 68.02,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:14:29Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "94f1614f3d16e847792870971116e1d4055167006b9ddd006c4f9086651a7286",
+    "raw_events_path": "workspace\\model-calls\\R40-pair02-candidate-call02-contingent_reconstitution_authority\\raw-events.jsonl",
+    "raw_events_sha256": "e6a4c455f052bffac14e71e2096d9a0d7cd04faef673bd2e10ca984aefcc5de1",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "f95c41d579a59a21038a743c23963c242d81cea2b460f5b3666e8a7dfd10b335",
+    "returncode": 0,
+    "role": "R40 candidate topology role evidence-triggered reconstitution authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:13:21Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13740,
+      "output_tokens": 5411,
+      "reasoning_output_tokens": 4643
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

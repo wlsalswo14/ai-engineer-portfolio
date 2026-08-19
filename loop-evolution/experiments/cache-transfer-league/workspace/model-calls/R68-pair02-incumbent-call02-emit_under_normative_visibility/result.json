@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self._resident = {}\n        self._recent = OrderedDict()\n        self._frequent = OrderedDict()\n        self._recent_bytes = 0\n        self._bytes = 0\n        self._target = self.capacity // 2\n        self._ghost_recent = OrderedDict()\n        self._ghost_frequent = OrderedDict()\n        self._ghost_limit = 2048\n\n    def _remember(self, key, size, recent):\n        self._ghost_recent.pop(key, None)\n        self._ghost_frequent.pop(key, None)\n        target = self._ghost_recent if recent else self._ghost_frequent\n        target[key] = size\n        while len(target) > self._ghost_limit:\n            target.popitem(last=False)\n\n    def _remove(self, key):\n        size = self._resident.pop(key)\n        if key in self._recent:\n            del self._recent[key]\n            self._recent_bytes -= size\n        else:\n            self._frequent.pop(key, None)\n        self._bytes -= size\n        return size\n\n    def _evict_one(self, protected=None):\n        prefer_recent = bool(self._recent) and (\n            not self._frequent or self._recent_bytes > self._target\n        )\n        queues = (\n            ((self._recent, True), (self._frequent, False))\n            if prefer_recent\n            else ((self._frequent, False), (self._recent, True))\n        )\n        for queue, is_recent in queues:\n            victim = next((k for k in queue if k != protected), None)\n            if victim is not None:\n                size = self._remove(victim)\n                self._remember(victim, size, is_recent)\n                return victim\n        return None\n\n    def _make_room(self, needed, protected=None):\n        evicted = []\n        while self._bytes + needed > self.capacity:\n            victim = self._evict_one(protected)\n            if victim is None:\n                break\n            evicted.append(victim)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        item_size = max(0, int(size))\n\n        if key in self._resident:\n            old_size = self._resident[key]\n            if item_size > self.capacity:\n                was_recent = key in self._recent\n                removed_size = self._remove(key)\n                self._remember(key, removed_size, was_recent)\n                return [key]\n\n            if key in self._recent:\n                del self._recent[key]\n                self._recent_bytes -= old_size\n                self._frequent[key] = None\n            else:\n                self._frequent.move_to_end(key)\n\n            delta = item_size - old_size\n            evicted = self._make_room(delta, key) if delta > 0 else []\n            if self._bytes + delta > self.capacity:\n                was_recent = False\n                removed_size = self._remove(key)\n                self._remember(key, removed_size, was_recent)\n                return evicted + [key]\n\n            self._resident[key] = item_size\n            self._bytes += delta\n            return evicted\n\n        in_recent_ghost = key in self._ghost_recent\n        in_frequent_ghost = key in self._ghost_frequent\n        if in_recent_ghost:\n            self._ghost_recent.pop(key, None)\n            step = max(1, min(self.capacity, item_size))\n            self._target = min(self.capacity, self._target + step)\n        elif in_frequent_ghost:\n            self._ghost_frequent.pop(key, None)\n            step = max(1, min(self.capacity, item_size))\n            self._target = max(0, self._target - step)\n\n        if item_size > self.capacity:\n            return []\n\n        evicted = self._make_room(item_size)\n        if self._bytes + item_size > self.capacity:\n            return evicted\n\n        self._resident[key] = item_size\n        self._bytes += item_size\n        if in_recent_ghost or in_frequent_ghost:\n            self._frequent[key] = None\n        else:\n            self._recent[key] = None\n            self._recent_bytes += item_size\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R68-pair02-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 61.683,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:01:58Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fb15884d1577018638aee91bc4acfb037bf46483160d8422f10f4dca84a37488",
+    "raw_events_path": "workspace\\model-calls\\R68-pair02-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "2b14f06633ab5f855e6eb90caf95d78d67449bd112390df7c8e8222f920308b0",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "ebf4bf01571d39380fc80317f67b5d66ab3a6fd1c7d25adaf3c77428c192b6e2",
+    "returncode": 0,
+    "role": "R68 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:00:56Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13605,
+      "output_tokens": 4662,
+      "reasoning_output_tokens": 3624
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

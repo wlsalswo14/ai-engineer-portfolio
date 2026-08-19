@@ -1,0 +1,73 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Construct independently from the public task and contract. Preserve the exact Policy(capacity_bytes) constructor and access(key, size, now) -> list[int] interface. Operate online, one request at a time, using only standard-library state and request history. Admit only valid integer-key objects whose size is compatible with nonnegative capacity; never exceed capacity_bytes. Every returned key must be a unique integer resident immediately before eviction, and returned keys must correspond exactly to removals caused by the current request. Oversized or zero-capacity requests must remain safe and must not fabricate evictions. Retain no assumption that an inherited mechanism, representation, tuning, or repair lineage is authoritative. The independent design must provide observable evidence of correct hit handling, byte accounting, scan resistance, phase-shift adaptation, and bounded regret-oriented behavior without hidden traces, oracle decisions, benchmark knowledge, or quarantined implementation details.",
+      "exact_actions": [
+        "Before admitting a miss, establish that capacity is nonnegative, the request size is admissible, and the post-admission byte total can be bounded.",
+        "On each request, update only online state derived from the current request and prior observed requests.",
+        "When space is required, remove only tracked residents until the incoming object fits or admission is rejected; record each removal once.",
+        "After every request, verify internally that tracked keys are unique, tracked bytes do not exceed capacity, and the reported eviction set is a subset of prior residents removed now.",
+        "Exercise behavioral checks for hits, repeated reuse, oversized objects, zero capacity, scan pollution, and a locality phase transition.",
+        "Require the final policy to satisfy the direct interface and safety contract independently of any inherited mechanism."
+      ],
+      "obligations": [
+        "Maintain an authoritative internal representation of currently admitted keys and their byte sizes.",
+        "Account for bytes on every admission and removal, including all evictions caused by one request.",
+        "Never admit an object larger than available capacity; never return keys not resident before the request.",
+        "Return a list of integer keys only, with no duplicates and no unrelated historical evictions.",
+        "Treat repeated accesses as hits when the key is resident and preserve contract-consistent size semantics.",
+        "Use now only as online temporal context; do not assume future requests or inspect external state.",
+        "Balance recency and reuse evidence so scans do not permanently displace repeatedly useful objects.",
+        "Allow stale locality evidence to decay or be superseded so phase changes can alter retention decisions.",
+        "Keep behavior deterministic or otherwise contract-safe for identical observed histories.",
+        "Expose no anchor-derived implementation, repair lineage, benchmark trace, oracle, or score dependence."
+      ],
+      "witnesses": [
+        "Constructor and access signatures remain legal.",
+        "State remains capacity-safe after every request.",
+        "Eviction output contains only unique keys that were currently cached and removed by this request.",
+        "Hit, oversized, zero-capacity, and ordinary miss behavior are distinguishable and contract-safe.",
+        "Online metadata can respond to changing locality while limiting pollution from one-pass scans.",
+        "No decision depends on evaluator internals, hidden data, external libraries, or inherited implementation structure."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R5-pair02-candidate-call01-anchor_quarantine_gateway",
+    "duration_seconds": 23.522,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:14:03Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "a782388da1f253c00d6b1815da7b9358c9686582ccde2a44adb4bb72ccf67ea6",
+    "raw_events_path": "workspace\\model-calls\\R5-pair02-candidate-call01-anchor_quarantine_gateway\\raw-events.jsonl",
+    "raw_events_sha256": "fd08bfa658c2fb03f784e3ce1e88bebfcec1cf45620e3dea4cfd76e075031651",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 0,
+    "response_sha256": "c75228c9fac8250cdfa5b65fd02f43c4d9ca6ae9c47b55b5fbabb18c1aa2a46a",
+    "returncode": 0,
+    "role": "R5 candidate topology role inheritance firewall and obligation distiller",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:13:40Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13304,
+      "output_tokens": 1129,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

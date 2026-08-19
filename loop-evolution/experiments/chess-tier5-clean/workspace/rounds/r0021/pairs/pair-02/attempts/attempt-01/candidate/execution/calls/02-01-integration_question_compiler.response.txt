@@ -1,0 +1,24 @@
+{
+  "HANDOFF_STATE": "NO_QUERY",
+  "component_id": "mate-score-transport@1",
+  "consumer_binding_map": {
+    "causal_target": "Preserve mate distance across TT store/probe ply boundaries.",
+    "anchor_seam": "Engine.search self.tt store/probe boundary.",
+    "store": "Encode only mate scores using store_score(score, store_ply).",
+    "probe": "Decode only mate scores using probe_score(stored_score, current_ply).",
+    "tuple_shape": "(depth, transported_score, flag, stored_ply, bestmove)",
+    "preserved": ["ordinary scores", "flags", "keys", "bestmove", "stored ply", "lifecycle"],
+    "dependency_closure": "TT score field only"
+  },
+  "evidence": {
+    "harness": "disposable in-memory non-engine seam harness",
+    "status": "PASS",
+    "positive_mate": [99988, 2, 99990, 7, 99983],
+    "negative_mate": [-99988, 2, -99990, 7, -99983],
+    "ordinary": [37, 4, 37, 11, 37],
+    "tuple_shift": [[5, 99991, 1, 3, "e2e4"], [5, 99986, 1, 3, "e2e4"]],
+    "lifecycle": "clear -> miss -> reuse",
+    "bounded_iterations": 1024
+  },
+  "postcondition": "Final producer may graft this same component once at the declared TT store/probe seam; no query, alternate mechanism, or engine artifact was created."
+}

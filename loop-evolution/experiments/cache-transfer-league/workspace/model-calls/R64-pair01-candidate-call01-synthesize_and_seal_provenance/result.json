@@ -1,0 +1,71 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Source-anonymous synthesis sealed: preserve substantive behavioral evidence while exposing no generative attribution. Hard legality and capacity obligations take precedence over heuristic objectives; online adaptation must remain bounded by directly observable request state.",
+      "exact_actions": [
+        "Construct the terminal policy from the sealed behavioral obligations and source-anonymous evidence only.",
+        "Audit every insertion, promotion, replacement, and eviction against resident-byte accounting and unique-key invariants.",
+        "Audit oversized, zero-capacity, zero-size, repeated-hit, ghost-hit, and phase-transition behavior separately.",
+        "Ensure returned eviction lists are generated solely from actual resident removals during the current access.",
+        "Retain online-only adaptive state, but exclude any mechanism that requires future requests, hidden traces, oracle decisions, or external artifacts.",
+        "Emit one complete policy satisfying the interface and constraints; preserve unresolved objective tradeoffs as explicit heuristic choices rather than unsupported guarantees."
+      ],
+      "obligations": [
+        "Preserve the exact public interface and standard-library-only implementation boundary.",
+        "Normalize and safely account for capacity, keys, and sizes without allowing negative accounting or capacity overflow.",
+        "Maintain unique resident membership and ensure every returned eviction key is actually removed from resident state.",
+        "Handle an object larger than capacity without retaining it, while preserving correct eviction reporting for an already resident object being removed.",
+        "Keep nonresident ghost evidence separate from resident occupancy and exclude ghost bytes from capacity usage.",
+        "Use adaptive recency/frequency treatment only as an online heuristic, while preserving distinctions between scan resistance, repeated reuse, byte cost, and phase shifts.",
+        "Treat hard contract legality and capacity safety as non-negotiable when objectives conflict.",
+        "Do not recover, reveal, or condition decisions on the provenance of any supplied claim."
+      ],
+      "witnesses": [
+        "The required interface is Policy(capacity_bytes) with access(key, size, now) returning a list of integer eviction keys.",
+        "Resident state must be represented by unique keys whose summed normalized sizes never exceed nonnegative capacity.",
+        "Eviction outputs must contain only keys resident immediately before the corresponding removal, with no duplicates or metadata-only keys.",
+        "Recent and frequent resident classes, ghost histories, adaptive partitioning, variable object sizes, oversized requests, zero capacity, and zero-sized objects are substantively distinct cases.",
+        "The competing objectives create real tensions among hit rate, byte hit rate, scan resistance, phase adaptation, and regret; these must not be collapsed into a single unsupported claim.",
+        "All decisions must use only the current access and policy-maintained online state, with no trace, oracle, benchmark, external library, networking, or subprocess dependence."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R64-pair01-candidate-call01-synthesize_and_seal_provenance",
+    "duration_seconds": 19.718,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:18:33Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fa1c0e806311d5168987aa3abdd9134a3b032c69e4fedd24f0e1606a9da321ee",
+    "raw_events_path": "workspace\\model-calls\\R64-pair01-candidate-call01-synthesize_and_seal_provenance\\raw-events.jsonl",
+    "raw_events_sha256": "177087c12f3c217f1fddc8a74d193eec9a22f70ea711961564d8d33940e2b007",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "2a2e8f39ef8127edfa10c4f5c897400ae5394d2d9c810130830eb67685824c65",
+    "returncode": 0,
+    "role": "R64 candidate topology role provenance-sealing evidence synthesizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:18:14Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14981,
+      "output_tokens": 1338,
+      "reasoning_output_tokens": 825
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

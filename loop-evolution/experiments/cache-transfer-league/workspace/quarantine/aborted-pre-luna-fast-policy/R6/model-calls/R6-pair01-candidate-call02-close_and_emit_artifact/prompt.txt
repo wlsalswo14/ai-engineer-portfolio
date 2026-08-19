@@ -1,0 +1,102 @@
+Role: R6 candidate topology role forward obligation-closure custodian
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R6,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: close_and_emit_artifact
+Role: forward obligation-closure custodian
+Objective: Consume the immediately preceding complete artifact and its obligation evidence as one indivisible lineage, reconcile explicit contradictions against the visible task and contract evidence through whole-artifact custody, and emit exactly one complete contract-compliant policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "originate_obligation_capsule": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost = OrderedDict()\n        self.frequency = {}\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n        self.requests = 0\n\n    def _bump(self, key):\n        self.frequency[key] = min(255, self.frequency.get(key, 0) + 1)\n\n    def _tick(self):\n        self.requests += 1\n        if self.requests % 1024 == 0:\n            for key, value in list(self.frequency.items()):\n                value //= 2\n                if value:\n                    self.frequency[key] = value\n                else:\n                    del self.frequency[key]\n\n    def _remember(self, key, size, segment):\n        self.ghost.pop(key, None)\n        self.ghost[key] = (size, segment)\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _victim_key(self):\n        if self.probation:\n            return next(iter(self.probation))\n        if self.protected:\n            return next(iter(self.protected))\n        return None\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            segment = 0\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            segment = 1\n        else:\n            return None\n        self.used_bytes -= size\n        self._remember(key, size, segment)\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._tick()\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            self._bump(key)\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._bump(key)\n            self._rebalance()\n            return []\n\n        size = max(0, int(size))\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        self._bump(key)\n        ghost_entry = self.ghost.pop(key, None)\n        if ghost_entry is not None:\n            _, old_segment = ghost_entry\n            step = max(1, self.capacity_bytes // 32)\n            if old_segment:\n                self.protected_target = min(\n                    (self.capacity_bytes * 3) // 4,\n                    self.protected_target + step,\n                )\n            else:\n                self.protected_target = max(\n                    self.capacity_bytes // 4,\n                    self.protected_target - step,\n                )\n\n        victim = self._victim_key()\n        if (\n            ghost_entry is None\n            and victim is not None\n            and self.used_bytes + size > self.capacity_bytes\n            and self.frequency[key] <= self.frequency.get(victim, 0)\n        ):\n            self._remember(key, size, 0)\n            return []\n\n        if ghost_entry is not None and ghost_entry[1]:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n\n        evicted = []\n        while self.used_bytes > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n        return evicted\n",
+    "sha256": "779d4da7b41d667a19340e703588564abe448dfeeedd634f607af977069a0180"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n\n    def _demote_protected(self):\n        target = self.capacity_bytes // 2\n        while self.protected and sum(self.protected.values()) > target:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._demote_protected()\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R5 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Replace the repair-history structure with one forward whole-artifact obligation relay: an origin call creates a complete contract-grounded artifact without treating the anchor as a repair substrate, and a custody call consumes that exact artifact for whole-artifact obligation closure before emission.",
+    "expected_effect": "The lineage should become less anchor-coupled while preserving executable continuity, changing both the basis of structural decisions and the granularity and direction of revision while keeping contract evidence visible at emission.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The incumbent assumes useful novelty must remain an anchor-relative sequence of reversible local repairs and that correctness depends on retaining and compressing that history, which can preserve the anchor's structural commitments when an independent family is needed."
+  },
+  "loop_structure": {
+    "final_call_id": "close_and_emit_artifact",
+    "information_flow": "The first call sees all common inputs and originates one complete policy-and-obligation capsule. The second sees that immediately preceding capsule plus all common inputs, including the anchor policy, while treating only the capsule as the mutable lineage; it resolves obligation contradictions at whole-artifact level and emits one policy. There are no side paths or unconsumed outputs.",
+    "name": "Forward Whole-Artifact Obligation Relay",
+    "organization": "two-call sequential artifact custody",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "originate_obligation_capsule",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Derive role evidence from the supplied task and contracts, then originate one complete obligation-bearing policy artifact. Keep the anchor visible as comparative evidence but do not use it as a repair substrate, rollback source, or ordered edit lineage.",
+            "output_type": "policy_capsule",
+            "role": "contract-origin whole-artifact custodian"
+          },
+          {
+            "id": "close_and_emit_artifact",
+            "inputs": [
+              "originate_obligation_capsule",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the immediately preceding complete artifact and its obligation evidence as one indivisible lineage, reconcile explicit contradictions against the visible task and contract evidence through whole-artifact custody, and emit exactly one complete contract-compliant policy.",
+            "output_type": "policy",
+            "role": "forward obligation-closure custodian"
+          }
+        ],
+        "id": "forward_artifact_custody",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

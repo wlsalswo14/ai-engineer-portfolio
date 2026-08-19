@@ -1,0 +1,83 @@
+Role: R5 candidate topology role contract-grounded policy producer
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R5,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: independent_policy_producer
+Role: contract-grounded policy producer
+Objective: Consume the preceding constitution and visible contract context, then emit exactly one complete policy whose observable actions provide evidence for every retained obligation and behavioral commitment without reconstructing the quarantined inherited mechanism.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "anchor_quarantine_gateway": {
+    "analysis_packet": {
+      "certificate": "Construct independently from the public task and contract. Preserve the exact Policy(capacity_bytes) constructor and access(key, size, now) -> list[int] interface. Operate online, one request at a time, using only standard-library state and request history. Admit only valid integer-key objects whose size is compatible with nonnegative capacity; never exceed capacity_bytes. Every returned key must be a unique integer resident immediately before eviction, and returned keys must correspond exactly to removals caused by the current request. Oversized or zero-capacity requests must remain safe and must not fabricate evictions. Retain no assumption that an inherited mechanism, representation, tuning, or repair lineage is authoritative. The independent design must provide observable evidence of correct hit handling, byte accounting, scan resistance, phase-shift adaptation, and bounded regret-oriented behavior without hidden traces, oracle decisions, benchmark knowledge, or quarantined implementation details.",
+      "witnesses": [
+        "Constructor and access signatures remain legal.",
+        "State remains capacity-safe after every request.",
+        "Eviction output contains only unique keys that were currently cached and removed by this request.",
+        "Hit, oversized, zero-capacity, and ordinary miss behavior are distinguishable and contract-safe.",
+        "Online metadata can respond to changing locality while limiting pollution from one-pass scans.",
+        "No decision depends on evaluator internals, hidden data, external libraries, or inherited implementation structure."
+      ],
+      "obligations": [
+        "Maintain an authoritative internal representation of currently admitted keys and their byte sizes.",
+        "Account for bytes on every admission and removal, including all evictions caused by one request.",
+        "Never admit an object larger than available capacity; never return keys not resident before the request.",
+        "Return a list of integer keys only, with no duplicates and no unrelated historical evictions.",
+        "Treat repeated accesses as hits when the key is resident and preserve contract-consistent size semantics.",
+        "Use now only as online temporal context; do not assume future requests or inspect external state.",
+        "Balance recency and reuse evidence so scans do not permanently displace repeatedly useful objects.",
+        "Allow stale locality evidence to decay or be superseded so phase changes can alter retention decisions.",
+        "Keep behavior deterministic or otherwise contract-safe for identical observed histories.",
+        "Expose no anchor-derived implementation, repair lineage, benchmark trace, oracle, or score dependence."
+      ],
+      "exact_actions": [
+        "Before admitting a miss, establish that capacity is nonnegative, the request size is admissible, and the post-admission byte total can be bounded.",
+        "On each request, update only online state derived from the current request and prior observed requests.",
+        "When space is required, remove only tracked residents until the incoming object fits or admission is rejected; record each removal once.",
+        "After every request, verify internally that tracked keys are unique, tracked bytes do not exceed capacity, and the reported eviction set is a subset of prior residents removed now.",
+        "Exercise behavioral checks for hits, repeated reuse, oversized objects, zero capacity, scan pollution, and a locality phase transition.",
+        "Require the final policy to satisfy the direct interface and safety contract independently of any inherited mechanism."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R4 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Introduce one anchor-implementation visibility firewall that converts inherited context into an implementation-agnostic obligation brief and withholds anchor_policy from the final producer.",
+    "expected_effect": "Independent contract-grounded construction should jointly change phase-shift adaptation posture and scan-resistance posture while retaining direct validity obligations.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family assumes novelty must remain inside an anchor-derived reversible repair lineage, so terminal compression cannot escape the anchor's representational and behavioral couplings."
+  }
+}

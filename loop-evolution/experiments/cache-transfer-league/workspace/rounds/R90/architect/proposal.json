@@ -1,0 +1,146 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R90-structure-architect\\final-receipt.json",
+    "sha256": "5d95aedd02d64947aebe34038b8c4c063a7f209d1715305cd7697e9dc8485e56"
+  },
+  "architect_response": {
+    "architect_scope": "one-R90-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "task_hypothesis_contract_emit",
+      "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The second consumes that capsule and reopens anchor_policy and anchor_contract. The third consumes the resulting complete executable state and reopens task_constraints and loop_structure. The final call consumes the resulting complete executable closure and reopens task, candidate_hypothesis, and the nonadjacently recurrent anchor_contract edge. All other lineage edges remain unchanged.",
+      "name": "Nonadjacent Contract Recurrence Relay",
+      "organization": "four-call sequential lineage carrying one complete executable artifact under a single recurrent contract-authority edge",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "originate_executable_capsule",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile the visible evidence and obligations into one complete executable policy artifact.",
+              "output_type": "policy_capsule",
+              "role": "integrated executable originator"
+            },
+            {
+              "id": "anchor_window_transition",
+              "inputs": [
+                "originate_executable_capsule",
+                "anchor_policy",
+                "anchor_contract"
+              ],
+              "objective": "Consume the preceding complete artifact, reconcile it against the reentered anchor evidence and contract obligations, and emit one complete executable policy state.",
+              "output_type": "executable_policy_state",
+              "role": "anchor-window executable custodian"
+            },
+            {
+              "id": "constraint_window_transition",
+              "inputs": [
+                "anchor_window_transition",
+                "task_constraints",
+                "loop_structure"
+              ],
+              "objective": "Consume the preceding complete artifact, reconcile it against the reentered constraints and structural evidence, and emit one complete executable policy closure.",
+              "output_type": "executable_policy_closure",
+              "role": "constraint-window executable custodian"
+            },
+            {
+              "id": "task_hypothesis_contract_emit",
+              "inputs": [
+                "constraint_window_transition",
+                "task",
+                "candidate_hypothesis",
+                "anchor_contract"
+              ],
+              "objective": "Consume the preceding complete artifact, reconcile terminal task and hypothesis evidence under the recurrent contract authority, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "contract-recurrent terminal policy authority"
+            }
+          ],
+          "id": "nonadjacent_contract_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "evidence timing changes from one-touch contract exposure to separated early-and-terminal exposure",
+        "terminal authority changes from task-hypothesis-only reconciliation to contract-bearing emission"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "mutually exclusive one-touch downstream evidence-window partitioning",
+      "independent_replacement_principle": "nonadjacent contract recurrence, under which one governing evidence edge regains authority at emission after an intervening visibility gap",
+      "rejected_assumptions": [
+        "Downstream evidence windows must remain mutually exclusive for reliable reconciliation.",
+        "Contract authority may expire before terminal emission without permitting obligation drift."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Restore only the anchor_contract authority edge at the final call after one intervening transition where it remains hidden.",
+      "expected_effect": "Terminal changes become directly accountable to the same contract that governed the earlier anchor transition, changing both evidence timing and final authority while preserving one executable lineage.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Mutually exclusive one-touch downstream windows let contract authority expire before the terminal task-hypothesis transition, leaving its final reconciliation without direct contract visibility."
+    },
+    "structural_mutation": {
+      "after": "anchor_contract also enters task_hypothesis_window_emit after remaining absent from constraint_window_transition.",
+      "before": "anchor_contract is visible downstream only to anchor_window_transition and is absent from every later transition.",
+      "change_count": 1,
+      "factor": "nonadjacent terminal recurrence of the anchor_contract authority edge",
+      "why_structural": "This single external-edge addition breaks downstream window exclusivity and changes graph adjacency, evidence timing, and terminal authority without role fission."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 90,
+  "incumbent_structure_sha256": "adf0272184f889b94a3b101edb1dbdeb6ee2bcdf57b0121c3721841a819b9549",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R90\\qualitative-error-notebook.json",
+    "sha256": "f71fe1a10f20e1f375a06bebc30309c00b50a9115cc5985ab761c38d2dfe4efd"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R90\\source-manifest.json",
+    "sha256": "7dc57aa1312a56fbf716fd4b648f45688e77d3733ddc697a95c01cf861be7562"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 4,
+    "coarse_topology_collision_override": null,
+    "factor": "nonadjacent terminal recurrence of the anchor_contract authority edge",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "originate_executable_capsule",
+        "executor_semantics": "complete policy artifact plus obligation evidence on the same single lineage",
+        "output_type": "policy_capsule"
+      },
+      {
+        "call_id": "anchor_window_transition",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      },
+      {
+        "call_id": "constraint_window_transition",
+        "executor_semantics": "self-contained executable policy artifact crossing a provenance-blind closure edge",
+        "output_type": "executable_policy_closure"
+      }
+    ],
+    "semantic_topology_fingerprint": "efbdffe84434522ff927a6b28551dface16a22afd2b824400fe2cf3894c7d0cd",
+    "topology_fingerprint": "bd3e5a21d0eac9259fd6f8d8a087984f45273b98df9d80e1fa8910ae983b1625"
+  }
+}

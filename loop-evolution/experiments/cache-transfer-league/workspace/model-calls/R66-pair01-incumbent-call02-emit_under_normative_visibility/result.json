@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self._bytes = 0\n        self._recent_bytes = 0\n        self._protected_bytes = 0\n        self._recent_target = max(1, self.capacity // 5) if self.capacity else 0\n        self._protected_target = self.capacity - self._recent_target\n        self._entries = {}\n        self._recent = OrderedDict()\n        self._protected = OrderedDict()\n        self._ghost = OrderedDict()\n        self._frequency = OrderedDict()\n        self._ticks = 0\n\n    def _count(self, key, extra=0):\n        value = self._frequency.get(key, 0)\n        value = min(255, value + 1 + extra)\n        self._frequency[key] = value\n        self._frequency.move_to_end(key)\n        while len(self._frequency) > 8192:\n            self._frequency.popitem(last=False)\n        return value\n\n    def _age(self):\n        for key in list(self._frequency):\n            self._frequency[key] = max(1, self._frequency[key] // 2)\n        for entry in self._entries.values():\n            entry[1] = max(1, entry[1] // 2)\n\n    def _remember_ghost(self, key):\n        self._ghost[key] = None\n        self._ghost.move_to_end(key)\n        while len(self._ghost) > 4096:\n            self._ghost.popitem(last=False)\n\n    def _remove(self, key):\n        entry = self._entries.pop(key, None)\n        if entry is None:\n            return\n        size, _, segment = entry\n        self._bytes -= size\n        if segment == 0:\n            self._recent.pop(key, None)\n            self._recent_bytes -= size\n        else:\n            self._protected.pop(key, None)\n            self._protected_bytes -= size\n        self._remember_ghost(key)\n\n    def _victim_order(self, incoming_size, exclude):\n        recent_first = self._recent_bytes + incoming_size > self._recent_target\n        stores = (self._recent, self._protected) if recent_first else (self._protected, self._recent)\n        for store in stores:\n            for key in store:\n                if key != exclude:\n                    yield key\n\n    def _plan(self, incoming_size, exclude=None):\n        required = self._bytes + incoming_size - self.capacity\n        if required <= 0:\n            return []\n        planned = []\n        freed = 0\n        for key in self._victim_order(incoming_size, exclude):\n            planned.append(key)\n            freed += self._entries[key][0]\n            if freed >= required:\n                break\n        return planned\n\n    def _make_room(self, incoming_size, exclude=None):\n        evicted = []\n        for key in self._plan(incoming_size, exclude):\n            self._remove(key)\n            evicted.append(key)\n        return evicted\n\n    def _rebalance_protected(self):\n        while self._protected and self._protected_bytes > self._protected_target:\n            key, _ = self._protected.popitem(last=False)\n            entry = self._entries.get(key)\n            if entry is None:\n                continue\n            size = entry[0]\n            entry[2] = 0\n            self._protected_bytes -= size\n            self._recent[key] = None\n            self._recent_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        incoming = max(0, int(size))\n        self._ticks += 1\n        if self._ticks % 2048 == 0:\n            self._age()\n\n        entry = self._entries.get(key)\n        if entry is not None:\n            if incoming > self.capacity:\n                self._remove(key)\n                return [key]\n            old_size = entry[0]\n            self._bytes += incoming - old_size\n            entry[0] = incoming\n            entry[1] = self._count(key)\n            if entry[2] == 0:\n                self._recent.pop(key, None)\n                self._recent_bytes -= incoming\n                entry[2] = 1\n                self._protected[key] = None\n                self._protected_bytes += incoming\n                self._rebalance_protected()\n            else:\n                self._protected.move_to_end(key)\n            return self._make_room(0, key)\n\n        if incoming > self.capacity:\n            return []\n\n        ghost_hit = key in self._ghost\n        if ghost_hit:\n            del self._ghost[key]\n        count = self._count(key, 1 if ghost_hit else 0)\n        evicted = self._make_room(incoming)\n\n        if ghost_hit:\n            self._entries[key] = [incoming, count, 1]\n            self._protected[key] = None\n            self._protected_bytes += incoming\n        else:\n            self._entries[key] = [incoming, count, 0]\n            self._recent[key] = None\n            self._recent_bytes += incoming\n        self._bytes += incoming\n        self._rebalance_protected()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R66-pair01-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 134.557,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:35:54Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "deb9866af48d3d084461e8d2d7bb653cda810e3cac10b1e9345cd91a13549542",
+    "raw_events_path": "workspace\\model-calls\\R66-pair01-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "5561899f8a73edcb72579904d18238b0a6f270d8961c38cda1b0aa1c5c5a072b",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "722a97b213e47ae4ab59a412b2fe40b47c6ac2089949e6302269d4c101664d62",
+    "returncode": 0,
+    "role": "R66 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:33:40Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13007,
+      "output_tokens": 10553,
+      "reasoning_output_tokens": 9310
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

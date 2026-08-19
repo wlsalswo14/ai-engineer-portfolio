@@ -1,0 +1,41 @@
+{
+  "final_call_id": "proposal_opaque_retract_emit",
+  "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule and directly sees task, anchor_contract, task_constraints, and loop_structure, while anchor_policy and candidate_hypothesis remain visible only through their already-reconciled capsule effects; it may retract unsupported commitments and emits one policy.",
+  "name": "Proposal-Opaque Retraction Dyad",
+  "organization": "two-call sequential lineage with full-evidence executable origination and proposal-opaque retract-only terminal authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_reconciled_executable",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the visible evidence and obligations into one complete executable policy capsule while retaining semantic authorship over every included commitment.",
+          "output_type": "policy_capsule",
+          "role": "full-evidence executable origin authority"
+        },
+        {
+          "id": "proposal_opaque_retract_emit",
+          "inputs": [
+            "originate_reconciled_executable",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "loop_structure"
+          ],
+          "objective": "Consume originate_reconciled_executable, assess its commitments using the complete artifact and directly visible obligations and structural context, retract only unsupported commitments without adding or substituting policy semantics, preserve executable completeness, and emit one policy.",
+          "output_type": "policy",
+          "role": "proposal-opaque retract-only terminal authority"
+        }
+      ],
+      "id": "proposal_opaque_authority_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

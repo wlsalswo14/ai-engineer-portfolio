@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n\n    def _remember(self, key, protected):\n        first = self.ghost_protected if protected else self.ghost_probation\n        second = self.ghost_probation if protected else self.ghost_protected\n        first.pop(key, None)\n        second.pop(key, None)\n        first[key] = None\n        while len(first) > self.ghost_limit:\n            first.popitem(last=False)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n            self.probation.move_to_end(key, last=False)\n\n    def _adapt(self, key):\n        if key in self.ghost_protected:\n            self.ghost_protected.pop(key, None)\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = min(self.capacity_bytes, self.protected_target + step)\n        elif key in self.ghost_probation:\n            self.ghost_probation.pop(key, None)\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = max(0, self.protected_target - step)\n        self._rebalance()\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size < 0 or size > self.capacity_bytes:\n            return []\n\n        self._adapt(key)\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n                self._remember(old_key, False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n                self._remember(old_key, True)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        if self.used_bytes + size <= self.capacity_bytes:\n            self.probation[key] = size\n            self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R20-pair01-candidate-call02-atomic_policy_committer",
+    "duration_seconds": 43.707,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:40:58Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c59369b1d7cf8cd8ec01e1933e0da92eef767c7248eab3718c1356e1ebd9c351",
+    "raw_events_path": "workspace\\model-calls\\R20-pair01-candidate-call02-atomic_policy_committer\\raw-events.jsonl",
+    "raw_events_sha256": "382f68331c573db3a274c4ed87ec0eb38b0bd6270396288bc16f307d3e069e15",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "ead93a9f670eb6ba30d41afceb42d0463f58119447902a583486433c7e42ff2e",
+    "returncode": 0,
+    "role": "R20 candidate topology role history-free whole-artifact policy materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:40:14Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14327,
+      "output_tokens": 3314,
+      "reasoning_output_tokens": 2579
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,96 @@
+Role: R30 candidate topology role negative-edge independent policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R30,
+matched pair 3, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: negative_edge_policy_authority
+Role: negative-edge independent policy authority
+Objective: Consume the immediately preceding complete executable closure as disconfirming evidence without treating any predecessor commitment as a default. Independently ground exactly one complete policy in the other visible task, contract, constraint, hypothesis, and loop evidence, then emit it.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "form_visible_executable_closure": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.target_frequent = self.capacity_bytes // 2\n        self.ghost_limit = max(32, min(8192, self.capacity_bytes // 64 + 32))\n\n    def _remember(self, ghost, key, size):\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n    def _rebalance(self):\n        while self.frequent and self.frequent_bytes > self.target_frequent:\n            old_key, old_size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= old_size\n            self.recent[old_key] = old_size\n            self.recent_bytes += old_size\n\n    def _evict_one(self):\n        if self.recent and (self.recent_bytes > self.target_frequent or not self.frequent):\n            old_key, old_size = self.recent.popitem(last=False)\n            self.recent_bytes -= old_size\n            self._remember(self.ghost_recent, old_key, old_size)\n            return old_key\n        if self.frequent:\n            old_key, old_size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= old_size\n            self._remember(self.ghost_frequent, old_key, old_size)\n            return old_key\n        if self.recent:\n            old_key, old_size = self.recent.popitem(last=False)\n            self.recent_bytes -= old_size\n            self._remember(self.ghost_recent, old_key, old_size)\n            return old_key\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_recent:\n            self.target_frequent = min(\n                self.capacity_bytes,\n                self.target_frequent + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_frequent:\n            self.target_frequent = max(\n                0,\n                self.target_frequent - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget(key)\n\n        evicted = []\n        while self.recent_bytes + self.frequent_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.recent[key] = size\n        self.recent_bytes += size\n        return evicted\n",
+    "sha256": "16bc3f5f3c7e0c8c192f7d81bef9d39d3615c345aee6ff190a3697fec7fc1a18"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R29 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Invert only the predecessor edge's authority polarity: retain full executable-artifact visibility but make the closure disconfirming evidence rather than a semantic starting point.",
+    "expected_effect": "The terminal call should independently ground its semantics in public evidence while using the visible closure to expose unsupported commitments, changing both predecessor deference and construction timing.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The complete predecessor closure carries presumptive positive semantic authority, so terminal reconciliation can preserve correlated blind spots instead of independently challenging inherited commitments."
+  },
+  "loop_structure": {
+    "final_call_id": "negative_edge_policy_authority",
+    "information_flow": "The first call forms and passes one complete executable closure. The second call receives that artifact with the same public external evidence as the champion, but the handoff confers no positive semantic authority: predecessor semantics serve only as disconfirming evidence while the terminal call independently grounds and emits one policy.",
+    "name": "Negative-Authority Executable Relay",
+    "organization": "two-call sequential lineage joined by one unconditional negative-authority predecessor edge",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_visible_executable_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Form exactly one complete executable policy closure from the supplied evidence, justify its semantics against the public obligations, remove construction provenance from the handoff, and pass the complete artifact forward.",
+            "output_type": "executable_policy_closure",
+            "role": "executable semantic closure former"
+          },
+          {
+            "id": "negative_edge_policy_authority",
+            "inputs": [
+              "form_visible_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the immediately preceding complete executable closure as disconfirming evidence without treating any predecessor commitment as a default. Independently ground exactly one complete policy in the other visible task, contract, constraint, hypothesis, and loop evidence, then emit it.",
+            "output_type": "policy",
+            "role": "negative-edge independent policy authority"
+          }
+        ],
+        "id": "negative_authority_relay",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

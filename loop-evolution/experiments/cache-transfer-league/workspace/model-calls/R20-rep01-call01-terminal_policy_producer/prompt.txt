@@ -1,0 +1,78 @@
+Role: evidence-preserving transactional policy producer
+
+Execute exactly one role in a fixed historical topology translated to Cache
+Policy vocabulary. This is representative 1 for topology R20.
+It is an independent run: no other representative, candidate, evaluation, or
+score is visible. Do not use tools or inspect the filesystem; use only the inline
+visible inputs below. Do not search, sample variants, or ask another agent.
+
+Role id: terminal_policy_producer
+Role: evidence-preserving transactional policy producer
+Objective: Starting only from the anchor policy and standard library, audit before divergence and construct one ordered repair trajectory. For every minimal proposed edit, retain the anchor's identical-reproducer checkpoint-patch-checkpoint-patch intervention, regression replay, exact rollback, and validity safeguards. Record each accepted edit as an exactly reversible delta with immutable motivating evidence and provisional acceptance. After construction, perform bounded terminal causal compression on the assembled policy: examine retained deltas in reverse order, remove exactly one delta, replay its motivating reproductions and the precommitted regression, interface, authoritative-state, and capacity obligations, permanently delete it only if all motivating failures remain closed and no obligation regresses, and otherwise restore it exactly. When deletion invalidates evidence for affected retained deltas, replay only that affected suffix within the fixed bound. Do not generate alternatives, replicate calls or samples, use parameter tuning as the structural mechanism, or use privileged workload knowledge. Emit exactly one complete contract-compliant policy artifact; if no modified state remains valid, emit the anchor policy unchanged.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and must define class Policy with __init__(capacity_bytes) and
+access(key, size, now). Do not return a diff, multiple variants, benchmark data,
+or evaluator-specific constants. You may reason internally, but return exactly
+one artifact.
+
+Visible inputs, exactly as fixed by the topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.cache:\n            stored_size = self.cache.pop(key)\n            self.cache[key] = stored_size\n            return []\n\n        if size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "fresh mechanical byte-capacity LRU anchor",
+    "artifact_sha256": "f0ceca64e89ac8734d5ad762f735610bf205c0b0432463bec9c89473d2ebe348",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality and online-only access visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_or_trace_hardcoding": true,
+    "no_scores_available": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Reverse-order singleton ablation with exact restoration and affected-suffix replay removes only deltas no longer required by witnessed obligations.",
+    "expected_effect": "A smaller reversible policy artifact should retain the validated behavior of the assembled repair trajectory.",
+    "falsifier": "Falsified unless the emitted policy artifact is all-valid and satisfies the median promotion contract.",
+    "observed_bottleneck": "A continuous repair trajectory can retain causally redundant deltas after later edits supersede their motivating effect."
+  },
+  "loop_structure": {
+    "final_call_id": "terminal_policy_producer",
+    "information_flow": "One self-contained producer starts from the anchor policy, preserves raw audit evidence, follows the anchor's ordered transactional A-B-A-B repair process, records every accepted edit as an exactly reversible delta, and then causally compresses that provisional stack in the assembled final context before emitting one complete policy artifact.",
+    "name": "Solo Provisional Policy Repair Stack with Terminal Causal Compression",
+    "organization": "solo",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "terminal_policy_producer",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Starting only from the anchor policy and standard library, audit before divergence and construct one ordered repair trajectory. For every minimal proposed edit, retain the anchor's identical-reproducer checkpoint-patch-checkpoint-patch intervention, regression replay, exact rollback, and validity safeguards. Record each accepted edit as an exactly reversible delta with immutable motivating evidence and provisional acceptance. After construction, perform bounded terminal causal compression on the assembled policy: examine retained deltas in reverse order, remove exactly one delta, replay its motivating reproductions and the precommitted regression, interface, authoritative-state, and capacity obligations, permanently delete it only if all motivating failures remain closed and no obligation regresses, and otherwise restore it exactly. When deletion invalidates evidence for affected retained deltas, replay only that affected suffix within the fixed bound. Do not generate alternatives, replicate calls or samples, use parameter tuning as the structural mechanism, or use privileged workload knowledge. Emit exactly one complete contract-compliant policy artifact; if no modified state remains valid, emit the anchor policy unchanged.",
+            "output_type": "policy",
+            "role": "evidence-preserving transactional policy producer"
+          }
+        ],
+        "id": "produce_and_compress",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

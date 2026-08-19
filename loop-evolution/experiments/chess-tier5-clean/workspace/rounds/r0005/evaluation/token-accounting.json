@@ -1,0 +1,548 @@
+{
+  "schema_version": 1,
+  "accounting_rule": "total=input+output; effective=(input-cached_input)+output; reasoning_output is a subset of output and is not added again",
+  "proposal_sol_xhigh": {
+    "input_tokens": 17731,
+    "cached_input_tokens": 9984,
+    "output_tokens": 4492,
+    "reasoning_output_tokens": 3106,
+    "model_calls": 1,
+    "uncached_input_tokens": 7747,
+    "total_tokens": 22223,
+    "effective_tokens": 12239
+  },
+  "internal_loop_luna_high": {
+    "incumbent": {
+      "input_tokens": 114954,
+      "cached_input_tokens": 49152,
+      "output_tokens": 35260,
+      "reasoning_output_tokens": 16454,
+      "model_calls": 4,
+      "uncached_input_tokens": 65802,
+      "total_tokens": 150214,
+      "effective_tokens": 101062
+    },
+    "candidate": {
+      "input_tokens": 3633993,
+      "cached_input_tokens": 3165184,
+      "output_tokens": 106071,
+      "reasoning_output_tokens": 50869,
+      "model_calls": 14,
+      "uncached_input_tokens": 468809,
+      "total_tokens": 3740064,
+      "effective_tokens": 574880
+    },
+    "combined": {
+      "input_tokens": 3748947,
+      "cached_input_tokens": 3214336,
+      "output_tokens": 141331,
+      "reasoning_output_tokens": 67323,
+      "model_calls": 18,
+      "uncached_input_tokens": 534611,
+      "total_tokens": 3890278,
+      "effective_tokens": 675942
+    },
+    "invalid_retry_spend": {
+      "input_tokens": 1652245,
+      "cached_input_tokens": 1444864,
+      "output_tokens": 48143,
+      "reasoning_output_tokens": 23731,
+      "model_calls": 6,
+      "uncached_input_tokens": 207381,
+      "total_tokens": 1700388,
+      "effective_tokens": 255524
+    }
+  },
+  "round_total": {
+    "input_tokens": 3766678,
+    "cached_input_tokens": 3224320,
+    "output_tokens": 145823,
+    "reasoning_output_tokens": 70429,
+    "model_calls": 19,
+    "uncached_input_tokens": 542358,
+    "total_tokens": 3912501,
+    "effective_tokens": 688181
+  },
+  "pairs": [
+    {
+      "pair": 1,
+      "anchor_id": "anchor_dd97a2fcb0808c5d",
+      "anchor_role": "current_champion",
+      "all_attempts": {
+        "incumbent": {
+          "input_tokens": 21939,
+          "cached_input_tokens": 8960,
+          "output_tokens": 8510,
+          "reasoning_output_tokens": 3845,
+          "model_calls": 1,
+          "uncached_input_tokens": 12979,
+          "total_tokens": 30449,
+          "effective_tokens": 21489
+        },
+        "candidate": {
+          "input_tokens": 411513,
+          "cached_input_tokens": 338944,
+          "output_tokens": 18659,
+          "reasoning_output_tokens": 7690,
+          "model_calls": 3,
+          "uncached_input_tokens": 72569,
+          "total_tokens": 430172,
+          "effective_tokens": 91228
+        },
+        "combined": {
+          "input_tokens": 433452,
+          "cached_input_tokens": 347904,
+          "output_tokens": 27169,
+          "reasoning_output_tokens": 11535,
+          "model_calls": 4,
+          "uncached_input_tokens": 85548,
+          "total_tokens": 460621,
+          "effective_tokens": 112717
+        }
+      },
+      "decision_attempt": {
+        "incumbent": {
+          "input_tokens": 21939,
+          "cached_input_tokens": 8960,
+          "output_tokens": 8510,
+          "reasoning_output_tokens": 3845,
+          "model_calls": 1,
+          "uncached_input_tokens": 12979,
+          "total_tokens": 30449,
+          "effective_tokens": 21489
+        },
+        "candidate": {
+          "input_tokens": 411513,
+          "cached_input_tokens": 338944,
+          "output_tokens": 18659,
+          "reasoning_output_tokens": 7690,
+          "model_calls": 3,
+          "uncached_input_tokens": 72569,
+          "total_tokens": 430172,
+          "effective_tokens": 91228
+        },
+        "combined": {
+          "input_tokens": 433452,
+          "cached_input_tokens": 347904,
+          "output_tokens": 27169,
+          "reasoning_output_tokens": 11535,
+          "model_calls": 4,
+          "uncached_input_tokens": 85548,
+          "total_tokens": 460621,
+          "effective_tokens": 112717
+        }
+      },
+      "decision_attempt_valid": true,
+      "invalid_attempts": {
+        "count": 0,
+        "incumbent": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0,
+          "uncached_input_tokens": 0,
+          "total_tokens": 0,
+          "effective_tokens": 0
+        },
+        "candidate": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0,
+          "uncached_input_tokens": 0,
+          "total_tokens": 0,
+          "effective_tokens": 0
+        },
+        "combined": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0,
+          "uncached_input_tokens": 0,
+          "total_tokens": 0,
+          "effective_tokens": 0
+        }
+      },
+      "per_attempt": [
+        {
+          "attempt": 1,
+          "incumbent": {
+            "input_tokens": 21939,
+            "cached_input_tokens": 8960,
+            "output_tokens": 8510,
+            "reasoning_output_tokens": 3845,
+            "model_calls": 1,
+            "uncached_input_tokens": 12979,
+            "total_tokens": 30449,
+            "effective_tokens": 21489
+          },
+          "candidate": {
+            "input_tokens": 411513,
+            "cached_input_tokens": 338944,
+            "output_tokens": 18659,
+            "reasoning_output_tokens": 7690,
+            "model_calls": 3,
+            "uncached_input_tokens": 72569,
+            "total_tokens": 430172,
+            "effective_tokens": 91228
+          },
+          "combined": {
+            "input_tokens": 433452,
+            "cached_input_tokens": 347904,
+            "output_tokens": 27169,
+            "reasoning_output_tokens": 11535,
+            "model_calls": 4,
+            "uncached_input_tokens": 85548,
+            "total_tokens": 460621,
+            "effective_tokens": 112717
+          }
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "anchor_id": "anchor_eaba2e9ff3e678c1",
+      "anchor_role": "frozen_lineage_baseline",
+      "all_attempts": {
+        "incumbent": {
+          "input_tokens": 21900,
+          "cached_input_tokens": 8960,
+          "output_tokens": 7723,
+          "reasoning_output_tokens": 3089,
+          "model_calls": 1,
+          "uncached_input_tokens": 12940,
+          "total_tokens": 29623,
+          "effective_tokens": 20663
+        },
+        "candidate": {
+          "input_tokens": 1853516,
+          "cached_input_tokens": 1660672,
+          "output_tokens": 38938,
+          "reasoning_output_tokens": 18884,
+          "model_calls": 5,
+          "uncached_input_tokens": 192844,
+          "total_tokens": 1892454,
+          "effective_tokens": 231782
+        },
+        "combined": {
+          "input_tokens": 1875416,
+          "cached_input_tokens": 1669632,
+          "output_tokens": 46661,
+          "reasoning_output_tokens": 21973,
+          "model_calls": 6,
+          "uncached_input_tokens": 205784,
+          "total_tokens": 1922077,
+          "effective_tokens": 252445
+        }
+      },
+      "decision_attempt": {
+        "incumbent": {
+          "input_tokens": 21900,
+          "cached_input_tokens": 8960,
+          "output_tokens": 7723,
+          "reasoning_output_tokens": 3089,
+          "model_calls": 1,
+          "uncached_input_tokens": 12940,
+          "total_tokens": 29623,
+          "effective_tokens": 20663
+        },
+        "candidate": {
+          "input_tokens": 906363,
+          "cached_input_tokens": 814592,
+          "output_tokens": 21269,
+          "reasoning_output_tokens": 8719,
+          "model_calls": 3,
+          "uncached_input_tokens": 91771,
+          "total_tokens": 927632,
+          "effective_tokens": 113040
+        },
+        "combined": {
+          "input_tokens": 928263,
+          "cached_input_tokens": 823552,
+          "output_tokens": 28992,
+          "reasoning_output_tokens": 11808,
+          "model_calls": 4,
+          "uncached_input_tokens": 104711,
+          "total_tokens": 957255,
+          "effective_tokens": 133703
+        }
+      },
+      "decision_attempt_valid": true,
+      "invalid_attempts": {
+        "count": 1,
+        "incumbent": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_output_tokens": 0,
+          "model_calls": 0,
+          "uncached_input_tokens": 0,
+          "total_tokens": 0,
+          "effective_tokens": 0
+        },
+        "candidate": {
+          "input_tokens": 947153,
+          "cached_input_tokens": 846080,
+          "output_tokens": 17669,
+          "reasoning_output_tokens": 10165,
+          "model_calls": 2,
+          "uncached_input_tokens": 101073,
+          "total_tokens": 964822,
+          "effective_tokens": 118742
+        },
+        "combined": {
+          "input_tokens": 947153,
+          "cached_input_tokens": 846080,
+          "output_tokens": 17669,
+          "reasoning_output_tokens": 10165,
+          "model_calls": 2,
+          "uncached_input_tokens": 101073,
+          "total_tokens": 964822,
+          "effective_tokens": 118742
+        }
+      },
+      "per_attempt": [
+        {
+          "attempt": 1,
+          "incumbent": {
+            "input_tokens": 0,
+            "cached_input_tokens": 0,
+            "output_tokens": 0,
+            "reasoning_output_tokens": 0,
+            "model_calls": 0,
+            "uncached_input_tokens": 0,
+            "total_tokens": 0,
+            "effective_tokens": 0
+          },
+          "candidate": {
+            "input_tokens": 947153,
+            "cached_input_tokens": 846080,
+            "output_tokens": 17669,
+            "reasoning_output_tokens": 10165,
+            "model_calls": 2,
+            "uncached_input_tokens": 101073,
+            "total_tokens": 964822,
+            "effective_tokens": 118742
+          },
+          "combined": {
+            "input_tokens": 947153,
+            "cached_input_tokens": 846080,
+            "output_tokens": 17669,
+            "reasoning_output_tokens": 10165,
+            "model_calls": 2,
+            "uncached_input_tokens": 101073,
+            "total_tokens": 964822,
+            "effective_tokens": 118742
+          }
+        },
+        {
+          "attempt": 2,
+          "incumbent": {
+            "input_tokens": 21900,
+            "cached_input_tokens": 8960,
+            "output_tokens": 7723,
+            "reasoning_output_tokens": 3089,
+            "model_calls": 1,
+            "uncached_input_tokens": 12940,
+            "total_tokens": 29623,
+            "effective_tokens": 20663
+          },
+          "candidate": {
+            "input_tokens": 906363,
+            "cached_input_tokens": 814592,
+            "output_tokens": 21269,
+            "reasoning_output_tokens": 8719,
+            "model_calls": 3,
+            "uncached_input_tokens": 91771,
+            "total_tokens": 927632,
+            "effective_tokens": 113040
+          },
+          "combined": {
+            "input_tokens": 928263,
+            "cached_input_tokens": 823552,
+            "output_tokens": 28992,
+            "reasoning_output_tokens": 11808,
+            "model_calls": 4,
+            "uncached_input_tokens": 104711,
+            "total_tokens": 957255,
+            "effective_tokens": 133703
+          }
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "anchor_id": "anchor_730b29adc4699eed",
+      "anchor_role": "recent_promotion_alternate",
+      "all_attempts": {
+        "incumbent": {
+          "input_tokens": 71115,
+          "cached_input_tokens": 31232,
+          "output_tokens": 19027,
+          "reasoning_output_tokens": 9520,
+          "model_calls": 2,
+          "uncached_input_tokens": 39883,
+          "total_tokens": 90142,
+          "effective_tokens": 58910
+        },
+        "candidate": {
+          "input_tokens": 1368964,
+          "cached_input_tokens": 1165568,
+          "output_tokens": 48474,
+          "reasoning_output_tokens": 24295,
+          "model_calls": 6,
+          "uncached_input_tokens": 203396,
+          "total_tokens": 1417438,
+          "effective_tokens": 251870
+        },
+        "combined": {
+          "input_tokens": 1440079,
+          "cached_input_tokens": 1196800,
+          "output_tokens": 67501,
+          "reasoning_output_tokens": 33815,
+          "model_calls": 8,
+          "uncached_input_tokens": 243279,
+          "total_tokens": 1507580,
+          "effective_tokens": 310780
+        }
+      },
+      "decision_attempt": {
+        "incumbent": {
+          "input_tokens": 47690,
+          "cached_input_tokens": 22272,
+          "output_tokens": 10746,
+          "reasoning_output_tokens": 5970,
+          "model_calls": 1,
+          "uncached_input_tokens": 25418,
+          "total_tokens": 58436,
+          "effective_tokens": 36164
+        },
+        "candidate": {
+          "input_tokens": 687297,
+          "cached_input_tokens": 575744,
+          "output_tokens": 26281,
+          "reasoning_output_tokens": 14279,
+          "model_calls": 3,
+          "uncached_input_tokens": 111553,
+          "total_tokens": 713578,
+          "effective_tokens": 137834
+        },
+        "combined": {
+          "input_tokens": 734987,
+          "cached_input_tokens": 598016,
+          "output_tokens": 37027,
+          "reasoning_output_tokens": 20249,
+          "model_calls": 4,
+          "uncached_input_tokens": 136971,
+          "total_tokens": 772014,
+          "effective_tokens": 173998
+        }
+      },
+      "decision_attempt_valid": true,
+      "invalid_attempts": {
+        "count": 1,
+        "incumbent": {
+          "input_tokens": 23425,
+          "cached_input_tokens": 8960,
+          "output_tokens": 8281,
+          "reasoning_output_tokens": 3550,
+          "model_calls": 1,
+          "uncached_input_tokens": 14465,
+          "total_tokens": 31706,
+          "effective_tokens": 22746
+        },
+        "candidate": {
+          "input_tokens": 681667,
+          "cached_input_tokens": 589824,
+          "output_tokens": 22193,
+          "reasoning_output_tokens": 10016,
+          "model_calls": 3,
+          "uncached_input_tokens": 91843,
+          "total_tokens": 703860,
+          "effective_tokens": 114036
+        },
+        "combined": {
+          "input_tokens": 705092,
+          "cached_input_tokens": 598784,
+          "output_tokens": 30474,
+          "reasoning_output_tokens": 13566,
+          "model_calls": 4,
+          "uncached_input_tokens": 106308,
+          "total_tokens": 735566,
+          "effective_tokens": 136782
+        }
+      },
+      "per_attempt": [
+        {
+          "attempt": 1,
+          "incumbent": {
+            "input_tokens": 23425,
+            "cached_input_tokens": 8960,
+            "output_tokens": 8281,
+            "reasoning_output_tokens": 3550,
+            "model_calls": 1,
+            "uncached_input_tokens": 14465,
+            "total_tokens": 31706,
+            "effective_tokens": 22746
+          },
+          "candidate": {
+            "input_tokens": 681667,
+            "cached_input_tokens": 589824,
+            "output_tokens": 22193,
+            "reasoning_output_tokens": 10016,
+            "model_calls": 3,
+            "uncached_input_tokens": 91843,
+            "total_tokens": 703860,
+            "effective_tokens": 114036
+          },
+          "combined": {
+            "input_tokens": 705092,
+            "cached_input_tokens": 598784,
+            "output_tokens": 30474,
+            "reasoning_output_tokens": 13566,
+            "model_calls": 4,
+            "uncached_input_tokens": 106308,
+            "total_tokens": 735566,
+            "effective_tokens": 136782
+          }
+        },
+        {
+          "attempt": 2,
+          "incumbent": {
+            "input_tokens": 47690,
+            "cached_input_tokens": 22272,
+            "output_tokens": 10746,
+            "reasoning_output_tokens": 5970,
+            "model_calls": 1,
+            "uncached_input_tokens": 25418,
+            "total_tokens": 58436,
+            "effective_tokens": 36164
+          },
+          "candidate": {
+            "input_tokens": 687297,
+            "cached_input_tokens": 575744,
+            "output_tokens": 26281,
+            "reasoning_output_tokens": 14279,
+            "model_calls": 3,
+            "uncached_input_tokens": 111553,
+            "total_tokens": 713578,
+            "effective_tokens": 137834
+          },
+          "combined": {
+            "input_tokens": 734987,
+            "cached_input_tokens": 598016,
+            "output_tokens": 37027,
+            "reasoning_output_tokens": 20249,
+            "model_calls": 4,
+            "uncached_input_tokens": 136971,
+            "total_tokens": 772014,
+            "effective_tokens": 173998
+          }
+        }
+      ]
+    }
+  ]
+}

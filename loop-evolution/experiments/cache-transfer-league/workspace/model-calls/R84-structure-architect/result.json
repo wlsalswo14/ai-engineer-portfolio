@@ -1,0 +1,134 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R84-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "emit_with_full_latched_visibility",
+      "information_flow": "The first call receives all six common inputs and emits one complete executable policy capsule. The second consumes that capsule and reopens anchor_policy and anchor_contract. The third consumes the resulting complete executable state, retains the anchor evidence visibility, and additionally reopens task_constraints and loop_structure. The final call consumes the resulting complete executable closure, retains both prior evidence windows, additionally reopens task and candidate_hypothesis, and emits one policy.",
+      "name": "Monotone Evidence-Latch Executable Relay",
+      "organization": "four-call sequential lineage carrying one complete executable artifact through cumulatively visible downstream evidence prefixes",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "originate_latched_capsule",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile all initially visible evidence and obligations into one complete executable policy artifact.",
+              "output_type": "policy_capsule",
+              "role": "integrated executable originator"
+            },
+            {
+              "id": "latch_anchor_evidence",
+              "inputs": [
+                "originate_latched_capsule",
+                "anchor_policy",
+                "anchor_contract"
+              ],
+              "objective": "Consume originate_latched_capsule, directly reconcile the inherited complete artifact with the reopened anchor evidence and obligations, and emit one complete executable policy state.",
+              "output_type": "executable_policy_state",
+              "role": "anchor-latch executable custodian"
+            },
+            {
+              "id": "latch_constraint_evidence",
+              "inputs": [
+                "latch_anchor_evidence",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "loop_structure"
+              ],
+              "objective": "Consume latch_anchor_evidence, retain direct anchor-evidence visibility, add constraints and structural evidence visibility, reconcile their interactions in the inherited complete artifact, and emit one complete executable policy closure.",
+              "output_type": "executable_policy_closure",
+              "role": "constraint-latch executable custodian"
+            },
+            {
+              "id": "emit_with_full_latched_visibility",
+              "inputs": [
+                "latch_constraint_evidence",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "loop_structure",
+                "task",
+                "candidate_hypothesis"
+              ],
+              "objective": "Consume latch_constraint_evidence, retain both prior evidence windows, add task and hypothesis visibility, reconcile remaining visible obligations in the same complete artifact, and emit one policy.",
+              "output_type": "policy",
+              "role": "cumulative-evidence policy authority"
+            }
+          ],
+          "id": "single_latched_executable_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only downstream common-evidence edge persistence changes; the four-call sequence, single complete executable artifact, nonbranching lineage, and final policy emission remain fixed.",
+      "why_not_repeat_role_fission": "No producer, reviewer, finalizer, or additional terminal role is created; the existing lineage positions remain and only their concrete external-evidence visibility changes."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Latch each reopened evidence pair into every later executable transition, producing monotone cumulative visibility while preserving one sequential artifact lineage.",
+      "expected_effect": "Later calls can directly reconcile interactions between previously reopened and newly reopened obligations without parallel candidates, adjudication, or terminal role fission.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Disjoint reentry leaves each downstream transition without direct visibility of evidence reopened on earlier transitions, so cross-window obligations survive only through inherited artifact state."
+    },
+    "structural_mutation": {
+      "after": "Each downstream call adds one common-evidence window, and every added window remains directly visible on all subsequent lineage edges.",
+      "before": "Each downstream call receives one mutually exclusive common-evidence window that disappears at the next lineage edge.",
+      "change_count": 1,
+      "factor": "monotone downstream latching of reentered common evidence",
+      "why_structural": "The mutation changes external-input edge persistence and downstream evidence visibility from disjoint windows to cumulative prefixes while leaving sequence, artifact custody, and call authority intact."
+    }
+  },
+  "receipt": {
+    "call_id": "R84-structure-architect",
+    "duration_seconds": 62.139,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T01:36:37Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "82685b4647506debbbee93e1df52dee03b914184bd9edeba026879ff2a02f6f1",
+    "raw_events_path": "workspace\\model-calls\\R84-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "41ed782020e9ff65028ab7ce3d2980432e267fdd76467abe041b37bc7a53784b",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "663f8b52b3e49b15d97063e4abf4c155c981b5074f5dfefdc0db8a02540c3600",
+    "returncode": 0,
+    "role": "score-blind R84 local_refinement structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T01:35:35Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14668,
+      "output_tokens": 3121,
+      "reasoning_output_tokens": 2068
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

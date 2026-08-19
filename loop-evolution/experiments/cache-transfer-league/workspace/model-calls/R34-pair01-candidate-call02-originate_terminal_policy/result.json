@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.used = 0\n        self.protected_bytes = 0\n        self.target = int(self.capacity * 0.70)\n        self.entries = {}\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost = OrderedDict()\n        self.ghost_limit = 1024\n        self.step = 0\n\n    def _remember(self, key, segment):\n        self.ghost.pop(key, None)\n        self.ghost[key] = segment\n        while len(self.ghost) > self.ghost_limit:\n            self.ghost.popitem(last=False)\n\n    def _remove(self, key):\n        entry = self.entries.pop(key, None)\n        if entry is None:\n            return\n        size, _, _, segment = entry\n        self.used -= size\n        if segment:\n            self.protected.pop(key, None)\n            self.protected_bytes -= size\n        else:\n            self.probation.pop(key, None)\n        self._remember(key, segment)\n\n    def _promote(self, key, entry):\n        size = entry[0]\n        self.probation.pop(key, None)\n        self.protected[key] = None\n        entry[3] = 1\n        self.protected_bytes += size\n        while self.protected_bytes > self.target and self.protected:\n            old, _ = self.protected.popitem(last=False)\n            old_entry = self.entries.get(old)\n            if old_entry is None:\n                continue\n            old_entry[3] = 0\n            self.protected_bytes -= old_entry[0]\n            self.probation[old] = None\n\n    def _victim(self):\n        for pool in (self.probation, self.protected):\n            chosen = None\n            chosen_score = None\n            for key in pool:\n                entry = self.entries.get(key)\n                if entry is None:\n                    continue\n                age = max(0, self.step - entry[2])\n                size = max(1, entry[0])\n                score = (1.0 + 2.0 * min(entry[1], 32)) / (size * (1.0 + age / 32.0))\n                if entry[3]:\n                    score *= 1.25\n                if chosen_score is None or score < chosen_score:\n                    chosen = key\n                    chosen_score = score\n            if chosen is not None:\n                return chosen\n        return None\n\n    def _adjust_target(self, segment):\n        if self.capacity <= 0:\n            return\n        delta = max(1, self.capacity // 16)\n        if segment:\n            self.target = min(self.capacity, self.target + delta)\n        else:\n            self.target = max(0, self.target - delta)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.step += 1\n        requested = max(0, int(size))\n        entry = self.entries.get(key)\n        if entry is not None:\n            entry[1] += 1\n            entry[2] = self.step\n            if entry[3]:\n                self.protected.move_to_end(key)\n            else:\n                self._promote(key, entry)\n            return []\n\n        if requested > self.capacity:\n            self.ghost.pop(key, None)\n            return []\n\n        old_segment = self.ghost.pop(key, None)\n        if old_segment is not None:\n            self._adjust_target(old_segment)\n\n        evicted = []\n        while self.used + requested > self.capacity:\n            victim = self._victim()\n            if victim is None:\n                break\n            self._remove(victim)\n            evicted.append(victim)\n\n        if self.used + requested > self.capacity:\n            return evicted\n\n        self.entries[key] = [requested, 0, self.step, 0]\n        self.probation[key] = None\n        self.used += requested\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R34-pair01-candidate-call02-originate_terminal_policy",
+    "duration_seconds": 54.402,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:32:00Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "cd1b2f4107263b29c9549b83cadf6b18a030dc05a2346d481c72dfd3b5bc22ef",
+    "raw_events_path": "workspace\\model-calls\\R34-pair01-candidate-call02-originate_terminal_policy\\raw-events.jsonl",
+    "raw_events_sha256": "8645ad72ac5b980ea77e73b8682f0a0fb206e7c122b53b45a634b31d07cb21f8",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "9b236958ac21eab348ee496e996c2003e42bdc5dd6f5458372ebe90d0a6253ef",
+    "returncode": 0,
+    "role": "R34 candidate topology role terminal-origin policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:31:05Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13999,
+      "output_tokens": 4231,
+      "reasoning_output_tokens": 3255
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

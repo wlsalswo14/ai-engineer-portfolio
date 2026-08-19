@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "campaign_id": "cache-transfer-league-clean-20260809",
+  "amendment_id": "cache-display-r100-extension-from-atomic-r8",
+  "authority": "latest explicit user continuation through exactly display R100",
+  "effective_after_display_round": 8,
+  "authorized_display_round_range": {
+    "start": 9,
+    "end": 100
+  },
+  "stop_after_display_round": 100,
+  "cache_r101_permitted": false,
+  "preserved_immutable_contracts": [
+    {
+      "path": "EVOLUTION-R6-R11-CONTRACT.json",
+      "sha256": "71036fd0a79d3d92ce68993176d52e0462c5bac1f0f4da791b46cf463f19dada"
+    },
+    {
+      "path": "LUNA-FAST-EXECUTOR-EPOCH.json",
+      "sha256": "8d51e00f387074d75fdd814d659a0a76c9991092f594b3482a2e390ced8425b3"
+    }
+  ],
+  "overrides_only": [
+    "authorized display-round range after atomic R8",
+    "stop_after_display_round from 11 to 100",
+    "next unopened guard from cache_r12 to cache_r101",
+    "Luna Fast executor epoch scope through R100"
+  ],
+  "authoritative_start": {
+    "display_round": 8,
+    "atomic_state_path": "workspace/rounds/R8/R8-ATOMIC-COMMIT.json",
+    "atomic_state_sha256": "a2913594a1bae43183042e908a4bd2ddd5bfd2d29a9a2be1637fb982d9960dad",
+    "state_path": "workspace/rounds/R8/state.json",
+    "state_sha256": "b4e31712e86e204571253a78be3f051861f0e03a0e309f98e57171126dce0b26",
+    "champion_policy_path": "workspace/champion-r8/policy.py",
+    "champion_policy_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "champion_structure_path": "workspace/champion-r8/structure.json",
+    "champion_structure_sha256": "1dc7dc0e89c5c5780a03e14734bfe4d2b56d039eb2967912b03fa2b209dffd4f",
+    "selection_receipt_path": "workspace/champion-r8/selection-receipt.json",
+    "selection_receipt_sha256": "c28e9e42c04e351f003047eda499437c97f28be625cfb486aae83cb0ca06b8de",
+    "proposal_mode_after": "counter_hypothesis",
+    "local_refinement_count": 2,
+    "emergent_failure_count": 2
+  },
+  "state_machine": {
+    "derive_every_round_from_immediately_preceding_atomic_state": true,
+    "counter_nonpromotion": "counter_hypothesis persists until promotion",
+    "promotion_reset": {
+      "local_refinement_count": 0,
+      "emergent_failure_count": 0,
+      "next_mode": "local_refinement",
+      "next_local_refinement_attempt": 1
+    },
+    "local_refinement_limit": 2,
+    "emergent_failure_limit": 2
+  },
+  "effective_structure_architect_boundary": {
+    "calls_per_round": 1,
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "policy_code": false,
+    "official_numeric_scores_or_traces": false,
+    "best_of_n_or_hardcoding": false
+  },
+  "effective_inner_model_boundary": {
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "service_tier": "fast",
+    "request_tier": "priority",
+    "direct_model_substitution": false
+  },
+  "duel_and_evaluation_contract": {
+    "inherited_from": "EVOLUTION-R6-R11-CONTRACT.json",
+    "matched_pair_count": 3,
+    "same_current_champion_anchor_and_score_blind_hypothesis": true,
+    "seal_all_six_before_score": true,
+    "frozen_v3_replay2": true,
+    "all_valid_required": true,
+    "candidate_pairwise_majority_required": true,
+    "candidate_strict_median_required": true,
+    "close_absolute_threshold": 0.25,
+    "close_action": "replay3 for all six",
+    "promotion_moves_structure_and_representative_policy_together": true
+  },
+  "coordination": {
+    "heavy_lock": "experiments/.heavy-evaluation.lock.json",
+    "fresh_chess_go_before_every_scorer": true,
+    "stockfish_overlap": false
+  },
+  "accounting_and_audit": {
+    "atomic_round_state_report_tests_tokens": true,
+    "transport_failures_preserved": true,
+    "paid_api_spend_usd": 0.0,
+    "git_commit_permitted": false
+  }
+}

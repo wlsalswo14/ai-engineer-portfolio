@@ -1,0 +1,97 @@
+{
+  "schema_version": 3,
+  "protocol": "OUROBOROS_MATCHED_THREE_DIVERSE_ANCHOR_RELATIVE_V5",
+  "planned_pair_count": 3,
+  "completed_pair_count": 3,
+  "completed_early": false,
+  "anchor_elo": -120.412,
+  "candidate_wins": 0,
+  "candidate_losses": 3,
+  "ties": 0,
+  "invalid_pair_count": 0,
+  "pair_verdicts": [
+    {
+      "pair": 1,
+      "verdict": "candidate_loss",
+      "incumbent_elo": -120.412,
+      "candidate_elo": -156.206
+    },
+    {
+      "pair": 2,
+      "verdict": "candidate_loss",
+      "incumbent_elo": -219.274,
+      "candidate_elo": -224.267
+    },
+    {
+      "pair": 3,
+      "verdict": "candidate_loss",
+      "incumbent_elo": -181.88,
+      "candidate_elo": -239.761
+    }
+  ],
+  "candidate_median_elo": -224.267,
+  "incumbent_median_elo": -181.88,
+  "candidate_median_score_rate": 0.21,
+  "incumbent_median_score_rate": 0.255,
+  "relative_performance_ratio": 0.8235294117647058,
+  "median_delta": -42.387,
+  "representative_candidate_pair": 2,
+  "representative_candidate_elo": -224.267,
+  "candidate_invalid_count": 0,
+  "incumbent_invalid_count": 0,
+  "promotion_checks": {
+    "three_valid_pairs_completed": true,
+    "candidate_wins_strictly_exceed_losses": false,
+    "candidate_median_strictly_exceeds_incumbent": false,
+    "candidate_invalid_count_zero": true,
+    "incumbent_invalid_count_zero": true
+  },
+  "promoted": false,
+  "inconclusive": false,
+  "promotion_rule": "complete three valid pairs; candidate wins > losses; candidate median Elo > incumbent median Elo; zero invalid arms on either side",
+  "anchor_policy": "three precommitted diverse anchors; common within each pair",
+  "development_assessment_required": true,
+  "force_complete_pairs": false,
+  "partial_development_assessment": {
+    "decisive": false,
+    "status": "qualification_undecided",
+    "formal_promotion_already_impossible": true,
+    "threshold": 0.9,
+    "representative_candidate_pair": 2,
+    "candidate_median_lower": 0.21,
+    "candidate_median_upper": 0.285,
+    "incumbent_median_lower": 0.215,
+    "incumbent_median_upper": 0.33,
+    "relative_performance_lower": 0.6363636363636364,
+    "relative_performance_upper": 1.3255813953488371
+  },
+  "bounded_development_early_stop_applied": false,
+  "irreversible_rejection_early_stop_applied": false,
+  "anchor_panel": [
+    {
+      "pair": 1,
+      "anchor_id": "anchor_61f6c6bacbc6b14e",
+      "role": "current_champion",
+      "origin": "champion:package_a9dd70e3fc84f08d",
+      "engine_source_sha256": "61f6c6bacbc6b14ea5f83f86536b02a5801e197ff12902e38bffaf4d3bea0317",
+      "elo": -120.412
+    },
+    {
+      "pair": 2,
+      "anchor_id": "anchor_eaba2e9ff3e678c1",
+      "role": "frozen_lineage_baseline",
+      "origin": "bootstrap:package_ebdecd200797a81e",
+      "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+      "elo": -94.211
+    },
+    {
+      "pair": 3,
+      "anchor_id": "anchor_aa37ac4558e674f3",
+      "role": "recent_promotion_alternate",
+      "origin": "round:11:pair:1:candidate",
+      "engine_source_sha256": "aa37ac4558e674f340d14d44d7559d7b59c7fd2b723842941f381690e18714d1",
+      "elo": -135.979
+    }
+  ],
+  "distinct_anchor_count": 3
+}

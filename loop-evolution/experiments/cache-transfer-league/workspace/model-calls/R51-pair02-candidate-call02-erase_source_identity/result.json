@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.target_t1 = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _replace(self, prefer_t1):\n        if prefer_t1 and self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._remember(self.b2, key)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n            return key\n        return None\n\n    def _remove_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _adapt(self, upward):\n        if self.capacity_bytes <= 0:\n            return\n        step = max(1, self.capacity_bytes // 16)\n        if upward:\n            self.target_t1 = min(self.capacity_bytes, self.target_t1 + step)\n        else:\n            self.target_t1 = max(0, self.target_t1 - step)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored = self.t1.pop(key)\n            self.t1_bytes -= stored\n            self.t2[key] = stored\n            self.t2_bytes += stored\n            return []\n\n        if key in self.t2:\n            stored = self.t2.pop(key)\n            self.t2[key] = stored\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            self._adapt(True)\n        elif in_b2:\n            self._adapt(False)\n        self._remove_ghost(key)\n\n        evicted = []\n        while self.t1_bytes + self.t2_bytes + size > self.capacity_bytes:\n            prefer_t1 = self.t1_bytes > self.target_t1\n            old_key = self._replace(prefer_t1)\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.t2[key] = size if in_b2 else size\n        self.t2_bytes += size\n        while len(self.b1) + len(self.b2) > self.ghost_limit:\n            if len(self.b1) >= len(self.b2) and self.b1:\n                self.b1.popitem(last=False)\n            elif self.b2:\n                self.b2.popitem(last=False)\n            else:\n                break\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R51-pair02-candidate-call02-erase_source_identity",
+    "duration_seconds": 14.866,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:32:48Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "66b2af3a2a0aa64abf4fdb8f1e7cb738736a565f9854d057b2e72de7e9f01634",
+    "raw_events_path": "workspace\\model-calls\\R51-pair02-candidate-call02-erase_source_identity\\raw-events.jsonl",
+    "raw_events_sha256": "1b65037b74e31b0b825a397ae2c844c0df40ad330696db59d41d064017f30b5f",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "4b2b52c7e1d1dea4015dd4d6088bbb4b39b3639517af1f768e11bcc17bb3630e",
+    "returncode": 0,
+    "role": "R51 candidate topology role provenance-erasing custody gate",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:32:33Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 12871,
+      "output_tokens": 942,
+      "reasoning_output_tokens": 116
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

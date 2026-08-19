@@ -1,0 +1,43 @@
+{
+  "final_call_id": "transition_and_author_policy",
+  "information_flow": "The first call receives every common input and emits source-distinguished analysis that can establish one causal-demotion trigger without carrying a policy. The final call consumes that analysis while independently receiving every common input, retains direct visibility of all sources, changes the anchor's causal status only when the trigger is established, and emits one complete policy.",
+  "name": "Contradiction-Activated Causal Demotion",
+  "organization": "two-call sequential lineage with one control-bearing non-policy handoff and one state-transitioning unitary policy authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "establish_causal_contradiction",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Determine whether the supplied evidence establishes an incompatibility between an anchor-dependent assumption and a current contract or constraint obligation, preserving the supporting source distinctions without creating a policy artifact.",
+          "output_type": "analysis",
+          "role": "source-distinguished causal contradiction authority"
+        },
+        {
+          "id": "transition_and_author_policy",
+          "inputs": [
+            "establish_causal_contradiction",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume establish_causal_contradiction with every common input, retain direct source visibility, demote the anchor to counterfactual-only evidence exactly when the established contradiction triggers the causal-state transition, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "state-transitioning unitary policy authority"
+        }
+      ],
+      "id": "causal_demotion_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

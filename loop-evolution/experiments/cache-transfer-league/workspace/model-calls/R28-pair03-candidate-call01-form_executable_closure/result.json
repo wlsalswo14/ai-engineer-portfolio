@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\nfrom math import isqrt\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.frequency = {}\n        self.frequency_limit = 8192\n        self.tick = 0\n        self.decay_period = 4096\n\n    def _touch_frequency(self, key):\n        self.tick += 1\n        if self.tick % self.decay_period == 0:\n            for old_key, count in tuple(self.frequency.items()):\n                count >>= 1\n                if count:\n                    self.frequency[old_key] = count\n                else:\n                    del self.frequency[old_key]\n        if key in self.frequency:\n            self.frequency[key] = min(255, self.frequency[key] + 1)\n            return\n        if len(self.frequency) >= self.frequency_limit:\n            weakest = min(self.frequency.values())\n            for old_key in tuple(self.frequency):\n                if self.frequency[old_key] == weakest:\n                    del self.frequency[old_key]\n                    if len(self.frequency) < self.frequency_limit:\n                        break\n        self.frequency[key] = 1\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self.probation[old_key] = old_size\n\n    def _evict_one(self):\n        if self.probation:\n            old_key, old_size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, old_key)\n        elif self.protected:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self._remember(self.ghost_protected, old_key)\n        else:\n            return None\n        self.used_bytes -= old_size\n        return old_key\n\n    def _victim_plan(self, required_bytes):\n        plan = []\n        remaining = required_bytes\n        for old_key, old_size in self.probation.items():\n            if remaining <= 0:\n                break\n            plan.append((old_key, old_size))\n            remaining -= old_size\n        if remaining > 0:\n            for old_key, old_size in self.protected.items():\n                if remaining <= 0:\n                    break\n                plan.append((old_key, old_size))\n                remaining -= old_size\n        return plan\n\n    def _should_admit(self, key, size, plan):\n        candidate_frequency = self.frequency.get(key, 1)\n        candidate_weight = max(1, isqrt(size))\n        for old_key, old_size in plan:\n            victim_frequency = self.frequency.get(old_key, 1)\n            victim_weight = max(1, isqrt(old_size))\n            if candidate_frequency * victim_weight < victim_frequency * candidate_weight:\n                return False\n        return True\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            self._touch_frequency(key)\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._touch_frequency(key)\n            self._rebalance()\n            return []\n\n        self._touch_frequency(key)\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        if key in self.ghost_probation:\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_protected:\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n        self._forget_ghost(key)\n\n        required_bytes = max(0, self.used_bytes + size - self.capacity_bytes)\n        plan = self._victim_plan(required_bytes)\n        if not self._should_admit(key, size, plan):\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R28-pair03-candidate-call01-form_executable_closure",
+    "duration_seconds": 75.182,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:52:06Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "5df8f71b65f8892bcaeb60ded1261272f7fa576805d82c8d3b76c77d90e12eac",
+    "raw_events_path": "workspace\\model-calls\\R28-pair03-candidate-call01-form_executable_closure\\raw-events.jsonl",
+    "raw_events_sha256": "87196b07a8a1c0c43cb2aca4b44470ceac7b111b95cd618655d7334d339078da",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "9233f4b1647d872e15570aa8dc05ec7d33559fd619d3f0605798e57774877093",
+    "returncode": 0,
+    "role": "R28 candidate topology role self-contained executable closure former",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:50:50Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14403,
+      "output_tokens": 5960,
+      "reasoning_output_tokens": 4660
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

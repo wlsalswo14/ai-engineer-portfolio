@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.ghost_probation_bytes = 0\n        self.ghost_protected_bytes = 0\n        self.used_bytes = 0\n        self.target_probation = self.capacity_bytes // 2\n\n    def _remove_ghost(self, queue, key, protected):\n        if key not in queue:\n            return 0\n        size = queue.pop(key)\n        if protected:\n            self.ghost_protected_bytes -= size\n        else:\n            self.ghost_probation_bytes -= size\n        return size\n\n    def _remember(self, key, size, protected):\n        self._remove_ghost(self.ghost_probation, key, False)\n        self._remove_ghost(self.ghost_protected, key, True)\n        queue = self.ghost_protected if protected else self.ghost_probation\n        queue[key] = size\n        if protected:\n            self.ghost_protected_bytes += size\n        else:\n            self.ghost_probation_bytes += size\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        limit = self.capacity_bytes\n        while self.ghost_probation_bytes + self.ghost_protected_bytes > limit:\n            if self.ghost_probation:\n                key, size = self.ghost_probation.popitem(last=False)\n                self.ghost_probation_bytes -= size\n            elif self.ghost_protected:\n                key, size = self.ghost_protected.popitem(last=False)\n                self.ghost_protected_bytes -= size\n            else:\n                break\n\n    def _make_room(self, incoming, evicted):\n        while self.used_bytes + incoming > self.capacity_bytes:\n            take_probation = bool(self.probation) and (\n                self.probation_bytes > self.target_probation\n                or not self.protected\n            )\n            if take_probation:\n                key, size = self.probation.popitem(last=False)\n                self.probation_bytes -= size\n                self.used_bytes -= size\n                self._remember(key, size, False)\n                evicted.append(key)\n            elif self.protected:\n                key, size = self.protected.popitem(last=False)\n                self.protected_bytes -= size\n                self.used_bytes -= size\n                self._remember(key, size, True)\n                evicted.append(key)\n            elif self.probation:\n                key, size = self.probation.popitem(last=False)\n                self.probation_bytes -= size\n                self.used_bytes -= size\n                self._remember(key, size, False)\n                evicted.append(key)\n            else:\n                break\n        return self.used_bytes + incoming <= self.capacity_bytes\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.probation_bytes -= stored_size\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            return []\n\n        if size < 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        evicted = []\n\n        if key in self.ghost_probation:\n            base = max(1, self.ghost_probation_bytes)\n            delta = max(1, self.ghost_protected_bytes // base)\n            self._remove_ghost(self.ghost_probation, key, False)\n            self.target_probation = min(self.capacity_bytes, self.target_probation + delta)\n            if not self._make_room(size, evicted):\n                return evicted\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used_bytes += size\n            return evicted\n\n        if key in self.ghost_protected:\n            base = max(1, self.ghost_protected_bytes)\n            delta = max(1, self.ghost_probation_bytes // base)\n            self._remove_ghost(self.ghost_protected, key, True)\n            self.target_probation = max(0, self.target_probation - delta)\n            if not self._make_room(size, evicted):\n                return evicted\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used_bytes += size\n            return evicted\n\n        if not self._make_room(size, evicted):\n            return evicted\n        self.probation[key] = size\n        self.probation_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R3-pair03-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 154.948,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T08:53:12Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "7461b22eee894aa66c695d2500336009a067f98926d70656a014625cb3fb7150",
+    "raw_events_path": "workspace\\model-calls\\R3-pair03-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "e12294bab5e88b522e89189956fa256ad32b156732b68d7a3797858571d14713",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 0,
+    "response_sha256": "5acc1f38dabf8ba8343bdafa7e52b59864a429b84df23627d3d13692fd43f1f5",
+    "returncode": 0,
+    "role": "R3 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T08:50:37Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13582,
+      "output_tokens": 8375,
+      "reasoning_output_tokens": 7211
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

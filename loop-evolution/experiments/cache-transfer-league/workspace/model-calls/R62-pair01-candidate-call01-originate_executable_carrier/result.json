@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.target = self.capacity_bytes // 2\n        self.bytes1 = 0\n        self.bytes2 = 0\n        self.ghost_limit = 4096\n\n    def _forget(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._forget(key)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _take(self, key):\n        if key in self.t1:\n            size = self.t1.pop(key)\n            self.bytes1 -= size\n            return size, 1\n        if key in self.t2:\n            size = self.t2.pop(key)\n            self.bytes2 -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, from_b2):\n        choose_t1 = bool(self.t1) and (\n            self.bytes1 > self.target\n            or (from_b2 and self.bytes1 == self.target)\n        )\n        if choose_t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.bytes2 -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, from_b2):\n        evicted = []\n        while self.bytes1 + self.bytes2 + size > self.capacity_bytes:\n            key = self._evict_one(from_b2)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n        if requested <= 0:\n            if key in self.t1:\n                self.t1.move_to_end(key)\n            elif key in self.t2:\n                self.t2.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._take(key)\n            if segment == 1:\n                self._remember(self.b1, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.b2, key, old_size)\n                return [key]\n            return []\n\n        if key in self.t1 or key in self.t2:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        adjustment = max(1, self.capacity_bytes // 16)\n        if in_b1:\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(adjustment, min(requested, self.capacity_bytes)),\n            )\n        elif in_b2:\n            self.target = max(\n                0,\n                self.target - max(adjustment, min(requested, self.capacity_bytes)),\n            )\n\n        self._forget(key)\n        evicted = self._make_room(requested, in_b2)\n        if in_b1 or in_b2:\n            self.t2[key] = requested\n            self.bytes2 += requested\n        else:\n            self.t1[key] = requested\n            self.bytes1 += requested\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R62-pair01-candidate-call01-originate_executable_carrier",
+    "duration_seconds": 21.631,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:02:04Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "abbf1ebb8e404e1e33b0ff662315bae164761b5c1fb8c1cb5b4975293cf63e3a",
+    "raw_events_path": "workspace\\model-calls\\R62-pair01-candidate-call01-originate_executable_carrier\\raw-events.jsonl",
+    "raw_events_sha256": "a66c84100a73ccba55f01160f81adc9a5368123ff10df5786ccd64783a3983ac",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "877cbf036d5b16ad5db3ffe737dc43c4ada77d0da12ae5635360b991051c7f8d",
+    "returncode": 0,
+    "role": "R62 candidate topology role one-pass full-context executable origin",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:01:43Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14636,
+      "output_tokens": 1503,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

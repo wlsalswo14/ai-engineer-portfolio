@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "attempt": 1,
+  "agent_role": "structural_architect",
+  "proposal_policy": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "auth_mode": "codex_subscription",
+    "allow_paid_api": false,
+    "allow_model_fallback": false,
+    "sandbox": "read-only",
+    "max_model_calls": 1,
+    "max_tokens": 120000,
+    "max_wall_seconds": 1800,
+    "codex_executable": "codex.cmd"
+  },
+  "proposal_policy_sha256": "635f29bc92d9e1d7ff6d31ab49f6e9ff4b5928d0ca8f79f544c84cbe6ca0ce31",
+  "execution_provenance": "collaboration_subagent_direct_contingency",
+  "official_codex_backend_invoked": false,
+  "delegated_subagent_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\manual-proposals\\r0016\\subagent-receipt.json",
+  "delegated_subagent_receipt_sha256": "e8fa924402976f5786daaab2054b36a121df66eb09e3f6c18f9d6cee22eed1ec",
+  "prompt_sha256": "a888ab84e4703adc9a8bebff922e1e62ed7397e007d7cd829cc28f3e2c221c43",
+  "response_sha256": "b1cc32a922916a8aab27a10096cc227fb6d9759b1ed922cca7b65da14fe0a00d",
+  "usage": {
+    "input_tokens": 0,
+    "cached_input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_output_tokens": 0,
+    "model_calls": 0
+  },
+  "trace_refs": [
+    "collaboration-subagent:gpt-5.6-sol:max"
+  ],
+  "validation": {
+    "passed": true,
+    "loader": "LoopPlan.from_payload(payload, expected_mode='counter_hypothesis')",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "validated_capsule_file_sha256": "e1c8d25980aeca79997bd4f6511c5310ca00ed8525d273c646d96e4cf4f8681f",
+    "normalized_payload_matches_file": true,
+    "validated_structure_id": "loop_1a0f412a7c1df86e",
+    "validated_call_count": 1,
+    "validated_organization": "solo",
+    "family_break_schema_complete": true,
+    "alternative_family_unique_in_bounded_history": true,
+    "previously_seen_structure_id": false
+  }
+}

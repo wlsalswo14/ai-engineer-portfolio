@@ -1,0 +1,67 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Source-neutral obligation quotient: implementation provenance, edit ancestry, and anchor structure are non-authoritative; only observable contract duties, constraints, and behavioral tensions are retained.",
+      "exact_actions": [],
+      "obligations": [
+        "Preserve the declared constructor and access interface.",
+        "Maintain online-only visibility and make decisions from current admissible observations and internal state only.",
+        "Respect standard-library-only and prohibited-information constraints.",
+        "Ensure capacity safety for every request and state transition.",
+        "Return only currently cached, unique integer keys evicted by the current access.",
+        "Represent observable cache state consistently with the evaluator-owned authoritative state.",
+        "Account for object sizes in all admission, retention, promotion, demotion, and eviction consequences without violating capacity.",
+        "Treat anchor code, hash, structural organization, and edit ancestry as evidence rather than construction authority.",
+        "Balance hit-rate, byte efficiency, scan resistance, phase-shift responsiveness, and regret as competing behavioral objectives under unknown traces.",
+        "Emit one complete policy lineage without relying on scores, matched-arm outcomes, or external comparison."
+      ],
+      "witnesses": [
+        "The required interface is Policy(capacity_bytes) with access(key, size, now) returning a list of integer keys.",
+        "The evaluator owns authoritative cache state, and processing is online one access at a time.",
+        "The policy must use only the Python standard library and must not access traces, references, oracle decisions, benchmark paths, external libraries, networking, or subprocesses.",
+        "Returned keys must be unique, currently cached, and limited to keys evicted by the current request.",
+        "The cache must never exceed capacity_bytes, including variable object sizes and zero-capacity or oversized requests.",
+        "The stated objectives jointly concern object hit rate, byte hit rate, scan resistance, phase-shift adaptation, and regret against an offline optimum.",
+        "The evidence identifies a tension between resistance to transient sequences, responsiveness to regime changes, and preservation of legality without future-trace knowledge."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R7-pair02-candidate-call01-provenance_quotient_normalizer",
+    "duration_seconds": 18.569,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:18:00Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "9cd72512fcf7a5b8ebde4971d8020c92a823bd346af637963de6b63969d40a7c",
+    "raw_events_path": "workspace\\model-calls\\R7-pair02-candidate-call01-provenance_quotient_normalizer\\raw-events.jsonl",
+    "raw_events_sha256": "59be1f85c05f16bed7731bd6e2297a0171b1aac032e222af0c3c9a81a8eb8011",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "7da623eb00012bb887c334aa840a7083c08461a207def8540b403ee60cde06da",
+    "returncode": 0,
+    "role": "R7 candidate topology role source-neutral obligation normalizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:17:41Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13348,
+      "output_tokens": 904,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

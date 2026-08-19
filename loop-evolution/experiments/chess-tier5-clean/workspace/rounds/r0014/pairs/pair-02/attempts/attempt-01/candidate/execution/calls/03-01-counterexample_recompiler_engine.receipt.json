@@ -1,0 +1,30 @@
+{
+  "stage": "counterexample_triggered_semantic_reentry",
+  "stage_mode": "sequential",
+  "call_id": "counterexample_recompiler_engine",
+  "role": "counterexample-triggered semantic recompiler",
+  "output_type": "engine",
+  "prompt_sha256": null,
+  "response_sha256": "7030e9e62d33e9ec4ba3ebbfc732e6b2ed6d0157cc63c42b0267efc0ab8041d0",
+  "usage": {
+    "input_tokens": 0,
+    "cached_input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_output_tokens": 0,
+    "model_calls": 0
+  },
+  "trace_refs": [
+    "supervisor-direct-contingency:codex-quota-unavailable"
+  ],
+  "execution_provenance": "supervisor_direct_contingency",
+  "official_runtime_policy_reproduced": false,
+  "user_authorized_direct_role_substitution": true,
+  "validation": {
+    "syntax": "passed",
+    "start_position_legal_moves": 20,
+    "parent_immutable_after_make": true,
+    "uci_handshake": "passed",
+    "legal_bestmove_smoke": "bestmove b1c3",
+    "tt_mate_score_cross_ply_counterexample": "passed"
+  }
+}

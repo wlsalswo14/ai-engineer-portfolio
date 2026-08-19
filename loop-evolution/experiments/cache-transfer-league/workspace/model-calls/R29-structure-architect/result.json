@@ -1,0 +1,119 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R29-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "expose_committed_policy",
+      "information_flow": "The first call sees all common evidence and forms exactly one complete executable policy state whose semantics are final. The second call consumes that state with public obligations visible but without anchor-policy visibility; it has no authority to reinterpret, replace, or revise the inherited semantics and emits the contained policy through an identity-preserving transition.",
+      "name": "Origin-Locked Semantic Relay",
+      "organization": "two-call sequential lineage with upstream-exclusive semantic authority and one downstream semantic write barrier",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "commit_executable_state",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Use the supplied evidence to resolve public obligations and form exactly one complete executable policy state whose semantics constitute the lineage's sole final commitment.",
+              "output_type": "executable_policy_state",
+              "role": "origin-bound semantic authority"
+            },
+            {
+              "id": "expose_committed_policy",
+              "inputs": [
+                "commit_executable_state",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the immediately preceding complete executable state, verify its correspondence to the visible public obligations without semantic reinterpretation, and emit exactly its committed policy.",
+              "output_type": "policy",
+              "role": "read-only policy exposer"
+            }
+          ],
+          "id": "origin_locked_relay",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "location and timing of semantic commitment",
+        "terminal response to perceived contract tension",
+        "semantic stability across the handoff"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "post-construction provenance-blind terminal semantic authority",
+      "independent_replacement_principle": "Semantic intent becomes irrevocable where the complete executable state is formed, and every downstream transition preserves that intent by identity.",
+      "rejected_assumptions": [
+        "A terminal call requires independent semantic discretion after a complete executable artifact already exists.",
+        "Separating final semantic commitment from formation-time evidence improves reconciliation."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Reverse semantic authority across the lineage edge: the first call makes the sole irrevocable semantic commitment, and the final call receives read-only semantic authority.",
+      "expected_effect": "Origin-locked semantics should reduce handoff drift and move contract reconciliation from terminal reinterpretation to evidence-visible policy formation.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active family leaves executable semantics provisional until a provenance-blind terminal authority reinterprets them, separating final commitments from the evidence that originally made them coherent."
+    },
+    "structural_mutation": {
+      "after": "The first call holds sole semantic authority when forming one complete executable state; the lineage edge makes those semantics immutable, and the final call may only expose that state as policy.",
+      "before": "The first call forms a provisional executable closure, while the provenance-blind final call holds sole authority to reconcile and revise its semantics.",
+      "change_count": 1,
+      "factor": "origin-bound semantic authority enforced by an irreversible semantic write barrier",
+      "why_structural": "The mutation reverses control authority on the only inter-call edge and changes its state-transition semantics from revisable transfer to identity-preserving transfer."
+    }
+  },
+  "receipt": {
+    "call_id": "R29-structure-architect",
+    "duration_seconds": 66.287,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:55:41Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c754ce97110554058ebc15b397992f3125527a71a82c241bd827e6f4a57d1dcf",
+    "raw_events_path": "workspace\\model-calls\\R29-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "5852d2c12c5c88feb686b4a23d95a8cd14beba43264fa9d766be5386f497e1a4",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "c4f0fbccf4218945b8dd0a5ba556999bfabae13ba01f509b80bf07de0b5c7e90",
+    "returncode": 0,
+    "role": "score-blind R29 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:54:34Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14561,
+      "output_tokens": 3478,
+      "reasoning_output_tokens": 2588
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,42 @@
+{
+  "parsed_response": {
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.history = OrderedDict()\n        self.history_limit = 8192\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.used_bytes = 0\n        self.access_count = 0\n\n    def _record(self, key):\n        value = self.history.pop(key, 0) + 1\n        self.history[key] = value\n        while len(self.history) > self.history_limit:\n            old_key, _ = self.history.popitem(last=False)\n            if old_key in self.probation or old_key in self.protected:\n                self.history[old_key] = value\n                break\n        self.access_count += 1\n        if self.access_count % 2048 == 0:\n            for item_key in list(self.history):\n                self.history[item_key] = max(1, (self.history[item_key] + 1) // 2)\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _frequency(self, key):\n        return self.history.get(key, 1)\n\n    def _rebalance(self):\n        protected_bytes = sum(self.protected.values())\n        while self.protected and protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.probation[old_key] = old_size\n            protected_bytes -= old_size\n\n    def _victim(self):\n        if self.probation:\n            return next(iter(self.probation))\n        if self.protected:\n            return next(iter(self.protected))\n        return None\n\n    def _evict_one(self):\n        if self.probation:\n            old_key, old_size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, old_key)\n        elif self.protected:\n            old_key, old_size = self.protected.popitem(last=False)\n            self._remember(self.ghost_protected, old_key)\n        else:\n            return None\n        self.used_bytes -= old_size\n        return old_key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._record(key)\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        if key in self.ghost_probation:\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = max(0, self.protected_target - max(step, min(size, self.capacity_bytes)))\n        elif key in self.ghost_protected:\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = min(self.capacity_bytes, self.protected_target + max(step, min(size, self.capacity_bytes)))\n\n        victim = self._victim()\n        if victim is not None:\n            new_score = self._frequency(key) / max(1, size)\n            old_size = self.probation.get(victim, self.protected.get(victim, 1))\n            old_score = self._frequency(victim) / max(1, old_size)\n            if key not in self.ghost_probation and key not in self.ghost_protected and new_score < old_score:\n                self._forget_ghost(key)\n                return []\n\n        self._forget_ghost(key)\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                return evicted\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R25-pair02-incumbent-call01-form_executable_closure",
+    "duration_seconds": 42.509,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:26:37Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "cb1add4ee6cf4f31afcc854b4f1b4ca9bc06e5624a6eb9bfcbf7e6f27ff4e589",
+    "raw_events_path": "workspace\\model-calls\\R25-pair02-incumbent-call01-form_executable_closure\\raw-events.jsonl",
+    "raw_events_sha256": "7266413b0aa0852413488157d2810c60d9f99c726e511cc8c253edcb0669cfb5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "3b8fef87c522cbd946e14dc09615a5fc95179c39bf515c949d70a1ddf039bb47",
+    "returncode": 0,
+    "role": "R25 incumbent topology role executable semantic closure former",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:25:55Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14421,
+      "output_tokens": 3167,
+      "reasoning_output_tokens": 2070
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

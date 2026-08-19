@@ -1,0 +1,18 @@
+Evidence packet
+
+- Artifact: [provisional builder response](C:/Users/jinminjae/OneDrive/Desktop/Ouroboros/loop-evolution/experiments/chess-tier5-clean/workspace/rounds/r0010/pairs/pair-01/attempts/attempt-01/incumbent/execution/calls/01-01-provisional_builder.response.txt)
+- Failure: pawn-only evaluation collapse.
+- Witness FEN: `8/8/8/8/8/8/P7/4K2k w - - 0 1`
+- Provisional: `Engine.evaluate(...) == 0`
+- Champion evaluator: nonzero (`256` expected from supplied source).
+- Causal delta: provisional `Engine.evaluate` replacement, specifically:
+  `if not any(x!='.' and x.lower() not in ('p','k') for x in p.b):return 0`
+- A–B–A intervention:
+  - A: provisional evaluator → `0`
+  - B: remove the implicated shortcut → `186`
+  - A restored → `0`
+- Certified rollback: restore the complete champion `Engine.evaluate` function. Singleton-line removal is not preservation-safe because it breaks king-only draw evaluation.
+- Obligations: preserve legal generation, perft, UCI handshake, exactly-one `bestmove`, and king-only draw behavior.
+- No engine emitted; workspace unchanged.
+- Runtime caveat: interpreter execution was blocked by the managed read-only shell policy; the witness is executable but runtime results above are source-derived.
+- Memory upload: unavailable because network access is forbidden and the filesystem is read-only.

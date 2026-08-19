@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.used_bytes = 0\n        self.target_t1_bytes = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _drop_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key):\n        self._drop_ghost(key)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _evict_one(self):\n        if self.t1 and (self.t1_bytes > self.target_t1_bytes or not self.t2):\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n        elif self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._remember(self.b2, key)\n        elif self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def _insert(self, key, size, protected):\n        if protected:\n            self.t2[key] = size\n            self.t2_bytes += size\n        else:\n            self.t1[key] = size\n            self.t1_bytes += size\n        self.used_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            self.target_t1_bytes = min(\n                self.capacity_bytes,\n                self.target_t1_bytes + max(1, min(size, self.capacity_bytes)),\n            )\n        elif in_b2:\n            self.target_t1_bytes = max(\n                0,\n                self.target_t1_bytes - max(1, min(size, self.capacity_bytes)),\n            )\n        self._drop_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self._insert(key, size, in_b1 or in_b2)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R26-pair03-incumbent-call01-form_executable_closure",
+    "duration_seconds": 50.927,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T17:34:37Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "f8bedf2996ac1a9cde3040cf8f3cdf4eb2791aea104535d99f1cfce30420edd9",
+    "raw_events_path": "workspace\\model-calls\\R26-pair03-incumbent-call01-form_executable_closure\\raw-events.jsonl",
+    "raw_events_sha256": "07553b7958ba812c4774f937612940fd18a2259b2617324d84bbfdaf5d569e08",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "6d29eccf65d628504c1bf49852545af8b4d0a98643d5e6fa2537cc8bc22d6755",
+    "returncode": 0,
+    "role": "R26 incumbent topology role executable semantic closure former",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T17:33:46Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13798,
+      "output_tokens": 3903,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

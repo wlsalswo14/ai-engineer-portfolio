@@ -1,0 +1,121 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R36-structure-architect\\final-receipt.json",
+    "sha256": "f0e41d2427b5b133eb84248056ff528aacf7ca04440dbfb66e08f873801d1ccf"
+  },
+  "architect_response": {
+    "architect_scope": "one-R36-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "contract_bounded_behavior_authority",
+      "information_flow": "The first call receives all common evidence, creates one complete executable closure, and binds its public-contract conformance as immutable. The terminal call consumes that closure with public non-anchor evidence, retains no authority to alter the locked conformance boundary, revises only behavior-bearing semantics, and emits one policy.",
+      "name": "Contract-Locked Behavioral Authority Relay",
+      "organization": "two-call sequential lineage with one contract-locked executable handoff",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "lock_contract_closure",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Form exactly one complete executable policy closure from the supplied evidence, bind public-contract conformance as an immutable authority boundary, delegate only behavior-semantic revision, and pass the complete artifact forward.",
+              "output_type": "executable_policy_closure",
+              "role": "contract-lock authority"
+            },
+            {
+              "id": "contract_bounded_behavior_authority",
+              "inputs": [
+                "lock_contract_closure",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume lock_contract_closure and the supplied public evidence, preserve its locked contract conformance, exercise authority only over behavior-bearing semantics within that boundary, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "contract-bounded behavioral authority"
+            }
+          ],
+          "id": "contract_locked_relay",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "resistance to transient scan-driven displacement",
+        "adaptation after workload phase shifts"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "unrestricted terminal reconciliation of both contract conformance and behavior semantics",
+      "independent_replacement_principle": "upstream contract lock with downstream behavior-only semantic authority",
+      "rejected_assumptions": [
+        "Terminal contract reconciliation requires unrestricted authority over a complete predecessor artifact.",
+        "Contract conformance and behavior-semantic revision must remain coupled under one terminal authority."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Lock public-contract conformance upstream and delegate only behavior-semantic revision downstream on the same complete policy-bearing lineage.",
+      "expected_effect": "The authority boundary should preserve operation validity while allowing coherent downstream changes to scan resistance and phase-shift adaptation.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active structure assumes terminal contract repair requires unrestricted semantic authority, allowing conformance reconciliation to overwrite coordinated behavior in a complete predecessor artifact."
+    },
+    "structural_mutation": {
+      "after": "The first call binds contract conformance immutably, while the terminal call may revise only behavior-bearing semantics within that boundary.",
+      "before": "The terminal call holds unpartitioned authority to reconcile contract conformance and behavioral semantics throughout the predecessor closure.",
+      "change_count": 1,
+      "factor": "immutable public-contract authority boundary on the executable-closure handoff",
+      "why_structural": "This changes edge authority and state-transition semantics without adding candidates, branches, or terminal role fission."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 36,
+  "incumbent_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R36\\qualitative-error-notebook.json",
+    "sha256": "a3216e16851c83cfd57a7f6b7ad0e32609ac2d518dc12320e2b200cd39621f78"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R36\\source-manifest.json",
+    "sha256": "2e3d984fcdeb72219ec784e08ce457e049c49a2682c43b8fc7c3cfaaf242e3d2"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": {
+      "coarse_topology_fingerprint": "77f3f01e91c941ec17b784361bf133c53e6607cca68a98d73254b0630be50d58",
+      "matches_incumbent_coarse_shape": true,
+      "mere_role_fission_or_rename": false,
+      "reason": "coarse call shape reused with a novel certified edge/control semantic factor"
+    },
+    "factor": "immutable public-contract authority boundary on the executable-closure handoff",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "lock_contract_closure",
+        "executor_semantics": "self-contained executable policy artifact crossing a provenance-blind closure edge",
+        "output_type": "executable_policy_closure"
+      }
+    ],
+    "semantic_topology_fingerprint": "83e5ec99b1537933fa7b23cadefb82ee212a79087578510ea24532b28d39d2b8",
+    "topology_fingerprint": "77f3f01e91c941ec17b784361bf133c53e6607cca68a98d73254b0630be50d58"
+  }
+}

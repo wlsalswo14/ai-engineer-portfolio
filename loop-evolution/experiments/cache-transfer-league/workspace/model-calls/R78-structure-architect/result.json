@@ -1,0 +1,115 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R78-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "release_from_closed_custody",
+      "information_flow": "The first call alone receives all common inputs, reconciles their evidence and obligations, and emits one complete executable policy closure. The final call consumes only that closure, receives no common external input directly, applies its self-contained custody transition, and emits its single enclosed policy.",
+      "name": "Epistemically Closed Executable Custody",
+      "organization": "two-call sequential lineage whose sole edge transfers exclusive custody of one complete executable policy closure",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "form_executable_custody",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile all visible evidence and obligations into one complete executable policy closure whose carried basis is sufficient for downstream custody, without issuing binding exclusions.",
+              "output_type": "executable_policy_closure",
+              "role": "atomic evidence-to-artifact custodian"
+            },
+            {
+              "id": "release_from_closed_custody",
+              "inputs": [
+                "form_executable_custody"
+              ],
+              "objective": "Consume form_executable_custody as the sole visible evidence, preserve the complete artifact under its self-contained custody semantics, and emit its one policy.",
+              "output_type": "policy",
+              "role": "closure-governed policy release authority"
+            }
+          ],
+          "id": "closed_custody_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "authoritative-operation consistency",
+        "scan-resistance coherence",
+        "phase-shift adaptation coherence"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "binding negative-authority vetoes carried on an analysis-to-policy edge",
+      "independent_replacement_principle": "Resolve evidence atomically into one complete executable artifact and transfer exclusive custody of that artifact across an epistemically closed edge.",
+      "rejected_assumptions": [
+        "A binding negative analysis must control downstream policy construction.",
+        "The terminal emitter must reread all common evidence and remain the sole constructive authority.",
+        "A non-policy handoff can reliably preserve evidence-to-artifact coherence."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace the veto-bearing analysis handoff with one epistemically closed executable-custody transfer that commits a complete policy artifact upstream and makes that artifact the terminal call's sole evidence.",
+      "expected_effect": "Executable continuity should improve authoritative-operation consistency and produce more coherent scan-resistance and phase-shift adaptation behavior by preventing late divergence between reconciled evidence and emitted policy.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active family leaves policy identity uncommitted until a terminal call that can reinterpret every source, while its predecessor supplies only binding negative analysis and preserves no executable artifact."
+    },
+    "structural_mutation": {
+      "after": "The upstream call transfers one complete executable policy closure under exclusive custody, and the terminal call sees only that closure when emitting its policy.",
+      "before": "A non-policy analysis edge carries binding exclusions to a terminal constructor that also directly sees every common input.",
+      "change_count": 1,
+      "factor": "epistemically closed executable-custody transfer on the sole lineage edge",
+      "why_structural": "The single custody factor changes the edge payload, construction authority, evidence timing, and downstream visibility as inseparable consequences of making the transferred executable artifact the sole post-handoff source of truth."
+    }
+  },
+  "receipt": {
+    "call_id": "R78-structure-architect",
+    "duration_seconds": 200.695,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:32:43Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "5b053eb32362f0ee134a7a521e9ccca3b875a9d0dc14683ddb957664fa67d6f9",
+    "raw_events_path": "workspace\\model-calls\\R78-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "f3bb0533af508fafc021db950aae1e6735d4d61af969ebf870a5ee66d7503f3a",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "96356eaec0cdf3da0e31a2c709c797a82fe4eecfa6e7a860e107743f8786e97c",
+    "returncode": 0,
+    "role": "score-blind R78 counter_hypothesis structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:29:23Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14539,
+      "output_tokens": 9297,
+      "reasoning_output_tokens": 8392
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "pair": 2,
+  "attempt": 2,
+  "execution_order": [
+    "candidate",
+    "incumbent"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "frozen_lineage_baseline",
+    "anchor_id": "anchor_eaba2e9ff3e678c1",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\final-output.json",
+    "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+    "metrics": {
+      "draws": 65,
+      "elo": -94.211,
+      "losses": 31,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\benchmark-result-receipt.json",
+      "score_rate": 0.365,
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+      "wins": 4
+    },
+    "origin": "bootstrap:package_ebdecd200797a81e"
+  },
+  "incumbent_structure_id": "loop_f7c2f8106612d495",
+  "candidate_structure_id": "loop_a6a600647446e2cd",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0023\\pairs\\pair-02\\attempts\\attempt-02\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0023\\pairs\\pair-02\\attempts\\attempt-02\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": false,
+    "failure_kind": "invalid_engine_payload",
+    "public_score": 0.0,
+    "public_evidence": [],
+    "elo": null
+  },
+  "candidate_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:752d126f779c6343e1287bed92f2c7f009c41436ad9a5bfeec9e3b9d6efb9127",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.295,
+    "wins": 5,
+    "draws": 49,
+    "losses": 46,
+    "elo": -148.002,
+    "elo_error_95": 107.368,
+    "los": 0.000859,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0023\\pairs\\pair-02\\attempts\\attempt-02\\candidate\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-752d126f779c6343.json",
+    "benchmark_receipt_sha256": "d140ec8d298b5251836662de4e3fea85ba75b7ec85503e790b120f1f297a3c90",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-752d126f779c6343.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:752d126f779c6343e1287bed92f2c7f009c41436ad9a5bfeec9e3b9d6efb9127",
+      "chessbench-wdl:5-49-46"
+    ]
+  },
+  "verdict": {
+    "verdict": "invalid",
+    "incumbent_elo": null,
+    "candidate_elo": -148.002
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "anchor_seam_mechanism_construction",
+        "stage_mode": "sequential",
+        "call_id": "anchor_seam_mechanism_foundry",
+        "role": "anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "7e1b80d969a573e870660bd34a88033d1b18ca7eb25f79098f8294ad5edcd4a1",
+        "response_sha256": "bcbdb90a35e87a965e7e843f160fe1614d1450b06963caa0f6bc3e092114b89e",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 554735,
+          "cached_input_tokens": 493568,
+          "output_tokens": 13234,
+          "reasoning_output_tokens": 8771,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.updated",
+          "item.completed",
+          "item.completed",
+          "item.updated",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_rehearsed_graft",
+        "stage_mode": "sequential",
+        "call_id": "seam_grafting_engine",
+        "role": "single seam-rehearsed component grafting producer",
+        "output_type": "engine",
+        "prompt_sha256": "0b932fcfb6915977766f577d73dd653eff667665a672f5066cc76b5bbe16dc0d",
+        "response_sha256": "d6311dc5ef4ab564685d63ebc5598669c4b2da660c6e661a94f8f1d0f358809e",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 21470,
+          "cached_input_tokens": 0,
+          "output_tokens": 8199,
+          "reasoning_output_tokens": 3068,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "single_cycle_mapped_component",
+        "stage_mode": "sequential",
+        "call_id": "cycle_mapped_component_foundry",
+        "role": "single cycle-mapped anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "4585498a0ca3d64676010870b1b1e57a7099fd2e912b615cf1bb5486e7a24951",
+        "response_sha256": "5b19683dfca23ade390243013e919305bf8fc29332357ef3cb1f17c17f5c29d2",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 198654,
+          "cached_input_tokens": 164352,
+          "output_tokens": 14274,
+          "reasoning_output_tokens": 8614,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "triggered_seam_boundary_repartition",
+        "stage_mode": "sequential",
+        "call_id": "causal_cycle_boundary_repartitioner",
+        "role": "single causal-cycle-triggered seam boundary repartitioner",
+        "output_type": "analysis",
+        "prompt_sha256": "8443dfc1af2918363508f67397a185be9aea45560c18c55b1a1fdd7c465ece7e",
+        "response_sha256": "fc115fd0ff3defc822b9ddfb73be56318364675bf475cc20bd2f45601d4aca8a",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 50481,
+          "cached_input_tokens": 32256,
+          "output_tokens": 3635,
+          "reasoning_output_tokens": 2503,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_cycle_safe_graft",
+        "stage_mode": "sequential",
+        "call_id": "cycle_repartitioned_grafting_engine",
+        "role": "single cycle-safe component grafting engine producer",
+        "output_type": "engine",
+        "prompt_sha256": "aa25be7ec650abb9d62801000ae5d1a9802b5b25e526f2eed043f44130f5d06b",
+        "response_sha256": "9d86a312f3140d210cbbf27e77cdfe7116cbc497f6b9d61d08ee249da56460d4",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 52342,
+          "cached_input_tokens": 32256,
+          "output_tokens": 8670,
+          "reasoning_output_tokens": 3751,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false
+}

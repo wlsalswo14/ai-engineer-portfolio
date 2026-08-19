@@ -1,0 +1,108 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R94-structure-architect\\final-receipt.json",
+    "sha256": "1d2ea7d1047b4a3b26e81bcbbf0fd06b3c43d17b27e176c442167529d0ddb807"
+  },
+  "architect_response": {
+    "architect_scope": "one-R94-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "closure_preserving_retract_emit",
+      "information_flow": "The first call receives every common input and emits one complete executable policy closure carrying authoritative causal dependencies among its commitments. The final call consumes that closure, reopens every common input simultaneously, applies only closure-preserving retractions without adding or substituting semantics, and emits one policy.",
+      "name": "Closure-Bound Retraction Executable Dyad",
+      "organization": "two-call sequential lineage with one executable dependency-closure origin and one closure-preserving retract-only terminal authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "originate_executable_dependency_closure",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile the jointly visible evidence and obligations into one complete executable policy artifact whose causal dependencies define authoritative closure-preserving retraction transitions.",
+              "output_type": "executable_policy_closure",
+              "role": "joint-evidence executable closure origin authority"
+            },
+            {
+              "id": "closure_preserving_retract_emit",
+              "inputs": [
+                "originate_executable_dependency_closure",
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume originate_executable_dependency_closure, inspect the complete artifact against jointly visible common evidence, retract unsupported semantics only through its authoritative closure-preserving transitions, add or substitute no semantics, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "joint-evidence closure-preserving retract-only terminal authority"
+            }
+          ],
+          "id": "single_closure_bound_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only the origin-to-terminal edge state semantics changes from a policy capsule to an authoritative executable dependency closure; full common-input visibility, origin authorship, two-call lineage, and retract-only terminal authority remain fixed.",
+      "why_not_repeat_role_fission": "No call is added, divided, or reassigned: the same two authorities remain, and the single mutation changes the causal granularity of their existing handoff rather than creating another producer, reviewer, or finalizer."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Change only the existing handoff state semantics: the origin emits one complete executable policy closure, and the terminal exercises unchanged retract-only authority through closure-preserving state transitions while retaining full common-evidence visibility.",
+      "expected_effect": "Retraction should remain corrective while preserving causally supported executable coherence and avoiding the unnecessary removal of independent commitments.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The incumbent executable handoff does not make causal dependency closure among retained commitments authoritative at the retraction boundary, so a justified local retraction can strand semantics that depended on the removed commitment."
+    },
+    "structural_mutation": {
+      "after": "A complete executable policy closure crosses the same edge, making dependency-closed retraction transitions authoritative while leaving call count, evidence visibility, and retract-only terminal authority unchanged.",
+      "before": "A complete policy capsule crosses the origin-to-terminal edge, whose retract-only authority preserves executable completeness without an authoritative dependency-closure state.",
+      "change_count": 1,
+      "factor": "causal-dependency closure authority on the executable handoff edge",
+      "why_structural": "The mutation changes the policy-bearing edge state and the causal transitions available to its consumer, rather than adding a role, checklist, gate, branch, or renamed responsibility."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 94,
+  "incumbent_structure_sha256": "c907cfebd2011c00c4a17d4a12a8f25f0f76ab7dbda9b969287a07383677fcb7",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "local_refinement",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R94\\qualitative-error-notebook.json",
+    "sha256": "22d03627905d5f6a8e6d542529cbadcaa5e815563a1813846df4a048ba07b2c3"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R94\\source-manifest.json",
+    "sha256": "fbc9af026bb87e09222a6b2d6b5d61025dcbe4456c5f900f28b6d69b6e8ec7b0"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "causal-dependency closure authority on the executable handoff edge",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "originate_executable_dependency_closure",
+        "executor_semantics": "self-contained executable policy artifact crossing a provenance-blind closure edge",
+        "output_type": "executable_policy_closure"
+      }
+    ],
+    "semantic_topology_fingerprint": "b6fe8b44b22fee075be8ff6e99190a1d9b279c5be1003b341824b25187a15855",
+    "topology_fingerprint": "4926f616b6cdcdea6bb56d66153ef167e6e0d97900303de56f4ca7446ea030dc"
+  }
+}

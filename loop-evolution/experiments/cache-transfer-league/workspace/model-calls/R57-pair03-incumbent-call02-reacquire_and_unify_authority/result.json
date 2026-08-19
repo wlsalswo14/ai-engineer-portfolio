@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.ghost_limit = 4096\n        self.target = self.capacity_bytes // 2\n        self.bytes1 = 0\n        self.bytes2 = 0\n\n    def _forget_ghost(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _remember(self, ghost, key, size):\n        self._forget_ghost(key)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _take(self, key):\n        if key in self.t1:\n            size = self.t1.pop(key)\n            self.bytes1 -= size\n            return size, 1\n        if key in self.t2:\n            size = self.t2.pop(key)\n            self.bytes2 -= size\n            return size, 2\n        return None, None\n\n    def _evict_one(self, b2_hit):\n        use_t1 = bool(self.t1) and (\n            self.bytes1 > self.target\n            or (b2_hit and self.bytes1 == self.target)\n        )\n        if use_t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.bytes2 -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.bytes1 -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def _make_room(self, size, b2_hit):\n        evicted = []\n        while self.bytes1 + self.bytes2 + size > self.capacity_bytes:\n            key = self._evict_one(b2_hit)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        requested = int(size)\n\n        if requested <= 0:\n            if key in self.t1:\n                self.t1.move_to_end(key)\n            elif key in self.t2:\n                self.t2.move_to_end(key)\n            return []\n\n        if requested > self.capacity_bytes:\n            old_size, segment = self._take(key)\n            if segment == 1:\n                self._remember(self.b1, key, old_size)\n                return [key]\n            if segment == 2:\n                self._remember(self.b2, key, old_size)\n                return [key]\n            return []\n\n        if key in self.t1:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        if key in self.t2:\n            self._take(key)\n            evicted = self._make_room(requested, False)\n            self.t2[key] = requested\n            self.bytes2 += requested\n            return evicted\n\n        b1_hit = key in self.b1\n        b2_hit = key in self.b2\n        if b1_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(step, min(requested, self.capacity_bytes)),\n            )\n        elif b2_hit:\n            step = max(1, self.capacity_bytes // 16)\n            self.target = max(\n                0,\n                self.target - max(step, min(requested, self.capacity_bytes)),\n            )\n\n        self._forget_ghost(key)\n        evicted = self._make_room(requested, b2_hit)\n        if b1_hit or b2_hit:\n            self.t2[key] = requested\n            self.bytes2 += requested\n        else:\n            self.t1[key] = requested\n            self.bytes1 += requested\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R57-pair03-incumbent-call02-reacquire_and_unify_authority",
+    "duration_seconds": 20.186,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T21:09:29Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "07a29b819e5b54092feb9d9d1562d4edd768cc4848be06e30e75e70db783dde6",
+    "raw_events_path": "workspace\\model-calls\\R57-pair03-incumbent-call02-reacquire_and_unify_authority\\raw-events.jsonl",
+    "raw_events_sha256": "d53fcbc403d6862759c222de32698882c2684bb59ce8dca21d2046c909142504",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "30389f8746dd7cf3552f53add03efa404f6bc2c0629dee1c1687e35231134dbb",
+    "returncode": 0,
+    "role": "R57 incumbent topology role raw-evidence-reacquiring unitary policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T21:09:09Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14526,
+      "output_tokens": 1421,
+      "reasoning_output_tokens": 370
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

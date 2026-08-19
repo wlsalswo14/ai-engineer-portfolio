@@ -1,0 +1,37 @@
+{
+  "final_call_id": "emit_bound_artifact",
+  "information_flow": "The first call receives every common input and resolves them into one binding policy_capsule carrying a complete executable policy artifact. The final call consumes only that capsule, has no common-input visibility or policy-revision authority, and emits the contained artifact as the single policy.",
+  "name": "Single-Contact Authority Inversion",
+  "organization": "two-call sequential lineage with intake-localized binding policy authority and artifact-only terminal emission",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "bind_executable_authority",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Resolve the supplied hypothesis against all six visible sources and bind one complete executable policy artifact with settled evidence commitments into a single policy capsule.",
+          "output_type": "policy_capsule",
+          "role": "single-contact executable policy authority"
+        },
+        {
+          "id": "emit_bound_artifact",
+          "inputs": [
+            "bind_executable_authority"
+          ],
+          "objective": "Consume bind_executable_authority as the sole visible evidence, preserve its complete executable artifact and settled commitments without reinterpretation or alternate construction, and emit that artifact as the one policy.",
+          "output_type": "policy",
+          "role": "artifact-only non-revising emitter"
+        }
+      ],
+      "id": "authority_inversion_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

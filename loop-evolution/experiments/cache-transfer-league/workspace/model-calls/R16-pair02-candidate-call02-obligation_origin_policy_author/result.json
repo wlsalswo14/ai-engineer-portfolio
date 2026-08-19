@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import deque\nfrom heapq import heappop, heappush\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.items = {}\n        self.used_bytes = 0\n        self.recent_bytes = 0\n        self.target_recent = (self.capacity_bytes * 3) // 5\n        self.recent_heap = []\n        self.hot_heap = []\n        self.ghosts = {}\n        self.ghost_queue = deque()\n        self.ghost_serial = 0\n        self.ghost_limit = max(256, min(8192, self.capacity_bytes // 64 + 256))\n        self.tick = 0\n        self.decay_period = 1024\n\n    def _touch(self, key, item):\n        item[4] += 1\n        if item[3] == \"r\":\n            heappush(self.recent_heap, (item[2], item[4], key))\n        else:\n            heappush(self.hot_heap, (item[1], -item[0], item[2], item[4], key))\n\n    def _remember(self, key, segment):\n        self.ghost_serial += 1\n        serial = self.ghost_serial\n        self.ghosts[key] = (segment, serial)\n        self.ghost_queue.append((serial, key))\n        while len(self.ghost_queue) > self.ghost_limit:\n            old_serial, old_key = self.ghost_queue.popleft()\n            current = self.ghosts.get(old_key)\n            if current is not None and current[1] == old_serial:\n                del self.ghosts[old_key]\n\n    def _decay(self):\n        for key, item in list(self.items.items()):\n            if item[3] != \"h\":\n                continue\n            item[1] = max(1, item[1] // 2)\n            if item[1] == 1:\n                item[3] = \"r\"\n                self.recent_bytes += item[0]\n            self._touch(key, item)\n\n    def _maybe_rebuild(self):\n        limit = len(self.items) * 4 + 64\n        if len(self.recent_heap) <= limit and len(self.hot_heap) <= limit:\n            return\n        self.recent_heap = []\n        self.hot_heap = []\n        for key, item in self.items.items():\n            self._touch(key, item)\n\n    def _oldest_recent(self):\n        while self.recent_heap:\n            last, version, key = heappop(self.recent_heap)\n            item = self.items.get(key)\n            if item is not None and item[3] == \"r\" and item[2] == last and item[4] == version:\n                return key\n        return None\n\n    def _weakest_hot(self):\n        while self.hot_heap:\n            frequency, negative_size, last, version, key = heappop(self.hot_heap)\n            item = self.items.get(key)\n            if (item is not None and item[3] == \"h\" and item[1] == frequency\n                    and item[0] == -negative_size and item[2] == last and item[4] == version):\n                return key\n        return None\n\n    def _victim(self):\n        if self.recent_bytes > self.target_recent:\n            key = self._oldest_recent()\n            if key is not None:\n                return key\n            return self._weakest_hot()\n        key = self._weakest_hot()\n        if key is not None:\n            return key\n        return self._oldest_recent()\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if not isinstance(key, int) or isinstance(key, bool):\n            return []\n        if not isinstance(size, int) or isinstance(size, bool) or size < 0:\n            return []\n\n        self.tick += 1\n        if self.tick % self.decay_period == 0:\n            self._decay()\n\n        item = self.items.get(key)\n        if item is not None:\n            item[2] = self.tick\n            if item[3] == \"r\":\n                item[1] = min(16, item[1] + 1)\n                if item[1] >= 2:\n                    item[3] = \"h\"\n                    self.recent_bytes -= item[0]\n            self._touch(key, item)\n            self._maybe_rebuild()\n            return []\n\n        ghost = self.ghosts.pop(key, None)\n        if ghost is not None and self.capacity_bytes:\n            step = max(1, self.capacity_bytes // 16)\n            if ghost[0] == \"r\":\n                self.target_recent = min(self.capacity_bytes, self.target_recent + step)\n            else:\n                self.target_recent = max(0, self.target_recent - step)\n\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            self._maybe_rebuild()\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._victim()\n            if victim is None:\n                break\n            old = self.items.pop(victim)\n            self.used_bytes -= old[0]\n            if old[3] == \"r\":\n                self.recent_bytes -= old[0]\n            self._remember(victim, old[3])\n            evicted.append(victim)\n\n        segment = \"h\" if ghost is not None else \"r\"\n        frequency = 2 if segment == \"h\" else 1\n        item = [size, frequency, self.tick, segment, 0]\n        self.items[key] = item\n        self.used_bytes += size\n        if segment == \"r\":\n            self.recent_bytes += size\n        self._touch(key, item)\n        self._maybe_rebuild()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R16-pair02-candidate-call02-obligation_origin_policy_author",
+    "duration_seconds": 112.991,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:59:42Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c86b9bc81453a8a84b1b547abcfc602d1669e3a131ab781e2350710eb0954e1c",
+    "raw_events_path": "workspace\\model-calls\\R16-pair02-candidate-call02-obligation_origin_policy_author\\raw-events.jsonl",
+    "raw_events_sha256": "11ff68f34401ba83c7bff167ed8d2360ac0bc4363ec16472e26eabc60d5a5ad4",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "fab23c3dc2828f8cf7f087ddd1329423f3b3dbf0c53dd16ab292903a9cc056f8",
+    "returncode": 0,
+    "role": "R16 candidate topology role obligation-originated terminal policy author",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:57:49Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13392,
+      "output_tokens": 9105,
+      "reasoning_output_tokens": 7695
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

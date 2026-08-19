@@ -1,0 +1,267 @@
+## Sole capability
+
+A cooperative deadline/work-budget component at the anchor seam:
+
+- Producer: `Engine.think()` initializes `nodes` and `deadline`.
+- Consumer: `search()`/`qsearch()` call `check_time()`.
+- Obligation: abort safely while preserving the last completed root move.
+
+```python
+import time
+
+
+class BudgetExpired(TimeoutError):
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__(reason)
+
+
+class WorkBudget:
+    """Primitive: begin(milliseconds, work_limit), tick(units), close()."""
+
+    def __init__(self, clock=None):
+        self.clock = clock or time.perf_counter
+        self.nodes = 0
+        self.deadline = 0.0
+        self.work_limit = None
+        self.active = False
+        self.generation = 0
+
+    def begin(self, milliseconds, work_limit=None):
+        if milliseconds < 0:
+            raise ValueError("negative duration")
+        if work_limit is not None and work_limit < 0:
+            raise ValueError("negative work limit")
+        if self.active:
+            raise RuntimeError("budget already active")
+        self.nodes = 0
+        self.deadline = self.clock() + float(milliseconds) / 1000.0
+        self.work_limit = work_limit
+        self.active = True
+        self.generation += 1
+        return self.snapshot()
+
+    def tick(self, units=1):
+        if not self.active:
+            raise RuntimeError("budget inactive")
+        if units <= 0:
+            raise ValueError("non-positive work")
+        if self.clock() >= self.deadline:
+            raise BudgetExpired("time")
+        if self.work_limit is not None and self.nodes + units > self.work_limit:
+            raise BudgetExpired("work")
+        self.nodes += units
+        if self.clock() >= self.deadline:
+            raise BudgetExpired("time")
+        return self.nodes
+
+    def close(self):
+        if not self.active:
+            raise RuntimeError("budget inactive")
+        self.active = False
+        return self.snapshot()
+
+    def snapshot(self):
+        return {
+            "active": self.active,
+            "nodes": self.nodes,
+            "deadline": self.deadline,
+            "generation": self.generation,
+        }
+
+
+class AnchorSearchSeam:
+    """Single bounded surrogate for think -> check_time -> root-result consumption."""
+
+    def __init__(self, clock=None):
+        self.budget = WorkBudget(clock)
+        self.nodes = 0
+        self.deadline = 0.0
+        self.best_move = None
+
+    def start(self, milliseconds, work_limit):
+        self.budget.begin(milliseconds, work_limit)
+        self.nodes = 0
+        self.deadline = self.budget.deadline
+        self.best_move = None
+
+    def step(self, root_move):
+        self.nodes = self.budget.tick()
+        self.best_move = root_move
+        return root_move
+
+    def finish(self):
+        return self.budget.close()
+
+    def run(self, root_moves, milliseconds, work_limit):
+        root_moves = tuple(root_moves)
+        self.start(milliseconds, work_limit)
+
+        if not root_moves:
+            self.finish()
+            return {"status": "empty", "best": None, "nodes": 0, "active": False}
+
+        self.best_move = root_moves[0]
+        completed = 0
+
+        for move in root_moves:
+            try:
+                self.step(move)
+                completed += 1
+            except BudgetExpired as exc:
+                self.finish()
+                return {
+                    "status": "timeout",
+                    "reason": exc.reason,
+                    "best": self.best_move,
+                    "nodes": self.nodes,
+                    "completed": completed,
+                    "active": self.budget.active,
+                }
+
+        self.finish()
+        return {
+            "status": "complete",
+            "reason": None,
+            "best": self.best_move,
+            "nodes": self.nodes,
+            "completed": completed,
+            "active": self.budget.active,
+        }
+
+
+class FakeClock:
+    def __init__(self):
+        self.value = 0.0
+
+    def __call__(self):
+        return self.value
+
+    def advance(self, seconds):
+        self.value += seconds
+
+
+def timeout_reason(fn):
+    try:
+        fn()
+    except BudgetExpired as exc:
+        return exc.reason
+    raise AssertionError("expected BudgetExpired")
+
+
+def fixture_suite():
+    traces = []
+
+    clock = FakeClock()
+    b = WorkBudget(clock)
+    b.begin(1000, 3)
+    b.tick(3)
+    reason = timeout_reason(b.tick)
+    assert reason == "work" and b.nodes == 3
+    b.close()
+    traces.append("effect: nodes=3 reason=work")
+
+    clock = FakeClock()
+    b = WorkBudget(clock)
+    b.begin(1000, 5)
+    b.tick(2)
+    assert b.active and b.nodes == 2
+    b.close()
+    traces.append("null: active=True nodes=2")
+
+    clock = FakeClock()
+    b = WorkBudget(clock)
+    assert not b.active
+    b.begin(1000, 0)
+    reason = timeout_reason(b.tick)
+    assert reason == "work"
+    b.close()
+    assert not b.active
+    traces.append("boundary: inactive->active->expired(work)->closed")
+
+    clock = FakeClock()
+    b = WorkBudget(clock)
+    b.begin(1000, 4)
+    b.tick()
+    g1, n1 = b.generation, b.nodes
+    b.close()
+    b.begin(1000, 4)
+    b.tick()
+    g2, n2 = b.generation, b.nodes
+    b.close()
+    assert (g1, g2, n1, n2) == (1, 2, 1, 1)
+    traces.append("repeat: generations=1,2 nodes=1,1")
+
+    clock = FakeClock()
+    b = WorkBudget(clock)
+    b.begin(5, 5)
+    b.tick()
+    clock.advance(0.006)
+    reason = timeout_reason(b.tick)
+    assert reason == "time" and b.nodes == 1
+    b.close()
+    traces.append("dependency: nodes=1 reason=time")
+
+    clock = FakeClock()
+    b = WorkBudget(clock)
+    b.begin(1000, 3)
+    reason = timeout_reason(lambda: b.tick(4))
+    assert reason == "work" and b.nodes == 0
+    b.tick(3)
+    final_reason = timeout_reason(b.tick)
+    b.close()
+    assert final_reason == "work" and b.nodes == 3
+    traces.append("bounded: rejected=work nodes=0 max=3 final=work")
+
+    clock = FakeClock()
+    seam = AnchorSearchSeam(clock)
+    result = seam.run(("a1", "b2", "c3"), 1000, 2)
+    assert result == {
+        "status": "timeout",
+        "reason": "work",
+        "best": "b2",
+        "nodes": 2,
+        "completed": 2,
+        "active": False,
+    }
+    traces.append(
+        "seam: status=timeout reason=work best=b2 nodes=2 active=False"
+    )
+
+    traces.append("agreement: primitive=bounded-stop seam=bounded-stop")
+    return traces
+
+
+if __name__ == "__main__":
+    for line in fixture_suite():
+        print(line)
+    print("PASS")
+```
+
+Execution command:
+
+```text
+python budget_component.py
+```
+
+Deterministic expected trace:
+
+```text
+effect: nodes=3 reason=work
+null: active=True nodes=2
+boundary: inactive->active->expired(work)->closed
+repeat: generations=1,2 nodes=1,1
+dependency: nodes=1 reason=time
+bounded: rejected=work nodes=0 max=3 final=work
+seam: status=timeout reason=work best=b2 nodes=2 active=False
+agreement: primitive=bounded-stop seam=bounded-stop
+PASS
+```
+
+Actual execution was unavailable: the managed read-only policy rejected even a trivial Python command, so the trace above is not claimed as observed.
+
+Causal falsifier: reject the capability if work exceeds its limit, deadline expiry does not unwind, repeated `begin()` leaks state, the seam loses the last completed root result, or the surrogate and primitive disagree on timeout reason/state.
+
+Graft invariants: one budget instance owned by `Engine`; `think()` calls `begin()` and closes every lifecycle; `search()`/`qsearch()` only call `tick()`; preserve `nodes`, `deadline`, `TimeoutError` unwinding, legal fallback, UCI behavior, and all board/evaluation code unchanged. No workspace files were modified.
+
+Wikia memory upload was attempted twice but blocked by the same command policy.

@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "pair": 2,
+  "attempt": 2,
+  "execution_order": [
+    "candidate",
+    "incumbent"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "frozen_lineage_baseline",
+    "anchor_id": "anchor_eaba2e9ff3e678c1",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\final-output.json",
+    "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+    "metrics": {
+      "draws": 65,
+      "elo": -94.211,
+      "losses": 31,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\benchmark-result-receipt.json",
+      "score_rate": 0.365,
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+      "wins": 4
+    },
+    "origin": "bootstrap:package_ebdecd200797a81e"
+  },
+  "incumbent_structure_id": "loop_f7c2f8106612d495",
+  "candidate_structure_id": "loop_8390669a7b4309e5",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0022\\pairs\\pair-02\\attempts\\attempt-02\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0022\\pairs\\pair-02\\attempts\\attempt-02\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:0d20335672375d107226af3158692dc3fcb960b1819b84b3257ed560c807eafd",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.245,
+    "wins": 2,
+    "draws": 45,
+    "losses": 53,
+    "elo": -190.849,
+    "elo_error_95": 114.769,
+    "los": 1.9e-05,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0022\\pairs\\pair-02\\attempts\\attempt-02\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-0d20335672375d10.json",
+    "benchmark_receipt_sha256": "2ec382d6be3db95e1f899478b3ad4ab6e2d9624c54a05a4b5a392e4d9deb05df",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-0d20335672375d10.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:0d20335672375d107226af3158692dc3fcb960b1819b84b3257ed560c807eafd",
+      "chessbench-wdl:2-45-53"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": false,
+    "failure_kind": "public_uci_smoke_failed",
+    "public_score": 0.0,
+    "public_evidence": [
+      "engine-source:4b2650d22241a675b346ee2654cb0cfa3d911edad45a5c50757e390585905c06"
+    ],
+    "elo": null
+  },
+  "verdict": {
+    "verdict": "invalid",
+    "incumbent_elo": -190.849,
+    "candidate_elo": null
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "anchor_seam_mechanism_construction",
+        "stage_mode": "sequential",
+        "call_id": "anchor_seam_mechanism_foundry",
+        "role": "anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "726a5d38c886127051ba84fd5bf02a27fc3b2673331318e8ada4a7ebbb10e707",
+        "response_sha256": "d24cdd2f607982e4eb658bf9036cce00410baa9dc84f404d36cb1410bd07a366",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 700006,
+          "cached_input_tokens": 650752,
+          "output_tokens": 14741,
+          "reasoning_output_tokens": 8148,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.started",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "item.completed",
+          "item.updated",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.updated",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.updated",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "single_rehearsed_graft",
+        "stage_mode": "sequential",
+        "call_id": "seam_grafting_engine",
+        "role": "single seam-rehearsed component grafting producer",
+        "output_type": "engine",
+        "prompt_sha256": "416a2399df95cc78c65827b63eb58098d4600118bae93f56a82e123bbadda064",
+        "response_sha256": "e6fc585af7cf7b7432b78a579e8addc24c723d9ea095ce224a30392ccf6107d2",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 21705,
+          "cached_input_tokens": 8960,
+          "output_tokens": 7993,
+          "reasoning_output_tokens": 2707,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "single_seam_rehearsed_component",
+        "stage_mode": "sequential",
+        "call_id": "seam_rehearsed_component_foundry",
+        "role": "single anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "52fdb75de2fade896a9e551f9c43400af0d3bce0610f0a981dd702623624ca3f",
+        "response_sha256": "9b060f1b56c813e2c8a30d8e1d06d84cd2b7f121436cf09fac78eb7e63f53018",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 82174,
+          "cached_input_tokens": 49664,
+          "output_tokens": 10527,
+          "reasoning_output_tokens": 7910,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      },
+      {
+        "stage": "triggered_state_ownership_compilation",
+        "stage_mode": "sequential",
+        "call_id": "noncommutative_ownership_compiler",
+        "role": "single noncommutativity-triggered state-ownership transformer",
+        "output_type": "analysis",
+        "prompt_sha256": "872d70f0f3beaf353c91f3c7a44c2541446e6c99bae2c9949f2600a07f855d3b",
+        "response_sha256": "60e51a40931547d56f02c5dc37e9afc945b89547ddd4abe7ac3cbefd0e5d2bfb",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 47379,
+          "cached_input_tokens": 22272,
+          "output_tokens": 7085,
+          "reasoning_output_tokens": 2239,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_ownership_native_graft",
+        "stage_mode": "sequential",
+        "call_id": "ownership_native_grafting_engine",
+        "role": "single ownership-bound component grafting engine producer",
+        "output_type": "engine",
+        "prompt_sha256": "36e9f88b7be4ad42d74d49bb78edb21f86e84b9ed3e4d1bdb8158960a06141a6",
+        "response_sha256": "49b623f305ca8a1cc7490fd551480a3703019e03653494a9e42df9b2dda521fb",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 27329,
+          "cached_input_tokens": 8960,
+          "output_tokens": 4821,
+          "reasoning_output_tokens": 151,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false
+}

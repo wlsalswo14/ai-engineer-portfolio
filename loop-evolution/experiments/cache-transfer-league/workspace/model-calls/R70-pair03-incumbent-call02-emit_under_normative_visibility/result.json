@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes: int):\n        try:\n            capacity = int(capacity_bytes)\n        except (TypeError, ValueError, OverflowError):\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self.used_bytes = 0\n        self.recent_bytes = 0\n        self.recent_target = self.capacity_bytes // 2\n        self.resident = {}\n        self.ghost_recent = {}\n        self.ghost_frequent = {}\n        self.ghost_limit = 1024\n        self.tick = 0\n\n    def _remember_ghost(self, key, size, frequency, segment):\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n        target = self.ghost_recent if segment == 0 else self.ghost_frequent\n        target[key] = (size, frequency, self.tick)\n        while len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_limit:\n            oldest_source = None\n            oldest_key = None\n            oldest_tick = None\n            for source in (self.ghost_recent, self.ghost_frequent):\n                for candidate, data in source.items():\n                    if oldest_tick is None or data[2] < oldest_tick:\n                        oldest_source = source\n                        oldest_key = candidate\n                        oldest_tick = data[2]\n            if oldest_source is None:\n                break\n            oldest_source.pop(oldest_key, None)\n\n    def _remove(self, key):\n        entry = self.resident.pop(key, None)\n        if entry is None:\n            return False\n        size, frequency, last, segment = entry\n        self.used_bytes -= size\n        if segment == 0:\n            self.recent_bytes -= size\n        if self.used_bytes < 0:\n            self.used_bytes = 0\n        if self.recent_bytes < 0:\n            self.recent_bytes = 0\n        self._remember_ghost(key, size, frequency, segment)\n        return True\n\n    def _choose_victim(self, protected):\n        if not self.resident:\n            return None\n        frequent_bytes = self.used_bytes - self.recent_bytes\n        if self.recent_bytes > self.recent_target:\n            candidates = [(key, entry) for key, entry in self.resident.items()\n                          if key != protected and entry[3] == 0]\n        elif frequent_bytes > self.capacity_bytes - self.recent_target:\n            candidates = [(key, entry) for key, entry in self.resident.items()\n                          if key != protected and entry[3] == 1]\n        else:\n            candidates = [(key, entry) for key, entry in self.resident.items()\n                          if key != protected]\n        if not candidates:\n            candidates = [(key, entry) for key, entry in self.resident.items()\n                          if key != protected]\n        if not candidates:\n            return None\n        return min(candidates, key=lambda item: (item[1][1], item[1][2], item[1][0], item[0]))[0]\n\n    def _trim(self, protected, evicted):\n        while self.used_bytes > self.capacity_bytes:\n            victim = self._choose_victim(protected)\n            if victim is None or not self._remove(victim):\n                break\n            evicted.append(victim)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        try:\n            key = int(key)\n        except (TypeError, ValueError, OverflowError):\n            return []\n        try:\n            size = max(0, int(size))\n        except (TypeError, ValueError, OverflowError):\n            size = 0\n        self.tick += 1\n        evicted = []\n\n        if key in self.resident:\n            old_size, frequency, last, segment = self.resident[key]\n            if size > self.capacity_bytes or self.capacity_bytes == 0:\n                if self._remove(key):\n                    evicted.append(key)\n                return evicted\n            self.used_bytes -= old_size\n            if segment == 0:\n                self.recent_bytes -= old_size\n            frequency = min(65535, frequency + 1)\n            segment = 1 if segment == 1 or frequency >= 2 else 0\n            self.resident[key] = (size, frequency, self.tick, segment)\n            self.used_bytes += size\n            if segment == 0:\n                self.recent_bytes += size\n            self._trim(key, evicted)\n            return evicted\n\n        ghost = self.ghost_recent.pop(key, None)\n        if ghost is not None:\n            self.recent_target = min(self.capacity_bytes,\n                                     self.recent_target + max(1, ghost[0]))\n            frequency = min(65535, max(2, ghost[1] + 1))\n            segment = 1\n        else:\n            ghost = self.ghost_frequent.pop(key, None)\n            if ghost is not None:\n                self.recent_target = max(0,\n                                         self.recent_target - max(1, ghost[0]))\n                frequency = min(65535, max(2, ghost[1] + 1))\n                segment = 1\n            else:\n                frequency = 1\n                segment = 0\n        self.ghost_recent.pop(key, None)\n        self.ghost_frequent.pop(key, None)\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return evicted\n        self.resident[key] = (size, frequency, self.tick, segment)\n        self.used_bytes += size\n        if segment == 0:\n            self.recent_bytes += size\n        self._trim(key, evicted)\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R70-pair03-incumbent-call02-emit_under_normative_visibility",
+    "duration_seconds": 77.711,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:20:49Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "e28638faf892edaadd7fe2d78a52b1ce1584e982076260b0b7d785dc85a02794",
+    "raw_events_path": "workspace\\model-calls\\R70-pair03-incumbent-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "7b6878037a831eb6b3365674309ec1488c10be6c2ef695d52ed02334bcbb9077",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "740ea1b790de3b4079fa6a1c6a4845d4951b9a7decb31c1ad2e5abc03c219618",
+    "returncode": 0,
+    "role": "R70 incumbent topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:19:31Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13155,
+      "output_tokens": 6191,
+      "reasoning_output_tokens": 4849
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

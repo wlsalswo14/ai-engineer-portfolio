@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n        self.min_protected = self.capacity_bytes // 4\n        self.max_protected = (self.capacity_bytes * 3) // 4\n        self.adaptation_step = max(1, self.capacity_bytes // 16) if self.capacity_bytes else 1\n        self.recent_ghost = OrderedDict()\n        self.frequent_ghost = OrderedDict()\n        self.ghost_limit = 4096\n\n    def _remember(self, key, was_protected):\n        target = self.frequent_ghost if was_protected else self.recent_ghost\n        other = self.recent_ghost if was_protected else self.frequent_ghost\n        other.pop(key, None)\n        target.pop(key, None)\n        target[key] = None\n        while len(self.recent_ghost) + len(self.frequent_ghost) > self.ghost_limit:\n            if self.recent_ghost:\n                self.recent_ghost.popitem(last=False)\n            else:\n                self.frequent_ghost.popitem(last=False)\n\n    def _rebalance_protected(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance_protected()\n            return []\n\n        recent_hit = key in self.recent_ghost\n        frequent_hit = key in self.frequent_ghost\n        self.recent_ghost.pop(key, None)\n        self.frequent_ghost.pop(key, None)\n        if recent_hit:\n            self.protected_target = max(\n                self.min_protected,\n                self.protected_target - self.adaptation_step,\n            )\n        elif frequent_hit:\n            self.protected_target = min(\n                self.max_protected,\n                self.protected_target + self.adaptation_step,\n            )\n\n        if self.capacity_bytes == 0 or size < 0 or size > self.capacity_bytes:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n                self._remember(old_key, False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n                self._remember(old_key, True)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R19-pair03-candidate-call02-successor_policy_owner",
+    "duration_seconds": 67.766,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T16:29:59Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c0bc954dd0a770f5f613ad08af19589c367c242a1d6790ed8e6c02b0271af42b",
+    "raw_events_path": "workspace\\model-calls\\R19-pair03-candidate-call02-successor_policy_owner\\raw-events.jsonl",
+    "raw_events_sha256": "887e1802684b5ea82b930dc663d72683849d8ee44572ef47831605f2f4faf382",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "4d443feafe12539fc1c9650058a43589646f246439fefc380c259869c7ff39c6",
+    "returncode": 0,
+    "role": "R19 candidate topology role successor executable-state owner and sole publisher",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T16:28:51Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14419,
+      "output_tokens": 5219,
+      "reasoning_output_tokens": 4417
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

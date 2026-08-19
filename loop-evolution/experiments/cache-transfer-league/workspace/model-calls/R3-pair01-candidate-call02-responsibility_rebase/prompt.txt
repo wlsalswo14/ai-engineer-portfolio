@@ -1,0 +1,52 @@
+Role: R3 candidate topology role evidence-triggered causal state transformer
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R3,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: responsibility_rebase
+Role: evidence-triggered causal state transformer
+Objective: Consume responsibility_probe and let its non-separability witness trigger a change from anchor-relative repair state to contract-relative joint-responsibility state at the evidenced boundary. Preserve unaffected obligations and evidence provenance, then emit the transitioned construction state.
+Output kind: analysis
+
+Return one strict JSON object and no prose:
+{"analysis_packet":{"certificate":"...","witnesses":[],"obligations":[],"exact_actions":[]},"artifact_kind":"analysis_only"}
+Do not output Python, policy source, a patch, a diff, alternative policies, or
+a ranked selection. Analyze or transform evidence only for the one lineage.
+
+Visible inputs fixed by this topology:
+{
+  "responsibility_probe": {
+    "analysis_packet": {
+      "certificate": "At the admission/eviction boundary, retention, capacity accounting, and eviction reporting are causally non-separable: the same online state transition removes cached entries to satisfy the byte bound and determines the unique currently cached keys returned. Interface legality, standard-library use, and online-only visibility remain fixed.",
+      "witnesses": [
+        {
+          "boundary": "admission and eviction state transition",
+          "causal_relation": "Changing anchor-relative retention to address scan resistance and phase shifts changes the cached-key set, used-byte accounting, and eviction return simultaneously; these responsibilities cannot be independently varied at this boundary.",
+          "counterfactual": "Hold interface legality, online visibility, integer-key uniqueness, and standard-library constraints fixed; reassign eviction responsibility from the anchor's probation-first decomposition to a contract-relative joint state while preserving unaffected obligations."
+        }
+      ],
+      "obligations": [
+        "preserve the Policy constructor and access interface",
+        "never exceed capacity_bytes",
+        "return only unique integer keys currently cached before eviction",
+        "make decisions from online accesses only",
+        "retain standard-library-only implementation legality"
+      ],
+      "exact_actions": [
+        "Inspect the supplied anchor, contract, constraints, hypothesis, and sequential lineage only.",
+        "Identify admission/eviction as the inherited responsibility boundary.",
+        "Relate retention, byte accounting, and legal eviction reporting as one non-separable causal obligation.",
+        "Hold unrelated interface, visibility, key-type, library, and online-processing responsibilities fixed.",
+        "Emit the boundary witness and anchor-relative construction state for responsibility_rebase."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  }
+}

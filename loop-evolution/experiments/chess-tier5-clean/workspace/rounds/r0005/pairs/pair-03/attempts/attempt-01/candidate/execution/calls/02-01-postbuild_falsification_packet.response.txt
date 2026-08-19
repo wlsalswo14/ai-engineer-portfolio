@@ -1,0 +1,30 @@
+{
+  "status": "shared-failure-found; no draft-specific delta observed",
+  "witnesses": [
+    {
+      "id": "QS-CHECK-QUIET-EVASION",
+      "region": "Engine.qsearch",
+      "reproduction": "Position 7k/8/8/8/8/8/4Q3/K7 w - - 0 1; play e2e8.",
+      "expected": "black is checked and has quiet legal evasions",
+      "observed_from_source": "qsearch calls legal(p, True), returns [], and scores -99999 as mate",
+      "impact": "false mate score; search-quality failure, not an illegal-UCI move",
+      "differential": "also present in supplied champion"
+    }
+  ],
+  "changed_regions": [],
+  "preservation_checks": [
+    "UCI handshake and exactly one bestmove",
+    "start-position perft: 20, 400, 8902, 197281",
+    "castling, en-passant, promotion, check-evasion legality",
+    "movetime deadline and deterministic repeated probes"
+  ],
+  "reproduction_commands": [
+    "python -m py_compile engine.py",
+    "python -c \"import time,engine; p=engine.Position.fen('7k/8/8/8/8/8/4Q3/K7 w - - 0 1'); m=next(x for x in engine.legal(p) if engine.notation(x)=='e2e8'); q=engine.make(p,m); e=engine.Engine(); e.deadline=time.perf_counter()+10; print(engine.notation(m),engine.attacked(q,engine.king(q,1),0),engine.legal(q,True),e.qsearch(q,-engine.INF,engine.INF,1))\"",
+    "@('uci','isready','position startpos','go movetime 20','quit') | python .\\engine.py"
+  ],
+  "execution_limitations": [
+    "No root engine.py exists; the artifact is embedded in execution/calls/01-01-draft_engine.response.txt.",
+    "Python execution was blocked by the isolated command policy, so runtime UCI/perft results could not be independently collected."
+  ]
+}

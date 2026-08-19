@@ -1,0 +1,131 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R35-structure-architect\\final-receipt.json",
+    "sha256": "118a032d0ab1fbc8d10329d4bdfe8e82a727d4c64e6c6364bf31d7349fb86a3b"
+  },
+  "architect_response": {
+    "architect_scope": "one-R35-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "release_accountable_policy",
+      "information_flow": "The first call receives all common inputs and issues one non-policy charter that identifies the origin and status of relevant assumptions. The second call consumes that charter without direct anchor-policy visibility, forms one complete executable policy state, and preserves the charter as visible evidence. The final call consumes the complete state and its declared provenance with public obligations and emits one policy.",
+      "name": "Prospective Assumption-Accountability Lineage",
+      "organization": "three-call sequential lineage with one preconstruction accountability boundary and an uninterrupted executable handoff after materialization",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "issue_assumption_charter",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Issue one non-policy charter before any executable artifact exists, relating anchor-derived assumptions and candidate claims to public obligations by declared origin and exposing unresolved tensions for downstream resolution.",
+              "output_type": "analysis",
+              "role": "preconstruction assumption-accountability authority"
+            },
+            {
+              "id": "materialize_accountable_state",
+              "inputs": [
+                "issue_assumption_charter",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the preceding charter and supplied public obligations, resolve its exposed tensions into one complete executable policy state, and preserve the charter's declared provenance as visible evidence for the next call.",
+              "output_type": "executable_policy_state",
+              "role": "accountable executable-state materializer"
+            },
+            {
+              "id": "release_accountable_policy",
+              "inputs": [
+                "materialize_accountable_state",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Consume the complete executable state and its declared assumption provenance, reconcile its current semantics with supplied public obligations, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "provenance-visible contract release authority"
+            }
+          ],
+          "id": "accountable_materialization_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "evidence timing changes from retrospective filtering to prospective attribution",
+        "terminal provenance visibility changes from absent to explicitly preserved",
+        "executable-state transition changes from first-call formation to downstream materialization"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "the post-construction provenance firewall applied to an anchor-informed executable closure",
+      "independent_replacement_principle": "Establish explicit assumption accountability before executable materialization and preserve that declared provenance through the single policy-bearing lineage.",
+      "rejected_assumptions": [
+        "Independence is best established by deleting provenance after an executable artifact has already absorbed anchor context.",
+        "A provenance-blind terminal authority can reliably separate inherited construction assumptions from contract-grounded semantics."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Replace post-construction provenance blindness with a preconstruction assumption-accountability charter whose declared evidence remains visible through one subsequently materialized executable artifact.",
+      "expected_effect": "Earlier evidence attribution and persistent provenance visibility should let construction and final reconciliation challenge inherited assumptions without reopening the anchor or severing the executable lineage.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The champion makes contextual influence latent by completing an anchor-informed executable closure before removing its construction provenance, leaving the terminal authority unable to distinguish inherited assumptions from contract-grounded commitments."
+    },
+    "structural_mutation": {
+      "after": "An anchor-visible first call emits only an assumption-accountability charter; a downstream anchor-hidden call materializes one complete executable state while preserving that charter as visible evidence, and the terminal call consumes the complete state with public obligations.",
+      "before": "An anchor-informed first call completes an executable closure, removes its construction provenance, and passes it to a provenance-blind terminal authority.",
+      "change_count": 1,
+      "factor": "preconstruction provenance accountability replacing the post-construction provenance firewall",
+      "why_structural": "The single boundary replacement changes the lineage from an immediately policy-bearing relay into an analysis-first three-call graph while jointly changing evidence timing, provenance visibility, and the transition into executable state."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 35,
+  "incumbent_structure_sha256": "3356fd8a802296f6f8ce3f3a9ed759604f025af5bd7db500cc9b655e42a44a54",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R35\\qualitative-error-notebook.json",
+    "sha256": "fc38d3bf3121cfb1f87c745c661e6633587b2efd5300bf35bb382c880d4b1343"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R35\\source-manifest.json",
+    "sha256": "894af77c1f7045d58bc23776fc52f002b4694238fb713c567ad8916f922359e9"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 3,
+    "coarse_topology_collision_override": null,
+    "factor": "preconstruction provenance accountability replacing the post-construction provenance firewall",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "materialize_accountable_state",
+        "executor_semantics": "complete executable policy artifact serving as the sole constructive lineage state",
+        "output_type": "executable_policy_state"
+      }
+    ],
+    "semantic_topology_fingerprint": "89a583364b0a3f09e98b9f8d635fb22c3100fec2e3c99370e74bdc9b59481ee6",
+    "topology_fingerprint": "2bc28276978cae2d4bf80bd73ce4e45ee8f0ec6293b7c1a322eddd5fc70b4a83"
+  }
+}

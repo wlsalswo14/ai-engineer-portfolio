@@ -1,0 +1,28 @@
+{
+  "analysis_packet": {
+    "certificate": "Only explicit contract and task constraints are binding. The anchor’s algorithmic structure and any unverified performance claims are nonbinding. Unsupported assumptions, hidden information, oracle adaptation, benchmark knowledge, score claims, and reinstatement of excluded predecessor commitments are binding exclusions. Admissible conflicts remain unresolved for downstream construction within the stated contract.",
+    "exact_actions": [
+      "Construct only within the explicit task and contract constraints.",
+      "Treat anchor data structures, heuristics, and inferred optimization benefits as optional evidence rather than commitments.",
+      "Exclude hidden-state inference, trace hardcoding, oracle adaptation, benchmark inspection, external dependencies, and unsupported score claims.",
+      "Reconcile remaining admissible design choices without selecting or ranking alternatives in this analysis."
+    ],
+    "obligations": [
+      "Preserve interface legality.",
+      "Maintain capacity safety for every access.",
+      "Return only currently cached unique integer keys.",
+      "Use only online information available at the current access.",
+      "Use only the Python standard library.",
+      "Emit one complete policy downstream.",
+      "Honor binding exclusions and do not treat nonbinding anchor framing as mandatory."
+    ],
+    "witnesses": [
+      "The task requires a standard-library Policy with the specified constructor and access interface.",
+      "The evaluator owns authoritative cache state; returns must contain only currently cached, unique integer keys.",
+      "Capacity safety, online visibility, and prohibition of benchmark, trace, oracle, networking, subprocess, and non-stdlib dependencies are explicit constraints.",
+      "The anchor exposes recency/frequency queues, ghost metadata, adaptive targeting, and ignores now; these implementation details are not independently normative.",
+      "No scores, traces, evaluator results, or external evidence are visible."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

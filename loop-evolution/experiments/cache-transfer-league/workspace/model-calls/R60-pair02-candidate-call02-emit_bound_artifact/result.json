@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.cold = OrderedDict()\n        self.hot = OrderedDict()\n        self.cold_bytes = 0\n        self.hot_bytes = 0\n        self.hot_target = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n        self.ghost_cold = OrderedDict()\n        self.ghost_hot = OrderedDict()\n        self.width = 2048\n        self.mask = 0xffffffffffffffff\n        self.seeds = (0x9e3779b97f4a7c15, 0xbf58476d1ce4e5b9, 0x94d049bb133111eb, 0xd6e8feb86659fd93)\n        self.sketch = [[0] * self.width for _ in self.seeds]\n        self.ticks = 0\n\n    def _mix(self, value, seed):\n        x = ((int(value) & self.mask) ^ seed) & self.mask\n        x = (((x ^ (x >> 30)) * 0xbf58476d1ce4e5b9) & self.mask)\n        x = (((x ^ (x >> 27)) * 0x94d049bb133111eb) & self.mask)\n        return (x ^ (x >> 31)) & self.mask\n\n    def _touch_frequency(self, key):\n        self.ticks += 1\n        for row, seed in zip(self.sketch, self.seeds):\n            index = self._mix(key, seed) % self.width\n            if row[index] < 65535:\n                row[index] += 1\n        if (self.ticks & 4095) == 0:\n            for row in self.sketch:\n                for index in range(self.width):\n                    row[index] >>= 1\n\n    def _frequency(self, key):\n        return min(row[self._mix(key, seed) % self.width] for row, seed in zip(self.sketch, self.seeds))\n\n    def _drop_ghost(self, key):\n        self.ghost_cold.pop(key, None)\n        self.ghost_hot.pop(key, None)\n\n    def _remember_ghost(self, ghost, other, key, size):\n        other.pop(key, None)\n        ghost.pop(key, None)\n        ghost[key] = size\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _remove_resident(self, key):\n        if key in self.cold:\n            size = self.cold.pop(key)\n            self.cold_bytes -= size\n            return size, False\n        if key in self.hot:\n            size = self.hot.pop(key)\n            self.hot_bytes -= size\n            return size, True\n        return None, False\n\n    def _add_cold(self, key, size):\n        self.cold[key] = size\n        self.cold_bytes += size\n\n    def _add_hot(self, key, size):\n        self.hot[key] = size\n        self.hot_bytes += size\n\n    def _rebalance_hot(self):\n        while len(self.hot) > 1 and self.hot_bytes > self.hot_target:\n            key, size = self.hot.popitem(last=False)\n            self.hot_bytes -= size\n            self._add_cold(key, size)\n\n    def _choose_cold_victim(self):\n        if not self.cold:\n            return None\n        best_key = None\n        best_size = 0\n        best_frequency = 0\n        for position, (key, size) in enumerate(self.cold.items()):\n            if position >= 32:\n                break\n            frequency = self._frequency(key)\n            if best_key is None:\n                best_key = key\n                best_size = size\n                best_frequency = frequency\n                continue\n            left = (frequency + 1) * best_size\n            right = (best_frequency + 1) * size\n            if left < right:\n                best_key = key\n                best_size = size\n                best_frequency = frequency\n        return best_key\n\n    def _make_room(self, size):\n        evicted = []\n        while self.cold_bytes + self.hot_bytes + size > self.capacity_bytes:\n            key = self._choose_cold_victim()\n            if key is not None:\n                victim_size = self.cold.pop(key)\n                self.cold_bytes -= victim_size\n                self._remember_ghost(self.ghost_cold, self.ghost_hot, key, victim_size)\n                evicted.append(key)\n                continue\n            if not self.hot:\n                break\n            key, victim_size = self.hot.popitem(last=False)\n            self.hot_bytes -= victim_size\n            self._remember_ghost(self.ghost_hot, self.ghost_cold, key, victim_size)\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        requested = int(size)\n\n        if requested <= 0:\n            if key in self.cold:\n                self.cold.move_to_end(key)\n            elif key in self.hot:\n                self.hot.move_to_end(key)\n            return []\n\n        old_size, was_hot = self._remove_resident(key)\n\n        if requested > self.capacity_bytes:\n            if old_size is not None:\n                if was_hot:\n                    self._remember_ghost(self.ghost_hot, self.ghost_cold, key, old_size)\n                else:\n                    self._remember_ghost(self.ghost_cold, self.ghost_hot, key, old_size)\n                return [key]\n            return []\n\n        self._touch_frequency(key)\n\n        if old_size is not None:\n            evicted = self._make_room(requested)\n            self._add_hot(key, requested)\n            self._rebalance_hot()\n            return evicted\n\n        cold_hit = key in self.ghost_cold\n        hot_hit = key in self.ghost_hot\n        if cold_hit or hot_hit:\n            step = max(1, self.capacity_bytes // 16)\n            if cold_hit:\n                self.hot_target = max(0, self.hot_target - step)\n            else:\n                self.hot_target = min(self.capacity_bytes, self.hot_target + step)\n        self._drop_ghost(key)\n\n        evicted = self._make_room(requested)\n        if cold_hit or hot_hit:\n            self._add_hot(key, requested)\n            self._rebalance_hot()\n        else:\n            self._add_cold(key, requested)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R60-pair02-candidate-call02-emit_bound_artifact",
+    "duration_seconds": 24.794,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T21:40:37Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "07265c9b6d45b4dde66a3a150f32498e5b74105c5175018e40cad7af6a99dee6",
+    "raw_events_path": "workspace\\model-calls\\R60-pair02-candidate-call02-emit_bound_artifact\\raw-events.jsonl",
+    "raw_events_sha256": "df8d2780ca972271ccd72e8e8c12adea9cbc8f9441d43b6df5618a10e3700b95",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "9199b6dd1cd9a5dfb308b3a493c30c793df9d766a9d5b40ca9202cd9f8b5c378",
+    "returncode": 0,
+    "role": "R60 candidate topology role artifact-only non-revising emitter",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T21:40:12Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13599,
+      "output_tokens": 1611,
+      "reasoning_output_tokens": 56
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

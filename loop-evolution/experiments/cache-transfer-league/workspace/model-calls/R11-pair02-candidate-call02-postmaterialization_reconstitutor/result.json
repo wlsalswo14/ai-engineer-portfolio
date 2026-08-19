@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.used_bytes = 0\n        self.target_t1_bytes = self.capacity_bytes // 2\n        self.ghost_limit_bytes = max(64, min(1 << 20, self.capacity_bytes * 2 + 64))\n        self.ghost_limit_entries = 4096\n\n    def _remove_ghost(self, key):\n        if key in self.b1:\n            size = self.b1.pop(key)\n            self.b1_bytes -= size\n        if key in self.b2:\n            size = self.b2.pop(key)\n            self.b2_bytes -= size\n\n    def _remember(self, target, key, size):\n        self._remove_ghost(key)\n        target[key] = size\n        if target is self.b1:\n            self.b1_bytes += size\n        else:\n            self.b2_bytes += size\n        while (self.b1_bytes + self.b2_bytes > self.ghost_limit_bytes or\n               len(self.b1) + len(self.b2) > self.ghost_limit_entries):\n            if self.b1:\n                old_key, old_size = self.b1.popitem(last=False)\n                self.b1_bytes -= old_size\n            elif self.b2:\n                old_key, old_size = self.b2.popitem(last=False)\n                self.b2_bytes -= old_size\n            else:\n                break\n\n    def _replace(self, incoming, evicted, prefer_t2):\n        while self.used_bytes + incoming > self.capacity_bytes:\n            if not self.t1 and not self.t2:\n                break\n            choose_t1 = bool(self.t1) and (\n                not self.t2 or\n                self.t1_bytes > self.target_t1_bytes or\n                (prefer_t2 and self.t1_bytes == self.target_t1_bytes)\n            )\n            if choose_t1:\n                key, size = self.t1.popitem(last=False)\n                self.t1_bytes -= size\n                self._remember(self.b1, key, size)\n            elif self.t2:\n                key, size = self.t2.popitem(last=False)\n                self.t2_bytes -= size\n                self._remember(self.b2, key, size)\n            else:\n                key, size = self.t1.popitem(last=False)\n                self.t1_bytes -= size\n                self._remember(self.b1, key, size)\n            self.used_bytes -= size\n            evicted.append(key)\n\n    def _increase_target(self, incoming):\n        ratio = max(1, self.b2_bytes // max(1, self.b1_bytes))\n        step = max(1, min(self.capacity_bytes, ratio * max(1, incoming)))\n        self.target_t1_bytes = min(self.capacity_bytes,\n                                   self.target_t1_bytes + step)\n\n    def _decrease_target(self, incoming):\n        ratio = max(1, self.b1_bytes // max(1, self.b2_bytes))\n        step = max(1, min(self.capacity_bytes, ratio * max(1, incoming)))\n        self.target_t1_bytes = max(0, self.target_t1_bytes - step)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        incoming = max(0, int(size))\n        if self.capacity_bytes == 0 or incoming > self.capacity_bytes:\n            return []\n\n        in_b1 = key in self.b1\n        in_b2 = key in self.b2\n        if in_b1:\n            self._increase_target(incoming)\n        elif in_b2:\n            self._decrease_target(incoming)\n        self._remove_ghost(key)\n\n        evicted = []\n        self._replace(incoming, evicted, in_b2)\n\n        if in_b1 or in_b2:\n            self.t2[key] = incoming\n            self.t2_bytes += incoming\n        else:\n            self.t1[key] = incoming\n            self.t1_bytes += incoming\n        self.used_bytes += incoming\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R11-pair02-candidate-call02-postmaterialization_reconstitutor",
+    "duration_seconds": 59.284,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:11:32Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "b53c77ecd8c4f0211458d56b6d8ed9881e677763b85a10d3d2b76bd1b2ecee67",
+    "raw_events_path": "workspace\\model-calls\\R11-pair02-candidate-call02-postmaterialization_reconstitutor\\raw-events.jsonl",
+    "raw_events_sha256": "ba326bcb8226603d6376be38391cf172c83c2fefb8e7fab54d0531a6efc27b21",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "2f4549bbf342bc5697f9e71d9ac8e3febd21a7e31d560cc4d1d3823c37074ba3",
+    "returncode": 0,
+    "role": "R11 candidate topology role whole-state falsification reconstitutor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:10:33Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14356,
+      "output_tokens": 4587,
+      "reasoning_output_tokens": 3460
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,75 @@
+{
+  "architect_scope": "one-R58-structural-factor-only",
+  "proposal_mode": "emergent_exploration",
+  "qualitative_hypothesis": {
+    "observed_bottleneck": "The champion can reconcile two evidence views but cannot propagate withdrawal of support through commitments already combined during terminal synthesis.",
+    "causal_change": "Replace the non-policy handoff with a revocable executable policy state whose terminal consumer retracts and rederives commitments causally dependent on any premise that loses evidential support.",
+    "expected_effect": "Unsupported consequences cease propagating while independently supported commitments remain intact within one executable lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score"
+  },
+  "structural_mutation": {
+    "change_count": 1,
+    "factor": "evidence-triggered dependency-directed rollback authority on the executable handoff",
+    "before": "A nonbinding analysis crosses the sole edge, after which the terminal call reacquires all common inputs and synthesizes a policy without a prior executable commitment state.",
+    "after": "The sole edge carries one complete revocable executable policy state, and reacquired evidence can trigger terminal rollback of causally dependent commitments before one policy is emitted.",
+    "why_structural": "This replaces the analysis edge with a stateful causal-control edge whose executable payload and dependency-directed revocation authority are inseparable."
+  },
+  "mode_certificate": {
+    "capability_family": "assumption-based executable truth maintenance",
+    "champion_limitation": "The champion has defeasible evidence reconciliation but no executable state from which loss of premise support can causally retract downstream commitments.",
+    "trigger": "Reacquired common evidence withdraws support from a premise that is causally necessary to a commitment in the carried executable policy state.",
+    "state_transition": "The artifact moves from supported-commitment state to rollback-and-rederive state, removing authority from dependent commitments while retaining independently supported commitments on the same lineage.",
+    "observable_effect": "The final policy contains no commitment supported solely through the withdrawn premise and preserves commitments with surviving independent support.",
+    "not_local_refinement": "This introduces operational truth-maintenance control over an executable artifact rather than source demotion, evidence timing adjustment, an added reviewer, gate, field, role split, certificate, or rename."
+  },
+  "candidate_structure": {
+    "name": "Revocable Executable Truth-Maintenance Edge",
+    "organization": "two-call sequential lineage with one complete executable-state handoff and terminal dependency-retraction authority",
+    "information_flow": "The first call receives every common input and emits one complete executable policy state whose commitments remain causally revocable. The final call consumes that state and independently receives every common input. Withdrawal of support for an operative premise triggers dependency-directed rollback and rederivation within the same artifact lineage; no side channel or alternate candidate exists.",
+    "stages": [
+      {
+        "id": "truth_maintenance_lineage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "instantiate_revocable_state",
+            "role": "executable causal-state constructor",
+            "objective": "Construct one complete executable policy artifact from the supplied evidence while making each adopted commitment operationally dependent on the premises that authorize it.",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "executable_policy_state"
+          },
+          {
+            "id": "propagate_retraction_and_emit",
+            "role": "dependency-directed rollback authority",
+            "objective": "Consume the executable state alongside reacquired common evidence, trigger rollback when support is withdrawn from a causally necessary premise, rederive affected commitments from surviving evidence, preserve independent commitments, and emit one complete policy.",
+            "inputs": [
+              "instantiate_revocable_state",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "policy"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "propagate_retraction_and_emit"
+  },
+  "compliance": {
+    "one_structural_factor_only": true,
+    "score_or_trace_content_used": false,
+    "policy_code_emitted": false,
+    "variants_sampling_or_best_of_n_emitted": false,
+    "hardcoding_emitted": false
+  }
+}

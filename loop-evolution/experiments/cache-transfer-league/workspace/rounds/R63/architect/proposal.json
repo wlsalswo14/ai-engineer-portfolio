@@ -1,0 +1,110 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R63-structure-architect\\final-receipt.json",
+    "sha256": "c2bc3253382cdb64bafe933c8366f990e2b25126028f4a17f402760732ddde76"
+  },
+  "architect_response": {
+    "architect_scope": "one-R63-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "emit_under_normative_visibility",
+      "information_flow": "The first call receives every common input and emits only an analysis that synthesizes generative evidence against normative obligations. The final call consumes that analysis, directly receives only task, anchor_contract, and task_constraints, has no direct visibility of anchor_policy, candidate_hypothesis, or loop_structure, and emits one complete policy.",
+      "name": "Permanent Source-Class Cut",
+      "organization": "two-call sequential lineage with an unconditional generative-source cut on the terminal edge",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "synthesize_cut_sources",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile inherited and counter-generative claims against normative obligations, preserve conflicts and supporting distinctions, and emit only an analysis without creating a policy artifact.",
+              "output_type": "analysis",
+              "role": "upstream generative-evidence synthesizer"
+            },
+            {
+              "id": "emit_under_normative_visibility",
+              "inputs": [
+                "synthesize_cut_sources",
+                "task",
+                "anchor_contract",
+                "task_constraints"
+              ],
+              "objective": "Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.",
+              "output_type": "policy",
+              "role": "normative-source policy authority"
+            }
+          ],
+          "id": "source_class_cut_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "terminal dependence on inherited-anchor evidence",
+        "timing of generative-evidence settlement",
+        "location of direct contract reconciliation"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "terminal lossless evidence reacquisition of all six common inputs",
+      "independent_replacement_principle": "Generative evidence receives one upstream synthesis, while terminal authority directly sees only normative evidence and the resulting analysis.",
+      "rejected_assumptions": [
+        "Reliable policy emission requires terminal reacquisition of every common input.",
+        "Inherited and counter-generative sources should remain directly co-visible at terminal authority.",
+        "Upstream counter-analysis must remain defeasible through terminal rereading of its original generative sources."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Permanently remove direct terminal visibility of anchor_policy, candidate_hypothesis, and loop_structure while retaining direct terminal visibility of task, anchor_contract, and task_constraints.",
+      "expected_effect": "Generative evidence is synthesized earlier with reduced terminal anchor dependence, while contract reconciliation remains directly grounded at emission.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "Lossless terminal reacquisition lets inherited generative sources dominate the upstream counter-analysis and postpones evidence settlement until policy emission."
+    },
+    "structural_mutation": {
+      "after": "The terminal authority consumes the preceding analysis and directly reacquires only task, anchor_contract, and task_constraints; direct edges from anchor_policy, candidate_hypothesis, and loop_structure are absent.",
+      "before": "The terminal authority reacquires all six common inputs and may reinterpret the preceding analysis against every original source.",
+      "change_count": 1,
+      "factor": "fixed generative-source edge cut with normative-source terminal visibility",
+      "why_structural": "The mutation permanently changes terminal graph connectivity and evidence authority through one source-class visibility partition, rather than renaming or splitting roles."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 63,
+  "incumbent_structure_sha256": "d724448a08628609077256da53038ddf4c29aca1745344795a4442bea91a21e7",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R63\\qualitative-error-notebook.json",
+    "sha256": "efe721bda9f0f30f580371fd51bed7d2428e838ea7e9fdaabb996ea1fb86ba73"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R63\\source-manifest.json",
+    "sha256": "bb8647829d7f4f7431929f50eadccfafea30e8027971d661c6a0ee6306aa0d44"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "fixed generative-source edge cut with normative-source terminal visibility",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [],
+    "semantic_topology_fingerprint": "974633a14717d0938b7a5d871baaaeb02a1f32758ae986f7abdd94a42a3638ab",
+    "topology_fingerprint": "ac40632875795200f06f33a3ef21f3ac05a1a9b014c30fc26e6bf8bbece82405"
+  }
+}

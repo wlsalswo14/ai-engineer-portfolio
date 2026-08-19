@@ -1,0 +1,78 @@
+{
+  "architect_scope": "one-R61-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "contract_scoped_transform",
+    "information_flow": "The first call receives every common input and emits a policy_capsule carrying one complete executable policy artifact. The final call consumes that capsule together with anchor_contract and task_constraints, has no direct visibility of task, anchor_policy, candidate_hypothesis, or loop_structure, transforms the carried artifact under the visible obligations, and emits one policy.",
+    "name": "Contract-Scoped Mutable Executable Baton",
+    "organization": "two-call sequential lineage with upstream executable origination and one mutable policy-bearing handoff",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "originate_executable_baton",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Settle the supplied evidence into one complete executable policy artifact and carry that artifact in a single policy capsule.",
+            "output_type": "policy_capsule",
+            "role": "upstream executable-state originator"
+          },
+          {
+            "id": "contract_scoped_transform",
+            "inputs": [
+              "originate_executable_baton",
+              "anchor_contract",
+              "task_constraints"
+            ],
+            "objective": "Consume originate_executable_baton, apply transformation authority using only the visible contract and constraints, preserve one continuous executable lineage, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "contract-scoped executable-state transformer"
+          }
+        ],
+        "id": "executable_baton_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "changed_behavioral_dimensions": [
+      "executable commitment timing",
+      "terminal source visibility",
+      "correction locality"
+    ],
+    "counter_until_promotion": true,
+    "forbidden_inherited_mechanism": "terminal lossless common-input reacquisition",
+    "independent_replacement_principle": "continuous executable custody with contract-scoped downstream transformation",
+    "rejected_assumptions": [
+      "An analysis-only precursor is the safest representation for structural influence.",
+      "Terminal lossless reacquisition of every common input is necessary for policy settlement.",
+      "Policy origination should remain wholly terminal."
+    ]
+  },
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "causal_change": "Replace that family with a contract-scoped mutable executable baton: the first call originates one complete executable artifact, and the terminal call transforms that artifact with visibility limited to the contract and constraints.",
+    "expected_effect": "Executable commitment moves earlier while terminal behavior becomes less dependent on inherited and framing sources, changing both commitment timing and correction locality.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family makes the nonfinal contribution analysis-only while concentrating raw-evidence reacquisition and policy origination in the terminal call."
+  },
+  "structural_mutation": {
+    "after": "A complete executable policy capsule crosses the handoff, after which the terminal authority sees only that capsule, anchor_contract, and task_constraints and transforms the carried artifact into one policy.",
+    "before": "A nonbinding analysis crosses the handoff, after which the terminal authority reacquires every common input and originates the policy.",
+    "change_count": 1,
+    "factor": "contract-scoped mutable executable baton across the sole handoff",
+    "why_structural": "The single handoff protocol simultaneously changes state type, evidence visibility, origination timing, and downstream transformation authority without adding parallelism or splitting a terminal role."
+  }
+}

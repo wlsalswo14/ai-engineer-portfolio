@@ -1,0 +1,18 @@
+Verifier packet
+
+- Artifact parity: [anchor-engine.txt](C:/Users/jinminjae/OneDrive/Desktop/Ouroboros/loop-evolution/experiments/chess-tier5-clean/workspace/rounds/r0005/pairs/pair-02/attempts/attempt-02/candidate/inputs/anchor-engine.txt) and [draft response](C:/Users/jinminjae/OneDrive/Desktop/Ouroboros/loop-evolution/experiments/chess-tier5-clean/workspace/rounds/r0005/pairs/pair-02/attempts/attempt-02/candidate/execution/calls/01-01-draft_engine.response.txt) contain the same engine source. No draft-only changed region or differential witness found.
+
+- Concrete engine failures: none established.
+
+- Runtime limitation: execution was not possible. `py --version` and Python subprocess commands were rejected by the managed read-only sandbox. Therefore syntax, UCI, perft, legality, determinism, and deadline behavior remain uncertified.
+
+Required reproduction commands:
+
+```powershell
+python -m py_compile engine.py
+"uci`nisready`nposition startpos`ngo movetime 100`nquit`n" | python .\engine.py
+```
+
+Preservation checks: start-position perft `20, 400, 8902, 197281`; Kiwipete perft `48, 2039, 97862`; repeated legal `bestmove` probes at 1/5/10/100 ms.
+
+Memory upload: failed twice because outbound POST commands were rejected by sandbox policy.

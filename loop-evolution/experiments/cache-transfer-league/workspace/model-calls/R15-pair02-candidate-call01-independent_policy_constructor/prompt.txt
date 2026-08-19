@@ -1,0 +1,97 @@
+Role: R15 candidate topology role whole-policy constructor
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R15,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: independent_policy_constructor
+Role: whole-policy constructor
+Objective: Reject the inherited reversible-delta and terminal-compression family, construct one complete contract-compliant policy under the independent replacement principle, and transmit only the executable artifact without rationale, edit history, provisional states, or retained evidence.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.used_bytes = 0\n\n    def _demote_protected(self):\n        target = self.capacity_bytes // 2\n        while self.protected and sum(self.protected.values()) > target:\n            key, size = self.protected.popitem(last=False)\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self._demote_protected()\n            return []\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._demote_protected()\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R14 champion policy anchor",
+    "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Insert a provenance-erasing executable handoff: an upstream constructor emits one complete policy, while the final authority receives that executable artifact and the common external inputs but none of the upstream rationale, deltas, provisional states, or retained evidence.",
+    "expected_effect": "Independent whole-artifact reconciliation should jointly improve phase-transition response coherence and scan-disturbance containment without sacrificing executable lineage visibility.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family assumes retained edit provenance remains causally useful through finalization, but that history can entrench anchor-relative decomposition and make terminal judgment depend on edit order rather than whole-artifact coherence."
+  },
+  "loop_structure": {
+    "final_call_id": "provenance_blind_reconciler",
+    "information_flow": "The first authority receives all common inputs and emits one complete executable policy without accompanying construction provenance. The final authority consumes that policy and the common external inputs, receives no predecessor rationale or intermediate state, reconciles the artifact as an indivisible whole, and emits one policy.",
+    "name": "Provenance-Erased Executable Reconciliation Relay",
+    "organization": "two-authority sequential executable relay",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "independent_policy_constructor",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reject the inherited reversible-delta and terminal-compression family, construct one complete contract-compliant policy under the independent replacement principle, and transmit only the executable artifact without rationale, edit history, provisional states, or retained evidence.",
+            "output_type": "policy",
+            "role": "whole-policy constructor"
+          },
+          {
+            "id": "provenance_blind_reconciler",
+            "inputs": [
+              "independent_policy_constructor",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the immediately preceding executable policy as the sole lineage state, assess it as an indivisible whole against the permitted external obligations, resolve any whole-artifact incoherence without reconstructing predecessor provenance, and emit one complete contract-compliant policy.",
+            "output_type": "policy",
+            "role": "whole-artifact reconciliation authority"
+          }
+        ],
+        "id": "construct_then_reconcile",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

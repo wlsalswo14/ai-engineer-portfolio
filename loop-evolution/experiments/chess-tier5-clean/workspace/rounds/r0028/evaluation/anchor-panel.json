@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "policy": "current champion + frozen lineage baseline + recent promotion alternate",
+  "refresh_rule": "panel is frozen per round; current and alternate change only after promotion",
+  "common_anchor_within_pair": true,
+  "distinct_anchor_count": 3,
+  "anchors": [
+    {
+      "role": "current_champion",
+      "anchor_id": "anchor_2a8ecd4e182f9dd2",
+      "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0027\\final-output.json",
+      "engine_source_sha256": "2a8ecd4e182f9dd2331f5943272991e77848555ebaa75cd0bfea53f3cd97890d",
+      "metrics": {
+        "elo": -132.041,
+        "score_rate": 0.315,
+        "wins": 7,
+        "draws": 49,
+        "losses": 44,
+        "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0027\\benchmark-result-receipt.json",
+        "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-2a8ecd4e182f9dd2.json"
+      },
+      "origin": "champion:package_96dd07714247885c"
+    },
+    {
+      "role": "frozen_lineage_baseline",
+      "anchor_id": "anchor_eaba2e9ff3e678c1",
+      "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\final-output.json",
+      "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+      "metrics": {
+        "draws": 65,
+        "elo": -94.211,
+        "losses": 31,
+        "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\benchmark-result-receipt.json",
+        "score_rate": 0.365,
+        "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+        "wins": 4
+      },
+      "origin": "bootstrap:package_ebdecd200797a81e"
+    },
+    {
+      "role": "recent_promotion_alternate",
+      "anchor_id": "anchor_4678594f10379ca4",
+      "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0027\\pairs\\pair-02\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+      "engine_source_sha256": "4678594f10379ca42c4b310bad377c1fe7f2a36a60bdc39c3445ecfa9a76ce16",
+      "metrics": {
+        "valid": true,
+        "benchmark_valid": true,
+        "failure_kind": null,
+        "public_score": 1.0,
+        "public_evidence": [
+          "engine-source:4678594f10379ca42c4b310bad377c1fe7f2a36a60bdc39c3445ecfa9a76ce16",
+          "public-uci-smoke:passed"
+        ],
+        "score_rate": 0.335,
+        "wins": 5,
+        "draws": 57,
+        "losses": 38,
+        "elo": -116.594,
+        "elo_error_95": 103.122,
+        "los": 0.007307,
+        "valid_games": 100,
+        "candidate_failures": 0,
+        "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0027\\pairs\\pair-02\\attempts\\attempt-01\\candidate\\evaluation\\benchmark-result-receipt.json",
+        "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4678594f10379ca4.json",
+        "benchmark_receipt_sha256": "429d2dc3acf7c2db81c6040c084523f7baa24a9601ac3c4943f55531b9806bb4",
+        "evidence": [
+          "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-4678594f10379ca4.json",
+          "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+          "engine-source:4678594f10379ca42c4b310bad377c1fe7f2a36a60bdc39c3445ecfa9a76ce16",
+          "chessbench-wdl:5-57-38"
+        ]
+      },
+      "origin": "round:27:pair:2:candidate"
+    }
+  ]
+}

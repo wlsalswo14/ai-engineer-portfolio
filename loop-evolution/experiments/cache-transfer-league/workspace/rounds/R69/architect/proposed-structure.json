@@ -1,0 +1,37 @@
+{
+  "final_call_id": "emit_from_linear_custody",
+  "information_flow": "The first call receives every common input and commits one complete executable policy closure as the lineage's sole behavior-bearing artifact. The final call receives only that immediately preceding closure, cannot reinterpret or revise its behavioral choices, and emits the same artifact as one policy.",
+  "name": "Linear Upstream Policy Custody",
+  "organization": "two-call sequential lineage with fully informed upstream commitment and non-discretionary terminal custody",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "commit_binding_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the visible evidence and obligations once, then commit one complete executable policy closure as the sole behavior-bearing artifact for the lineage.",
+          "output_type": "executable_policy_closure",
+          "role": "fully informed binding policy authority"
+        },
+        {
+          "id": "emit_from_linear_custody",
+          "inputs": [
+            "commit_binding_closure"
+          ],
+          "objective": "Consume commit_binding_closure, preserve its behavioral identity without reinterpretation or revision, and emit its complete policy artifact as the single final policy.",
+          "output_type": "policy",
+          "role": "non-discretionary executable custodian"
+        }
+      ],
+      "id": "binding_custody_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

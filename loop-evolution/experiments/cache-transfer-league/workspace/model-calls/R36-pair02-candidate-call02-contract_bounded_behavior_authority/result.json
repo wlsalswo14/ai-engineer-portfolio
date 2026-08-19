@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.target_t1 = self.capacity_bytes // 2\n        self.ghost_capacity = self.capacity_bytes * 2\n\n    def _remove_ghost(self, key):\n        if key in self.b1:\n            size = self.b1.pop(key)\n            self.b1_bytes -= size\n            return size\n        if key in self.b2:\n            size = self.b2.pop(key)\n            self.b2_bytes -= size\n            return size\n        return None\n\n    def _remember(self, ghost, key, size):\n        self._remove_ghost(key)\n        if self.ghost_capacity <= 0:\n            return\n        ghost[key] = size\n        if ghost is self.b1:\n            self.b1_bytes += size\n        else:\n            self.b2_bytes += size\n        while self.b1_bytes + self.b2_bytes > self.ghost_capacity:\n            if self.b1:\n                old_key, old_size = self.b1.popitem(last=False)\n                self.b1_bytes -= old_size\n            elif self.b2:\n                old_key, old_size = self.b2.popitem(last=False)\n                self.b2_bytes -= old_size\n            else:\n                break\n\n    def _evict_one(self):\n        if self.t1 and (self.t1_bytes > self.target_t1 or not self.t2):\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key, size)\n            return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self._remember(self.b2, key, size)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self._remember(self.b1, key, size)\n            return key\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        if key in self.b1:\n            delta = max(1, min(self.capacity_bytes, size))\n            self.target_t1 = min(self.capacity_bytes, self.target_t1 + delta)\n            self._remove_ghost(key)\n            destination = self.t2\n        elif key in self.b2:\n            delta = max(1, min(self.capacity_bytes, size))\n            self.target_t1 = max(0, self.target_t1 - delta)\n            self._remove_ghost(key)\n            destination = self.t2\n        else:\n            destination = self.t1\n\n        evicted = []\n        while self.t1_bytes + self.t2_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        destination[key] = size\n        if destination is self.t1:\n            self.t1_bytes += size\n        else:\n            self.t2_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R36-pair02-candidate-call02-contract_bounded_behavior_authority",
+    "duration_seconds": 39.667,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:48:27Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "1c5848694f808ede432fb99e9fe2e8bb09ec22f58e5a724b365f16f5994018c0",
+    "raw_events_path": "workspace\\model-calls\\R36-pair02-candidate-call02-contract_bounded_behavior_authority\\raw-events.jsonl",
+    "raw_events_sha256": "173d1a5484c131077e6e423288499a556bce2bcfff2daffa09c19de02287a41d",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "69f9181534950b245b9fd5964d2e485f086b16fc0457fd51c3f2b6a68ff68146",
+    "returncode": 0,
+    "role": "R36 candidate topology role contract-bounded behavioral authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:47:48Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13740,
+      "output_tokens": 3007,
+      "reasoning_output_tokens": 2063
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,193 @@
+{
+  "artifact": "typed_semantic_ir",
+  "anchor": "champion_engine.files.engine.py",
+  "scope": "single loss-accounted representation; no candidate emission",
+  "types": {
+    "Square": "int[0,63], a1=0, h8=63",
+    "Piece": "'.'|'P'|'N'|'B'|'R'|'Q'|'K'|'p'|'n'|'b'|'r'|'q'|'k'",
+    "Move": "int: from bits 0-5, to bits 6-11, promotion bits 12-15, flags bits 16+",
+    "Position": "{board: Piece[64], side: 0|1, castling: int, ep: Square|-1, halfmove: int, fullmove: int}",
+    "Score": "integer centipawn score, side-to-move perspective",
+    "Deadline": "monotonic-clock seconds"
+  },
+  "nodes": [
+    {
+      "id": "protocol.lifecycle",
+      "type": "UCI lifecycle",
+      "provenance": ["main", "Engine.__init__", "main stdin loop"],
+      "status": "preserved",
+      "semantics": [
+        "Reads one whitespace-tokenized command per input line.",
+        "uci emits id name, id author, uciok.",
+        "isready emits readyok.",
+        "ucinewgame clears transposition, history, and killer caches.",
+        "position replaces the current Position.",
+        "go movetime invokes search and emits exactly one bestmove line.",
+        "quit terminates the loop; outputs are flushed."
+      ],
+      "uncertain": [
+        "ucinewgame does not reset the board position.",
+        "Unsupported or malformed commands are silently ignored."
+      ]
+    },
+    {
+      "id": "state.fen",
+      "type": "Position parser",
+      "provenance": ["Position.fen", "Position.start"],
+      "status": "preserved",
+      "semantics": [
+        "Parses six FEN fields into board, side, KQkq rights, en-passant square, halfmove, and fullmove state.",
+        "Assumes syntactically valid FEN and does not validate kings, piece counts, or field ranges."
+      ],
+      "uncertain": ["Malformed FEN behavior is undefined and may raise."]
+    },
+    {
+      "id": "state.move_generation",
+      "type": "pseudo/legal move relation",
+      "provenance": ["pseudo", "legal", "attacked", "king"],
+      "status": "preserved",
+      "semantics": [
+        "Generates pawn, knight, bishop, rook, queen, king, promotion, en-passant, and castling moves.",
+        "legal filters pseudo moves by making a copied position and requiring the moving side's king to remain unattacked.",
+        "Capture-only mode is used by quiescence search."
+      ],
+      "uncertain": [
+        "Generated moves can theoretically capture the opposing king.",
+        "Positions without a king are tolerated because king() returns -1 and attacked(-1) is false."
+      ]
+    },
+    {
+      "id": "state.transition",
+      "type": "immutable make transition",
+      "provenance": ["make"],
+      "status": "preserved",
+      "semantics": [
+        "Copies the board and applies ordinary, promotion, castling, and en-passant moves.",
+        "Toggles side to move.",
+        "Updates castling rights on king movement and rook origin/destination squares.",
+        "Creates an en-passant target only after a two-square pawn move.",
+        "Resets halfmove clock after pawn moves or captures; otherwise increments it.",
+        "Increments fullmove after Black moves.",
+        "No unmake stack or repetition history exists."
+      ]
+    },
+    {
+      "id": "search.control",
+      "type": "iterative-deepening negamax",
+      "provenance": ["Engine.think", "Engine.root", "Engine.search"],
+      "status": "preserved",
+      "semantics": [
+        "Searches legal root moves with iterative depths 1 through 63.",
+        "Uses negamax alpha-beta, mate scores, check extensions at shallow depth, move ordering, killers, history, and a transposition table.",
+        "Retains the last fully completed iteration when timeout occurs.",
+        "Returns the first legal move immediately for movetime <= 4 ms.",
+        "Treats halfmove >= 100 as a draw."
+      ],
+      "uncertain": [
+        "No repetition or insufficient-material search rule is implemented.",
+        "Transposition identity omits halfmove and fullmove counters.",
+        "Quiescence has nonstandard ply cutoffs and may terminate tactical exploration early."
+      ]
+    },
+    {
+      "id": "search.quiescence",
+      "type": "capture/check extension",
+      "provenance": ["Engine.qsearch", "legal"],
+      "status": "preserved",
+      "semantics": [
+        "Uses static evaluation when not in check.",
+        "Searches captures and promotions when quiet; searches all legal evasions while in check.",
+        "Detects mate or stalemate when no legal continuation exists.",
+        "Stops quiet positions at ply 12 and all positions at ply 24."
+      ]
+    },
+    {
+      "id": "search.transposition",
+      "type": "TT state",
+      "provenance": ["Engine.search", "Engine.mscore", "Engine.__init__"],
+      "status": "preserved",
+      "semantics": [
+        "Key is board string, side, castling rights, and en-passant square.",
+        "Entry stores depth, score, bound flag, ply, and best move.",
+        "Mate scores are ply-adjusted when stored and retrieved.",
+        "Table is cleared when exceeding 180000 entries and on ucinewgame."
+      ],
+      "uncertain": ["Cache reuse across halfmove states can conflate draw-claim contexts."]
+    },
+    {
+      "id": "evaluation.flow",
+      "type": "static evaluation pipeline",
+      "provenance": ["Engine.evaluate", "VAL"],
+      "status": "preserved",
+      "semantics": [
+        "Accumulates signed material with White positive and Black negative.",
+        "Adds pawn advancement, center terms, passed-pawn bonuses, knight/bishop/queen centralization, rook rank/file terms, bishop-pair bonus, doubled-pawn and isolated-pawn penalties.",
+        "Uses material phase to switch king centralization versus endgame king safety.",
+        "Returns the score from the side-to-move perspective.",
+        "Recognizes selected bare-king, king-and-knight, and king-and-bishop material as zero."
+      ],
+      "uncertain": [
+        "Evaluation has no mobility, explicit king-safety, repetition, or broader endgame model.",
+        "The phase thresholds and special draw classes are heuristic rather than task-defined semantics."
+      ]
+    },
+    {
+      "id": "time.control",
+      "type": "deadline/abort protocol",
+      "provenance": ["Engine.think", "Engine.check_time"],
+      "status": "preserved",
+      "semantics": [
+        "Deadline is perf_counter()+max(0.001, movetime*0.82).",
+        "Node counter checks the deadline every 32 calls.",
+        "TimeoutError aborts the current iteration; completed prior result remains authoritative.",
+        "Top-level exception fallback emits the first currently legal move."
+      ],
+      "uncertain": [
+        "The 82% budget and 32-node polling interval do not formally guarantee deadline compliance for very small movetimes.",
+        "If no legal move exists, bestmove 0000 is emitted; this is not a legal move but represents terminal state."
+      ]
+    }
+  ],
+  "dependency_edges": [
+    ["protocol.position", "state.fen", "constructs Position"],
+    ["protocol.position", "state.transition", "applies parsed legal move sequence"],
+    ["state.fen", "state.move_generation", "supplies board, side, rights, ep"],
+    ["state.move_generation", "state.transition", "legal validation requires make"],
+    ["state.transition", "search.control", "successor positions"],
+    ["state.transition", "evaluation.flow", "material and positional state"],
+    ["state.move_generation", "search.control", "root and interior move lists"],
+    ["search.transposition", "search.control", "bounds, move ordering, reuse"],
+    ["evaluation.flow", "search.control", "leaf and quiescence scores"],
+    ["time.control", "search.control", "iteration abort and best-result retention"],
+    ["protocol.ucinewgame", "search.transposition", "cache invalidation"],
+    ["state.halfmove", "search.control", " fifty-move draw cutoff"]
+  ],
+  "preservation_contract": {
+    "preserved": [
+      "Standard-library-only execution.",
+      "a1-origin board indexing and UCI coordinate notation.",
+      "Copy-on-move state transitions.",
+      "Legal-move filtering through king-safety attack detection.",
+      "Side-relative evaluation and negamax sign inversion.",
+      "Iterative deepening with last-completed-result timeout behavior.",
+      "Required UCI command/output lifecycle for valid positions."
+    ],
+    "uncertain": [
+      "Malformed-input behavior.",
+      "Terminal bestmove 0000 behavior.",
+      "Missing repetition tracking.",
+      "Incomplete TT state identity.",
+      "Very short deadline compliance.",
+      "Opposing-king capture exclusion."
+    ]
+  },
+  "audit_hooks": [
+    "UCI handshake and flush trace.",
+    "Start position legal-move count and deterministic move notation.",
+    "FEN plus move-sequence state transition checks.",
+    "Castling, promotion, en-passant, check, mate, and stalemate probes.",
+    "Repeated identical search determinism.",
+    "Movetime deadline and exactly-one-bestmove checks.",
+    "TT equivalence probes differing only in halfmove/fullmove counters."
+  ]
+}

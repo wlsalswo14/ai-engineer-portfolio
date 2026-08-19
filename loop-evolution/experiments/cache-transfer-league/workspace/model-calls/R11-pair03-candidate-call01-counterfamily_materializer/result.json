@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.used_bytes = 0\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.recent_ghost = OrderedDict()\n        self.frequent_ghost = OrderedDict()\n        self.tick = 0\n        self.protected_limit = (self.capacity_bytes * 3) // 5\n        self.ghost_limit = 2048\n\n    def _bounds(self):\n        minimum = self.capacity_bytes // 4\n        maximum = (self.capacity_bytes * 3) // 4\n        return minimum, maximum\n\n    def _remember_ghost(self, table, key):\n        self.recent_ghost.pop(key, None)\n        self.frequent_ghost.pop(key, None)\n        table[key] = None\n        while len(table) > self.ghost_limit:\n            table.popitem(last=False)\n\n    def _rebalance(self):\n        protected_bytes = sum(record['size'] for record in self.protected.values())\n        while self.protected and protected_bytes > self.protected_limit:\n            key, record = self.protected.popitem(last=False)\n            self.probation[key] = record\n            protected_bytes -= record['size']\n\n    def _victim_from_probation(self):\n        if not self.probation:\n            return None\n        candidates = list(self.probation.items())[:64]\n        victim_key, victim = candidates[0]\n        for key, record in candidates[1:]:\n            left = (record['hits'] + 1) * victim['size']\n            right = (victim['hits'] + 1) * record['size']\n            if left < right:\n                victim_key, victim = key, record\n        self.probation.pop(victim_key)\n        return victim_key, victim\n\n    def _evict_one(self, evicted):\n        candidate = self._victim_from_probation()\n        if candidate is not None:\n            key, record = candidate\n            self._remember_ghost(self.recent_ghost, key)\n        elif self.protected:\n            key, record = self.protected.popitem(last=False)\n            self._remember_ghost(self.frequent_ghost, key)\n        else:\n            return False\n        self.used_bytes -= record['size']\n        evicted.append(key)\n        return True\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.tick += 1\n\n        record = self.protected.get(key)\n        if record is not None:\n            record['hits'] += 1\n            record['last'] = self.tick\n            self.protected.move_to_end(key)\n            return []\n\n        record = self.probation.get(key)\n        if record is not None:\n            self.probation.pop(key)\n            record['hits'] += 1\n            record['last'] = self.tick\n            self.protected[key] = record\n            self._rebalance()\n            return []\n\n        if self.capacity_bytes == 0 or size < 0 or size > self.capacity_bytes:\n            return []\n\n        minimum, maximum = self._bounds()\n        if key in self.recent_ghost:\n            self.protected_limit = max(minimum, self.protected_limit - max(1, self.capacity_bytes // 16))\n        elif key in self.frequent_ghost:\n            self.protected_limit = min(maximum, self.protected_limit + max(1, self.capacity_bytes // 16))\n        self.recent_ghost.pop(key, None)\n        self.frequent_ghost.pop(key, None)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            if not self._evict_one(evicted):\n                break\n\n        record = {'size': int(size), 'hits': 0, 'last': self.tick}\n        self.probation[key] = record\n        self.used_bytes += record['size']\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R11-pair03-candidate-call01-counterfamily_materializer",
+    "duration_seconds": 56.38,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:12:45Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "fd9599f4df2c7219e52a9c810ba2432c13352c37357af256ec5daefbdecb7c9d",
+    "raw_events_path": "workspace\\model-calls\\R11-pair03-candidate-call01-counterfamily_materializer\\raw-events.jsonl",
+    "raw_events_sha256": "8e3ac1c4e1a8d0aedc09d62ec72b71465d52db1e7e7699827a01af61c9db395c",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "3a4a3eefe8f82dfb5acd93d6092719645e4404a5d442f6d85a8372fe63e53434",
+    "returncode": 0,
+    "role": "R11 candidate topology role whole-state counter-family conjecture materializer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:11:48Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14108,
+      "output_tokens": 4077,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

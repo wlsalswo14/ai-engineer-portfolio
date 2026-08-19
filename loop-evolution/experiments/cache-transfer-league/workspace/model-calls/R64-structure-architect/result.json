@@ -1,0 +1,107 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R64-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "emit_from_provenance_sealed_evidence",
+      "information_flow": "The first call receives every common input and emits a source-anonymous analysis preserving substantive claims, conflict relations, and normative grounding. The final call consumes that analysis, directly receives task, anchor_contract, and task_constraints, remains unable to access anchor_policy, candidate_hypothesis, or loop_structure directly or recover their attribution from the handoff, and emits one complete policy.",
+      "name": "Provenance-Sealed Source Cut",
+      "organization": "two-call sequential lineage with the champion external-source cut and one provenance-visibility mask on the sole handoff",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "synthesize_and_seal_provenance",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile generative claims against normative obligations, preserve substantive distinctions and conflicts, withhold attribution to cut generative sources, and emit only an analysis.",
+              "output_type": "analysis",
+              "role": "provenance-sealing evidence synthesizer"
+            },
+            {
+              "id": "emit_from_provenance_sealed_evidence",
+              "inputs": [
+                "synthesize_and_seal_provenance",
+                "task",
+                "anchor_contract",
+                "task_constraints"
+              ],
+              "objective": "Consume synthesize_and_seal_provenance, evaluate its source-anonymous evidence against the directly visible normative inputs, and emit one complete policy without recovering cut-source provenance.",
+              "output_type": "policy",
+              "role": "source-anonymous normative policy authority"
+            }
+          ],
+          "id": "provenance_sealed_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only provenance visibility on the existing analysis handoff changes; call count, sequence, direct external edges, terminal authority, and output kinds remain unchanged.",
+      "why_not_repeat_role_fission": "The lineage retains the same two distinct calls and introduces no duplicated producer, reviewer, finalizer, or terminal role."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Seal generative-source provenance on the sole handoff while preserving claim substance, conflict relations, and normative grounding.",
+      "expected_effect": "The terminal authority evaluates inherited and counter-generative claims symmetrically against directly visible obligations without losing their substantive evidence.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The direct generative-source cut can still leave source identity visible through attributed claims on the analysis handoff, permitting source-conditioned terminal deference."
+    },
+    "structural_mutation": {
+      "after": "The existing direct-source cut remains, and the sole analysis edge additionally withholds generative-source attribution while carrying source-anonymous claims, conflicts, and normative grounding.",
+      "before": "The terminal call lacks direct generative-source edges, but the analysis handoff may retain attribution linking claims to their generative origins.",
+      "change_count": 1,
+      "factor": "source-origin anonymity on the sole analysis handoff",
+      "why_structural": "This changes the evidence visibility semantics of an existing causal edge and therefore changes the terminal evidence set without adding calls, roles, or a decision gate."
+    }
+  },
+  "receipt": {
+    "call_id": "R64-structure-architect",
+    "duration_seconds": 94.91,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:18:13Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "4f17de1ef4e45b7a9f92625c9500e0e5074864ecf0f8dc496a5cc02ed4185252",
+    "raw_events_path": "workspace\\model-calls\\R64-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "2056591c41657927175661557329a68ed51af51a114007ce3d2778b56246f710",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "74ceb4e9209e57018a7f78f79afd1fbbfc35c595574566cf4eb83034706f4fe8",
+    "returncode": 0,
+    "role": "score-blind R64 local_refinement structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:16:38Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 5888,
+      "input_tokens": 14424,
+      "output_tokens": 4856,
+      "reasoning_output_tokens": 4016
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

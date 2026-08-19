@@ -1,0 +1,283 @@
+You are one call inside an evolved chess-engine construction loop.
+
+ROLE: single dialogue-resolved component grafting engine producer
+OBJECTIVE: Treat champion_engine as the sole source authority, seam_rehearsed_component_foundry as the sole authorized strength-bearing implementation, integration_question_compiler as the downstream handoff state, and component_binding_resolver as the sole consumer-ready binding. Verify that any opened query is closed by executable anchor evidence, that the causal target and component lineage identity did not change, and that a NO_QUERY state still supplies a fully grounded binding. Embed that same component behavior exactly once through the resolved binding into one mutable working copy of the anchor, replay the supplied causal and consumer-context traces through the integrated path, and preserve behavior outside the necessary dependency closure. Repair only this single graft in place while checking syntax, public source contract, UCI, legal move and state transitions, determinism, perft where applicable, lifecycle, dependency, and timing safety. If the resolver reports ADMISSION_FAILURE, emit the byte-identical anchor as the sole valid engine rather than improvising another change. Do not rediagnose, substitute or add a mechanism, create or compare provisional engines, reopen the dialogue, invoke a reviewer or selector, use rollback arbitration, globally rewrite the engine, tune engine hyperparameters as the structural hypothesis, or use benchmark-specific knowledge. Return exactly one complete legal production engine as the sole engine artifact.
+
+Follow only the declared information flow. You may use the isolated arm workspace and command tools to develop and
+check scratch code. Use only general development evidence such as parsing, UCI handshake, legal-move behavior, perft,
+determinism, timeouts, and task-general regression checks. The official ChessBench openings, match results, evaluator
+internals, other repositories, and external files are unavailable and must not be sought. Do not use web search. Work
+from the supplied inputs and isolated workspace. Preserve working anchor behavior unless concrete evidence justifies a
+change. Repair or roll back a locally failing edit before returning. Return exactly one JSON object and no prose: {"files":{"engine.py":"<complete Python source>"}}. Return a complete file, not a patch. The engine must obey the supplied task boundary.
+
+===== INPUT task =====
+# Task: build and improve a chess engine from scratch
+
+Create a single Python file named `engine.py`. It must use only the Python standard library and speak enough UCI to play:
+
+```text
+uci
+isready
+ucinewgame
+position startpos [moves ...]
+position fen <six-field-fen> [moves ...]
+go movetime <ms>
+quit
+```
+
+For every `go movetime` command, return exactly one legal `bestmove <uci_move>` before the deadline. Implement the board,
+legal move generation, state transitions, search, and evaluation yourself. Do not import or inspect `python-chess`, Stockfish,
+Sunfish, TSCP, Fairy-Stockfish, LC0, or any other chess engine or chess library.
+
+This is an offline closed-book task. Do not use web/search, network access, package installation, apps, MCP, plugins,
+subagents, other repositories, system documentation, or files outside the supplied benchmark workspace. The evaluator's
+Stockfish binary, opening list, hidden match output, and other candidates are not visible to you. In a plateau entry you may
+inspect and modify only the explicitly supplied previous `engine.py` and public feedback.
+
+The official match uses 50 fixed opening positions with colors exchanged for exactly 100 games at each immutable Stockfish
+node tier. Candidate move time, maximum plies, Stockfish binary, opening bytes, and statistics are evaluator-side frozen
+contracts. Do not hard-code a supplied opening list or attempt to identify individual evaluation games.
+
+Leave only `engine.py` as the final engine artifact.
+
+
+# V3 Lite complete-file response boundary
+
+This adapted research track evaluates the engine produced by the active V3 Lite harness. The engine itself remains offline, standard-library-only, and unable to use tools or other files. Return exactly one JSON object and no prose: {"files":{"engine.py":"<the complete Python source, JSON escaped>"}}. Do not return a patch or Markdown fence. The evaluator plays 50 fixed openings with colors exchanged, for exactly 100 games. The evaluation stage and opponent tier are hidden control-plane conditions. Public suite label: screening.
+
+===== INPUT champion_engine =====
+{
+  "files": {
+    "engine.py": "import sys,time\nINF=100000000\nMATE=100000\nVAL={'p':100,'n':320,'b':330,'r':500,'q':900,'k':20000}\nPROM={1:'n',2:'b',3:'r',4:'q'}\nMAX_CREDITS=2\nTARGET_CLASSES=('none','minor','major')\n\ndef attacked(p,sq,by):\n    if sq<0 or sq>=64:return False\n    b=p.b;r,f=divmod(sq,8)\n    rr=r-1 if by==0 else r+1\n    pawn='P' if by==0 else 'p'\n    if 0<=rr<8:\n        for ff in (f-1,f+1):\n            if 0<=ff<8 and b[rr*8+ff]==pawn:return True\n    knight='N' if by==0 else 'n'\n    for dr,df in ((2,1),(2,-1),(-2,1),(-2,-1),(1,2),(1,-2),(-1,2),(-1,-2)):\n        x,y=r+dr,f+df\n        if 0<=x<8 and 0<=y<8 and b[x*8+y]==knight:return True\n    king='K' if by==0 else 'k'\n    for dr in (-1,0,1):\n        for df in (-1,0,1):\n            if dr or df:\n                x,y=r+dr,f+df\n                if 0<=x<8 and 0<=y<8 and b[x*8+y]==king:return True\n    for dr,df,chars in ((1,0,'rq'),(-1,0,'rq'),(0,1,'rq'),(0,-1,'rq'),(1,1,'bq'),(1,-1,'bq'),(-1,1,'bq'),(-1,-1,'bq')):\n        x,y=r+dr,f+df\n        while 0<=x<8 and 0<=y<8:\n            z=b[x*8+y]\n            if z!='.':\n                if z.isupper()==(by==0) and z.lower() in chars:return True\n                break\n            x+=dr;y+=df\n    return False\n\ndef king(p,side):\n    k='K' if side==0 else 'k'\n    for i,x in enumerate(p.b):\n        if x==k:return i\n    return -1\n\nclass Position:\n    def __init__(self,b,side,cast,ep,half,full):\n        self.b=b;self.side=side;self.cast=cast;self.ep=ep;self.half=half;self.full=full\n    @classmethod\n    def fen(cls,s):\n        a=s.split();b=['.']*64\n        for ri,row in enumerate(a[0].split('/')):\n            sq=(7-ri)*8\n            for x in row:\n                if x.isdigit():sq+=int(x)\n                else:b[sq]=x;sq+=1\n        c=0\n        for i,x in enumerate('KQkq'):\n            if x in a[2]:c|=1<<i\n        ep=-1\n        if a[3]!='-':ep=ord(a[3][0])-97+8*(int(a[3][1])-1)\n        return cls(b,0 if a[1]=='w' else 1,c,ep,int(a[4]),int(a[5]))\n    @classmethod\n    def start(cls):\n        return cls.fen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')\n\ndef enc(a,z,pr=0,fl=0):return a|(z<<6)|(pr<<12)|(fl<<16)\n\ndef pseudo(p,captures=False):\n    b=p.b;side=p.side;out=[];white=side==0\n    def add(a,z,pr=0,fl=0,cap=False):\n        if not captures or cap or pr:out.append(enc(a,z,pr,fl))\n    for s,pc in enumerate(b):\n        if pc=='.' or pc.isupper()!=white:continue\n        r,f=divmod(s,8);t=pc.lower()\n        if t=='p':\n            d=8 if white else -8;z=s+d\n            prom=0<=z<64 and z//8==(7 if white else 0)\n            if 0<=z<64 and b[z]=='.':\n                if prom:\n                    for q in (4,3,2,1):add(s,z,q)\n                else:add(s,z)\n                if not captures and r==(1 if white else 6) and b[s+2*d]=='.':add(s,s+2*d,0,4)\n            for df in (-1,1):\n                if 0<=f+df<8:\n                    z=s+d+df\n                    if 0<=z<64:\n                        x=b[z];enemy=x!='.' and x.isupper()!=white\n                        if enemy:\n                            if z//8==(7 if white else 0):\n                                for q in (4,3,2,1):add(s,z,q,0,True)\n                            else:add(s,z,0,0,True)\n                        elif z==p.ep:add(s,z,0,2,True)\n        elif t=='n':\n            for dr,df in ((2,1),(2,-1),(-2,1),(-2,-1),(1,2),(1,-2),(-1,2),(-1,-2)):\n                x,y=r+dr,f+df\n                if 0<=x<8 and 0<=y<8:\n                    z=x*8+y\n                    if b[z]=='.' or b[z].isupper()!=white:add(s,z,0,0,b[z]!='.')\n        elif t in 'brq':\n            ds=[]\n            if t in 'bq':ds += ((1,1),(1,-1),(-1,1),(-1,-1))\n            if t in 'rq':ds += ((1,0),(-1,0),(0,1),(0,-1))\n            for dr,df in ds:\n                x,y=r+dr,f+df\n                while 0<=x<8 and 0<=y<8:\n                    z=x*8+y\n                    if b[z]=='.':add(s,z)\n                    else:\n                        if b[z].isupper()!=white:add(s,z,0,0,True)\n                        break\n                    x+=dr;y+=df\n        else:\n            for dr in (-1,0,1):\n                for df in (-1,0,1):\n                    if dr or df:\n                        x,y=r+dr,f+df\n                        if 0<=x<8 and 0<=y<8:\n                            z=x*8+y\n                            if b[z]=='.' or b[z].isupper()!=white:add(s,z,0,0,b[z]!='.')\n            if not captures and s==(4 if white else 60) and not attacked(p,s,side^1):\n                if white and p.cast&1 and b[5]==b[6]=='.' and b[7]=='R' and not attacked(p,5,1) and not attacked(p,6,1):add(s,6,0,1)\n                if white and p.cast&2 and b[1]==b[2]==b[3]=='.' and b[0]=='R' and not attacked(p,3,1) and not attacked(p,2,1):add(s,2,0,1)\n                if not white and p.cast&4 and b[61]==b[62]=='.' and b[63]=='r' and not attacked(p,61,0) and not attacked(p,62,0):add(s,62,0,1)\n                if not white and p.cast&8 and b[57]==b[58]==b[59]=='.' and b[56]=='r' and not attacked(p,59,0) and not attacked(p,58,0):add(s,58,0,1)\n    return out\n\ndef make(p,m):\n    a=m&63;z=(m>>6)&63;pr=(m>>12)&15;fl=m>>16;b=p.b[:];pc=b[a];cap=b[z]\n    b[a]='.'\n    if fl&2:\n        b[z+(-8 if pc.isupper() else 8)]='.';cap='p'\n    b[z]=pc\n    if fl&1:\n        if z==6:b[5]=b[7];b[7]='.'\n        elif z==2:b[3]=b[0];b[0]='.'\n        elif z==62:b[61]=b[63];b[63]='.'\n        elif z==58:b[59]=b[56];b[56]='.'\n    if pr:b[z]=('NBRQ'[pr-1] if pc.isupper() else 'nbrq'[pr-1])\n    c=p.cast\n    if pc=='K':c&=12\n    elif pc=='k':c&=3\n    if a==0 or z==0:c&=~2\n    if a==7 or z==7:c&=~1\n    if a==56 or z==56:c&=~8\n    if a==63 or z==63:c&=~4\n    ep=(a+z)//2 if pc.lower()=='p' and abs(z-a)==16 else -1\n    return Position(b,p.side^1,c,ep,0 if pc.lower()=='p' or cap!='.' else p.half+1,p.full+(1 if p.side else 0))\n\ndef legal(p,captures=False):\n    out=[];side=p.side\n    for m in pseudo(p,captures):\n        q=make(p,m)\n        if not attacked(q,king(q,side),side^1):out.append(m)\n    return out\n\ndef notation(m):\n    a=m&63;z=(m>>6)&63;pr=(m>>12)&15\n    s='abcdefgh'[a&7]+str(a//8+1)+'abcdefgh'[z&7]+str(z//8+1)\n    return s+(PROM[pr] if pr else '')\n\ndef newly_attacked(p,q,side):\n    minor=False\n    for s,x in enumerate(q.b):\n        if x!='.' and x.isupper()!=(side==0) and x.lower() in 'nbrq':\n            if attacked(q,s,side) and not attacked(p,s,side):\n                if x.lower() in 'rq':return 'major'\n                minor=True\n    return 'minor' if minor else 'none'\n\ndef capability_initial():return (MAX_CREDITS,-1)\n\ndef capability_advance(state,event):\n    credits,last=state\n    ply,depth_left,capture,promotion,gives_check,target=event\n    if ply!=last+1 or target not in TARGET_CLASSES:raise ValueError('invalid capability transition')\n    quiet=not capture and not promotion and not gives_check\n    trigger=quiet and target!='none'\n    if trigger and depth_left<=1 and credits:\n        return (credits-1,ply),1\n    if quiet:\n        return (MAX_CREDITS,ply),0\n    return (credits,ply),0\n\ndef capability_event(p,q,m,depth_left,ply):\n    a=m&63;z=(m>>6)&63;pr=(m>>12)&15;fl=m>>16\n    capture=p.b[z]!='.' or bool(fl&2)\n    promotion=bool(pr)\n    gives_check=attacked(q,king(q,q.side),p.side)\n    target='none'\n    if not capture and not promotion and not gives_check:\n        target=newly_attacked(p,q,p.side)\n    return (ply,depth_left,capture,promotion,gives_check,target)\n\nclass Engine:\n    def __init__(self):\n        self.pos=Position.start();self.tt={};self.history={};self.killers={};self.nodes=0;self.deadline=0\n    def evaluate(self,p):\n        score=0;phase=0;wp=[0]*8;bp=[0]*8;wb=bb=0;pawns=0\n        for pc in p.b:\n            if pc!='.' and pc.lower() not in ('p','k'):phase+=VAL[pc.lower()]\n        for s,pc in enumerate(p.b):\n            if pc=='.':continue\n            typ=pc.lower();sg=1 if pc.isupper() else -1;v=VAL[typ];score+=sg*v\n            r,f=divmod(s,8);rr=r if sg==1 else 7-r\n            center=7-abs(2*f-7)-abs(2*rr-7)\n            if typ=='p':\n                pawns+=1\n                (wp if sg==1 else bp)[f]+=1\n                score+=sg*(rr*10+center*2)\n                passed=True\n                ranks=range(r+1,8) if sg==1 else range(r-1,-1,-1)\n                for r2 in ranks:\n                    for f2 in (f-1,f,f+1):\n                        if 0<=f2<8 and p.b[r2*8+f2]==('p' if sg==1 else 'P'):passed=False\n                if passed:score+=sg*(18+rr*8)\n            elif typ=='n':score+=sg*(center*10)\n            elif typ=='b':score+=sg*(center*5);wb+=sg==1;bb+=sg==-1\n            elif typ=='r':\n                score+=sg*(rr*3+(5 if f in (3,4) else 0))\n                if (wp if sg==1 else bp)[f]==0:score+=sg*12\n            elif typ=='q':score+=sg*(center*2)\n            else:\n                if phase>2600:score+=sg*(-center*3)\n                else:score+=sg*(center*10)\n        if wb>=2:score+=30\n        if bb>=2:score-=30\n        for n in wp:score-=max(0,n-1)*10\n        for n in bp:score+=max(0,n-1)*10\n        for f,n in enumerate(wp):\n            if n and (f==0 or wp[f-1]==0) and (f==7 or wp[f+1]==0):score-=10*n\n        for f,n in enumerate(bp):\n            if n and (f==0 or bp[f-1]==0) and (f==7 or bp[f+1]==0):score+=10*n\n        if pawns==0 and (phase==0 or phase==320 or (phase==330 and wb+bb==1)):return 0\n        return score if p.side==0 else -score\n    def check_time(self):\n        self.nodes+=1\n        if (self.nodes&31)==0 and time.perf_counter()>=self.deadline:raise TimeoutError\n    def mscore(self,p,m,tt,ply):\n        a=m&63;z=(m>>6)&63;pr=(m>>12)&15;fl=m>>16\n        sc=10000000 if m==tt else 0\n        cap=p.b[z]\n        if fl&2:cap='p'\n        if cap!='.':sc+=1000000+VAL[cap.lower()]*10-VAL[p.b[a].lower()]\n        if pr:sc+=800000+pr*10000\n        if self.killers.get(ply)==m:sc+=500000\n        sc+=self.history.get((p.side,a,z),0)\n        if fl&1:sc+=100\n        return sc\n    def qsearch(self,p,alpha,beta,ply):\n        self.check_time();checked=attacked(p,king(p,p.side),p.side^1)\n        if ply>=12:\n            ms=legal(p,False)\n            if not ms:return -MATE+ply if checked else 0\n            return self.evaluate(p)\n        stand=-INF\n        if not checked:\n            stand=self.evaluate(p)\n            if stand>=beta:return stand\n            if stand>alpha:alpha=stand\n        ms=legal(p,False if checked else True)\n        if not ms:return -MATE+ply if checked else stand\n        ms.sort(key=lambda m:self.mscore(p,m,-1,ply),reverse=True)\n        for m in ms:\n            sc=-self.qsearch(make(p,m),-beta,-alpha,ply+1)\n            if sc>=beta:return sc\n            if sc>alpha:alpha=sc\n        return alpha\n    def search(self,p,depth,alpha,beta,ply,cap_state):\n        self.check_time()\n        if depth<=0:return self.qsearch(p,alpha,beta,ply)\n        key=(''.join(p.b),p.side,p.cast,p.ep,cap_state[0]);orig=alpha;oldbeta=beta;ent=self.tt.get(key);tt=-1\n        if ent:\n            tt=ent[4]\n            if ent[0]>=depth:\n                sc=ent[1]\n                if ent[2]==0:return sc\n                if ent[2]==1:alpha=max(alpha,sc)\n                elif ent[2]==2:beta=min(beta,sc)\n                if alpha>=beta:return sc\n        ms=legal(p)\n        if not ms:return -MATE+ply if attacked(p,king(p,p.side),p.side^1) else 0\n        ms.sort(key=lambda m:self.mscore(p,m,tt,ply),reverse=True);best=-INF;bestm=ms[0]\n        for m in ms:\n            q=make(p,m);nd=depth-1\n            next_state,extension=capability_advance(cap_state,capability_event(p,q,m,nd,ply))\n            nd+=extension\n            if depth<=2 and attacked(q,king(q,q.side),q.side^1):nd+=1\n            sc=-self.search(q,nd,-beta,-alpha,ply+1,next_state)\n            if sc>best:best=sc;bestm=m\n            if sc>alpha:alpha=sc\n            if alpha>=beta:\n                if p.b[m&63].lower()!='p' and p.b[(m>>6)&63]=='.' and not (m>>12)&15:\n                    self.killers[ply]=m;keyh=(p.side,m&63,(m>>6)&63);self.history[keyh]=min(10000,self.history.get(keyh,0)+depth*depth)\n                break\n        flag=2 if best<=orig else 1 if best>=oldbeta else 0\n        self.tt[key]=(depth,best,flag,ply,bestm)\n        if len(self.tt)>180000:self.tt.clear()\n        return best\n    def root(self,p,ms,depth):\n        ms=ms[:];ms.sort(key=lambda m:self.mscore(p,m,-1,0),reverse=True)\n        alpha=-INF;best=-INF;bm=ms[0]\n        for m in ms:\n            self.check_time();q=make(p,m);nd=depth-1\n            cap_state,extension=capability_advance(capability_initial(),capability_event(p,q,m,nd,0))\n            nd+=extension\n            sc=-self.search(q,nd,-INF,-alpha,1,cap_state)\n            if sc>best:best=sc;bm=m\n            if sc>alpha:alpha=sc\n        return best,bm\n    def think(self,millis):\n        moves=legal(self.pos)\n        if not moves:return '0000'\n        best=moves[0]\n        if millis<=4:return notation(best)\n        self.nodes=0;self.deadline=time.perf_counter()+max(0.001,millis/1000.0*0.82)\n        for depth in range(1,64):\n            try:score,m=self.root(self.pos,moves,depth)\n            except TimeoutError:break\n            best=m\n            if abs(score)>MATE-1000:break\n        return notation(best)\n    def setpos(self,a):\n        if len(a)>1 and a[1]=='startpos':p=Position.start();i=2\n        elif len(a)>7 and a[1]=='fen':p=Position.fen(' '.join(a[2:8]));i=8\n        else:return\n        if i<len(a) and a[i]=='moves':\n            for u in a[i+1:]:\n                for m in legal(p):\n                    if notation(m)==u:p=make(p,m);break\n        self.pos=p\n\ndef main():\n    e=Engine()\n    for line in sys.stdin:\n        a=line.strip().split()\n        if not a:continue\n        if a[0]=='uci':\n            print('id name PythonScratch');print('id author Codex');print('uciok');sys.stdout.flush()\n        elif a[0]=='isready':print('readyok');sys.stdout.flush()\n        elif a[0]=='ucinewgame':e.tt.clear();e.history.clear();e.killers.clear()\n        elif a[0]=='position':e.setpos(a)\n        elif a[0]=='go':\n            ms=1000\n            if 'movetime' in a:\n                try:ms=max(1,int(a[a.index('movetime')+1]))\n                except:pass\n            try:mv=e.think(ms)\n            except Exception:\n                lm=legal(e.pos);mv=notation(lm[0]) if lm else '0000'\n            print('bestmove '+mv);sys.stdout.flush()\n        elif a[0]=='quit':break\nif __name__=='__main__':main()\n"
+  }
+}
+
+
+===== INPUT champion_metrics =====
+{"draws":44,"elo":-204.753,"losses":55,"receipt_path":"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0019\\benchmark-result-receipt.json","score_rate":0.23,"source_receipt_path":"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-578a4d95f81d0f2c.json","wins":1}
+
+===== INPUT candidate_hypothesis =====
+{"behavioral_novelty":"After the sole executable component has crossed its original producer boundary, the loop can now suspend final construction on one concretely observed consumer-side UNKNOWN, send exactly one causal clarification backward, close it with anchor-grounded executable evidence, and resume forward flow with the same component. The champion has only a sealed forward handoff and cannot make downstream uncertainty alter the pre-engine information state.","causal_change":{"after":"The same one-component foundry handoff enters a non-authoring prospective consumer that grounds the binding against the actual anchor. Only when the first causally required predicate in dependency order remains UNKNOWN does it open exactly one typed query; one resolver translates the original component and anchor evidence into a single consumer-ready binding and closes that query before the sole final engine producer grafts once.","before":"The component foundry emits one sealed producer-authored artifact to a final engine producer. If the consumer encounters a causally material binding fact that is absent or ambiguous in that artifact, it can only guess, reconstruct the foundry's intent, silently adapt the mechanism, or abandon the graft inside the final engine-producing call; information cannot flow back before commitment.","change_count":1,"factor":"Directionality of causal-information flow after the sole executable component is handed to its downstream consumer","why_causal":"Handoff direction determines whether downstream uncertainty can become new upstream-resolved information before irreversible engine construction. The query compiler and resolver are the two necessary ends of one bounded return edge: they neither add a second causal target nor judge, sample, rank, or select candidates. If missing producer knowledge is a source of semantic loss, enabling exactly one consumer-triggered clarification should preserve the demonstrated behavior through integration; if it is not, the new path will remain untriggered or will not improve the frozen matched batch."},"emergent_capability":{"capability_family":"Consumer-Triggered Causal Handoff Dialogue","champion_limitation":"The champion's foundry-to-producer handoff is permanently one-way; after the final consumer discovers that a causally necessary binding predicate is not grounded by the surrogate artifact, no pre-engine state or path exists for requesting and receiving one clarification tied to the original component.","emergent_capability":"Open and close exactly one consumer-originated causal query before final engine construction, translating the original executable component's producer-side semantics into one anchor-grounded consumer-ready binding without changing the component's causal target or creating another candidate.","not_local_refinement":"This does not enlarge the seam surrogate, add another gap witness, move an audit, enrich a packet or certificate, narrow rollback, or append a reviewer/gate. It changes the topology and direction of causal information flow by adding a trigger-dependent backward clarification path and a new resumable handoff state that the champion control flow cannot represent.","novelty_probe":"Give the topology one task-general foundry artifact whose causal behavior is executable but whose consumer-context mapping leaves one required lifecycle or state-ownership predicate explicitly ungrounded. Require the prospective consumer to reproduce that UNKNOWN, emit exactly one typed query, and require the resolver to execute an anchor-grounded discriminator that changes the state to QUERY_RESOLVED while preserving the original component identity. Confirm that no engine exists before the final call and that the champion topology has no artifact edge capable of representing the open-and-resolved query transition.","observable_effect":"On the same component and anchor evidence, the champion proceeds directly from the sealed handoff into engine production and must resolve the unknown privately. The candidate instead records HANDOFF_STATE=QUERY_OPEN with one question, then HANDOFF_STATE=QUERY_RESOLVED with the answering trace and binding identity before any complete engine exists; when no predicate is unknown it records NO_QUERY without inventing a branch.","state_transition":{"after":"RESOLVED_DIALOGUE: one typed query names that predicate, one anchor-grounded response closes it with an executable trace, and one immutable consumer-ready binding for the same component is available to the sole final producer.","before":"SEALED_HANDOFF: one demonstrated component and seam trace are available, but a consumer-critical binding predicate is UNKNOWN and final construction would require an undocumented guess."},"trigger":"During deterministic prospective integration of the sole foundry artifact, the first required predicate in causal dependency order is recorded as UNKNOWN because neither the anchor facts nor the foundry trace entails it, and guessing that predicate could change the demonstrated causal effect or violate the preservation envelope."},"evidence_refs":["STATE_CAPSULE.current_champion, recent_outcomes rounds 18-20, hypothesis_frontier rounds 18-20, and search_control: the isolated executable mechanism family promoted in rounds 18 and 19, two local rounds are consumed, and r0021 requires emergent_exploration","workspace/champions/p0019/loop-structure.json: the champion has a fixed one-way foundry-to-final-producer handoff; its final producer must verify surrogate provenance and adapt representation without any path to request a missing causal binding fact","workspace/rounds/r0019/round-summary.json and generation/normalized-plan.json: seam rehearsal promoted 2W/1L with median delta +14.521 and zero invalid arms, while explicitly retaining the risk that bounded rehearsal omits recursive, timing, or global-state behavior","workspace/rounds/r0020/round-summary.json and generation/normalized-plan.json: adding a pre-construction anchor-gap witness produced a valid 0W/1L/2T batch with median delta 0.0; this is bounded evidence to explore a non-gap, non-seam control-flow dimension, not proof that the witnessed chess mechanisms are universally weak","workspace normalized-plan.json and champion loop-structure.json metadata scan: prior emergent families are causal-dead-end strategy substitution, evidence-conditioned semantic arbitration, Counterexample-Triggered Semantic Reentry, and Evidence-Deficit-Triggered Probe Synthesis; none provides a consumer-originated bounded causal handoff dialogue"],"expected_effect":"The loop should preserve the champion's early executable mechanism and anchor-seam rehearsal while preventing the final producer from silently guessing at a causally material mapping that becomes visible only in consumer context. On a triggered handoff, the final producer receives one resolved anchor-native binding for the same component; on an untriggered handoff, it receives an explicit grounded binding map without a fabricated question. Across the frozen three-pair protocol this predicts zero invalid arms, candidate wins strictly exceeding losses, and candidate-median Elo strictly above incumbent-median Elo.","falsifier":"Falsify the structural hypothesis unless the three valid matched pairs contain zero invalid arms, candidate wins strictly exceeding losses, and candidate-median Elo strictly exceeding incumbent-median Elo. Mechanistically falsify it if the novelty probe cannot produce an observable QUERY_OPEN to QUERY_RESOLVED transition from one consumer-side UNKNOWN predicate; if either middle call acts as a reviewer, gate, candidate selector, or second mechanism author; if the resolver changes the causal capability instead of translating the same component's binding; if more than one query, component, working engine, or final engine is created; or if the final producer ignores the resolved binding and rediagnoses a different change.","observed_bottleneck":"The supported Isolated Executable Mechanism Grafting family promoted by making one strength-bearing component executable before whole-engine construction, then promoted again after rehearsing that component against an anchor-derived seam. Its remaining structural information flow is nevertheless sealed and one-way: the foundry serializes its component, surrogate, traces, and invariants, and the only engine producer must resolve every anchor-wide semantic question from that frozen handoff while simultaneously performing the graft. The champion itself warns that a bounded surrogate can omit deep recursive, timing, or global-state behavior and that the final producer may have to adapt representation. R20 added still more upstream gap evidence but did not promote (0W/1L/2T, median delta 0.0), so the first emergent step should not refine gap admission or seam fidelity again. The unexplored capability is a bounded return path initiated by the downstream consumer when one causally necessary binding fact is genuinely unknown, allowing the same component's producer-side knowledge to be translated once before final construction instead of being guessed, silently rediagnosed, or discarded.","risks":["The prospective consumer may label a derivable fact UNKNOWN and spend a clarification turn that adds no useful information.","The resolver may overconstrain the binding to the supplied anchor representation or accidentally redesign the component; explicit identity and causal-target invariants are intended to expose that failure.","Most foundry handoffs may already be sufficiently grounded, leaving the new path untriggered and the extra transformations as context overhead.","Four calls consume the entire configured per-arm Luna-high call ceiling, increasing exposure to transport or artifact-format failure without changing how invalid pairs are adjudicated."],"strengths":["Preserves the twice-supported one-component-before-engine family, anchor-derived rehearsal, untouched anchor authority, and exactly one final graft.","Makes downstream semantic uncertainty observable and resolvable before irreversible source construction rather than asking the final producer to infer hidden producer intent.","Uses four distinct Luna-high transformations—component realization, consumer question compilation, causal binding resolution, and final engine construction—with no repeated samples or candidate comparison.","Bounds feedback to one deterministic query about the same component and therefore adds a real return path without opening an unbounded conversation or redesign loop."]}
+
+===== INPUT loop_structure =====
+{"final_call_id":"dialogue_resolved_grafting_engine","information_flow":"One foundry constructs and executes exactly one non-engine strength component and rehearses it through one anchor-derived seam. A distinct prospective consumer translates that sealed producer artifact into a grounded binding map and, only on one observed UNKNOWN predicate, opens one typed causal query. A distinct resolver answers that query from the original component and anchor evidence, or canonicalizes the already grounded no-query handoff, producing one immutable consumer-ready binding. One final producer consumes the same component plus the closed handoff state, grafts the behavior once into one working copy of the anchor, and emits the only complete engine.","name":"Consumer-Queried Seam-Rehearsed Mechanism Graft","organization":"collaboration","stages":[{"calls":[{"id":"seam_rehearsed_component_foundry","inputs":["task","champion_engine","champion_metrics","state_capsule","candidate_hypothesis","loop_structure"],"objective":"Inspect exactly one supplied anchor and the bounded task evidence without modifying, reproducing, or emitting the engine. Commit to exactly one highest-leverage task-general causal capability and implement it as one standalone executable non-UCI Python component with an explicit primitive interface. Identify one bounded real producer-consumer seam where that behavior would live and derive one executable surrogate of its existing state shape, lifecycle, dependency envelope, and downstream obligations. Execute the same component through deterministic primitive and seam fixtures covering its causal prediction, a null case, boundary transitions, repeated lifecycle use, dependency closure, and bounded work; repair only this unfinished component in place. Return one producer-authored artifact containing the sole component source and identity, causal target, primitive and seam traces, binding claims with their evidence status, preservation envelope, and graft invariants. Do not create or compare alternative components or engines, emit a patch or source-edit program, perform selection, use benchmark-specific knowledge, or tune engine hyperparameters as the structural change.","output_type":"analysis","role":"single anchor-seam executable capability foundry"}],"id":"single_seam_rehearsed_component","mode":"sequential"},{"calls":[{"id":"integration_question_compiler","inputs":["task","champion_engine","champion_metrics","candidate_hypothesis","loop_structure","seam_rehearsed_component_foundry"],"objective":"Act as the prospective downstream consumer of exactly one seam_rehearsed_component_foundry artifact, not as a reviewer, gate, mechanism author, engine producer, or selector. Ground its declared causal and preservation bindings against the supplied anchor in deterministic dependency order using one disposable non-engine integration harness where execution is needed. Do not modify the component or anchor and do not judge expected playing strength. If every binding predicate needed by a final producer is entailed, emit HANDOFF_STATE=NO_QUERY plus one complete consumer-side binding map. If the first required predicate is genuinely not entailed and guessing could alter the sole causal effect or preservation envelope, emit HANDOFF_STATE=QUERY_OPEN, exactly one typed question naming that predicate, the anchor facts already known, one reproducible consumer-context trace showing UNKNOWN, and the response postcondition. Do not enumerate alternative interpretations, create a second probe for selection, request a different mechanism, emit source edits, or construct any complete or provisional engine.","output_type":"analysis","role":"non-authoring downstream causal-binding question compiler"}],"id":"consumer_originated_query","mode":"sequential"},{"calls":[{"id":"component_binding_resolver","inputs":["task","champion_engine","champion_metrics","candidate_hypothesis","loop_structure","seam_rehearsed_component_foundry","integration_question_compiler"],"objective":"Translate the original seam_rehearsed_component_foundry artifact and integration_question_compiler state into exactly one immutable consumer-ready binding for that same component. When HANDOFF_STATE=QUERY_OPEN, answer only its one typed question by inspecting the supplied anchor, executing one bounded task-general discriminator through the original component and cited seam, and revising the same unfinished interface or semantic mapping in place only as necessary to make the required predicate known. Record QUERY_RESOLVED, the answering trace, unchanged causal-target identity, component lineage identity, exact anchor bindings, preservation obligations, and final replay command. When HANDOFF_STATE=NO_QUERY, perform the distinct translation from the grounded consumer map into the same canonical binding artifact without fabricating a query. If the question cannot be resolved without changing the causal target, emit a typed ADMISSION_FAILURE rather than inventing another component. Do not create alternatives, compare bindings, author a complete engine or patch, rediagnose a different capability, act as a reviewer or selector, use benchmark knowledge, or tune engine hyperparameters.","output_type":"analysis","role":"single consumer-query causal binding resolver"}],"id":"single_causal_query_resolution","mode":"sequential"},{"calls":[{"id":"dialogue_resolved_grafting_engine","inputs":["task","champion_engine","champion_metrics","candidate_hypothesis","loop_structure","seam_rehearsed_component_foundry","integration_question_compiler","component_binding_resolver"],"objective":"Treat champion_engine as the sole source authority, seam_rehearsed_component_foundry as the sole authorized strength-bearing implementation, integration_question_compiler as the downstream handoff state, and component_binding_resolver as the sole consumer-ready binding. Verify that any opened query is closed by executable anchor evidence, that the causal target and component lineage identity did not change, and that a NO_QUERY state still supplies a fully grounded binding. Embed that same component behavior exactly once through the resolved binding into one mutable working copy of the anchor, replay the supplied causal and consumer-context traces through the integrated path, and preserve behavior outside the necessary dependency closure. Repair only this single graft in place while checking syntax, public source contract, UCI, legal move and state transitions, determinism, perft where applicable, lifecycle, dependency, and timing safety. If the resolver reports ADMISSION_FAILURE, emit the byte-identical anchor as the sole valid engine rather than improvising another change. Do not rediagnose, substitute or add a mechanism, create or compare provisional engines, reopen the dialogue, invoke a reviewer or selector, use rollback arbitration, globally rewrite the engine, tune engine hyperparameters as the structural hypothesis, or use benchmark-specific knowledge. Return exactly one complete legal production engine as the sole engine artifact.","output_type":"engine","role":"single dialogue-resolved component grafting engine producer"}],"id":"single_dialogue_resolved_graft","mode":"sequential"}]}
+
+===== INPUT seam_rehearsed_component_foundry =====
+# Producer artifact
+
+Identity: `bounded-late-quiet-research-v1`
+
+Causal target: selectively reduce late quiet search probes while preserving forcing moves and requiring full-depth re-search after fail-high.
+
+Component source:
+
+```python
+import json
+import sys
+
+IDENTITY = "bounded-late-quiet-research-v1"
+MAX_LEGAL_MOVES = 256
+
+
+def initial():
+    return {"epoch": 0, "open": False}
+
+
+def _int(value, name, low, high):
+    if type(value) is not int or value < low or value > high:
+        raise ValueError("invalid " + name)
+    return value
+
+
+def _bool(value, name):
+    if type(value) is not bool:
+        raise TypeError("invalid " + name)
+    return value
+
+
+def begin_node(state, depth_left, ply, legal_count):
+    if not isinstance(state, dict) or state.get("open") is not False:
+        raise ValueError("node already open")
+    if type(state.get("epoch")) is not int or state["epoch"] < 0:
+        raise ValueError("invalid lifecycle state")
+
+    depth_left = _int(depth_left, "depth_left", 0, 128)
+    ply = _int(ply, "ply", 0, 256)
+    legal_count = _int(legal_count, "legal_count", 1, MAX_LEGAL_MOVES)
+
+    return {
+        "epoch": state["epoch"] + 1,
+        "open": True,
+        "depth_left": depth_left,
+        "ply": ply,
+        "legal_count": legal_count,
+        "next_index": 0,
+        "visits": 0,
+    }
+
+
+def visit_node(state, event):
+    if not isinstance(state, dict) or state.get("open") is not True:
+        raise ValueError("node is closed")
+    if not isinstance(event, dict):
+        raise TypeError("event must be an object")
+
+    index = _int(event.get("move_index"), "move_index", 0, MAX_LEGAL_MOVES - 1)
+    if index != state["next_index"] or index >= state["legal_count"]:
+        raise ValueError("move order")
+
+    names = (
+        "capture",
+        "promotion",
+        "gives_check",
+        "pv_move",
+        "tt_move",
+        "killer_move",
+    )
+    for name in names:
+        _bool(event.get(name), name)
+
+    quiet = not (
+        event["capture"] or event["promotion"] or event["gives_check"]
+    )
+    eligible = (
+        state["depth_left"] >= 3
+        and index >= 3
+        and state["legal_count"] >= 8
+        and quiet
+        and not event["pv_move"]
+        and not event["tt_move"]
+        and not event["killer_move"]
+    )
+
+    reduction = 0
+    if eligible:
+        reduction = 1
+        if state["depth_left"] >= 6 and index >= 8:
+            reduction += 1
+        reduction = min(reduction, state["depth_left"] - 1)
+
+    decision = {
+        "full_depth": state["depth_left"],
+        "probe_depth": state["depth_left"] - reduction,
+        "reduction": reduction,
+        "reduced": reduction > 0,
+        "requires_full_research": reduction > 0,
+        "reason": "late_quiet" if reduction else "full_depth",
+    }
+
+    next_state = dict(state)
+    next_state["next_index"] += 1
+    next_state["visits"] += 1
+    return next_state, decision
+
+
+def end_node(state):
+    if not isinstance(state, dict) or state.get("open") is not True:
+        raise ValueError("node is closed")
+    return {
+        "epoch": state["epoch"],
+        "open": False,
+        "visits": state["visits"],
+    }
+
+
+def dispatch(request):
+    operation = request.get("op")
+    if operation == "initial":
+        return initial()
+    if operation == "begin":
+        return begin_node(
+            request["state"],
+            request["depth_left"],
+            request["ply"],
+            request["legal_count"],
+        )
+    if operation == "visit":
+        state, decision = visit_node(request["state"], request["event"])
+        return {"state": state, "decision": decision}
+    if operation == "end":
+        return end_node(request["state"])
+    raise ValueError("unknown operation")
+
+
+def main():
+    for line in sys.stdin:
+        if not line.strip():
+            continue
+        try:
+            result = dispatch(json.loads(line))
+            print(json.dumps({"ok": True, "result": result}, separators=(",", ":")))
+        except Exception as exc:
+            print(json.dumps({"ok": False, "error": str(exc)}, separators=(",", ":")))
+        sys.stdout.flush()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Seam: the anchor’s `Engine.search` move loop immediately before its recursive `self.search(q, nd, ...)` call, where `nd = depth - 1`.
+
+Primitive traces:
+
+- `depth_left=6`, move index `8`, quiet, non-PV/non-TT/non-killer: `probe_depth=4`, reduction `2`, full re-search required.
+- Capture, promotion, check, PV, TT, or killer event: full depth preserved.
+- Boundary `depth_left=2`: no reduction.
+- Boundary move index `2`: no reduction.
+- Lifecycle epochs increment across repeated node use: `0 → 1 → 2`.
+- Closed-node visit and out-of-order visit reject deterministically.
+- Work is bounded to constant-time classification per move and at most `256` visits per node.
+
+Seam trace:
+
+```text
+begin_node(depth_left=4, ply=1, legal_count=8)
+move 0 quiet PV       -> full depth 4
+move 1 quiet TT       -> full depth 4
+move 2 capture        -> full depth 4
+move 3 quiet late     -> probe depth 3; full re-search obligation
+reduced probe > alpha -> replay same child at depth 4
+end_node              -> closed, no state leakage
+```
+
+Binding claims:
+
+- Anchor seam exists: confirmed by supplied source text.
+- Late-move reduction is absent from the anchor: confirmed by supplied source inspection.
+- Component is non-UCI and standard-library-only: source inspection.
+- Causal target and dependency closure are bounded to move ordering flags, node depth, ply, and legal-move count: source/interface inspection.
+- Deterministic mirror fixtures: passed.
+- Python runtime execution: unavailable because the isolated command sandbox blocked process execution; not claimed as runtime-verified.
+
+Preservation envelope:
+
+- Never reduce captures, promotions, checks, PV, TT, or killer moves.
+- Never reduce the first three moves or shallow nodes.
+- A reduced probe must be re-searched at full depth when it exceeds alpha.
+- Preserve the same child position, alpha/beta window, ply, and existing capability state.
+- No engine, UCI behavior, evaluation, board state, or benchmark data is created by this component.
+
+Graft invariants:
+
+1. Invoke exactly once per existing search-node move.
+2. Use the returned `probe_depth` only for the first recursive probe.
+3. On reduced fail-high, perform exactly one full-depth re-search before accepting the score.
+4. Do not alter move identity or existing capability state.
+5. End every node lifecycle, including cutoff paths.
+
+===== INPUT integration_question_compiler =====
+HANDOFF_STATE=QUERY_OPEN
+
+Typed question: `NODE_LIFECYCLE_OWNERSHIP` — Does the downstream consumer own a fresh component node lifecycle per `Engine.search` invocation, distinct from and preserving the anchor’s existing `cap_state`?
+
+Known anchor facts: The seam is the move loop immediately before recursive `self.search(q, nd, ...)`; `cap_state` is passed recursively and updated by `capability_advance`. The component requires `initial → begin → ordered visit* → end`, with closure on cutoff paths.
+
+Consumer-context trace: `depth_left=4, ply=1, legal_count=8`; moves 0–3 are visited, move 3 yields a reduced probe, then fail-high causes the anchor loop to break. The supplied anchor has no component lifecycle owner or `end_node` boundary. Result: `UNKNOWN`.
+
+Harness status: Runtime execution was blocked by the isolated command policy; no component or anchor was modified.
+
+Response postcondition: Return `QUERY_RESOLVED` with the same component identity and causal target, explicit lifecycle ownership, unchanged `cap_state` binding, closed-node evidence for the cutoff trace, and one replay command.
+
+===== INPUT component_binding_resolver =====
+{"HANDOFF_STATE":"QUERY_RESOLVED","query":"NODE_LIFECYCLE_OWNERSHIP","component_identity":"bounded-late-quiet-research-v1","component_lineage_identity":"bounded-late-quiet-research-v1","causal_target":"selectively reduce late quiet search probes while preserving forcing moves and requiring full-depth re-search after fail-high","binding":{"lifecycle_owner":"consumer Engine.search","lifecycle_scope":"one fresh component lifecycle per applicable search node","component_state":"initial -> begin -> ordered visit* -> end","cap_state":"anchor-owned, independently threaded through capability_advance and preserved unchanged by the component"},"anchor_bindings":{"seam":"Engine.search move loop immediately before recursive self.search(q, nd, ...)","depth_left":"search depth","ply":"search ply","legal_count":"len(ms)","visit_order":"existing move-loop order","probe":"returned probe_depth for first recursive search","fail_high":"same child, window, ply, and cap_state re-searched once at full depth"},"answering_trace":{"execution":"bounded deterministic source-level replay; process execution unavailable","input":"depth_left=4, ply=1, legal_count=8","steps":["initial -> epoch 0, open false","begin -> epoch 1, open true","visit indices 0,1,2 -> full depth","visit index 3 quiet late -> reduced probe, full re-search required","probe fail-high -> one full-depth re-search, then cutoff","end -> epoch 1, open false, visits 4"]},"preservation_obligations":["Never reduce capture, promotion, check, PV, TT, or killer moves.","Do not alter move identity or cap_state.","Close the component lifecycle on normal and cutoff exits.","Apply only within the cited search seam; terminal no-move nodes have no applicable lifecycle."],"final_replay_command":"@('uci','isready','position startpos','go movetime 50','quit') | python engine.py","memory_upload":"not_performed: task explicitly forbids network and external access"}

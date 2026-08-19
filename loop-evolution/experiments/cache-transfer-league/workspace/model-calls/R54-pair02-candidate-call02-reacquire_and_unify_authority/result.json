@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.ghost_limit = 4096\n        self.target = self.capacity_bytes // 2\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _demote(self):\n        while self.t2 and self.t2_bytes > self.target:\n            key, value = self.t2.popitem(last=False)\n            self.t2_bytes -= value\n            self.t1[key] = value\n            self.t1_bytes += value\n\n    def _replace_one(self):\n        if self.t1 and (self.t1_bytes > self.target or (self.t1_bytes == self.target and self.b2)):\n            key, value = self.t1.popitem(last=False)\n            self.t1_bytes -= value\n            self._remember(self.b1, key)\n        elif self.t2:\n            key, value = self.t2.popitem(last=False)\n            self.t2_bytes -= value\n            self._remember(self.b2, key)\n        elif self.t1:\n            key, value = self.t1.popitem(last=False)\n            self.t1_bytes -= value\n            self._remember(self.b1, key)\n        else:\n            return None\n        self.used_bytes -= value\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t2:\n            value = self.t2.pop(key)\n            self.t2[key] = value\n            return []\n\n        if key in self.t1:\n            value = self.t1.pop(key)\n            self.t1_bytes -= value\n            self.t2[key] = value\n            self.t2_bytes += value\n            self._demote()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        if key in self.b1:\n            self.target = min(\n                self.capacity_bytes,\n                self.target + max(1, min(size, self.capacity_bytes)),\n            )\n        elif key in self.b2:\n            self.target = max(\n                0,\n                self.target - max(1, min(size, self.capacity_bytes)),\n            )\n        self._forget(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._replace_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.t1[key] = size\n        self.t1_bytes += size\n        self.used_bytes += size\n        self._demote()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R54-pair02-candidate-call02-reacquire_and_unify_authority",
+    "duration_seconds": 38.615,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:51:47Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "1a64fc0dd5c0c6e9ea382afbe0bcec2811f92d16acfbed6825306f13c3428481",
+    "raw_events_path": "workspace\\model-calls\\R54-pair02-candidate-call02-reacquire_and_unify_authority\\raw-events.jsonl",
+    "raw_events_sha256": "fbb8894e4a61cd2883fb6d451d9c65723e4694c3466c6fde6fe6b6f9d866a653",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "b6a52fe26d35818b59471ae81b34ce1fbe1889c2996809ca8aa6a1dd60ae7679",
+    "returncode": 0,
+    "role": "R54 candidate topology role raw-evidence-reacquiring unitary policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:51:08Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14444,
+      "output_tokens": 2848,
+      "reasoning_output_tokens": 2057
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

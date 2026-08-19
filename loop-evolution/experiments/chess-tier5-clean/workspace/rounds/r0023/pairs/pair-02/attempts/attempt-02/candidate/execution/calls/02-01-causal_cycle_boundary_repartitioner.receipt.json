@@ -1,0 +1,32 @@
+{
+  "stage": "triggered_seam_boundary_repartition",
+  "stage_mode": "sequential",
+  "call_id": "causal_cycle_boundary_repartitioner",
+  "role": "single causal-cycle-triggered seam boundary repartitioner",
+  "output_type": "analysis",
+  "prompt_sha256": "8443dfc1af2918363508f67397a185be9aea45560c18c55b1a1fdd7c465ece7e",
+  "response_sha256": "fc115fd0ff3defc822b9ddfb73be56318364675bf475cc20bd2f45601d4aca8a",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "high",
+  "service_tier": "fast",
+  "request_tier": "priority",
+  "tier_contract": "fast_priority_required",
+  "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+  "usage": {
+    "input_tokens": 50481,
+    "cached_input_tokens": 32256,
+    "output_tokens": 3635,
+    "reasoning_output_tokens": 2503,
+    "model_calls": 1
+  },
+  "trace_refs": [
+    "thread.started",
+    "turn.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.completed",
+    "turn.completed",
+    "codex-subscription-home-slot:1"
+  ]
+}

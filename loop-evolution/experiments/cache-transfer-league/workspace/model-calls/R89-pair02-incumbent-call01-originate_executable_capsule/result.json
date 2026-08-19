@@ -1,0 +1,44 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _drop_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_frequent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if kind == 1:\n            self.ghost_recent[key] = value\n        else:\n            self.ghost_frequent[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_count_limit):\n            source = None\n            oldest = None\n            for ghosts in (self.ghost_recent, self.ghost_frequent):\n                if ghosts:\n                    value = next(iter(ghosts.values()))\n                    if oldest is None or value[1] < oldest[1]:\n                        oldest = value\n                        source = ghosts\n            _, value = source.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _adjust_target(self, kind):\n        if self.capacity <= 0:\n            return\n        recent_bytes = sum(value[0] for value in self.ghost_recent.values())\n        frequent_bytes = sum(value[0] for value in self.ghost_frequent.values())\n        if kind == 1:\n            delta = self.capacity if recent_bytes == 0 else max(1, min(self.capacity, frequent_bytes // recent_bytes or 1))\n            self.target = max(0, self.target - delta)\n        else:\n            delta = self.capacity if frequent_bytes == 0 else max(1, min(self.capacity, recent_bytes // frequent_bytes or 1))\n            self.target = min(self.capacity, self.target + delta)\n\n    def _demote_protected(self):\n        if not self.protected:\n            return None\n        key, size = self.protected.popitem(last=False)\n        self.protected_bytes -= size\n        self.probation[key] = (size, 2)\n        self.probation_bytes += size\n        return key\n\n    def _evict_probation(self):\n        if not self.probation:\n            return None\n        key, value = self.probation.popitem(last=False)\n        size, origin = value\n        self.probation_bytes -= size\n        self.used -= size\n        self._remember_ghost(key, size, origin)\n        return key\n\n    def _make_room(self, incoming, admission):\n        evicted = []\n        if admission == 2:\n            protected_limit = max(self.target, incoming)\n            while self.protected and self.protected_bytes + incoming > protected_limit:\n                self._demote_protected()\n        while self.used + incoming > self.capacity:\n            key = self._evict_probation()\n            if key is None:\n                if self._demote_protected() is None:\n                    break\n                continue\n            evicted.append(key)\n        return evicted\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.probation or key in self.protected:\n            if key in self.probation:\n                old_size, _ = self.probation.pop(key)\n                self.probation_bytes -= old_size\n                location = 1\n            else:\n                old_size = self.protected.pop(key)\n                self.protected_bytes -= old_size\n                location = 2\n            self.used -= old_size\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 2)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used += size\n            return evicted\n\n        ghost_kind = 1 if key in self.ghost_recent else 2 if key in self.ghost_frequent else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if ghost_kind:\n            self._adjust_target(ghost_kind)\n            self._drop_ghost(key)\n\n        admission = 2 if ghost_kind else 1\n        evicted = self._make_room(size, admission)\n        if self.used + size > self.capacity:\n            return evicted\n        if admission == 2:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.probation[key] = (size, 1)\n            self.probation_bytes += size\n        self.used += size\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R89-pair02-incumbent-call01-originate_executable_capsule",
+    "duration_seconds": 66.867,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T02:56:17Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "19a2d71956f2fc49c28a71451ed4b15c1e9ad964408206e1e60b91fe15b4ebf0",
+    "raw_events_path": "workspace\\model-calls\\R89-pair02-incumbent-call01-originate_executable_capsule\\raw-events.jsonl",
+    "raw_events_sha256": "24689f73a80523b2566326369c85674f17a8bf652ae3789c24f004e9b4dc98a6",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "e799540450428b63a830772284e016d8942faf8a8e3c05fec5d6e59ad9f9f141",
+    "returncode": 0,
+    "role": "R89 incumbent topology role integrated executable originator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T02:55:10Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15222,
+      "output_tokens": 5157,
+      "reasoning_output_tokens": 3806
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

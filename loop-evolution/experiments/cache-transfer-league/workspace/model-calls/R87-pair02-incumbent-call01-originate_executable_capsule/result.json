@@ -1,0 +1,44 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.probationary = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probationary = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.probationary_bytes = 0\n        self.protected_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _drop_ghost(self, key):\n        value = self.ghost_probationary.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_protected.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, protected):\n        self._drop_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if protected:\n            self.ghost_protected[key] = value\n        else:\n            self.ghost_probationary[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_probationary) + len(self.ghost_protected) > self.ghost_count_limit):\n            source = None\n            oldest = None\n            for ghosts in (self.ghost_probationary, self.ghost_protected):\n                if ghosts:\n                    value = next(iter(ghosts.values()))\n                    if oldest is None or value[1] < oldest[1]:\n                        source = ghosts\n                        oldest = value\n            _, value = source.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _evict_one(self):\n        if self.probationary and (self.probationary_bytes > self.target or not self.protected):\n            key, size = self.probationary.popitem(last=False)\n            self.probationary_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, False)\n            return key\n        if self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, True)\n            return key\n        if self.probationary:\n            key, size = self.probationary.popitem(last=False)\n            self.probationary_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, False)\n            return key\n        return None\n\n    def _make_room(self, incoming):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one()\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def _promote(self, key, size):\n        self.protected[key] = size\n        self.protected_bytes += size\n        self.used += size\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.probationary:\n            old_size = self.probationary.pop(key)\n            self.probationary_bytes -= old_size\n            self.used -= old_size\n            if size == 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            self._promote(key, size)\n            return evicted\n\n        if key in self.protected:\n            old_size = self.protected.pop(key)\n            self.protected_bytes -= old_size\n            self.used -= old_size\n            if size == 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            self._promote(key, size)\n            return evicted\n\n        reentry = key in self.ghost_probationary or key in self.ghost_protected\n        if size == 0 or size > self.capacity:\n            return []\n\n        if reentry:\n            self._drop_ghost(key)\n            self.target = self.capacity // 2\n\n        evicted = self._make_room(size)\n        if self.used + size > self.capacity:\n            return evicted\n\n        self.probationary[key] = size\n        self.probationary_bytes += size\n        self.used += size\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R87-pair02-incumbent-call01-originate_executable_capsule",
+    "duration_seconds": 48.228,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T02:33:57Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "f93d9a1ca5a2dfa7329fe835e8783875818b69b24363ba118ca999ab73ca930b",
+    "raw_events_path": "workspace\\model-calls\\R87-pair02-incumbent-call01-originate_executable_capsule\\raw-events.jsonl",
+    "raw_events_sha256": "000df081c7bf91bc46aee5ce8e9cb2996517b9d8aaf901da99fe82ae2676e7e5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "76c1af07d27220fb3826b670a242d799332def8dc60eff2676bcb480698f102c",
+    "returncode": 0,
+    "role": "R87 incumbent topology role integrated executable originator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T02:33:09Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15209,
+      "output_tokens": 3503,
+      "reasoning_output_tokens": 2297
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

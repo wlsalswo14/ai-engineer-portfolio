@@ -1,0 +1,43 @@
+{
+  "final_call_id": "construct_intervention_attributed_policy",
+  "information_flow": "The first call receives every common input, preserves binding unsupported-commitment exclusions, and emits an analysis defining the admissible trigger and intervention-attributed state transition. The final call consumes that analysis, directly receives every common input, retains full evidence visibility, and emits one complete policy embodying the transition.",
+  "name": "Intervention-Attributed Aperture",
+  "organization": "two-call sequential nonbranching lineage whose sole edge adds evidence-triggered causal-intervention authority to the champion's negative-authority aperture",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "bind_intervention_transition",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile all visible evidence and obligations, preserve unsupported-commitment exclusions, and express in one analysis the admissible evidence condition and causal-control transition required for active disambiguation.",
+          "output_type": "analysis",
+          "role": "causal-intervention authority"
+        },
+        {
+          "id": "construct_intervention_attributed_policy",
+          "inputs": [
+            "bind_intervention_transition",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume bind_intervention_transition, directly reconcile all common evidence, honor its exclusions, and emit one complete policy that remains observation-conditioned until the bound trigger and then enters intervention-attributed control while preserving all task and contract obligations.",
+          "output_type": "policy",
+          "role": "single-policy causal controller"
+        }
+      ],
+      "id": "causal_intervention_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity = int(capacity_bytes)\n        except Exception:\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self._items = {}\n        self._used = 0\n        self._tick = 0\n        self._serial = 0\n\n    def access(self, key, size, now):\n        self._tick += 1\n        tick = self._tick\n        normalized = self._normalize_size(size)\n\n        if normalized is None:\n            return []\n\n        if normalized > self.capacity_bytes:\n            return self._evict_all()\n\n        if normalized == 0:\n            return []\n\n        if key in self._items:\n            item = self._items[key]\n            old_size = item[0]\n            self._used += normalized - old_size\n            item[0] = normalized\n            gap = tick - item[1]\n            item[4] = gap if gap > 0 else item[4]\n            item[1] = tick\n            item[2] = min(1024, item[2] + 1)\n            item[3] += 1\n            if item[2] >= 2:\n                item[5] = True\n            return self._trim(normalized)\n\n        self._serial += 1\n        self._items[key] = [normalized, tick, 1, 1, 0, False, self._serial]\n        self._used += normalized\n        return self._trim(normalized)\n\n    def _normalize_size(self, size):\n        try:\n            value = int(size)\n        except Exception:\n            return None\n        if value < 0:\n            return None\n        return value\n\n    def _trim(self, incoming_size):\n        evicted = []\n        while self._used > self.capacity_bytes and self._items:\n            victim = self._victim(incoming_size)\n            if victim is None:\n                break\n            item = self._items.pop(victim)\n            self._used -= item[0]\n            evicted.append(victim)\n        evicted.sort()\n        return evicted\n\n    def _victim(self, incoming_size):\n        scale = float(max(1, self.capacity_bytes))\n        best_key = None\n        best_rank = None\n        for key, item in self._items.items():\n            age = max(0, self._tick - item[1])\n            effective_frequency = float(item[2]) / (1.0 + age / 8.0)\n            freshness = 1.0 / (1.0 + age)\n            reuse = 1.0 / (1.0 + max(0, item[4]))\n            protected = 0.0\n            if item[5] and age <= max(8, item[4] * 2):\n                protected = 2.0\n            byte_hits = 0.0\n            if item[2] > 1:\n                byte_hits = min(2.0, ((item[2] - 1) * item[0]) / max(1.0, scale * 0.25))\n            size_pressure = 3.0 * (float(item[0]) / scale)\n            retention = (2.0 * effective_frequency + protected + freshness + reuse + byte_hits - size_pressure)\n            rank = (retention, item[1], item[6])\n            if best_rank is None or rank < best_rank:\n                best_rank = rank\n                best_key = key\n        return best_key\n\n    def _evict_all(self):\n        evicted = list(self._items.keys())\n        self._items.clear()\n        self._used = 0\n        evicted.sort()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R91-pair03-candidate-call02-materialize_from_charter",
+    "duration_seconds": 91.437,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T03:23:03Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "880e3465bdff274edc021c3aeb6d69cc9aaad8f6a7810894f27f6c00eb91f30d",
+    "raw_events_path": "workspace\\model-calls\\R91-pair03-candidate-call02-materialize_from_charter\\raw-events.jsonl",
+    "raw_events_sha256": "296545df8780e80bee1aec2e23685465ef6bde89964c1eb2c95eacaa40ce4bc9",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "c45a253656e8185eb16f7c1605690ff7b5a44fd4dcd355ef5406a5a50c83bae4",
+    "returncode": 0,
+    "role": "R91 candidate topology role source-blind sole policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T03:21:32Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13020,
+      "output_tokens": 6302,
+      "reasoning_output_tokens": 5412
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

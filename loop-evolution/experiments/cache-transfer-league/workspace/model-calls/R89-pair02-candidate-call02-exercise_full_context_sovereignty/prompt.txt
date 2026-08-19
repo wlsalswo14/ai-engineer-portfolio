@@ -1,0 +1,102 @@
+Role: R89 candidate topology role terminal full-context policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R89,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: exercise_full_context_sovereignty
+Role: terminal full-context policy authority
+Objective: Consume originate_defeasible_predecessor with all common evidence co-visible, treat inherited commitments as defeasible evidence rather than preserved state, resolve visible conflicts once, and emit one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "originate_defeasible_predecessor": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.b1_bytes = 0\n        self.b2_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _discard_ghost(self, key):\n        value = self.b1.pop(key, None)\n        if value is not None:\n            self.b1_bytes -= value[0]\n        value = self.b2.pop(key, None)\n        if value is not None:\n            self.b2_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, frequent):\n        self._discard_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if frequent:\n            self.b2[key] = value\n            self.b2_bytes += value[0]\n        else:\n            self.b1[key] = value\n            self.b1_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.b1_bytes + self.b2_bytes > self.ghost_limit or\n               len(self.b1) + len(self.b2) > self.ghost_count_limit):\n            oldest_key = None\n            oldest_source = None\n            oldest_serial = None\n            for source in (self.b1, self.b2):\n                if source:\n                    key, value = next(iter(source.items()))\n                    if oldest_serial is None or value[1] < oldest_serial:\n                        oldest_key = key\n                        oldest_source = source\n                        oldest_serial = value[1]\n            value = oldest_source.pop(oldest_key)\n            if oldest_source is self.b1:\n                self.b1_bytes -= value[0]\n            else:\n                self.b2_bytes -= value[0]\n\n    def _adjust_target(self, frequent_ghost):\n        if self.capacity <= 0:\n            return\n        if frequent_ghost:\n            delta = self.capacity if self.b2_bytes == 0 else max(\n                1, min(self.capacity, self.b1_bytes // self.b2_bytes or 1)\n            )\n            self.target = max(0, self.target - delta)\n        else:\n            delta = self.capacity if self.b1_bytes == 0 else max(\n                1, min(self.capacity, self.b2_bytes // self.b1_bytes or 1)\n            )\n            self.target = min(self.capacity, self.target + delta)\n\n    def _remove_resident(self, key):\n        value = self.t1.pop(key, None)\n        if value is not None:\n            self.t1_bytes -= value\n            self.used -= value\n            return value\n        value = self.t2.pop(key, None)\n        if value is not None:\n            self.t2_bytes -= value\n            self.used -= value\n            return value\n        return None\n\n    def _replace_one(self, from_b2):\n        choose_t1 = bool(self.t1) and (\n            self.t1_bytes > self.target or\n            (from_b2 and self.t1_bytes == self.target)\n        )\n        if choose_t1 or not self.t2:\n            if self.t1:\n                key, size = self.t1.popitem(last=False)\n                self.t1_bytes -= size\n                self.used -= size\n                self._remember_ghost(key, size, False)\n                return key\n        if self.t2:\n            key, size = self.t2.popitem(last=False)\n            self.t2_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, True)\n            return key\n        if self.t1:\n            key, size = self.t1.popitem(last=False)\n            self.t1_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, False)\n            return key\n        return None\n\n    def _make_room(self, incoming, from_b2):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._replace_one(from_b2)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.t1 or key in self.t2:\n            self._remove_resident(key)\n            self._discard_ghost(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, False)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self.t2[key] = size\n            self.t2_bytes += size\n            self.used += size\n            return evicted\n\n        frequent_ghost = key in self.b2\n        recent_ghost = key in self.b1\n        if size <= 0 or size > self.capacity:\n            if frequent_ghost or recent_ghost:\n                self._discard_ghost(key)\n            return []\n\n        ghost_kind = frequent_ghost or recent_ghost\n        if ghost_kind:\n            self._adjust_target(frequent_ghost)\n            self._discard_ghost(key)\n\n        evicted = self._make_room(size, frequent_ghost)\n        if self.used + size > self.capacity:\n            return evicted\n\n        if ghost_kind:\n            self.t2[key] = size\n            self.t2_bytes += size\n        else:\n            self.t1[key] = size\n            self.t1_bytes += size\n        self.used += size\n        return evicted\n",
+    "sha256": "7595cb8f0a6a2d5c7c45fc849c2b29fab68a192b934a33183befd6036571b82a"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_policy": {
+    "artifact": "policy.py",
+    "sha256": "0e76fd3c963504da1ed2d5d58a0f23e2c0a081eac1af3a5da040da27275b80bd",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        self.capacity = max(0, int(capacity_bytes))\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.ghost_recent = OrderedDict()\n        self.ghost_frequent = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.used = 0\n        self.target = self.capacity // 2\n        self.ghost_bytes = 0\n        self.ghost_limit = max(64, min(1 << 20, 2 * max(1, self.capacity)))\n        self.ghost_count_limit = 4096\n        self.serial = 0\n\n    def _drop_ghost(self, key):\n        value = self.ghost_recent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n        value = self.ghost_frequent.pop(key, None)\n        if value is not None:\n            self.ghost_bytes -= value[0]\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self.serial += 1\n        value = (max(1, int(size)), self.serial)\n        if kind == 1:\n            self.ghost_recent[key] = value\n        else:\n            self.ghost_frequent[key] = value\n        self.ghost_bytes += value[0]\n        self._trim_ghosts()\n\n    def _trim_ghosts(self):\n        while (self.ghost_bytes > self.ghost_limit or\n               len(self.ghost_recent) + len(self.ghost_frequent) > self.ghost_count_limit):\n            candidate = None\n            source = None\n            for ghosts in (self.ghost_recent, self.ghost_frequent):\n                if ghosts:\n                    key = next(iter(ghosts))\n                    value = ghosts[key]\n                    if candidate is None or value[1] < candidate[1]:\n                        candidate = value\n                        source = ghosts\n            key, value = source.popitem(last=False)\n            self.ghost_bytes -= value[0]\n\n    def _adjust_target(self, kind):\n        if self.capacity <= 0:\n            return\n        b1 = sum(value[0] for value in self.ghost_recent.values())\n        b2 = sum(value[0] for value in self.ghost_frequent.values())\n        if kind == 1:\n            delta = self.capacity if b1 == 0 else max(1, min(self.capacity, b2 // b1 or 1))\n            self.target = min(self.capacity, self.target + delta)\n        else:\n            delta = self.capacity if b2 == 0 else max(1, min(self.capacity, b1 // b2 or 1))\n            self.target = max(0, self.target - delta)\n\n    def _remove_resident(self, key):\n        value = self.recent.pop(key, None)\n        if value is not None:\n            self.recent_bytes -= value\n            self.used -= value\n            return value\n        value = self.frequent.pop(key, None)\n        if value is not None:\n            self.frequent_bytes -= value\n            self.used -= value\n            return value\n        return None\n\n    def _evict_one(self, prefer_recent):\n        if prefer_recent and self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.frequent:\n            key, size = self.frequent.popitem(last=False)\n            self.frequent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        if self.recent:\n            key, size = self.recent.popitem(last=False)\n            self.recent_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        return None\n\n    def _make_room(self, incoming, ghost_kind):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            prefer_recent = self.recent_bytes > self.target\n            if ghost_kind == 1 and self.recent_bytes >= self.target:\n                prefer_recent = True\n            if ghost_kind == 2 and self.recent_bytes == self.target:\n                prefer_recent = False\n            key = self._evict_one(prefer_recent)\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key, size, now):\n        key = int(key)\n        size = max(0, int(size))\n\n        if key in self.recent or key in self.frequent:\n            self._remove_resident(key)\n            if size <= 0 or size > self.capacity:\n                return [key]\n            evicted = self._make_room(size, 0)\n            if self.used + size > self.capacity:\n                return evicted + [key]\n            self._drop_ghost(key)\n            self.frequent[key] = size\n            self.frequent_bytes += size\n            self.used += size\n            return evicted\n\n        ghost_kind = 1 if key in self.ghost_recent else 2 if key in self.ghost_frequent else 0\n        if size <= 0 or size > self.capacity:\n            return []\n        if ghost_kind:\n            self._adjust_target(ghost_kind)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size, ghost_kind)\n        if self.used + size > self.capacity:\n            return evicted\n        if ghost_kind:\n            self.frequent[key] = size\n            self.frequent_bytes += size\n        else:\n            self.recent[key] = size\n            self.recent_bytes += size\n        self.used += size\n        return evicted\n"
+  },
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R88 champion policy anchor",
+    "artifact_sha256": "0e76fd3c963504da1ed2d5d58a0f23e2c0a081eac1af3a5da040da27275b80bd",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Replace the downstream custodial chain with one full-context sovereignty edge: the predecessor remains a complete executable artifact but becomes defeasible evidence, while the terminal call alone rebinds policy authority with all common inputs co-visible.",
+    "expected_effect": "Removing commitment inertia and partial-view ordering should make phase-shift adaptation and scan resistance more coherent while reducing distortion of the object-hit versus byte-hit tradeoff.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The active family gives inherited executable commitments presumptive authority while evidence arrives through mutually exclusive windows, making reconciliation path-dependent even when each transition is locally coherent."
+  },
+  "loop_structure": {
+    "final_call_id": "exercise_full_context_sovereignty",
+    "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule and reopens every common input simultaneously. The capsule remains visible as evidence but carries no preservation authority; the final call emits the lineage's single policy.",
+    "name": "Defeasible Predecessor Sovereignty Edge",
+    "organization": "two-call sequential lineage with one complete executable predecessor and one terminal full-context authority reset",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "originate_defeasible_predecessor",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Reconcile the initially visible evidence and obligations into one complete executable policy artifact whose commitments remain explicitly open to terminal reconsideration.",
+            "output_type": "policy_capsule",
+            "role": "defeasible executable originator"
+          },
+          {
+            "id": "exercise_full_context_sovereignty",
+            "inputs": [
+              "originate_defeasible_predecessor",
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume originate_defeasible_predecessor with all common evidence co-visible, treat inherited commitments as defeasible evidence rather than preserved state, resolve visible conflicts once, and emit one complete policy.",
+            "output_type": "policy",
+            "role": "terminal full-context policy authority"
+          }
+        ],
+        "id": "single_sovereignty_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

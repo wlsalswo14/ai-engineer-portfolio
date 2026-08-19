@@ -1,0 +1,53 @@
+{
+  "analysis_packet": {
+    "certificate": "The anchor preserves the required interface, standard-library scope, online visibility, integer-key eviction contract, and byte-capacity safety. The candidate hypothesis identifies a conditional authority risk: if an analysis handoff contains contradicted or unsupported generative claims, downstream decision authority could let those claims control policy behavior, conflicting with online-only visibility and the prohibition on oracle or hidden-trace adaptation. No concrete contradictory evidence, score, trace, or majority/median result is visible here, so quarantine cannot be factually triggered from the supplied inputs.",
+    "exact_actions": [
+      "Treat the anchor’s legality and capacity properties as supporting evidence.",
+      "Do not assert that contradiction evidence exists when none is visible.",
+      "Mark the authority risk as conditional on concrete contradiction evidence.",
+      "Preserve the analysis handoff as visible evidence; permit irreversible authority withdrawal only if the downstream stage verifies a concrete conflict with the supplied obligations.",
+      "Emit no policy artifact from this stage."
+    ],
+    "obligations": [
+      {
+        "obligation": "Preserve legal Policy interface and list[int] eviction output.",
+        "status": "satisfied_by_anchor"
+      },
+      {
+        "obligation": "Return only currently cached unique integer keys.",
+        "status": "must_remain_in_force"
+      },
+      {
+        "obligation": "Never exceed capacity_bytes.",
+        "status": "satisfied_by_anchor"
+      },
+      {
+        "obligation": "Use only online, standard-library information and avoid oracle adaptation.",
+        "status": "must_remain_in_force"
+      },
+      {
+        "obligation": "Keep analysis visibility while withdrawing its authority only upon concrete qualifying contradiction.",
+        "status": "candidate_topology_requirement"
+      }
+    ],
+    "witnesses": [
+      {
+        "claim": "Anchor policy maintains resident byte accounting and evicts before admitting objects no larger than capacity.",
+        "status": "supporting"
+      },
+      {
+        "claim": "Anchor policy uses only current accesses and local metadata; no external evaluator information is visible in its source.",
+        "status": "supporting"
+      },
+      {
+        "claim": "The delivered synthesis is continuously authoritative in the proposed lineage.",
+        "status": "conditional_risk"
+      },
+      {
+        "claim": "The supplied falsifier is a criterion, not observed evidence.",
+        "status": "unsubstantiated"
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

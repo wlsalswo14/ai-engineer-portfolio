@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.used = 0\n        self.protected_bytes = 0\n        self.protected_target = self.capacity // 2\n        self.ghost_serial = 0\n        self.ghost_limit = 4096\n\n    def _drop_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _remember_ghost(self, key, size, kind):\n        self._drop_ghost(key)\n        self.ghost_serial += 1\n        value = (max(0, int(size)), self.ghost_serial)\n        if kind == 1:\n            self.ghost_probation[key] = value\n        else:\n            self.ghost_protected[key] = value\n        while len(self.ghost_probation) + len(self.ghost_protected) > self.ghost_limit:\n            oldest_kind = None\n            oldest_serial = None\n            if self.ghost_probation:\n                oldest_kind = 1\n                oldest_serial = next(iter(self.ghost_probation.values()))[1]\n            if self.ghost_protected:\n                serial = next(iter(self.ghost_protected.values()))[1]\n                if oldest_serial is None or serial < oldest_serial:\n                    oldest_kind = 2\n            if oldest_kind == 1:\n                self.ghost_probation.popitem(last=False)\n            else:\n                self.ghost_protected.popitem(last=False)\n\n    def _adjust_target(self, kind):\n        if self.capacity <= 0:\n            return\n        ghosts = self.ghost_probation if kind == 1 else self.ghost_protected\n        value = ghosts.get(next(reversed(ghosts))) if ghosts else (1, 0)\n        delta = max(1, min(self.capacity, value[0]))\n        if kind == 1:\n            self.protected_target = min(self.capacity, self.protected_target + delta)\n        else:\n            self.protected_target = max(0, self.protected_target - delta)\n\n    def _rebalance(self):\n        while self.protected_bytes > self.protected_target and self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self.used -= size\n            self._remember_ghost(key, size, 1)\n            return key\n        if self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.used -= size\n            self._remember_ghost(key, size, 2)\n            return key\n        return None\n\n    def _make_room(self, incoming):\n        evicted = []\n        while self.used + incoming > self.capacity:\n            key = self._evict_one()\n            if key is None:\n                break\n            evicted.append(key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        key = int(key)\n        size = max(0, int(size))\n\n        resident_kind = 0\n        if key in self.probation:\n            resident_kind = 1\n            old_size = self.probation.pop(key)\n            self.used -= old_size\n        elif key in self.protected:\n            resident_kind = 2\n            old_size = self.protected.pop(key)\n            self.protected_bytes -= old_size\n            self.used -= old_size\n\n        if resident_kind:\n            if size > self.capacity:\n                return [key]\n            evicted = self._make_room(size)\n            self._drop_ghost(key)\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used += size\n            self._rebalance()\n            return evicted\n\n        ghost_kind = 0\n        if key in self.ghost_probation:\n            ghost_kind = 1\n        elif key in self.ghost_protected:\n            ghost_kind = 2\n\n        if size > self.capacity:\n            return []\n\n        if ghost_kind:\n            self._adjust_target(ghost_kind)\n            self._drop_ghost(key)\n\n        evicted = self._make_room(size)\n        if ghost_kind:\n            self.protected[key] = size\n            self.protected_bytes += size\n        else:\n            self.probation[key] = size\n        self.used += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R73-pair02-candidate-call02-construct_with_open_visibility",
+    "duration_seconds": 48.216,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:51:21Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "f7864fec2919975e61c17ba5f5005f91eb30d873b08652f9848399cc43ee906c",
+    "raw_events_path": "workspace\\model-calls\\R73-pair02-candidate-call02-construct_with_open_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "31dd0e3c2dade10249d0d29dc73517391626af30fa69865ceb3cee57582d4d2b",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "8ebb04b324e718e2b1675f53080dd7f4c2c941b027cfd4a7631ba780cc52a256",
+    "returncode": 0,
+    "role": "R73 candidate topology role bounded constructive policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:50:32Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14751,
+      "output_tokens": 3372,
+      "reasoning_output_tokens": 2228
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

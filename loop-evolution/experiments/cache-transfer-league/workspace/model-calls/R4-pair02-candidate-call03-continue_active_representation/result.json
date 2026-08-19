@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self._probation = OrderedDict()\n        self._protected = OrderedDict()\n        self._ghost_probation = OrderedDict()\n        self._ghost_protected = OrderedDict()\n        self._used_bytes = 0\n        self._protected_bytes = 0\n        self._protected_limit = self.capacity_bytes // 2\n        self._ghost_limit = 1024\n\n    def _rebalance(self):\n        while self._protected and self._protected_bytes > self._protected_limit:\n            key, item_size = self._protected.popitem(last=False)\n            self._protected_bytes -= item_size\n            self._probation[key] = item_size\n\n    def _remember(self, key, protected):\n        self._ghost_probation.pop(key, None)\n        self._ghost_protected.pop(key, None)\n        ghost = self._ghost_protected if protected else self._ghost_probation\n        ghost[key] = None\n        while len(ghost) > self._ghost_limit:\n            ghost.popitem(last=False)\n\n    def _adapt(self, protected_ghost_hit):\n        step = max(1, self.capacity_bytes // 8)\n        if protected_ghost_hit:\n            self._protected_limit = max(0, self._protected_limit - step)\n        else:\n            self._protected_limit = min(self.capacity_bytes, self._protected_limit + step)\n        self._rebalance()\n\n    def _evict_one(self):\n        if self._probation:\n            key, item_size = self._probation.popitem(last=False)\n            self._remember(key, False)\n        elif self._protected:\n            key, item_size = self._protected.popitem(last=False)\n            self._protected_bytes -= item_size\n            self._remember(key, True)\n        else:\n            return None\n        self._used_bytes -= item_size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self._protected:\n            item_size = self._protected.pop(key)\n            self._protected[key] = item_size\n            return []\n\n        if key in self._probation:\n            item_size = self._probation.pop(key)\n            self._protected[key] = item_size\n            self._protected_bytes += item_size\n            self._rebalance()\n            return []\n\n        size = max(0, size)\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        protected_ghost_hit = key in self._ghost_protected\n        probation_ghost_hit = key in self._ghost_probation\n        if protected_ghost_hit or probation_ghost_hit:\n            self._ghost_protected.pop(key, None)\n            self._ghost_probation.pop(key, None)\n            self._adapt(protected_ghost_hit)\n\n        evicted = []\n        while self._used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                break\n            evicted.append(victim)\n\n        if self._used_bytes + size > self.capacity_bytes:\n            return evicted\n\n        self._used_bytes += size\n        if protected_ghost_hit:\n            self._protected[key] = size\n            self._protected_bytes += size\n            self._rebalance()\n        else:\n            self._probation[key] = size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R4-pair02-candidate-call03-continue_active_representation",
+    "duration_seconds": 29.121,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:06:42Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "c55dca19e154104d527f55ba26685546230018e191d1d330522b726ac23122bf",
+    "raw_events_path": "workspace\\model-calls\\R4-pair02-candidate-call03-continue_active_representation\\raw-events.jsonl",
+    "raw_events_sha256": "8912e2552024b9e5d96c3a515c851a756866ddf83ac5fb80f647b49b3659f10e",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 0,
+    "response_sha256": "26b78d4410314d43d2280c1e429f1ff0b9233d6013555749ee1801a268b5e0d1",
+    "returncode": 0,
+    "role": "R4 candidate topology role representation-conditioned executable-lineage continuator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:06:13Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14406,
+      "output_tokens": 1432,
+      "reasoning_output_tokens": 608
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

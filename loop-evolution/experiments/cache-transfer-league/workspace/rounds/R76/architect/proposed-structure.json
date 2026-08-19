@@ -1,0 +1,43 @@
+{
+  "final_call_id": "exercise_triggered_regrounding",
+  "information_flow": "The first call receives every common input and emits exactly one complete executable policy state. The final call consumes that state, directly sees every common input, uses contradiction evidence as the transition trigger, re-grounds the same single artifact when triggered, and emits one policy.",
+  "name": "Triggered Causal Re-grounding Lineage",
+  "organization": "two-call sequential lineage with one complete executable policy state and terminal causal-reset authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "instantiate_causally_live_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Integrate all visible evidence into one complete executable policy state whose initial commitments have an inspectable causal relationship to the anchor, contract, constraints, hypothesis, and loop structure.",
+          "output_type": "executable_policy_state",
+          "role": "single-artifact executable-state originator"
+        },
+        {
+          "id": "exercise_triggered_regrounding",
+          "inputs": [
+            "instantiate_causally_live_state",
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume instantiate_causally_live_state, reconcile its commitments against directly visible obligations, use contradiction of a shared inherited premise to transition the single artifact to contract-and-constraint grounding, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "causal-basis transition authority"
+        }
+      ],
+      "id": "causal_regrounding_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

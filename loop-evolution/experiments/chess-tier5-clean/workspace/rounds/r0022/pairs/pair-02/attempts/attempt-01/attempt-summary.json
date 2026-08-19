@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "pair": 2,
+  "attempt": 1,
+  "execution_order": [
+    "candidate",
+    "incumbent"
+  ],
+  "common_anchor": true,
+  "anchor": {
+    "role": "frozen_lineage_baseline",
+    "anchor_id": "anchor_eaba2e9ff3e678c1",
+    "artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\final-output.json",
+    "engine_source_sha256": "eaba2e9ff3e678c19fd294a0a7f6af54c0569f783c60ac7a89222edbcfe99391",
+    "metrics": {
+      "draws": 65,
+      "elo": -94.211,
+      "losses": 31,
+      "receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\champions\\p0000\\benchmark-result-receipt.json",
+      "score_rate": 0.365,
+      "source_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\imports\\v3-lite-r20\\benchmark-result-receipt.json",
+      "wins": 4
+    },
+    "origin": "bootstrap:package_ebdecd200797a81e"
+  },
+  "incumbent_structure_id": "loop_f7c2f8106612d495",
+  "candidate_structure_id": "loop_8390669a7b4309e5",
+  "incumbent_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0022\\pairs\\pair-02\\attempts\\attempt-01\\incumbent\\artifact\\final-output.json",
+  "candidate_artifact_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0022\\pairs\\pair-02\\attempts\\attempt-01\\candidate\\artifact\\final-output.json",
+  "incumbent_evaluation": {
+    "valid": true,
+    "benchmark_valid": true,
+    "failure_kind": null,
+    "public_score": 1.0,
+    "public_evidence": [
+      "engine-source:3648070ef0a5cc3b849e6686244033675a4d846cb280b2b60975db79fc9ca2d6",
+      "public-uci-smoke:passed"
+    ],
+    "score_rate": 0.32,
+    "wins": 5,
+    "draws": 54,
+    "losses": 41,
+    "elo": -128.134,
+    "elo_error_95": 104.572,
+    "los": 0.003531,
+    "valid_games": 100,
+    "candidate_failures": 0,
+    "benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\rounds\\r0022\\pairs\\pair-02\\attempts\\attempt-01\\incumbent\\evaluation\\benchmark-result-receipt.json",
+    "source_benchmark_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-3648070ef0a5cc3b.json",
+    "benchmark_receipt_sha256": "79daf20c492c7d600e2721ad8bf5f78038fc57a64a0a6dab049635181906544d",
+    "evidence": [
+      "chessbench-result:C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\benchmark-results\\fd855100a5a5adae-3648070ef0a5cc3b.json",
+      "chessbench-contract:fd855100a5a5adae76b24e344136cfd0a2f9b5d3e0768f5a4ab1f816b312367c",
+      "engine-source:3648070ef0a5cc3b849e6686244033675a4d846cb280b2b60975db79fc9ca2d6",
+      "chessbench-wdl:5-54-41"
+    ]
+  },
+  "candidate_evaluation": {
+    "valid": false,
+    "failure_kind": "invalid_engine_payload",
+    "public_score": 0.0,
+    "public_evidence": [],
+    "elo": null
+  },
+  "verdict": {
+    "verdict": "invalid",
+    "incumbent_elo": -128.134,
+    "candidate_elo": null
+  },
+  "execution_traces": {
+    "incumbent": [
+      {
+        "stage": "anchor_seam_mechanism_construction",
+        "stage_mode": "sequential",
+        "call_id": "anchor_seam_mechanism_foundry",
+        "role": "anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "726a5d38c886127051ba84fd5bf02a27fc3b2673331318e8ada4a7ebbb10e707",
+        "response_sha256": "a1b3ffaea552a1ad901cee84e4f711f313f97dfe9585b522b23fec1b054dbd68",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 358258,
+          "cached_input_tokens": 327680,
+          "output_tokens": 12065,
+          "reasoning_output_tokens": 7967,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_rehearsed_graft",
+        "stage_mode": "sequential",
+        "call_id": "seam_grafting_engine",
+        "role": "single seam-rehearsed component grafting producer",
+        "output_type": "engine",
+        "prompt_sha256": "e5d58dfa983bd5b0c56f725461cda3005b550edd520aae118d89b31d3b02e46a",
+        "response_sha256": "bc70baaedf34105f0ddf25774546b0eb094caad2fd02a8f288259ada59283d61",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 20468,
+          "cached_input_tokens": 0,
+          "output_tokens": 7565,
+          "reasoning_output_tokens": 2588,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "stage": "single_seam_rehearsed_component",
+        "stage_mode": "sequential",
+        "call_id": "seam_rehearsed_component_foundry",
+        "role": "single anchor-seam executable capability foundry",
+        "output_type": "analysis",
+        "prompt_sha256": "52fdb75de2fade896a9e551f9c43400af0d3bce0610f0a981dd702623624ca3f",
+        "response_sha256": "aafefcd8ffd25db75e1468b5f0562930049921b435eb99fc0c0c162377233bac",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 185234,
+          "cached_input_tokens": 145152,
+          "output_tokens": 13167,
+          "reasoning_output_tokens": 9885,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.completed",
+          "item.started",
+          "item.completed",
+          "item.updated",
+          "item.updated",
+          "item.completed",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "triggered_state_ownership_compilation",
+        "stage_mode": "sequential",
+        "call_id": "noncommutative_ownership_compiler",
+        "role": "single noncommutativity-triggered state-ownership transformer",
+        "output_type": "analysis",
+        "prompt_sha256": "19114b903232c04636a2458a5581dc74629bfaaab99af8a4408684e15dfda050",
+        "response_sha256": "cd9df6fa5e15e867da7f84000da64ad8a59f8ffe7164046bdf6ad7c759c772d1",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 22088,
+          "cached_input_tokens": 0,
+          "output_tokens": 9625,
+          "reasoning_output_tokens": 4903,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:0"
+        ]
+      },
+      {
+        "stage": "single_ownership_native_graft",
+        "stage_mode": "sequential",
+        "call_id": "ownership_native_grafting_engine",
+        "role": "single ownership-bound component grafting engine producer",
+        "output_type": "engine",
+        "prompt_sha256": "af040f75e06917390f1d429da63509856067ff9be7fc4d86fca7f890a56db2c1",
+        "response_sha256": "0f351117e87c678cf915a4d8718b30f3af08bf3a4d942c3fd5f0b1e5e92a4c84",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+        "service_tier": "fast",
+        "request_tier": "priority",
+        "tier_contract": "fast_priority_required",
+        "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+        "usage": {
+          "input_tokens": 27422,
+          "cached_input_tokens": 0,
+          "output_tokens": 5237,
+          "reasoning_output_tokens": 516,
+          "model_calls": 1
+        },
+        "trace_refs": [
+          "thread.started",
+          "turn.started",
+          "item.completed",
+          "turn.completed",
+          "codex-subscription-home-slot:1"
+        ]
+      }
+    ]
+  },
+  "recovered_interruption": false
+}

@@ -1,0 +1,35 @@
+{
+  "arm": "incumbent",
+  "artifact_path": "workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "ece3d6c5418695d27952c09d8db20e1e2492bb7c070695bf7a8dc4694632d252",
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "runner_sha256": "636304977bc178f9e675f59c39d9b24c32874c964b944a3c0275e13f6408efbc",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "display_round": 64,
+  "duration_seconds": 0.159359,
+  "finished_at": "2026-08-09T22:24:27Z",
+  "label": "pair-03-incumbent",
+  "normalized_result_sha256": "b97b2a4ebbaa9dec622258d2b43b124bbf1a7f65c320a52eb5a89d0ee37d7272",
+  "pair": 3,
+  "replay": 2,
+  "result": {
+    "candidate": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+    "details": {
+      "runtime_error": "returncode:1",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 635, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 630, in main\n    return _run_candidate_worker(args.candidate)\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 485, in _run_candidate_worker\n    trace_evictions.append(policy.access(int(access[\"key\"]), int(access[\"size\"]), int(access[\"now\"])))\n                           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\artifact\\policy.py\", line 91, in access\n    return self._trim()\n           ~~~~~~~~~~^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\artifact\\policy.py\", line 50, in _trim\n    self._protected_bytes -= entry[0]\n                             ~~~~~^^^\nTypeError: 'NoneType' object is not subscriptable\n",
+      "stdout": ""
+    },
+    "invalid_operation_count": 0,
+    "score": 0.0,
+    "timeout_count": 0,
+    "trace_count": 9
+  },
+  "schema_version": 1,
+  "started_at": "2026-08-09T22:24:26Z",
+  "valid": false
+}

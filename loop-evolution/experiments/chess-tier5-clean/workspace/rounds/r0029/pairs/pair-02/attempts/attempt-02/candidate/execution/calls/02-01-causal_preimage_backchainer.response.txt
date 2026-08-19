@@ -1,0 +1,81 @@
+{
+  "type": "PREIMAGE_CLOSURE",
+  "terminal_node": {
+    "id": "T",
+    "predicate": "Each go movetime command emits exactly one legal bestmove before its requested deadline."
+  },
+  "nodes": [
+    {
+      "id": "N1",
+      "type": "protocol_output",
+      "predicate": "The go path returns one UCI move and emits exactly one flushed bestmove line before the deadline."
+    },
+    {
+      "id": "N2",
+      "type": "legal_move_selection",
+      "predicate": "A returned move is a member of the current position's legal move set."
+    },
+    {
+      "id": "N3",
+      "type": "bounded_root_legality",
+      "predicate": "A legal move is produced or selected within the requested time budget, including initial legality work."
+    },
+    {
+      "id": "N4",
+      "type": "active_deadline",
+      "predicate": "The requested deadline is established before any potentially expensive go-specific computation."
+    }
+  ],
+  "edges": [
+    {
+      "from": "N1",
+      "to": "T",
+      "type": "satisfies",
+      "anchor_facts": [
+        "main() invokes think(ms), prints 'bestmove '+mv, and flushes."
+      ]
+    },
+    {
+      "from": "N2",
+      "to": "N1",
+      "type": "requires",
+      "anchor_facts": [
+        "think() returns notation(best); notation encodes the selected move as UCI."
+      ]
+    },
+    {
+      "from": "N3",
+      "to": "N2",
+      "type": "requires",
+      "anchor_facts": [
+        "think() assigns best from legal(self.pos), and the short-time branch returns that move."
+      ]
+    },
+    {
+      "from": "N4",
+      "to": "N3",
+      "type": "requires",
+      "anchor_facts": [
+        "think() calls legal(self.pos) before assigning self.deadline.",
+        "legal() fully enumerates pseudo moves, state transitions, and king-attack checks without deadline checks.",
+        "The supplied high-branching FEN exceeds the 1 ms interval before bestmove emission."
+      ]
+    }
+  ],
+  "preservation_boundary": [
+    "UCI handshake remains correct.",
+    "Current-position legality semantics and state transitions remain valid.",
+    "No benchmark or evaluator information is introduced.",
+    "The single bounded witness procedure remains sufficient for this closure."
+  ],
+  "dependency_order": [
+    "N4",
+    "N3",
+    "N2",
+    "N1",
+    "T"
+  ],
+  "unresolved_assumptions": [
+    "The witnessed position has at least one legal move that can be produced within the requested deadline."
+  ]
+}

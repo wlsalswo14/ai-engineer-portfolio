@@ -1,0 +1,25 @@
+{
+  "analysis_packet": {
+    "certificate": "Admissible intervention evidence exists only when online observations expose a decision-relevant unresolved cause, the intervention is legal under the cache contract, its effect is attributable from subsequent observations, and no hidden trace, oracle, benchmark path, score, or external implementation is used. Until that trigger, retain observation-conditioned control; upon the trigger, perform only bounded contract-safe intervention, attribute the resulting evidence, update control state, and continue online while preserving unsupported-commitment exclusions.",
+    "exact_actions": [
+      "Bind the downstream policy to remain observation-conditioned until a decision-relevant unresolved cause is evidenced online.",
+      "Require any intervention trigger to be contract-safe, bounded, attributable from subsequent observations, and supported solely by visible online evidence.",
+      "After the trigger, enter intervention-attributed control, record the attributable outcome, and use it for subsequent task-general adaptation.",
+      "Preserve all exclusions and obligations throughout the transition and expose the complete bound analysis to the final policy call."
+    ],
+    "obligations": [
+      "Preserve the anchor's interface and online-only visibility.",
+      "Return only currently cached unique integer keys and never exceed capacity.",
+      "Use only the Python standard library.",
+      "Exclude benchmark paths, trace hardcoding, oracle adaptation, external libraries, networking, subprocesses, and unsupported commitments.",
+      "Emit one complete policy downstream; do not emit alternatives or rankings."
+    ],
+    "witnesses": [
+      "Visible evidence is limited to the task, immutable champion anchor, contract, constraints, hypothesis, and loop structure.",
+      "The champion preserves interface legality, capacity safety, online visibility, and exclusion of unsupported commitments.",
+      "The stated bottleneck is unresolved decision-relevant causality after passive observation.",
+      "The transition must remain within one valid policy lineage and cannot rely on scores or matched-arm information."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

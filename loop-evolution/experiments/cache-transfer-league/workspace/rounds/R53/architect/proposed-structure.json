@@ -1,0 +1,42 @@
+{
+  "final_call_id": "expose_evidence_and_emit",
+  "information_flow": "The first call receives all six common inputs and creates one complete executable policy closure retaining joint semantic authority. The terminal call consumes that closure and visible public non-anchor evidence, supplies the evidence to the closure-owned transition without acquiring revision authority, and emits one policy.",
+  "name": "Artifact-Sovereign Continuation Relay",
+  "organization": "two-call sequential lineage with closure-owned transition control and a terminal evidence aperture",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "author_authority_retaining_continuation",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form exactly one complete executable policy closure from the supplied evidence, place joint conformance-and-behavior transition authority within that closure, and pass the authority-retaining artifact forward.",
+          "output_type": "executable_policy_closure",
+          "role": "artifact-sovereign continuation author"
+        },
+        {
+          "id": "expose_evidence_and_emit",
+          "inputs": [
+            "author_authority_retaining_continuation",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume author_authority_retaining_continuation and the supplied public non-anchor evidence, expose that evidence to the closure-owned transition without revising or replacing its semantics, and emit the resulting complete policy.",
+          "output_type": "policy",
+          "role": "terminal evidence aperture and emitter"
+        }
+      ],
+      "id": "artifact_sovereign_relay",
+      "mode": "sequential"
+    }
+  ]
+}

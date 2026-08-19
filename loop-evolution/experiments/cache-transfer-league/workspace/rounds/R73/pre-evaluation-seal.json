@@ -1,0 +1,156 @@
+{
+  "aggregate_sha256": "a6b7209f0bfbe172482c476a5f8108f798fdd70e25e04f5ddbbd9aea34360763",
+  "architect": {
+    "calls": 1,
+    "model": "gpt-5.6-sol",
+    "policy_code_emitted": false,
+    "proposal_path": "workspace\\rounds\\R73\\architect\\proposal.json",
+    "proposal_sha256": "4d5d34cd99a3c1fec49d36f7dbc576050e7897e728b44dcdb7f58714d36849f6",
+    "reasoning_effort": "max",
+    "receipt_path": "workspace\\model-calls\\R73-structure-architect\\final-receipt.json",
+    "receipt_sha256": "b2507e1230a2a631b9f9e5211c268bf03b87018f8554232b59cf8726f1e97420",
+    "request_tier": "priority",
+    "service_tier": "fast"
+  },
+  "arm_count": 6,
+  "benchmark_identity": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "cache_r101_opened": false,
+  "common_inputs": {
+    "anchor_policy_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "hypothesis_sha256": "acbf1e41d194d025685df5292f902201d390e4674943ff884d68c4b96141564e",
+    "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb"
+  },
+  "discarded_pre_fast_executor_epoch": null,
+  "display_round": 73,
+  "entries": [
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R73\\pairs\\pair-01\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "fc6a3ea8cd1ec48ef94b77ed1c97c610ba8db8fb6a0311d2895401d892a3369a",
+      "generation_contract_valid": true,
+      "generation_contract_violations": [],
+      "generic_valid": false,
+      "label": "pair-01-incumbent",
+      "pair": 1,
+      "seal_path": "workspace\\rounds\\R73\\pairs\\pair-01\\incumbent\\seal.json",
+      "seal_sha256": "c98ff3945486f3d57157df6b5676de21aa345cccf3606700218a24309f45f6f6"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R73\\pairs\\pair-01\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+      "generation_contract_valid": true,
+      "generation_contract_violations": [],
+      "generic_valid": false,
+      "label": "pair-01-candidate",
+      "pair": 1,
+      "seal_path": "workspace\\rounds\\R73\\pairs\\pair-01\\candidate\\seal.json",
+      "seal_sha256": "9286975148c74f6034978bc7f31d080ec27e69abfd15783dba6f3a8c6a01ae92"
+    },
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R73\\pairs\\pair-02\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "536f01641bfec39cc7e00a50964e50e5d280eb09c54ee410980a6db82e90d569",
+      "generation_contract_valid": true,
+      "generation_contract_violations": [],
+      "generic_valid": true,
+      "label": "pair-02-incumbent",
+      "pair": 2,
+      "seal_path": "workspace\\rounds\\R73\\pairs\\pair-02\\incumbent\\seal.json",
+      "seal_sha256": "b22e68895d80c2744388f03d673d38da7f7d50a17bd80a8d2e9058ec788e3884"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R73\\pairs\\pair-02\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "2a60eb73c923a0a07a0896d5a3987c2b1c1fa5096fb2245f53cc7fe626a3383b",
+      "generation_contract_valid": true,
+      "generation_contract_violations": [],
+      "generic_valid": false,
+      "label": "pair-02-candidate",
+      "pair": 2,
+      "seal_path": "workspace\\rounds\\R73\\pairs\\pair-02\\candidate\\seal.json",
+      "seal_sha256": "c804c182414f1c344b9e9d96b72bad436d432f6296af922dcd8a9b4407db52b2"
+    },
+    {
+      "arm": "incumbent",
+      "artifact_path": "workspace\\rounds\\R73\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+      "artifact_sha256": "66cfd3b405bd68994919a0580b0e5f5a2298f081c32b7bec5f9c60b8be5a91bc",
+      "generation_contract_valid": true,
+      "generation_contract_violations": [],
+      "generic_valid": false,
+      "label": "pair-03-incumbent",
+      "pair": 3,
+      "seal_path": "workspace\\rounds\\R73\\pairs\\pair-03\\incumbent\\seal.json",
+      "seal_sha256": "34d55470fe19e708123acc644896371accdb419cc9e48a457aa52f3d8112f73f"
+    },
+    {
+      "arm": "candidate",
+      "artifact_path": "workspace\\rounds\\R73\\pairs\\pair-03\\candidate\\artifact\\policy.py",
+      "artifact_sha256": "3e486c5568ae780df3449a9684b7b0ca6e8909979c03619c8ed26d9c640f7ff1",
+      "generation_contract_valid": true,
+      "generation_contract_violations": [],
+      "generic_valid": false,
+      "label": "pair-03-candidate",
+      "pair": 3,
+      "seal_path": "workspace\\rounds\\R73\\pairs\\pair-03\\candidate\\seal.json",
+      "seal_sha256": "8cf5e2421b06ca5fb66bf64de31feb505b4f2da20f9795e836cb29804b3f6401"
+    }
+  ],
+  "executor_epoch_binding": {
+    "path": "workspace\\rounds\\R73\\executor-epoch-binding.json",
+    "sha256": "82bc8f936508d377cd5d0f7606768a58a1ac88fb933022aae1b77c6ad4ea4592"
+  },
+  "inner_roles": {
+    "calls": 12,
+    "direct_substitution": false,
+    "executor_epoch_id": "luna-fast-priority-e1",
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "service_tier": "fast"
+  },
+  "pair_count": 3,
+  "proposal_mode": "counter_hypothesis",
+  "schema_version": 1,
+  "score_blind_generation": true,
+  "sealed_at": "2026-08-09T23:52:54Z",
+  "sealed_before_any_frozen_evaluation": true,
+  "selection_contract": {
+    "close_confirmation": {
+      "absolute_threshold": 0.25,
+      "action": "frozen replay3 for all six sealed arms",
+      "pass": "each replay3 normalized result equals both corresponding replay1 and replay2 results",
+      "trigger": "absolute median gap <= 0.25 or any valid non-tied pair gap <= 0.25"
+    },
+    "pair_ties": "exact equality is a tie and never a candidate win",
+    "predeclared_before_score_reveal": true,
+    "promotion": {
+      "all_six_valid_and_replay2_deterministic": true,
+      "candidate_median": "strictly greater than incumbent median",
+      "candidate_pairwise_majority": "at least two candidate wins and candidate wins strictly exceed incumbent wins",
+      "failure_action": "retain current champion policy and structure",
+      "representative": "candidate artifact at candidate median score, then lexicographically smallest artifact SHA256"
+    }
+  },
+  "selection_contract_sha256": "08b263329c42ee69020ab1d71df14448ec473eb3bae599c7891207c7992f4a7b",
+  "structures": {
+    "candidate": {
+      "call_count": 2,
+      "path": "workspace\\rounds\\R73\\architect\\proposed-structure.json",
+      "sha256": "a04bca9b442a9a31a6a6b1755e7a83938457cb78bd469535a7494a5b7852f6de",
+      "topology_fingerprint": "68b686e5777ddc9f8bfadc278df1782327a7c229897d56dfdea3e7abdc39aa9c"
+    },
+    "incumbent": {
+      "call_count": 2,
+      "path": "workspace\\champion-r72\\structure.json",
+      "sha256": "048bd7f7978a9edc6cce1abb46639026e00145b8afa355da2f0c45cd85e10f88",
+      "topology_fingerprint": "ac40632875795200f06f33a3ef21f3ac05a1a9b014c30fc26e6bf8bbece82405"
+    }
+  }
+}

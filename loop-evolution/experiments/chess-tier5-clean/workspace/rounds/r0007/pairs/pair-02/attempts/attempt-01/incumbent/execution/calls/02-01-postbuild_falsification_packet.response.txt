@@ -1,0 +1,14 @@
+{
+  "certificate": "NO_SOURCE_CHANGE_FAILURE_CERTIFICATE",
+  "artifact_identity": "Draft and supplied champion/anchor contain the same 12,934-byte engine artifact; no changed regions found.",
+  "reproducible_witnesses": [],
+  "differential_result": "No differential behavior is possible from identical source.",
+  "runtime_limitation": "Interpreter execution was blocked by the read-only runner; UCI/perft runtime results are therefore uncertified.",
+  "preservation_checks": [
+    "python -m py_compile <extracted_engine.py>",
+    "Start perft depths 1-4: expected 20, 400, 8902, 197281.",
+    "Run UCI handshake, start position, castling, en-passant, promotion, determinism, and movetime deadline probes.",
+    "Validate every returned bestmove against independently generated legal moves."
+  ],
+  "exact_identity_command": "python -c \"import json; a=json.load(open(r'inputs/anchor-engine.txt',encoding='utf8'))['files']['engine.py']; d=json.load(open(r'execution/calls/01-01-draft_engine.response.txt',encoding='utf8'))['files']['engine.py']; assert a==d; print('identical')\""
+}

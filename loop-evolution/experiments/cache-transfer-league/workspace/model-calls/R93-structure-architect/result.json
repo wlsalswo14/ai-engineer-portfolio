@@ -1,0 +1,109 @@
+{
+  "parsed_response": {
+    "architect_scope": "one-R93-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "proposal_opaque_retract_emit",
+      "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The final call consumes that capsule and directly sees task, anchor_contract, task_constraints, and loop_structure, while anchor_policy and candidate_hypothesis remain visible only through their already-reconciled capsule effects; it may retract unsupported commitments and emits one policy.",
+      "name": "Proposal-Opaque Retraction Dyad",
+      "organization": "two-call sequential lineage with full-evidence executable origination and proposal-opaque retract-only terminal authority",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "originate_reconciled_executable",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Reconcile the visible evidence and obligations into one complete executable policy capsule while retaining semantic authorship over every included commitment.",
+              "output_type": "policy_capsule",
+              "role": "full-evidence executable origin authority"
+            },
+            {
+              "id": "proposal_opaque_retract_emit",
+              "inputs": [
+                "originate_reconciled_executable",
+                "task",
+                "anchor_contract",
+                "task_constraints",
+                "loop_structure"
+              ],
+              "objective": "Consume originate_reconciled_executable, assess its commitments using the complete artifact and directly visible obligations and structural context, retract only unsupported commitments without adding or substituting policy semantics, preserve executable completeness, and emit one policy.",
+              "output_type": "policy",
+              "role": "proposal-opaque retract-only terminal authority"
+            }
+          ],
+          "id": "proposal_opaque_authority_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "scope_boundary": "Only terminal visibility of anchor_policy and candidate_hypothesis changes; call count, sequential lineage, executable origination, retract-only authority, and final emission remain unchanged.",
+      "why_not_repeat_role_fission": "No call is added, split, renamed, or replicated; the incumbent dyad remains intact and the mutation is solely an edge-visibility restriction."
+    },
+    "proposal_mode": "local_refinement",
+    "qualitative_hypothesis": {
+      "causal_change": "Remove the direct anchor_policy and candidate_hypothesis visibility edges from the terminal call while preserving their first-call visibility and their mediated effects through the executable capsule.",
+      "expected_effect": "Terminal retraction should respond to the completed artifact and directly visible obligations rather than renewed competition between proposal sources, preserving supported reconciled commitments while retaining authoritative constraint visibility.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The incumbent directly reopens anchor_policy and candidate_hypothesis after their commitments have already been reconciled into a complete executable capsule, allowing proposal provenance to influence a terminal authority that can only retract semantics."
+    },
+    "structural_mutation": {
+      "after": "The terminal call consumes the executable capsule plus task, anchor_contract, task_constraints, and loop_structure; anchor_policy and candidate_hypothesis reach it only through the capsule.",
+      "before": "The terminal call consumes the executable capsule and directly reopens all six common inputs.",
+      "change_count": 1,
+      "factor": "proposal-source opacity at the retract-only terminal authority",
+      "why_structural": "This deletes two direct evidence-visibility edges and changes when proposal-source evidence can causally affect terminal retraction, without changing authority type, adding a role, or breaking the executable lineage."
+    }
+  },
+  "receipt": {
+    "call_id": "R93-structure-architect",
+    "duration_seconds": 68.281,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T03:41:22Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-sol",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "6e410a76218a4b98e65527884da9cc63b64c17cff418244ed01e55b5c7e35c03",
+    "raw_events_path": "workspace\\model-calls\\R93-structure-architect\\raw-events.jsonl",
+    "raw_events_sha256": "23ee567e7da14728f1c18be4f07016c07dca2813eb00da74baf2f66ed886464c",
+    "reasoning_effort": "max",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "4321b296166afd6f0e51d62545a5832ae465fc854b56851c2fc75ba6e30d7b9f",
+    "returncode": 0,
+    "role": "score-blind R93 local_refinement structure architect; never policy code",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T03:40:13Z",
+    "tools_used": [],
+    "transport_resume_manifest": null,
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 14425,
+      "output_tokens": 3977,
+      "reasoning_output_tokens": 3106
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

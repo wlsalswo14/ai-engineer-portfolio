@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes):\n        try:\n            capacity = int(capacity_bytes)\n        except (TypeError, ValueError, OverflowError):\n            capacity = 0\n        self.capacity_bytes = max(0, capacity)\n        self._used = 0\n        self._tick = 0\n        self._items = {}\n        self._probation = OrderedDict()\n        self._protected = OrderedDict()\n        self._ghost_probation = OrderedDict()\n        self._ghost_protected = OrderedDict()\n        self._ghost_limit = 512\n        self._frequency = {}\n        self._protected_target = (self.capacity_bytes * 55) // 100\n\n    def _touch_frequency(self, key):\n        value = self._frequency.get(key, 0)\n        self._frequency[key] = min(value + 1, 1 << 20)\n\n    def _decay(self):\n        if self._tick % 256 != 0:\n            return\n        for key in list(self._frequency):\n            value = self._frequency[key] >> 1\n            if key in self._items or key in self._ghost_probation or key in self._ghost_protected:\n                self._frequency[key] = max(1, value)\n            elif value:\n                self._frequency[key] = value\n            else:\n                del self._frequency[key]\n        for item in self._items.values():\n            item[2] = max(1, item[2] >> 1)\n\n    def _remember_ghost(self, key, protected):\n        self._ghost_probation.pop(key, None)\n        self._ghost_protected.pop(key, None)\n        ghosts = self._ghost_protected if protected else self._ghost_probation\n        ghosts[key] = None\n        while len(ghosts) > self._ghost_limit:\n            ghosts.popitem(last=False)\n\n    def _ghost_adjustment(self, key):\n        step = max(1, self.capacity_bytes // 16)\n        if key in self._ghost_probation:\n            self._ghost_probation.pop(key, None)\n            self._protected_target = max(0, self._protected_target - step)\n        elif key in self._ghost_protected:\n            self._ghost_protected.pop(key, None)\n            self._protected_target = min(self.capacity_bytes, self._protected_target + step)\n\n    def _victim_key(self, key):\n        item = self._items[key]\n        age = self._tick - item[3]\n        return (\n            self._frequency.get(key, 1),\n            -age,\n            -item[0],\n            item[3],\n        )\n\n    def _utility(self, key, candidate=False):\n        frequency = max(1, self._frequency.get(key, 1))\n        if candidate:\n            recent = 4\n            protected_bonus = 0\n        else:\n            item = self._items[key]\n            age = max(0, self._tick - item[3])\n            recent = max(1, 4 - min(3, age // 32))\n            protected_bonus = 2 if item[1] else 0\n        return 4 * frequency + recent + protected_bonus\n\n    def _make_room(self, size, candidate=None, force=False):\n        if self._used + size <= self.capacity_bytes:\n            return True\n        needed = self._used + size - self.capacity_bytes\n        victims = []\n        probation = sorted(self._probation, key=self._victim_key)\n        protected = sorted(self._protected, key=self._victim_key)\n        ordered = probation + protected\n        freed = 0\n        candidate_utility = self._utility(candidate, True) if candidate is not None else 0\n        for victim in ordered:\n            victim_size = self._items[victim][0]\n            if not force and candidate is not None:\n                if candidate_utility * victim_size <= self._utility(victim) * size:\n                    return False\n            victims.append(victim)\n            freed += victim_size\n            if freed >= needed:\n                break\n        if freed < needed:\n            return False\n        for victim in victims:\n            self._remove(victim, remember=True)\n        return True\n\n    def _remove(self, key, remember=False):\n        item = self._items.pop(key, None)\n        if item is None:\n            return\n        protected = item[1]\n        if protected:\n            self._protected.pop(key, None)\n        else:\n            self._probation.pop(key, None)\n        self._used -= item[0]\n        if remember:\n            self._remember_ghost(key, protected)\n\n    def _promote(self, key):\n        item = self._items.get(key)\n        if item is None or item[1]:\n            return\n        self._probation.pop(key, None)\n        item[1] = True\n        self._protected[key] = None\n        while self._protected and self._protected_bytes() > self._protected_target:\n            oldest = next(iter(self._protected))\n            demoted = self._items[oldest]\n            self._protected.pop(oldest, None)\n            demoted[1] = False\n            self._probation[oldest] = None\n\n    def _protected_bytes(self):\n        return sum(self._items[key][0] for key in self._protected)\n\n    def _insert(self, key, size, force=False):\n        if size <= 0 or size > self.capacity_bytes:\n            return False\n        if not self._make_room(size, key, force=force):\n            return False\n        self._items[key] = [size, False, 1, self._tick]\n        self._probation[key] = None\n        self._used += size\n        return True\n\n    def access(self, key, size, now):\n        self._tick += 1\n        self._decay()\n        if type(key) is not int:\n            return list(self._items)\n        try:\n            amount = int(size)\n        except (TypeError, ValueError, OverflowError):\n            return list(self._items)\n        self._touch_frequency(key)\n        self._ghost_adjustment(key)\n        item = self._items.get(key)\n        if amount <= 0:\n            if item is not None:\n                self._remove(key, remember=False)\n            return list(self._items)\n        if amount > self.capacity_bytes:\n            if item is not None:\n                self._remove(key, remember=False)\n            return list(self._items)\n        if item is not None:\n            old_size = item[0]\n            old_protected = item[1]\n            old_hits = item[2]\n            if amount != old_size:\n                self._remove(key, remember=False)\n                if self._insert(key, amount, force=True):\n                    item = self._items[key]\n                    item[2] = old_hits + 1\n                    if old_protected or item[2] >= 2:\n                        self._promote(key)\n            else:\n                item[2] = min(item[2] + 1, 1 << 20)\n                item[3] = self._tick\n                if not item[1] and item[2] >= 2:\n                    self._promote(key)\n            return list(self._items)\n        self._insert(key, amount)\n        return list(self._items)\n"
+  },
+  "receipt": {
+    "call_id": "R41-pair01-candidate-call02-instantiate_unitary_policy",
+    "duration_seconds": 119.839,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:23:05Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "cd67b3058fb8644bab2eff7ba475ece2ffdb6c964e8c58dd59b3ac088d1cba5c",
+    "raw_events_path": "workspace\\model-calls\\R41-pair01-candidate-call02-instantiate_unitary_policy\\raw-events.jsonl",
+    "raw_events_sha256": "e007b332cce1f303c6deb691119bc9f305c3164cb00cbec1d810c9572c40cda5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "66e29172613a87054442cac996be6e335bd4f6b1d3e3ce1789f3cab39f6ee361",
+    "returncode": 0,
+    "role": "R41 candidate topology role sole policy author with predecessor-only visibility",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:21:05Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 0,
+      "input_tokens": 13092,
+      "output_tokens": 9688,
+      "reasoning_output_tokens": 7950
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

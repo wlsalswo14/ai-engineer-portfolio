@@ -1,0 +1,61 @@
+{
+  "final_call_id": "task_hypothesis_emit",
+  "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The second consumes that capsule with only anchor_policy and anchor_contract visible, conditionally changes the causal polarity of anchor_policy, and emits exactly one complete executable state. The third consumes only that state with task_constraints and loop_structure, and the final call consumes the resulting closure with task and candidate_hypothesis. Raw trigger evidence and side reports do not propagate beyond the transition.",
+  "name": "Anchor Polarity Transition Relay",
+  "organization": "four-call sequential executable lineage with one evidence-triggered authority-state transition on the anchor reentry edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_executable_capsule",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the visible evidence and obligations into one complete executable policy artifact.",
+          "output_type": "policy_capsule",
+          "role": "integrated executable originator"
+        },
+        {
+          "id": "anchor_polarity_transition",
+          "inputs": [
+            "originate_executable_capsule",
+            "anchor_policy",
+            "anchor_contract"
+          ],
+          "objective": "Consume originate_executable_capsule and compare its carried commitments with reentered anchor_policy under anchor_contract. When an anchor-contingent obligation is the sole visible support for a carried commitment, reverse anchor_policy from constructive precedent to counterexample-only evidence and revise the same artifact accordingly. Regardless of transition, emit exactly one complete executable policy state.",
+          "output_type": "executable_policy_state",
+          "role": "anchor evidence-polarity controller"
+        },
+        {
+          "id": "constraint_structure_transition",
+          "inputs": [
+            "anchor_polarity_transition",
+            "task_constraints",
+            "loop_structure"
+          ],
+          "objective": "Consume anchor_polarity_transition, assess the single inherited executable state against only reentered task_constraints and loop_structure, reconcile visible obligations within its established evidence authority, and emit one complete executable policy closure.",
+          "output_type": "executable_policy_closure",
+          "role": "constraint-structure executable custodian"
+        },
+        {
+          "id": "task_hypothesis_emit",
+          "inputs": [
+            "constraint_structure_transition",
+            "task",
+            "candidate_hypothesis"
+          ],
+          "objective": "Consume constraint_structure_transition, assess the inherited complete executable closure against only reentered task and candidate_hypothesis, reconcile remaining visible obligations in that same artifact, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "task-hypothesis policy authority"
+        }
+      ],
+      "id": "single_polarity_control_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

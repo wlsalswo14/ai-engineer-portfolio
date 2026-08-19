@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.history = OrderedDict()\n        self.ghost_limit = 4096\n        self.history_limit = 8192\n        self.protected_target = self.capacity_bytes // 2\n        self.protected_bytes = 0\n        self.used_bytes = 0\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _remember_history(self, key, frequency):\n        self.history.pop(key, None)\n        self.history[key] = frequency\n        while len(self.history) > self.history_limit:\n            self.history.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, entry = self.protected.popitem(last=False)\n            self.protected_bytes -= entry[0]\n            self.probation[key] = entry\n\n    def _probation_victim(self):\n        best_key = None\n        best_entry = None\n        examined = 0\n        for key, entry in self.probation.items():\n            if examined >= 16:\n                break\n            examined += 1\n            if best_entry is None:\n                best_key = key\n                best_entry = entry\n                continue\n            if entry[1] < best_entry[1]:\n                best_key = key\n                best_entry = entry\n            elif entry[1] == best_entry[1] and entry[0] > best_entry[0]:\n                best_key = key\n                best_entry = entry\n        return best_key\n\n    def _evict_one(self):\n        if self.probation:\n            key = self._probation_victim()\n            entry = self.probation.pop(key)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, entry = self.protected.popitem(last=False)\n            self.protected_bytes -= entry[0]\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self._remember_history(key, entry[1])\n        self.used_bytes -= entry[0]\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            entry = self.protected.pop(key)\n            entry[1] += 1\n            self.protected[key] = entry\n            return []\n\n        if key in self.probation:\n            entry = self.probation.pop(key)\n            entry[1] += 1\n            self.protected[key] = entry\n            self.protected_bytes += entry[0]\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, self.capacity_bytes // 16)\n        if key in self.ghost_probation:\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif key in self.ghost_protected:\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n\n        prior_frequency = self.history.pop(key, 0)\n        frequency = prior_frequency + 1\n        self._forget_ghost(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n\n        self.probation[key] = [size, frequency]\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R44-pair02-incumbent-call02-contract_bounded_behavior_authority",
+    "duration_seconds": 59.584,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:44:44Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "76af6a7762ced3ddbab46a5db18fa33fb833ee3d95d01a2525fd9df914b3d2f6",
+    "raw_events_path": "workspace\\model-calls\\R44-pair02-incumbent-call02-contract_bounded_behavior_authority\\raw-events.jsonl",
+    "raw_events_sha256": "fc74d49c71b2c776d55fcfe6415fb702a9313c61fd056e2fbcea09d3a633015b",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "fb6adc6afd50f7ad980647ceb1f4f5ff03d5d619a3c9b81c716d5791ca0fbec3",
+    "returncode": 0,
+    "role": "R44 incumbent topology role contract-bounded behavioral authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:43:45Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14338,
+      "output_tokens": 4651,
+      "reasoning_output_tokens": 3624
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

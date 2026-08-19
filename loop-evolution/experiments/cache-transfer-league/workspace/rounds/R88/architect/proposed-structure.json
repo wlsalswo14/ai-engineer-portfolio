@@ -1,0 +1,37 @@
+{
+  "final_call_id": "sealed_capsule_emit",
+  "information_flow": "The first call receives all six common inputs and emits one complete executable policy capsule. The final call consumes only that immediately preceding capsule, receives no reopened common evidence, and emits one complete policy.",
+  "name": "Single-Ingress Sealed Capsule",
+  "organization": "two-call sequential lineage with one evidence ingress and one sealed executable edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "integrated_capsule_origin",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Integrate the simultaneously visible evidence and obligations into one sealed complete executable policy artifact.",
+          "output_type": "policy_capsule",
+          "role": "single-ingress executable authority"
+        },
+        {
+          "id": "sealed_capsule_emit",
+          "inputs": [
+            "integrated_capsule_origin"
+          ],
+          "objective": "Consume integrated_capsule_origin without reopened external evidence, preserve its resolved semantics, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "evidence-blind terminal policy authority"
+        }
+      ],
+      "id": "sealed_single_ingress_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "artifact_type": "frozen_behavioral_contract",
+  "evidence": {
+    "anchor_inspection": "completed",
+    "anchor_execution": "not_completed: isolated command policy rejected Python execution",
+    "static_observations": [
+      "Anchor uses only sys and time.",
+      "Anchor implements board state, legal generation, special moves, search, evaluation, and required UCI commands.",
+      "Diagnostic risks: checked qsearch searches captures only; root null-window searches lack re-search; timer checks occur only every 32 nodes; TT keys omit halfmove state."
+    ],
+    "excluded": [
+      "ChessBench openings and positions",
+      "match results and evaluator internals",
+      "external engines, libraries, repositories, and web evidence"
+    ]
+  },
+  "contract": {
+    "scope": "One standard-library-only engine.py. One clean-room implementation trajectory. No source copying, candidate replication, candidate selection, delta attribution, rollback, or benchmark-specific logic.",
+    "priorities": {
+      "P0_protocol": [
+        "Accept uci, isready, ucinewgame, position startpos [moves], position fen <six fields> [moves], go movetime <ms>, and quit.",
+        "Emit uciok and readyok exactly once per corresponding command, with no diagnostic stdout.",
+        "Emit exactly one bestmove line for every go command.",
+        "For every nonterminal position, bestmove must belong to the current legal move set and use lowercase UCI promotion suffixes.",
+        "Return before the requested movetime, including very small positive budgets; retain a legal deterministic fallback before searching."
+      ],
+      "P0_legality": [
+        "Generate and apply all ordinary moves, captures, checks, pins, king safety, promotions, en passant, and castling.",
+        "Never allow a move leaving the moving side's king attacked.",
+        "Castling requires correct rights, rook presence, empty transit squares, and unattacked origin, transit, and destination squares.",
+        "Maintain side to move, castling rights, en-passant target, halfmove clock, and fullmove number."
+      ],
+      "P1_state_and_search": [
+        "Position parsing must consume exactly six FEN fields and then optional moves.",
+        "State transitions must not mutate prior positions or alias mutable board state.",
+        "Checked nodes must search all legal evasions, not captures alone.",
+        "Timeouts and internal exceptions must not suppress the required bestmove response.",
+        "Any transposition reuse must include every state field relevant to draw or search correctness, or avoid unsafe reuse.",
+        "Search and move ordering must be deterministic under controlled identical inputs."
+      ],
+      "P2_quality": [
+        "Use general material, positional, tactical, and terminal evaluation.",
+        "Prefer completed deeper searches while preserving the P0 deadline and legality guarantees.",
+        "Do not sacrifice broad legal correctness for a narrow tactical heuristic."
+      ]
+    },
+    "executable_probes": [
+      {
+        "id": "uci_smoke",
+        "input": "uci; isready; ucinewgame; position startpos; go movetime 20; quit",
+        "pass": "uciok, readyok, and exactly one legal bestmove are received; no extra stdout; response is before deadline."
+      },
+      {
+        "id": "start_perft",
+        "input": "Construct startpos and recursively count legal moves.",
+        "pass": "depth 1=20, depth 2=400, depth 3=8902, depth 4=197281."
+      },
+      {
+        "id": "state_sequence",
+        "input": "position startpos moves e2e4 e7e5 g1f3 b8c6",
+        "pass": "Side, board, en-passant target, clocks, and legal move set equal an independently constructed reference state."
+      },
+      {
+        "id": "castling",
+        "position": "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+        "pass": "e1g1 and e1c1 are legal. Moving or capturing the relevant rook or king permanently removes the corresponding right."
+      },
+      {
+        "id": "promotion",
+        "position": "4k3/P7/8/8/8/8/8/4K3 w - - 0 1",
+        "pass": "a7a8n, a7a8b, a7a8r, and a7a8q are generated and applied correctly."
+      },
+      {
+        "id": "en_passant",
+        "position": "4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1",
+        "pass": "e5d6 is legal and removes the pawn on d5; the target expires after one nonmatching move."
+      },
+      {
+        "id": "ep_discovered_check",
+        "position": "4r1k1/8/8/3pP3/8/8/8/4K3 w - d6 0 1",
+        "pass": "e5d6 is rejected because removing the pawn exposes the white king to the rook."
+      },
+      {
+        "id": "pinned_piece",
+        "position": "4k3/8/8/8/4r3/8/4R3/4K3 w - - 0 1",
+        "pass": "Moves of the e2 rook that expose the white king are absent."
+      },
+      {
+        "id": "determinism",
+        "input": "Run identical position/go commands repeatedly with a controlled fixed budget.",
+        "pass": "Identical legal bestmove responses and no dependence on randomness or process-global residue."
+      },
+      {
+        "id": "deadline_matrix",
+        "input": "Repeat UCI go tests at 1, 5, 20, and 100 ms on startpos and representative legal FENs.",
+        "pass": "Every command produces one legal bestmove before its deadline; no hang, traceback, or missing response."
+      }
+    ],
+    "preservation_invariants": [
+      "Every accepted move preserves exactly one board occupant per square and exactly one side-to-move transition.",
+      "A generated legal move remains legal when applied to the corresponding immutable position.",
+      "Pawn moves and captures reset halfmove clock; other moves increment it; fullmove increments after Black.",
+      "Castling and en-passant state is updated only by the applicable move and never leaks across unrelated positions.",
+      "Repeated position commands reproduce the same state regardless of prior search history.",
+      "UCI output remains machine-readable and free of debug text.",
+      "Terminal checkmate or stalemate may return the conventional 0000 sentinel; nonterminal bestmoves may never be 0000."
+    ],
+    "interacting_failure_cases": [
+      "En passant must combine capture removal, king-safety validation, target expiry, and clock updates.",
+      "Castling must combine rights, rook presence, attacked-square testing, rook relocation, and rights invalidation.",
+      "Promotion must combine capture or quiet movement, four promotion choices, check status, and UCI notation.",
+      "A checked search node must combine complete evasions with timeout fallback; a quiet evasion must not be mistaken for checkmate.",
+      "Transposition reuse must combine board identity, side, rights, en-passant state, and draw-relevant clocks.",
+      "FEN loading followed by moves must combine exact six-field parsing, state transitions, legality, and deterministic output."
+    ],
+    "pass_criteria": [
+      "All P0 probes pass with zero illegal moves, protocol violations, crashes, missing bestmoves, or deadline overruns.",
+      "All start-position perft counts pass exactly.",
+      "All special-move and interacting-failure probes pass exactly.",
+      "Determinism and repeated-position regression checks pass.",
+      "The final artifact is exactly one engine.py, standard-library-only, with no external file or network dependence and no benchmark-specific data.",
+      "If any probe fails during construction, repair the single implementation trajectory until the failure is closed while re-running all previously passed P0 and interacting probes."
+    ]
+  }
+}

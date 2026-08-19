@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.target = self.capacity // 2\n        self.a1 = OrderedDict()\n        self.am = OrderedDict()\n        self.a1_bytes = 0\n        self.am_bytes = 0\n        self.resident_bytes = 0\n        self.ghosts = OrderedDict()\n        self.ghost_limit = max(64, min(4096, self.capacity // 64 + 16))\n\n    def _discard_ghost(self, key):\n        self.ghosts.pop(key, None)\n\n    def _remember_ghost(self, key, segment, size):\n        self.ghosts.pop(key, None)\n        self.ghosts[key] = (segment, size)\n        while len(self.ghosts) > self.ghost_limit:\n            self.ghosts.popitem(last=False)\n\n    def _drop_resident(self, key):\n        if key in self.a1:\n            size = self.a1.pop(key)\n            self.a1_bytes -= size\n            self.resident_bytes -= size\n            return \"a1\", size\n        if key in self.am:\n            size = self.am.pop(key)\n            self.am_bytes -= size\n            self.resident_bytes -= size\n            return \"am\", size\n        return None\n\n    def _evict_one(self, segment):\n        if segment == \"a1\" and self.a1:\n            key, size = self.a1.popitem(last=False)\n            self.a1_bytes -= size\n        elif self.am:\n            key, size = self.am.popitem(last=False)\n            segment = \"am\"\n            self.am_bytes -= size\n        else:\n            return None\n        self.resident_bytes -= size\n        self._remember_ghost(key, segment, size)\n        return key\n\n    def _make_room(self, required, evicted):\n        while self.resident_bytes + required > self.capacity:\n            probationary_limit = self.capacity - self.target\n            if self.a1 and (not self.am or self.a1_bytes >= probationary_limit):\n                segment = \"a1\"\n            else:\n                segment = \"am\"\n            key = self._evict_one(segment)\n            if key is None:\n                break\n            evicted.append(key)\n\n    def _insert_a1(self, key, size):\n        self._discard_ghost(key)\n        self.a1[key] = size\n        self.a1_bytes += size\n        self.resident_bytes += size\n\n    def _insert_am(self, key, size):\n        self._discard_ghost(key)\n        self.am[key] = size\n        self.am_bytes += size\n        self.resident_bytes += size\n        while self.am_bytes > self.target and len(self.am) > 1:\n            old_key, old_size = self.am.popitem(last=False)\n            self.am_bytes -= old_size\n            self.a1[old_key] = old_size\n            self.a1_bytes += old_size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        del now\n        evicted = []\n        old = self._drop_resident(key)\n\n        if size <= 0:\n            self._discard_ghost(key)\n            if old is not None:\n                evicted.append(key)\n            return evicted\n\n        if size > self.capacity:\n            self._discard_ghost(key)\n            if old is not None:\n                self._remember_ghost(key, old[0], old[1])\n                evicted.append(key)\n            return evicted\n\n        ghost = self.ghosts.pop(key, None)\n        if ghost is not None:\n            delta = max(1, min(self.capacity, max(size, ghost[1])))\n            if ghost[0] == \"a1\":\n                self.target = max(0, self.target - delta)\n            else:\n                self.target = min(self.capacity, self.target + delta)\n            destination = \"am\"\n        elif old is not None:\n            destination = \"am\"\n        else:\n            destination = \"a1\"\n\n        self._make_room(size, evicted)\n        if destination == \"am\":\n            self._insert_am(key, size)\n        else:\n            self._insert_a1(key, size)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R63-pair03-candidate-call02-emit_under_normative_visibility",
+    "duration_seconds": 64.482,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:15:48Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "2004d9ba3e5be5d96a33f91474cbb44f39b3e9abf4bcd410ea74284158dccb6e",
+    "raw_events_path": "workspace\\model-calls\\R63-pair03-candidate-call02-emit_under_normative_visibility\\raw-events.jsonl",
+    "raw_events_sha256": "de7a7a528cac2da2d3792d5c1bd7972b5a60f60f3479ccc509939c60ffdcadd4",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "5a30e3fefd5c16f0a619282ed712d0f0ac38c60333d887b1eef0f594da1a9472",
+    "returncode": 0,
+    "role": "R63 candidate topology role normative-source policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:14:43Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13926,
+      "output_tokens": 5103,
+      "reasoning_output_tokens": 4073
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

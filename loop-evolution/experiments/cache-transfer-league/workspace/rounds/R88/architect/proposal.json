@@ -1,0 +1,111 @@
+{
+  "architect_receipt": {
+    "path": "workspace\\model-calls\\R88-structure-architect\\final-receipt.json",
+    "sha256": "640d773a3b0d2206eec5362ae9edced7e2672e1a89172b83f0c028c69ee83c2a"
+  },
+  "architect_response": {
+    "architect_scope": "one-R88-structural-factor-only",
+    "candidate_structure": {
+      "final_call_id": "sealed_capsule_emit",
+      "information_flow": "The first call receives all six common inputs and emits one complete executable policy capsule. The final call consumes only that immediately preceding capsule, receives no reopened common evidence, and emits one complete policy.",
+      "name": "Single-Ingress Sealed Capsule",
+      "organization": "two-call sequential lineage with one evidence ingress and one sealed executable edge",
+      "stages": [
+        {
+          "calls": [
+            {
+              "id": "integrated_capsule_origin",
+              "inputs": [
+                "task",
+                "anchor_policy",
+                "anchor_contract",
+                "task_constraints",
+                "candidate_hypothesis",
+                "loop_structure"
+              ],
+              "objective": "Integrate the simultaneously visible evidence and obligations into one sealed complete executable policy artifact.",
+              "output_type": "policy_capsule",
+              "role": "single-ingress executable authority"
+            },
+            {
+              "id": "sealed_capsule_emit",
+              "inputs": [
+                "integrated_capsule_origin"
+              ],
+              "objective": "Consume integrated_capsule_origin without reopened external evidence, preserve its resolved semantics, and emit one complete policy.",
+              "output_type": "policy",
+              "role": "evidence-blind terminal policy authority"
+            }
+          ],
+          "id": "sealed_single_ingress_lineage",
+          "mode": "sequential"
+        }
+      ]
+    },
+    "compliance": {
+      "hardcoding_emitted": false,
+      "one_structural_factor_only": true,
+      "policy_code_emitted": false,
+      "score_or_trace_content_used": false,
+      "variants_sampling_or_best_of_n_emitted": false
+    },
+    "mode_certificate": {
+      "changed_behavioral_dimensions": [
+        "external-evidence timing changes from staggered reentry to one-time initial visibility",
+        "downstream authority changes from evidence-conditioned revision to sealed-capsule-only emission"
+      ],
+      "counter_until_promotion": true,
+      "forbidden_inherited_mechanism": "disjoint downstream reopening of common external inputs after executable origination",
+      "independent_replacement_principle": "One originator receives all common evidence once, seals one complete executable capsule, and every subsequent edge carries only that capsule.",
+      "rejected_assumptions": [
+        "Partitioning common evidence into mutually exclusive downstream reentry windows improves reconciliation.",
+        "Multiple downstream custodians require independent evidence-conditioned mutation authority over one executable artifact."
+      ]
+    },
+    "proposal_mode": "counter_hypothesis",
+    "qualitative_hypothesis": {
+      "causal_change": "Close every external-evidence edge after one initial ingress and pass a sealed complete executable capsule directly to terminal emission.",
+      "expected_effect": "One-time integrated visibility should reduce order-dependent reinterpretation while shifting evidence timing and downstream revision authority.",
+      "falsifier": "all-valid matched majority and strict-median contract, with no score",
+      "observed_bottleneck": "The active family may fragment causal context by reopening disjoint evidence after executable commitment, making later custody order more influential than integrated evidence."
+    },
+    "structural_mutation": {
+      "after": "A two-call lineage admits all common evidence only at origination, then exposes the final authority solely to the immediately preceding complete executable capsule.",
+      "before": "A four-call executable relay reopens mutually exclusive subsets of common evidence for successive custodians.",
+      "change_count": 1,
+      "factor": "single-ingress sealed executable handoff",
+      "why_structural": "The single-ingress seal removes downstream common-input edges and evidence-conditioned custodial nodes, changing graph depth, evidence timing, visibility, and authority as consequences of one topology factor."
+    }
+  },
+  "benchmark_fixtures_visible": false,
+  "display_round": 88,
+  "incumbent_structure_sha256": "adf0272184f889b94a3b101edb1dbdeb6ee2bcdf57b0121c3721841a819b9549",
+  "official_numeric_scores_visible": false,
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_notebook": {
+    "path": "workspace\\rounds\\R88\\qualitative-error-notebook.json",
+    "sha256": "0e57583543b8fded93b739791cb270e3c448acd1adb20b3ec8f0f7c62b2e5adb"
+  },
+  "schema_version": 1,
+  "score_blind": true,
+  "source_manifest": {
+    "path": "workspace\\rounds\\R88\\source-manifest.json",
+    "sha256": "a6a376a6e61ecd245c412970a31600dfc5748f2c59deed1b77e50b0f60befd70"
+  },
+  "task_sha256": "6cdc13ad7f94046b8302190bcb4d82ed30a1279d4c1cb7975360d98002fe88bb",
+  "validation": {
+    "candidate_call_count": 2,
+    "coarse_topology_collision_override": null,
+    "factor": "single-ingress sealed executable handoff",
+    "output_type_normalizations": [],
+    "policy_bearing_output_kinds": [
+      {
+        "call_id": "integrated_capsule_origin",
+        "executor_semantics": "complete policy artifact plus obligation evidence on the same single lineage",
+        "output_type": "policy_capsule"
+      }
+    ],
+    "semantic_topology_fingerprint": "c9824e07431ffda9a324c12e436715bf7d7415cf32b70c7c4e66f2aba6dbf2f1",
+    "topology_fingerprint": "4c1d70f13a7282f6a0df9666a667f0c7f44485049af1b730f533ad10706a6545"
+  }
+}

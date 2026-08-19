@@ -1,0 +1,96 @@
+Role: R28 candidate topology role causal intervention policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R28,
+matched pair 2, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: intervention_grounded_policy_authority
+Role: causal intervention policy authority
+Objective: Consume the complete predecessor artifact without anchor-policy visibility, act in place on its semantic dependency structure under public-obligation evidence, transition from observational to intervention-grounded authority when dependency sensitivity becomes evident, and emit exactly one complete policy.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "form_executable_closure": {
+    "artifact_kind": "policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.window = OrderedDict()\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.window_bytes = 0\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self.window_target = min(self.capacity_bytes, max(1, self.capacity_bytes // 8)) if self.capacity_bytes else 0\n        self.protected_target = self.capacity_bytes // 2\n        self.ghost_window = OrderedDict()\n        self.ghost_main = OrderedDict()\n        self.ghost_limit = 4096\n        self.frequency = {}\n        self.tick = 0\n        self.intervention = False\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_window.pop(key, None)\n        self.ghost_main.pop(key, None)\n\n    def _observe(self, key):\n        self.tick += 1\n        count = min(255, self.frequency.get(key, 0) + 1)\n        self.frequency[key] = count\n        if count >= 2:\n            self.intervention = True\n        if self.tick % 2048 == 0:\n            for observed_key in tuple(self.frequency):\n                reduced = self.frequency[observed_key] // 2\n                if reduced:\n                    self.frequency[observed_key] = reduced\n                else:\n                    del self.frequency[observed_key]\n\n    def _rebalance_protected(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self.probation[old_key] = old_size\n\n    def _probation_victim(self):\n        if not self.probation:\n            return None\n        if not self.intervention:\n            return next(iter(self.probation))\n        best_key = None\n        best_value = None\n        for position, candidate in enumerate(self.probation):\n            value = (self.frequency.get(candidate, 0), position)\n            if best_value is None or value < best_value:\n                best_key = candidate\n                best_value = value\n            if position >= 31:\n                break\n        return best_key\n\n    def _evict_one(self):\n        if self.probation:\n            old_key = self._probation_victim()\n            old_size = self.probation.pop(old_key)\n            self._remember(self.ghost_main, old_key)\n        elif self.protected:\n            old_key, old_size = self.protected.popitem(last=False)\n            self.protected_bytes -= old_size\n            self._remember(self.ghost_main, old_key)\n        elif self.window:\n            old_key, old_size = self.window.popitem(last=False)\n            self.window_bytes -= old_size\n            self._remember(self.ghost_window, old_key)\n        else:\n            return None\n        self.used_bytes -= old_size\n        return old_key\n\n    def _adapt(self, key, size):\n        if key in self.ghost_window:\n            delta = max(1, self.capacity_bytes // 16, min(size, self.capacity_bytes))\n            self.window_target = min(self.capacity_bytes, self.window_target + delta)\n            self.intervention = True\n        elif key in self.ghost_main:\n            delta = max(1, self.capacity_bytes // 16, min(size, self.capacity_bytes))\n            self.window_target = max(1, self.window_target - delta)\n            self.intervention = True\n        self._forget_ghost(key)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._observe(key)\n        _ = now\n\n        if key in self.window:\n            stored_size = self.window.pop(key)\n            self.window[key] = stored_size\n            return []\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance_protected()\n            return []\n\n        if self.capacity_bytes == 0 or size <= 0 or size > self.capacity_bytes:\n            return []\n\n        self._adapt(key, size)\n        self.window[key] = size\n        self.window_bytes += size\n        self.used_bytes += size\n\n        while self.window and self.window_bytes > self.window_target:\n            old_key, old_size = self.window.popitem(last=False)\n            self.window_bytes -= old_size\n            self.probation[old_key] = old_size\n\n        self._rebalance_protected()\n        evicted = []\n        while self.used_bytes > self.capacity_bytes:\n            old_key = self._evict_one()\n            if old_key is None:\n                break\n            evicted.append(old_key)\n        return evicted\n",
+    "sha256": "d00ea7c7d5bef901399a868574a566e3b865e214d017c7ad7110ab1c84e4fbcc"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R27 champion policy anchor",
+    "artifact_sha256": "edadcebdf67f61483914ca79012510328d0e6f27d09c0cd5dd2cdd9bf5aa110e",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Give the final policy-bearing edge in-place intervention authority and make dependency-sensitivity evidence trigger a transition from observational to intervention-grounded semantic control.",
+    "expected_effect": "Latent semantic coupling becomes causally exposed before emission while one complete executable artifact remains continuously visible on the lineage.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion's final authority can observe and reconcile formed semantics but cannot create causal evidence distinguishing genuine obligation support from latent semantic coupling."
+  },
+  "loop_structure": {
+    "final_call_id": "intervention_grounded_policy_authority",
+    "information_flow": "The first call forms one complete executable closure and removes construction provenance from its handoff. The final call receives that complete artifact with public obligations but without anchor-policy visibility, intervenes in place on its semantic dependency structure, transitions authority upon dependency-sensitivity evidence, and emits one policy.",
+    "name": "Intervention-Grounded Executable Closure Relay",
+    "organization": "two-call sequential lineage separated by one provenance firewall and a final policy-bearing edge with sensitivity-triggered causal authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "form_executable_closure",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Form exactly one complete executable policy closure from the supplied evidence and public obligations, remove anchor-relative construction provenance from the handoff, and pass the entire executable artifact forward.",
+            "output_type": "executable_policy_closure",
+            "role": "self-contained executable closure former"
+          },
+          {
+            "id": "intervention_grounded_policy_authority",
+            "inputs": [
+              "form_executable_closure",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume the complete predecessor artifact without anchor-policy visibility, act in place on its semantic dependency structure under public-obligation evidence, transition from observational to intervention-grounded authority when dependency sensitivity becomes evident, and emit exactly one complete policy.",
+            "output_type": "policy",
+            "role": "causal intervention policy authority"
+          }
+        ],
+        "id": "intervention_grounded_relay",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

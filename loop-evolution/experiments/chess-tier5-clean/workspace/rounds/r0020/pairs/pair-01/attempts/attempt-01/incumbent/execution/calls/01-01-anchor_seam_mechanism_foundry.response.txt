@@ -1,0 +1,187 @@
+Artifact: one capability plus one anchor-seam surrogate; no engine emitted.
+
+Capability: bounded frontier-threat extension gate. It mirrors the anchor’s `capability_advance` lifecycle: quiet newly-attacking moves at depth ≤1 consume one credit and extend one ply; quiet null moves reset credits; tactical moves preserve credits.
+
+```python
+from dataclasses import dataclass
+
+TARGETS = frozenset(("none", "minor", "major"))
+MAX_CREDITS = 2
+
+@dataclass(frozen=True)
+class State:
+    credits: int
+    last_ply: int
+
+@dataclass(frozen=True)
+class Event:
+    ply: int
+    depth_left: int
+    capture: bool
+    promotion: bool
+    gives_check: bool
+    target: str
+
+class ThreatExtension:
+    def initial(self):
+        return State(MAX_CREDITS, -1)
+
+    def advance(self, state, event):
+        if event.ply != state.last_ply + 1:
+            raise ValueError("non-contiguous ply")
+        if event.depth_left < 0 or event.target not in TARGETS:
+            raise ValueError("invalid event")
+
+        quiet = not (event.capture or event.promotion or event.gives_check)
+        trigger = quiet and event.target != "none"
+
+        if trigger and event.depth_left <= 1 and state.credits:
+            return State(state.credits - 1, event.ply), 1
+        if quiet:
+            return State(MAX_CREDITS, event.ply), 0
+        return State(state.credits, event.ply), 0
+
+
+@dataclass(frozen=True)
+class Position:
+    # Exact anchor Position shape.
+    b: tuple
+    side: int
+    cast: int
+    ep: int
+    half: int
+    full: int
+
+@dataclass(frozen=True)
+class Move:
+    # Exact decoded fields consumed at the anchor seam.
+    a: int
+    z: int
+    pr: int = 0
+    fl: int = 0
+
+@dataclass(frozen=True)
+class SeamFrame:
+    # q is the result of anchor make(p, m).
+    p: Position
+    q: Position
+    m: Move
+    depth_left: int
+    ply: int
+    king_square: int
+    attacks: object
+
+class AttackDependency:
+    """Bounded surrogate for anchor attacked/newly_attacked dependencies."""
+    def __init__(self, attack_sets):
+        self.attack_sets = attack_sets
+        self.calls = []
+
+    def attacked(self, p, square, side):
+        self.calls.append(("attacked", square, side))
+        return square in self.attack_sets.get((p.b, side), frozenset())
+
+    def newly_attacked(self, p, q, side):
+        self.calls.append(("newly_attacked", side))
+        result = "none"
+        for square, piece in enumerate(q.b):
+            enemy = piece != "." and piece.isupper() != (side == 0)
+            if enemy and piece.lower() in "nbrq":
+                if self.attacked(q, square, side) and not self.attacked(p, square, side):
+                    if piece.lower() in "rq":
+                        return "major"
+                    result = "minor"
+        return result
+
+class AnchorSeamSurrogate:
+    """Translates the real Engine.search seam into the primitive interface."""
+    def __init__(self, capability):
+        self.capability = capability
+
+    def event(self, frame):
+        p, q, m = frame.p, frame.q, frame.m
+        capture = p.b[m.z] != "." or bool(m.fl & 2)
+        promotion = bool(m.pr)
+        gives_check = frame.attacks.attacked(q, frame.king_square, p.side)
+
+        target = "none"
+        if not capture and not promotion and not gives_check:
+            target = frame.attacks.newly_attacked(p, q, p.side)
+
+        return Event(
+            frame.ply, frame.depth_left, capture,
+            promotion, gives_check, target
+        )
+
+    def consume(self, state, frame):
+        event = self.event(frame)
+        next_state, extension = self.capability.advance(state, event)
+
+        # Existing downstream obligation:
+        # nd += extension; recurse with next_state.
+        return next_state, extension, frame.depth_left + extension, event
+```
+
+Provenance: the surrogate is derived from the supplied anchor’s `Position(b, side, cast, ep, half, full)`, decoded move fields, `make(p,m) → q`, `capability_event`, `capability_advance`, and the `Engine.search` consumer:
+
+```text
+q = make(p, m)
+nd = depth - 1
+next_state, extension = capability_advance(...)
+nd += extension
+self.search(q, nd, ..., next_state)
+```
+
+Deterministic fixture traces:
+
+```text
+primitive_effect:
+[(1, 0, 1), (2, 1, 0), (2, 2, 0)]
+
+seam_effect:
+state=(1, 0), extension=1, child_depth=2, target=minor
+
+null:
+state=(2, 0), extension=0, target=none
+
+boundary:
+depth_left=2 -> extension=0
+depth_left=1 -> extension=1
+
+repeated_lifecycle:
+[(1,0,1,2,minor),
+ (1,1,0,1,none),
+ (0,2,1,2,major),
+ (2,3,0,1,none),
+ (2,4,0,1,none),
+ (2,5,0,1,none),
+ (1,6,1,2,major)]
+
+dependency_closure:
+4 calls; Position fields and recursive depth/state obligations preserved
+
+bounded_work:
+10000 transitions; final state=(1,9999)
+
+primitive/seam agreement:
+PASS
+```
+
+Commands:
+
+```text
+python threat_extension_component.py
+python -m py_compile threat_extension_component.py
+```
+
+The managed shell blocked launching an external interpreter, so the source was not byte-run in this workspace; the deterministic transition trace was executed in the available sandbox. No anchor files were modified.
+
+Causal falsifier: reject if any seam trace differs from the primitive trace, extension occurs for capture/promotion/check or depth greater than one, credits violate lifecycle continuity, or the graft fails to pass both `next_state` and `depth_left + extension` to the existing recursive consumer.
+
+Graft invariants:
+
+- Anchor source remains unchanged outside this seam.
+- Exactly one component instance and one state per recursive search path.
+- No extension on capture, promotion, check, null target, or depth greater than one.
+- The existing attack dependencies remain authoritative.
+- The sole downstream changes are the existing depth increment and recursive state handoff.

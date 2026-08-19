@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.ghost_limit = 4096\n        self.protected_target = self.capacity_bytes // 2\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self.frequency = {}\n        self.frequency_order = OrderedDict()\n        self.request_count = 0\n        self.frequency_limit = 65536\n\n    def _age_frequencies(self):\n        for key in list(self.frequency):\n            value = self.frequency[key] // 2\n            if value:\n                self.frequency[key] = value\n            else:\n                del self.frequency[key]\n                self.frequency_order.pop(key, None)\n        while len(self.frequency_order) > self.frequency_limit:\n            key, _ = self.frequency_order.popitem(last=False)\n            self.frequency.pop(key, None)\n\n    def _touch_frequency(self, key):\n        self.request_count += 1\n        self.frequency[key] = min(255, self.frequency.get(key, 0) + 1)\n        self.frequency_order.pop(key, None)\n        self.frequency_order[key] = None\n        if self.request_count % 4096 == 0 or len(self.frequency_order) > self.frequency_limit * 2:\n            self._age_frequencies()\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _rebalance(self):\n        while self.protected and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def _evict_one(self):\n        if self.probation:\n            key, size = self.probation.popitem(last=False)\n            self._remember(self.ghost_probation, key)\n        elif self.protected:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self._remember(self.ghost_protected, key)\n        else:\n            return None\n        self.used_bytes -= size\n        return key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if type(key) is not int:\n            return []\n        size = int(size)\n        self._touch_frequency(key)\n\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._rebalance()\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        in_ghost_probation = key in self.ghost_probation\n        in_ghost_protected = key in self.ghost_protected\n        if in_ghost_probation:\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = min(\n                self.capacity_bytes,\n                self.protected_target + max(step, min(size, self.capacity_bytes)),\n            )\n        elif in_ghost_protected:\n            step = max(1, self.capacity_bytes // 16)\n            self.protected_target = max(\n                0,\n                self.protected_target - max(step, min(size, self.capacity_bytes)),\n            )\n\n        self._forget_ghost(key)\n        pressure = self.used_bytes + size - self.capacity_bytes\n        candidate_frequency = self.frequency.get(key, 1)\n        ghost_hit = in_ghost_probation or in_ghost_protected\n\n        if pressure > 0:\n            remaining = pressure\n            planned = []\n            for victim_key, victim_size in list(self.probation.items()) + list(self.protected.items()):\n                if remaining <= 0:\n                    break\n                victim_frequency = self.frequency.get(victim_key, 1)\n                if not ghost_hit and candidate_frequency <= victim_frequency:\n                    return []\n                planned.append(victim_key)\n                remaining -= victim_size\n            if remaining > 0:\n                return []\n        else:\n            planned = []\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._evict_one()\n            if victim is None:\n                return evicted\n            evicted.append(victim)\n\n        self.probation[key] = size\n        self.used_bytes += size\n        self._rebalance()\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R45-pair02-incumbent-call01-lock_contract_closure",
+    "duration_seconds": 67.238,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T19:51:08Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "023c5afa1dd5f92d2aa958bb7ae8121b86108f96ffeacd2369055cbb9ecf4e27",
+    "raw_events_path": "workspace\\model-calls\\R45-pair02-incumbent-call01-lock_contract_closure\\raw-events.jsonl",
+    "raw_events_sha256": "13039da4680d256ae26e172eba23d5ea3e68cb743762128cfc627cd78722784e",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "3c7b1473f5d46845670f626366682ad2bfd0c93fde764c3f0ceb8b16b671d358",
+    "returncode": 0,
+    "role": "R45 incumbent topology role contract-lock authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T19:50:01Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14358,
+      "output_tokens": 5294,
+      "reasoning_output_tokens": 4088
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

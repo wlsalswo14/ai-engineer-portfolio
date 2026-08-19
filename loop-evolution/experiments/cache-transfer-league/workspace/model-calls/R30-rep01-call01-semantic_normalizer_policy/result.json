@@ -1,0 +1,39 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = capacity_bytes\n        self.cache = OrderedDict()\n        self.used_bytes = 0\n        self.request_count = 0\n        self.hit_count = 0\n        self.miss_count = 0\n        self.eviction_count = 0\n\n    def _index_lookup(self, key):\n        return self.cache.get(key)\n\n    def _record_hit(self, key):\n        stored_size = self.cache.pop(key)\n        self.cache[key] = stored_size\n        self.hit_count += 1\n\n    def _remove_oldest(self):\n        old_key, old_size = self.cache.popitem(last=False)\n        self.used_bytes -= old_size\n        self.eviction_count += 1\n        return old_key\n\n    def _admit(self, key, size):\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            evicted.append(self._remove_oldest())\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n\n    def _reverse_admission(self, key, size, evicted):\n        self.cache.pop(key, None)\n        self.used_bytes -= size\n        for old_key in reversed(evicted):\n            old_size = self._removed_sizes[old_key]\n            self.cache[old_key] = old_size\n            self.used_bytes += old_size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self.request_count += 1\n        if key in self.cache:\n            self._record_hit(key)\n            return []\n\n        self.miss_count += 1\n        if size > self.capacity_bytes:\n            return []\n\n        self._removed_sizes = {}\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes and self.cache:\n            old_key, old_size = self.cache.popitem(last=False)\n            self._removed_sizes[old_key] = old_size\n            self.used_bytes -= old_size\n            self.eviction_count += 1\n            evicted.append(old_key)\n\n        self.cache[key] = size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R30-rep01-call01-semantic_normalizer_policy",
+    "duration_seconds": 22.582,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T07:43:15Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prompt_sha256": "a686c527cd235c12eb26a0d3d508b8130ac5c23a81cd3d614041e7bf7e595948",
+    "raw_events_sha256": "36e4722ac135d1aa90d15d931dcfb589db3b51909d72f5230aaf5c053d45be27",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "response_sha256": "be4343534bdd3e1880208e57eb846d28d672c4be1aa7e0e0a26ea2ad0c6cadb6",
+    "returncode": 0,
+    "role": "semantic-normal-form transducer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T07:42:52Z",
+    "tools_used": [],
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13089,
+      "output_tokens": 1053,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,108 @@
+Role: R73 incumbent topology role normative-source policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R73,
+matched pair 2, incumbent arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: emit_under_normative_visibility
+Role: normative-source policy authority
+Objective: Consume synthesize_cut_sources, directly reconcile its claims with the visible normative inputs, and emit one complete policy without reacquiring the cut generative sources.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "synthesize_cut_sources": {
+    "analysis_packet": {
+      "certificate": "The incumbent is an online, standard-library, byte-accounted two-segment recency/frequency policy with bounded ghost metadata. Its strongest evidence is interface legality, integer-key eviction reporting, capacity-preserving admission, and online adaptation through ghost hits. Its main heuristic risks are unverified target oscillation, frequency promotion of every resident hit, possible scan pollution, and limited phase-shift evidence. The proposed negative-authority change is a hypothesis only: it may expose previously withheld source distinctions, but without scores it cannot establish improvement. Normative contract obligations therefore bind the terminal more strongly than inherited or counter-generative performance claims.",
+      "witnesses": [
+        {
+          "claim": "Resident entries are removed and reinserted on access, promoting hits to the frequent segment.",
+          "support": "anchor_policy access and _remove_resident behavior"
+        },
+        {
+          "claim": "Ghost recency and ghost frequency hits adjust the recent-segment byte target.",
+          "support": "anchor_policy _adjust_target and ghost bookkeeping"
+        },
+        {
+          "claim": "Admission and eviction are bounded by capacity bytes, with oversized misses rejected and oversized resident updates removed.",
+          "support": "anchor_policy size checks and _make_room"
+        },
+        {
+          "claim": "Eviction reports keys removed from resident state, while ghost metadata remains nonresident.",
+          "support": "anchor_policy _evict_one and _remember_ghost"
+        },
+        {
+          "claim": "Performance claims about scan resistance, phase adaptation, and regret remain unverified because scores and traces are withheld.",
+          "support": "anchor_contract and task_constraints"
+        },
+        {
+          "claim": "The candidate causal change concerns evidence visibility and veto authority, not a validated cache-policy mechanism.",
+          "support": "candidate_hypothesis causal_change, expected_effect, and falsifier"
+        }
+      ],
+      "obligations": [
+        {
+          "priority": "binding",
+          "requirement": "Preserve the exact Policy constructor and access interface using only the Python standard library."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Operate online one access at a time without benchmark paths, hidden traces, oracle decisions, external libraries, networking, subprocesses, or score-derived adaptation."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Return only unique integer keys that are currently cached and evicted by the request."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Never exceed capacity_bytes, including zero, negative, oversized, and variable-size requests."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Treat the incumbent and candidate hypothesis as evidence to reconcile, not as authority to introduce unsupported commitments."
+        },
+        {
+          "priority": "binding",
+          "requirement": "Preserve explicit conflicts between heuristic evidence and normative legality; normative obligations control unresolved conflicts."
+        }
+      ],
+      "exact_actions": [
+        "Expose the incumbent's supported behavioral distinctions and the candidate visibility hypothesis to the terminal through analysis claims only.",
+        "Mark all score-free performance expectations as tentative and reject them as sufficient evidence for a design commitment.",
+        "Require the terminal to verify interface legality, online-only operation, current-cache eviction reporting, uniqueness, and byte-capacity safety independently.",
+        "Preserve the distinction between resident state, ghost evidence, heuristic segment targeting, and normative contract requirements.",
+        "Do not emit policy source, a patch, a diff, an alternative policy, or a ranked selection."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R72 champion policy anchor",
+    "artifact_sha256": "eb2c43095398056b554abd9f9a4de9781433e2674a326873a8634357c07ff01b",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  }
+}

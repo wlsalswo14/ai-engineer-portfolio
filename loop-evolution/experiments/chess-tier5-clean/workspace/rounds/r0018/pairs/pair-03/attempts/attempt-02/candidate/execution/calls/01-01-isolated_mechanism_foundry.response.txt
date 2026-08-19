@@ -1,0 +1,139 @@
+Artifact: one standalone `forcing_frontier.py` component. The managed read-only sandbox rejected file creation and Python execution, so traces below are statically derived and marked unexecuted.
+
+```python
+import json
+import sys
+
+INF = 10**9
+
+
+class ForcingFrontier:
+    def __init__(self, max_nodes=128, max_plies=8):
+        if type(max_nodes) is not int or max_nodes < 1:
+            raise ValueError("max_nodes must be positive")
+        if type(max_plies) is not int or max_plies < 0:
+            raise ValueError("max_plies must be non-negative")
+        self.max_nodes = max_nodes
+        self.max_plies = max_plies
+
+    def analyze(self, state):
+        self._validate(state)
+        self.nodes = 0
+        self.node_limited = False
+        self.ply_limited = False
+        self.trace = []
+        score, action = self._visit(state, 0)
+        return {
+            "score": score,
+            "best_action": action,
+            "nodes": self.nodes,
+            "node_limited": self.node_limited,
+            "ply_limited": self.ply_limited,
+            "trace": self.trace,
+        }
+
+    @classmethod
+    def _validate(cls, state):
+        if not isinstance(state, dict) or type(state.get("static")) is not int:
+            raise TypeError("state.static must be an integer")
+        if type(state.get("forced", False)) is not bool:
+            raise TypeError("state.forced must be boolean")
+        actions = state.get("actions", [])
+        if not isinstance(actions, list):
+            raise TypeError("state.actions must be a list")
+        ids = set()
+        for a in actions:
+            if not isinstance(a, dict):
+                raise TypeError("actions must be records")
+            ident = a.get("id")
+            if not isinstance(ident, str) or not ident or ident in ids:
+                raise ValueError("action ids must be unique strings")
+            ids.add(ident)
+            if type(a.get("forcing")) is not bool:
+                raise TypeError("action.forcing must be boolean")
+            cls._validate(a["child"])
+
+    def _visit(self, state, depth):
+        tag = state.get("id", "?")
+        if self.nodes >= self.max_nodes:
+            self.node_limited = True
+            self.trace.append({"state": tag, "depth": depth,
+                               "event": "node-boundary"})
+            return state["static"], None
+
+        self.nodes += 1
+        if depth >= self.max_plies:
+            self.ply_limited = True
+            self.trace.append({"state": tag, "depth": depth,
+                               "event": "ply-boundary"})
+            return state["static"], None
+
+        actions = [a for a in state.get("actions", []) if a["forcing"]]
+        actions.sort(key=lambda a: a["id"])
+
+        if not actions:
+            self.trace.append({
+                "state": tag, "depth": depth, "event": "frontier",
+                "score": state["static"], "best_action": None
+            })
+            return state["static"], None
+
+        best = -INF if state.get("forced", False) else state["static"]
+        best_action = None
+
+        for action in actions:
+            if self.nodes >= self.max_nodes:
+                self.node_limited = True
+                break
+            child_score, _ = self._visit(action["child"], depth + 1)
+            score = -child_score
+            if best_action is None or score > best:
+                best = score
+                best_action = action["id"]
+
+        if best_action is None:
+            best = state["static"]
+
+        self.trace.append({
+            "state": tag, "depth": depth, "event": "forcing",
+            "score": best, "best_action": best_action
+        })
+        return best, best_action
+
+
+def main():
+    request = json.load(sys.stdin)
+    result = ForcingFrontier(
+        request.get("max_nodes", 128),
+        request.get("max_plies", 8)
+    ).analyze(request["state"])
+    print(json.dumps(result, sort_keys=True, separators=(",", ":")))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Interface: input state records contain integer `static`, boolean `forced`, and action records `{id, forcing, child}`. Output contains the selected forcing action, negamax score, node/ply-bound flags, and deterministic trace.
+
+Causal prediction: forcing-only negamax with forced-state handling stabilizes tactical frontiers that static evaluation misses, while leaving quiet/null states unchanged.
+
+Falsifier: reject if the tactic fixture does not select `tactic`, the null fixture changes its static score, repeated runs differ, or node count exceeds `max_nodes`.
+
+Expected fixture traces:
+
+- Predicted effect: `score=100`, `best_action="tactic"`, `nodes=3`.
+- Null case: `score=17`, `best_action=null`, `nodes=1`.
+- Ply boundary: `score=0`, `ply_limited=true`.
+- Forced terminal: `score=-40`, `best_action=null`.
+- Work bound: `nodes=4`, `node_limited=true`.
+
+Execution command:
+
+```text
+python forcing_frontier.py <request.json
+```
+
+Integration invariants: preserve the anchor outside the quiescence adapter; pass static scores from side-to-move perspective; graft only the demonstrated forcing/forced semantics; retain lexical tie ordering, input immutability, and node/ply bounds.
+
+Memory upload also failed because the managed sandbox rejected all shell/network execution.

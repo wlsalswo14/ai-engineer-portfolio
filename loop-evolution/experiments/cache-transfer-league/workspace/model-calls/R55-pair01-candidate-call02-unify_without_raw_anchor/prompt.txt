@@ -1,0 +1,115 @@
+Role: R55 candidate topology role anchor-mediated unitary policy authority
+
+Execute exactly one gpt-5.6-luna high inner-loop role in Cache display R55,
+matched pair 1, candidate arm. This pipeline is independent: no other arm,
+pair, artifact, evaluator result, benchmark content, or official score is
+visible. Use only the inline inputs. Do not use tools, inspect files, search,
+sample, branch, vote, run best-of-N, retry a policy design, or ask another agent.
+
+Both arms are bound to the same immutable current champion anchor, task, generic
+constraints, and score-blind improvement hypothesis. Execute this arm's topology
+exactly; do not redesign it or substitute a model or artifact.
+
+Role id: unify_without_raw_anchor
+Role: anchor-mediated unitary policy authority
+Objective: Consume map_counter_assumptions, adjudicate its inherited-policy evidence against the directly visible task, contract, constraints, hypothesis, and loop structure, and emit one complete policy under undivided authority.
+Output kind: policy
+
+Return one strict JSON object and no prose:
+{"policy_source":"complete contents of policy.py","artifact_kind":"single_policy"}
+The source must be complete, deterministic, online-only, standard-library-only,
+and define class Policy with __init__(capacity_bytes) and access(key, size, now).
+Return the one policy lineage only: no diff, variants, benchmark data, evaluator
+constants, trace recognition, tuning sweep, voting, or ranked selection.
+
+Visible inputs fixed by this topology:
+{
+  "map_counter_assumptions": {
+    "analysis_packet": {
+      "certificate": "Nonbinding source-preserving analysis: the inherited anchor is evidence to inspect, not authorization; its score is withheld, and the stated causal hypothesis remains unverified.",
+      "witnesses": [
+        "Task: requires an online standard-library Policy interface and optimization across hit rate, scan resistance, adaptation, and regret while forbidding oracle or evaluator access.",
+        "Anchor policy: implements byte-aware two-segment recency with ghost histories and an adaptive target; it ignores now and contains no external visibility.",
+        "Anchor contract and constraints: require interface legality, capacity safety, online-only visibility, unique currently cached integer evictions, and no score-based claims.",
+        "Candidate hypothesis: asserts that removing the direct anchor edge should force mediated consideration, but its expected effect is architectural rather than evidence of policy quality.",
+        "Loop structure: the mapper sees the raw anchor, while the terminal authority sees only this analysis plus the other common inputs; the mapper is nonbinding and cannot authorize an artifact."
+      ],
+      "obligations": [
+        "Preserve the distinction between inherited implementation evidence, normative task requirements, contract constraints, speculative hypothesis, and topology structure.",
+        "Report unresolved tension between preserving anchor-derived evidence and preventing the terminal authority from bypassing defeasible mediation.",
+        "Avoid inferring quality, superiority, falsification, or score effects because scores and benchmark evidence are unavailable.",
+        "Do not create, select, modify, or authorize a policy artifact."
+      ],
+      "exact_actions": [
+        "Classify the anchor's observable mechanisms and compliance-relevant properties without treating them as directives.",
+        "Identify that the hypothesis is unvalidated and cannot override task, contract, or constraints.",
+        "Emit only this nonbinding analysis for downstream adjudication."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "task": "# Candidate Task: Cache Policy\n\nWrite `policy.py` using only the Python standard library.\n\n```python\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        ...\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        \"\"\"\n        Process one object request and return the keys evicted by this request.\n        \"\"\"\n```\n\nThe evaluator owns the authoritative cache state. Your policy should return only\nkeys that are currently cached and should never exceed `capacity_bytes`.\n\nOptimize for:\n\n- object hit rate;\n- byte hit rate;\n- scan resistance;\n- phase-shift adaptation;\n- regret against an offline optimum.\n\nDo not copy, import, invoke, inspect, or adapt evaluator-side reference\nimplementations, hidden traces, oracle decisions, benchmark source paths, or\nexternal cache libraries. Do not use networking, subprocesses, or non-stdlib\npackages.\n",
+  "anchor_contract": {
+    "artifact_kind": "immutable display-R54 champion policy anchor",
+    "artifact_sha256": "ec1ccb464a5e08c51726868594c64fb5e3c6de895d8e852c00ea7d4c5741dc6c",
+    "score_information": "withheld",
+    "required_comparison": "preserve interface legality, capacity safety, and online-only visibility"
+  },
+  "task_constraints": {
+    "standard_library_only": true,
+    "online_one_access_at_a_time": true,
+    "must_return_only_currently_cached_unique_integer_keys": true,
+    "must_never_exceed_capacity": true,
+    "no_benchmark_paths_trace_hardcoding_or_oracle_adaptation": true,
+    "no_scores_available": true,
+    "one_final_policy_only": true
+  },
+  "candidate_hypothesis": {
+    "causal_change": "Remove only the direct anchor_policy-to-terminal edge, making the source-preserving analysis the sole path for inherited-policy evidence while retaining direct terminal visibility of every other common input.",
+    "expected_effect": "The terminal authority should weigh inherited-policy evidence only after mediation while preserving independent access to governing evidence and sole responsibility for the final policy.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The terminal call can bypass the defeasible framing because it receives anchor_policy both directly and indirectly through the counter-assumption analysis."
+  },
+  "loop_structure": {
+    "final_call_id": "unify_without_raw_anchor",
+    "information_flow": "The first call receives every common input and emits a source-distinguished non-policy analysis. The final call consumes that analysis and directly receives task, anchor_contract, task_constraints, candidate_hypothesis, and loop_structure, but not anchor_policy; inherited-policy evidence therefore reaches the final call only through the immediate analysis edge.",
+    "name": "Selective Anchor Mediation",
+    "organization": "two-call sequential lineage with asymmetric terminal evidence visibility and one unitary policy authority",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "map_counter_assumptions",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+            "output_type": "analysis",
+            "role": "defeasible counter-assumption mapper"
+          },
+          {
+            "id": "unify_without_raw_anchor",
+            "inputs": [
+              "map_counter_assumptions",
+              "task",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Consume map_counter_assumptions, adjudicate its inherited-policy evidence against the directly visible task, contract, constraints, hypothesis, and loop structure, and emit one complete policy under undivided authority.",
+            "output_type": "policy",
+            "role": "anchor-mediated unitary policy authority"
+          }
+        ],
+        "id": "selective_anchor_mediation_lineage",
+        "mode": "sequential"
+      }
+    ]
+  }
+}

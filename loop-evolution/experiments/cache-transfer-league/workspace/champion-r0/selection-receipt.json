@@ -1,0 +1,39 @@
+{
+  "artifact_sha256": "294fb24343b8694d908efd6141fad01df3eb5543af329f7f473c0abbace03a60",
+  "close_confirmation": {
+    "passed": true,
+    "threshold": 0.25,
+    "triggered": false
+  },
+  "display_round": 0,
+  "display_source_round": 20,
+  "eligible_order": [
+    20,
+    26,
+    24
+  ],
+  "evaluation_batch_path": "workspace\\evaluation\\evaluation-batch.json",
+  "evaluation_batch_sha256": "9b82fb0c264967ac75f43bb23d36e879103229a2c5e08ebd5eaa1deb72720978",
+  "fallback_to_anchor": false,
+  "pre_evaluation_seal_path": "workspace\\pre-evaluation-seal.json",
+  "pre_evaluation_seal_sha256": "ac910f65640d783eb4dc1163b1afc90345bc4e2d4fe1ce3ac3155e492f6967f6",
+  "representative": 1,
+  "schema_version": 1,
+  "score": 82.0738,
+  "selected_at": "2026-08-09T07:56:49Z",
+  "selection_contract": {
+    "eligibility": "all-three-representatives-valid-and-replay2-deterministic",
+    "no_eligible_fallback": "shared-lru-anchor-if-valid",
+    "primary": "highest-median-score",
+    "representative": "median-ranked-valid-artifact-then-lexicographically-smallest-artifact-sha256",
+    "tie_breaks": [
+      "highest-minimum-representative-score",
+      "highest-mean-representative-score",
+      "lowest-display-source-round"
+    ]
+  },
+  "source_artifact_path": "workspace\\bootstrap\\R20\\rep-01\\artifact\\policy.py",
+  "source_seal_path": "workspace\\bootstrap\\R20\\rep-01\\seal.json",
+  "source_seal_sha256": "8fb06ddf3d5207f83b2ca66cd30352d5791b159fb034b83d698420447aed8058",
+  "status": "provisional-bootstrap-champion"
+}

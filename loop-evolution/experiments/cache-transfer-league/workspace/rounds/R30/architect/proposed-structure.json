@@ -1,0 +1,42 @@
+{
+  "final_call_id": "negative_edge_policy_authority",
+  "information_flow": "The first call forms and passes one complete executable closure. The second call receives that artifact with the same public external evidence as the champion, but the handoff confers no positive semantic authority: predecessor semantics serve only as disconfirming evidence while the terminal call independently grounds and emits one policy.",
+  "name": "Negative-Authority Executable Relay",
+  "organization": "two-call sequential lineage joined by one unconditional negative-authority predecessor edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_visible_executable_closure",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form exactly one complete executable policy closure from the supplied evidence, justify its semantics against the public obligations, remove construction provenance from the handoff, and pass the complete artifact forward.",
+          "output_type": "executable_policy_closure",
+          "role": "executable semantic closure former"
+        },
+        {
+          "id": "negative_edge_policy_authority",
+          "inputs": [
+            "form_visible_executable_closure",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume the immediately preceding complete executable closure as disconfirming evidence without treating any predecessor commitment as a default. Independently ground exactly one complete policy in the other visible task, contract, constraint, hypothesis, and loop evidence, then emit it.",
+          "output_type": "policy",
+          "role": "negative-edge independent policy authority"
+        }
+      ],
+      "id": "negative_authority_relay",
+      "mode": "sequential"
+    }
+  ]
+}

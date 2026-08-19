@@ -1,0 +1,70 @@
+{
+  "final_call_id": "certified_rollback_integrator",
+  "information_flow": "One producer creates a single provisional engine. A non-authoring verifier compares it with the anchor, reproduces failures, and uses reversible delta rollbacks solely as causal interventions to emit either a no-failure certificate or exact rollback certificates. The final integrator emits the provisional engine unchanged when certified clean; otherwise it applies only certified rollbacks, replays their bounded obligations, and falls back to the exact champion engine if a prescribed rollback cannot be applied or replayed safely.",
+  "name": "Causally Attributed Exact-Rollback Integrator",
+  "organization": "collaboration",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "provisional_builder",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "champion_metrics",
+            "state_capsule",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Starting from the champion anchor, execute one continuous champion-style improvement trajectory and emit exactly one complete legal UCI provisional engine. Do not generate alternative engines, replicate attempts, or select among candidates.",
+          "output_type": "engine",
+          "role": "provisional engine producer"
+        }
+      ],
+      "id": "construct",
+      "mode": "sequential"
+    },
+    {
+      "calls": [
+        {
+          "id": "causal_attributor",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "champion_metrics",
+            "provisional_builder",
+            "state_capsule",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Inspect and execute the realized provisional engine, reproduce a bounded set of concrete legality, protocol, regression, and search failures, and compare its source with the champion. For each reproduced failure, use exact reversible A-B-A rollback interventions on implicated changed deltas to determine whether removal closes the witness and restoration reopens it. Emit a bounded analysis packet containing executable witnesses, preservation obligations, and exact certified rollback deltas, or a no-failure certificate. Intervention artifacts are diagnostic counterfactuals only and must not be scored or selected as candidate engines.",
+          "output_type": "analysis",
+          "role": "independent terminal falsifier and delta attributor"
+        }
+      ],
+      "id": "attribute",
+      "mode": "sequential"
+    },
+    {
+      "calls": [
+        {
+          "id": "certified_rollback_integrator",
+          "inputs": [
+            "task",
+            "champion_engine",
+            "champion_metrics",
+            "provisional_builder",
+            "causal_attributor",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Emit one complete legal UCI engine. If the verifier issued a no-failure certificate, emit the provisional engine unchanged. Otherwise apply only the verifier's exact certified rollback deltas, without inventing repairs or modifying unrelated code, and replay the packet's witnesses and preservation obligations. Emit the resulting engine only if every replay passes; if attribution is incomplete, an exact rollback cannot be applied, or replay fails, emit the exact champion anchor engine.",
+          "output_type": "engine",
+          "role": "constrained final engine emitter"
+        }
+      ],
+      "id": "emit",
+      "mode": "sequential"
+    }
+  ]
+}

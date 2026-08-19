@@ -1,0 +1,42 @@
+{
+  "final_call_id": "reconcile_continuous_authority",
+  "information_flow": "The first call receives all common evidence and emits one complete executable policy state with no frozen semantic partition. The terminal call consumes that state with public non-anchor evidence, retains predecessor continuity, exercises end-to-end revision authority without nullification, and emits one policy.",
+  "name": "Revocable Whole-Artifact Continuity Relay",
+  "organization": "two-call sequential lineage with one continuously revisable executable-state handoff",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "form_revocable_policy_state",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Form exactly one complete executable policy state from the supplied evidence, keep contract-facing and behavioral semantics jointly revocable, and pass the complete state forward.",
+          "output_type": "executable_policy_state",
+          "role": "provisional whole-artifact authority"
+        },
+        {
+          "id": "reconcile_continuous_authority",
+          "inputs": [
+            "form_revocable_policy_state",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume form_revocable_policy_state and the supplied public evidence, preserve executable lineage continuity, reconcile all policy semantics under the public contract without nullifying predecessor authority, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "terminal end-to-end reconciliation authority"
+        }
+      ],
+      "id": "revocable_continuity_relay",
+      "mode": "sequential"
+    }
+  ]
+}

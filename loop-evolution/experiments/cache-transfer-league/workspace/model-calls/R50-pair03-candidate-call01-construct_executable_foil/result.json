@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self.used_bytes = 0\n        self.target_t1 = self.capacity_bytes // 2\n        self.ghost_limit = 4096\n\n    def _remember(self, ghost, key):\n        ghost.pop(key, None)\n        ghost[key] = None\n        while len(ghost) > self.ghost_limit:\n            ghost.popitem(last=False)\n\n    def _forget(self, key):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n\n    def _evict_t1(self):\n        if not self.t1:\n            return None\n        key, size = self.t1.popitem(last=False)\n        self.t1_bytes -= size\n        self.used_bytes -= size\n        self._remember(self.b1, key)\n        return key\n\n    def _evict_t2(self):\n        if not self.t2:\n            return None\n        key, size = self.t2.popitem(last=False)\n        self.t2_bytes -= size\n        self.used_bytes -= size\n        self._remember(self.b2, key)\n        return key\n\n    def _replace(self, from_b2=False):\n        if self.t1 and (self.t1_bytes > self.target_t1 or (from_b2 and self.t1_bytes == self.target_t1)):\n            return self._evict_t1()\n        if self.t2:\n            return self._evict_t2()\n        return self._evict_t1()\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.t1:\n            stored_size = self.t1.pop(key)\n            self.t1_bytes -= stored_size\n            self.t2[key] = stored_size\n            self.t2_bytes += stored_size\n            return []\n\n        if key in self.t2:\n            stored_size = self.t2.pop(key)\n            self.t2[key] = stored_size\n            return []\n\n        if size <= 0 or self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        step = max(1, min(size, self.capacity_bytes))\n        from_b2 = key in self.b2\n        if key in self.b1:\n            self.target_t1 = min(self.capacity_bytes, self.target_t1 + step)\n        elif from_b2:\n            self.target_t1 = max(0, self.target_t1 - step)\n        self._forget(key)\n\n        evicted = []\n        while self.used_bytes + size > self.capacity_bytes:\n            victim = self._replace(from_b2)\n            if victim is None:\n                break\n            evicted.append(victim)\n\n        self.t1[key] = size\n        self.t1_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R50-pair03-candidate-call01-construct_executable_foil",
+    "duration_seconds": 43.222,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T20:28:06Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "cd681043105eee70cec1f195c87231122be0648ac58f519bcfc75154693bca0c",
+    "raw_events_path": "workspace\\model-calls\\R50-pair03-candidate-call01-construct_executable_foil\\raw-events.jsonl",
+    "raw_events_sha256": "65f93dbff0ce67379d477f85d0021196e8a4fc5438a93b05220a48fe6d1a04d7",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "34dfa17f04690ec2e79dc73596cb89680ce12d30b92e152e162b04e8f03b882d",
+    "returncode": 0,
+    "role": "R50 candidate topology role executable-foil authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T20:27:23Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14360,
+      "output_tokens": 3341,
+      "reasoning_output_tokens": 2588
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

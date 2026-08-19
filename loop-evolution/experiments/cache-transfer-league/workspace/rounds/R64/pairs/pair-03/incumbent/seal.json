@@ -1,0 +1,34 @@
+{
+  "arm": "incumbent",
+  "artifact_bytes": 3685,
+  "artifact_path": "workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\artifact\\policy.py",
+  "artifact_sha256": "ece3d6c5418695d27952c09d8db20e1e2492bb7c070695bf7a8dc4694632d252",
+  "display_round": 64,
+  "frozen_evaluation_known_at_seal": false,
+  "generation_manifest_path": "workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\generation-manifest.json",
+  "generation_manifest_sha256": "439f73becbbe98040ba53acb5742e76e44025e75bed59a1d67f1c1ee1c1c37d7",
+  "label": "pair-03-incumbent",
+  "model_receipts": [
+    {
+      "path": "workspace\\model-calls\\R64-pair03-incumbent-call01-synthesize_cut_sources\\final-receipt.json",
+      "sha256": "5971d6d1abde34c9fa1f4e2d99a8f8d3d84fdfcd76ad7df1abe9ef91d02ad60a"
+    },
+    {
+      "path": "workspace\\model-calls\\R64-pair03-incumbent-call02-emit_under_normative_visibility\\final-receipt.json",
+      "sha256": "d11ce318e911483b6b755d209b5c2f347285000748d15cf2078ad0ef3960f60a"
+    }
+  ],
+  "official_score_known_at_seal": false,
+  "pair": 3,
+  "preseal_generic_validity": {
+    "errors": [
+      "generic_runtime_returncode:1:Traceback (most recent call last):\n  File \"<string>\", line 45, in <module>\n    first = [replay(*case) for case in cases]\n             ~~~~~~^^^^^^^\n  File \"<string>\", line 25, in replay\n    evicted = policy.access(key,size,now)\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\artifact\\policy.py\", line 91, in access\n    return self._trim()\n           ~~~~~~~~~~^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\rounds\\R64\\pairs\\pair-03\\incumbent\\artifact\\policy.py\", line 50, in _trim\n    self._protected_bytes -= entry[0]\n                             ~~~~~^^^\nTypeError: 'NoneType' object is not subscriptable\n"
+    ],
+    "official_static_reject": null,
+    "runtime": {},
+    "source_bytes": 3685,
+    "valid": false
+  },
+  "schema_version": 1,
+  "sealed_at": "2026-08-09T22:23:37Z"
+}

@@ -1,0 +1,29 @@
+{
+  "analysis_packet": {
+    "certificate": "The terminal policy must preserve the required interface and online-only legality while prioritizing adaptive, scan-resistant retention under changing workloads; safety obligations are absolute, while implementation choices remain open to the sole downstream author.",
+    "exact_actions": [
+      "Treat contract legality and capacity safety as non-negotiable acceptance conditions.",
+      "Use the anchor behavior as evidence of relevant tradeoffs, not as a required representation or source artifact.",
+      "Resolve the retention tradeoff between recency, repeated hits, byte efficiency, scan resistance, and phase adaptation before selecting implementation structures.",
+      "Prefer general online signals and bounded state over trace-specific assumptions.",
+      "Create the sole complete policy only in the terminal instantiation stage, using this charter as its entire evidence base."
+    ],
+    "obligations": [
+      "Maintain the exact Policy constructor and access interface.",
+      "Process one access at a time using only information available online.",
+      "Account for object sizes and enforce the byte-capacity limit, including zero, nonpositive, and oversized requests.",
+      "Return only keys that are currently cached, with no duplicates.",
+      "Balance frequent-object protection against scan pollution and retain useful behavior across workload phase shifts.",
+      "Use standard-library facilities only and avoid evaluator implementation access, hidden-trace inference, benchmark hardcoding, oracle adaptation, networking, subprocesses, and external packages.",
+      "Materialize exactly one final policy downstream; this stage must remain analysis-only."
+    ],
+    "witnesses": [
+      "The task requires object-hit rate, byte-hit rate, scan resistance, phase-shift adaptation, and low regret against offline optimum.",
+      "The contract requires returning only currently cached unique integer keys and never exceeding capacity_bytes.",
+      "The anchor maintains separate probationary and protected populations with ghost histories, exposing tensions between recency, repeated-use protection, scan resistance, and adaptive partitioning.",
+      "The candidate hypothesis identifies inherited representation as a possible source of premature anchoring and proposes resolving evidence tradeoffs before artifact materialization.",
+      "Scores and benchmark traces are unavailable, so no empirical ranking or trace-specific conclusion is justified."
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

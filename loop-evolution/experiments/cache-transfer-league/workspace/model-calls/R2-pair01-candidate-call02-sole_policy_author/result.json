@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.used_bytes = 0\n        self.protected_bytes = 0\n        self.protected_target = self.capacity_bytes // 2\n        self.step = max(1, self.capacity_bytes // 8)\n        self.ghost_limit = 4096\n\n    def _forget_ghost(self, key):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n\n    def _remember_ghost(self, key, protected):\n        self._forget_ghost(key)\n        ghosts = self.ghost_protected if protected else self.ghost_probation\n        ghosts[key] = None\n        while len(ghosts) > self.ghost_limit:\n            ghosts.popitem(last=False)\n\n    def _demote(self):\n        while len(self.protected) > 1 and self.protected_bytes > self.protected_target:\n            key, size = self.protected.popitem(last=False)\n            self.protected_bytes -= size\n            self.probation[key] = size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            self._demote()\n            return []\n\n        item_size = max(0, int(size))\n        recent_ghost = key in self.ghost_probation\n        protected_ghost = key in self.ghost_protected\n\n        if item_size > self.capacity_bytes or self.capacity_bytes == 0:\n            self._forget_ghost(key)\n            return []\n\n        if recent_ghost:\n            self.protected_target = min(\n                self.capacity_bytes, self.protected_target + self.step\n            )\n        elif protected_ghost:\n            self.protected_target = max(0, self.protected_target - self.step)\n        self._forget_ghost(key)\n        self._demote()\n\n        evicted = []\n        while self.used_bytes + item_size > self.capacity_bytes:\n            if self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n                self._remember_ghost(old_key, False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n                self._remember_ghost(old_key, True)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n\n        if self.used_bytes + item_size <= self.capacity_bytes:\n            self.probation[key] = item_size\n            self.used_bytes += item_size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R2-pair01-candidate-call02-sole_policy_author",
+    "duration_seconds": 78.562,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T08:42:03Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "3c9c172b5324e8159fa7519fa99be1726d259351d5b27c4198cdbfaadd9882bf",
+    "raw_events_path": "workspace\\model-calls\\R2-pair01-candidate-call02-sole_policy_author\\raw-events.jsonl",
+    "raw_events_sha256": "c7ecf966ce21952577e10af4c394d4b152887e743f1102a7d2cc303c76c74315",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 2,
+    "response_sha256": "7d183db3342401cef1e79ed952bf2e5b38d21ebdccd8e828a1f5d4a122a8b514",
+    "returncode": 0,
+    "role": "R2 candidate topology role evidence-bound policy author",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T08:40:44Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14411,
+      "output_tokens": 4180,
+      "reasoning_output_tokens": 3427
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

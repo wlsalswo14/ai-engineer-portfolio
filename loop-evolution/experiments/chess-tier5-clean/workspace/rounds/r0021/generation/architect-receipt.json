@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "attempt": 1,
+  "agent_role": "structural_architect",
+  "proposal_policy": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "max",
+    "agent_mode": "independent_subagent",
+    "auth_mode": "codex_subscription",
+    "allow_paid_api": false,
+    "allow_model_fallback": false,
+    "sandbox": "read-only",
+    "max_model_calls": 1,
+    "max_tokens": 120000,
+    "max_wall_seconds": 1800,
+    "codex_executable": "codex.cmd"
+  },
+  "proposal_policy_sha256": "635f29bc92d9e1d7ff6d31ab49f6e9ff4b5928d0ca8f79f544c84cbe6ca0ce31",
+  "execution_provenance": "collaboration_subagent_direct_contingency",
+  "official_codex_backend_invoked": false,
+  "delegated_subagent_receipt_path": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\chess-tier5-clean\\workspace\\manual-proposals\\r0021\\subagent-receipt.json",
+  "delegated_subagent_receipt_sha256": "eb367c1f3d36b13c8129f0a5ee6d6f361bc1ffdbf8c792b7a350a5e40b6ba189",
+  "prompt_sha256": null,
+  "response_sha256": "501ca434ab7908b9796e5d1770b9fdc7361e770997674e4db56439ee88127f41",
+  "usage": {
+    "input_tokens": 0,
+    "cached_input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_output_tokens": 0,
+    "model_calls": 0
+  },
+  "trace_refs": [
+    "collaboration-subagent:gpt-5.6-sol:max"
+  ],
+  "validation": {
+    "passed": true,
+    "mode_source": "workspace/state.json proposal_mode and STATE_CAPSULE.search_control.proposal_mode",
+    "expected_mode": "emergent_exploration",
+    "state_mode": "emergent_exploration",
+    "capsule_mode": "emergent_exploration",
+    "loader": "LoopPlan.from_payload(payload, expected_mode='emergent_exploration')",
+    "loader_result": "passed",
+    "search_context_check": "plan.validate_search_context(current_capsule)",
+    "search_context_result": "passed",
+    "validated_capsule_file_sha256": "7bd8e1bd9929cbda47d5b39d5ad083db5e243cf8cf49d6f28af93075716131f2",
+    "normalized_payload_matches_file": true,
+    "declared_structure_id_matches_recomputed": true,
+    "validated_structure_id": "loop_9119ae8b813d3665",
+    "validated_call_count": 4,
+    "validated_organization": "collaboration",
+    "validated_stage_ids": [
+      "single_seam_rehearsed_component",
+      "consumer_originated_query",
+      "single_causal_query_resolution",
+      "single_dialogue_resolved_graft"
+    ],
+    "validated_call_ids": [
+      "seam_rehearsed_component_foundry",
+      "integration_question_compiler",
+      "component_binding_resolver",
+      "dialogue_resolved_grafting_engine"
+    ],
+    "validated_output_types": [
+      "analysis",
+      "analysis",
+      "analysis",
+      "engine"
+    ],
+    "validated_final_call_id": "dialogue_resolved_grafting_engine",
+    "single_engine_producing_call": true,
+    "runtime_call_budget_respected": true,
+    "active_development_lineage_required": false,
+    "emergent_schema_fields_complete": true,
+    "capability_family_nonempty": true,
+    "capability_family_unique_in_full_structure_metadata_history": true,
+    "previously_seen_structure_id": false,
+    "exact_two_target_files": true,
+    "pre_staging_repository_observation": {
+      "file_count": 4452,
+      "sha256": "98b311162406f24e6e77c3310ce63f90bdff69a596b4c4af98e18e0388e37aeb"
+    },
+    "immutability_scope": "this subagent's write set, the r0021 staging directory, and protected live campaign/state/champion/round/benchmark paths",
+    "concurrent_external_activity": "The supervising agent confirmed that a separate cache campaign wrote 125 unrelated files elsewhere in the repository during staging; those external writes are not attributed to this subagent and are excluded from the path-scoped write-set audit."
+  }
+}

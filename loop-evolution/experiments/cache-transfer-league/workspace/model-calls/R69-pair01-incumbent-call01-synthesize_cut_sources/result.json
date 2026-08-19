@@ -1,0 +1,70 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "The anchor is interface-legal and online, but its behavior is an adaptive two-segment recency/frequency cache: resident hits are removed and promoted to frequent, ghost hits adjust the recent target and re-enter frequent, misses enter recent, and eviction records bounded ghost evidence. Any successor must preserve exact capacity accounting, current-resident-only unique integer evictions, oversized-object handling, and standard-library/online-only operation. The proposed source-class cut can improve executable continuity only if this analysis preserves the anchor's complete behavioral commitments and explicitly resolves their edge cases; it cannot rely on the terminal call to recover omitted generative details.",
+      "exact_actions": [
+        "Transfer the anchor's state model, transition order, and edge-case semantics into the final implementation as an explicit behavioral specification before emitting code.",
+        "Maintain separate ordered resident segments and ghost segments, byte totals, total resident usage, adaptive recent-target state, and bounded ghost metadata; update every counter on every transition.",
+        "For each access, normalize key and size, check residents before ghosts, remove/reconcile an existing resident before replacement, handle oversized cases before admission, adjust the target only on ghost re-reference, make room before insertion, and then admit exactly once.",
+        "Use only resident eviction operations to populate the returned list; record evicted entries in the matching ghost class, remove ghost duplicates before insertion, and trim ghosts by oldest serial/metadata while keeping byte and count limits valid.",
+        "Preserve the source-class cut by supplying behavioral commitments and conflict annotations only; do not emit Python, pseudo-code, a patch, alternative policies, rankings, or score claims."
+      ],
+      "obligations": [
+        "Emit one complete Policy artifact implementing the required constructor and access signatures using only the Python standard library.",
+        "Process exactly one access at a time using only current request data and internal state; do not inspect traces, evaluator state, benchmark paths, oracle decisions, external libraries, networking, or subprocesses.",
+        "Never let resident byte usage exceed nonnegative capacity, including replacement, zero-sized objects, capacity zero, and objects larger than capacity.",
+        "Return only unique integer keys that were resident before or during the current request and are actually evicted by that request; do not report ghost-only keys, nonexistent keys, or duplicates.",
+        "Keep resident and ghost accounting mutually consistent whenever keys move, are replaced, evicted, re-referenced, or trimmed; preserve deterministic behavior and bounded ghost memory.",
+        "Treat an oversized miss as noncached with no eviction; treat an oversized resident replacement as removal/reporting of the resident key without admitting the oversized object.",
+        "Preserve the inherited adaptive distinctions between recent and frequent evidence unless a change is explicitly justified by the counter-generative evidence; no score-blind redesign is warranted.",
+        "Ensure all branches terminate with a legal list[int] result and do not depend on unavailable upstream source visibility."
+      ],
+      "witnesses": [
+        "Inherited evidence: use separate recent and frequent resident orders with byte counters, bounded recent/frequent ghost histories, adaptive recent_target, and deterministic oldest-first eviction within the selected segment.",
+        "Inherited evidence: on a resident hit, remove the old resident accounting, reject an oversized replacement with that key reported as evicted, otherwise make room and promote the key to frequent.",
+        "Inherited evidence: on a miss larger than capacity, cache nothing and return no evictions; on a fitting miss, evict until the post-insertion byte total is safe, then insert into recent unless ghost evidence classifies it as a re-reference.",
+        "Counter-generative evidence: unconditional promotion of every resident hit to frequent may reduce scan resistance and can retain one-hit scan objects after promotion; adaptive ghost feedback may also be distorted by size-weighted ratios and zero-byte entries.",
+        "Counter-generative evidence: the terminal emitter has no direct anchor or hypothesis visibility, so compressed or ambiguous analysis would force behavioral reconstruction and risk changing phase adaptation, scan resistance, or eviction legality.",
+        "Supporting distinction: normative correctness is independent of hit-rate quality; capacity safety and legal eviction output are hard obligations, while recency/frequency balance, ghost adaptation, and regret are heuristic objectives with no available score evidence."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R69-pair01-incumbent-call01-synthesize_cut_sources",
+    "duration_seconds": 19.787,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:06:59Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "b8e4e6df69332ed8de7d812868d4d01eef5bcc26322b9fabefe45a8781b5caa5",
+    "raw_events_path": "workspace\\model-calls\\R69-pair01-incumbent-call01-synthesize_cut_sources\\raw-events.jsonl",
+    "raw_events_sha256": "d6a0f9f4629f8a8a02827c553b983961d4fdd1970a616dd836cc644b3abcc4ca",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "368a9778b7a595ff8a0d1fdc5cb3451b7d4c654b8b2dcce760cedb10c3ecdcbe",
+    "returncode": 0,
+    "role": "R69 incumbent topology role upstream generative-evidence synthesizer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:06:39Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14303,
+      "output_tokens": 1342,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

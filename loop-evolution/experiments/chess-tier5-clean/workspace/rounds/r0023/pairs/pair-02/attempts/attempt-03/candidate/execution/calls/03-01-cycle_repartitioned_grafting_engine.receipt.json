@@ -1,0 +1,30 @@
+{
+  "stage": "single_cycle_safe_graft",
+  "stage_mode": "sequential",
+  "call_id": "cycle_repartitioned_grafting_engine",
+  "role": "single cycle-safe component grafting engine producer",
+  "output_type": "engine",
+  "prompt_sha256": "e28b7bc020e459ed05df7fbdccc8e98ac6c3bca01a4042d527243d317c72fbcc",
+  "response_sha256": "15be79d26544d42e69a2ba60ced0e4be483f8ab6b855c0e76a9b1fe75370adf2",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "high",
+  "service_tier": "fast",
+  "request_tier": "priority",
+  "tier_contract": "fast_priority_required",
+  "runtime_policy_sha256": "6dd06a254e6e4d9e1020a54040422e24a71243afc81da8cdae415dc103efb1db",
+  "usage": {
+    "input_tokens": 25262,
+    "cached_input_tokens": 8960,
+    "output_tokens": 7713,
+    "reasoning_output_tokens": 2885,
+    "model_calls": 1
+  },
+  "trace_refs": [
+    "thread.started",
+    "turn.started",
+    "item.completed",
+    "item.completed",
+    "turn.completed",
+    "codex-subscription-home-slot:1"
+  ]
+}

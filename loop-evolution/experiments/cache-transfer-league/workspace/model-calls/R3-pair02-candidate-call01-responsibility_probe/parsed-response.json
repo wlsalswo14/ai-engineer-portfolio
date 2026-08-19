@@ -1,0 +1,30 @@
+{
+  "analysis_packet": {
+    "certificate": "The inherited miss admission/eviction boundary is causally non-separable: one online transition jointly determines cache membership, returned evictions, and byte accounting. The candidate hypothesis therefore targets a contract-relative joint-responsibility rebase while unrelated constraints remain fixed.",
+    "exact_actions": [
+      "Inspect the anchor's miss path as the inherited responsibility decomposition.",
+      "Relate eviction selection, cache membership, return legality, and byte safety at the identified boundary.",
+      "Record the construction state as anchor-relative repair pending evidence-triggered contract-relative joint-responsibility synthesis."
+    ],
+    "obligations": [
+      "Return only currently cached unique integer keys.",
+      "Never exceed capacity_bytes.",
+      "Preserve online one-access-at-a-time operation.",
+      "Maintain the declared Policy interface."
+    ],
+    "witnesses": [
+      {
+        "boundary": "online miss admission and eviction",
+        "evidence": "The anchor must select currently cached unique integer keys for return while simultaneously updating membership and used_bytes so capacity is never exceeded; separating these responsibilities can make either the eviction list stale or capacity accounting unsafe.",
+        "held_fixed": [
+          "Python standard-library restriction",
+          "one-access-at-a-time visibility",
+          "interface legality",
+          "no oracle, trace, or benchmark access",
+          "score blindness"
+        ]
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

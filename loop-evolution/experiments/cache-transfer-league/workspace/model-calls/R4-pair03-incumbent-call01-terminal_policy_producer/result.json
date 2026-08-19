@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.recent = OrderedDict()\n        self.frequent = OrderedDict()\n        self.recent_ghost = OrderedDict()\n        self.frequent_ghost = OrderedDict()\n        self.recent_bytes = 0\n        self.frequent_bytes = 0\n        self.recent_ghost_bytes = 0\n        self.frequent_ghost_bytes = 0\n        self.target_recent = 0\n\n    def _remove_ghost(self, table, key, recent):\n        if key not in table:\n            return\n        size = table.pop(key)\n        if recent:\n            self.recent_ghost_bytes -= size\n        else:\n            self.frequent_ghost_bytes -= size\n\n    def _record_ghost(self, key, size, recent):\n        other = self.frequent_ghost if recent else self.recent_ghost\n        self._remove_ghost(other, key, not recent)\n        table = self.recent_ghost if recent else self.frequent_ghost\n        self._remove_ghost(table, key, recent)\n        table[key] = size\n        if recent:\n            self.recent_ghost_bytes += size\n        else:\n            self.frequent_ghost_bytes += size\n        while self.recent_ghost_bytes + self.frequent_ghost_bytes > self.capacity_bytes:\n            if self.recent_ghost and (\n                not self.frequent_ghost or\n                self.recent_ghost_bytes >= self.frequent_ghost_bytes\n            ):\n                old_key, old_size = self.recent_ghost.popitem(last=False)\n                self.recent_ghost_bytes -= old_size\n            elif self.frequent_ghost:\n                old_key, old_size = self.frequent_ghost.popitem(last=False)\n                self.frequent_ghost_bytes -= old_size\n            else:\n                break\n\n    def _take_recent(self):\n        key, size = self.recent.popitem(last=False)\n        self.recent_bytes -= size\n        self._record_ghost(key, size, True)\n        return key\n\n    def _take_frequent(self):\n        key, size = self.frequent.popitem(last=False)\n        self.frequent_bytes -= size\n        self._record_ghost(key, size, False)\n        return key\n\n    def _replace_one(self, from_frequent):\n        choose_recent = bool(self.recent) and (\n            self.recent_bytes > self.target_recent or\n            (from_frequent and self.recent_bytes == self.target_recent)\n        )\n        if choose_recent:\n            return self._take_recent()\n        if self.frequent:\n            return self._take_frequent()\n        if self.recent:\n            return self._take_recent()\n        return None\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.frequent:\n            stored_size = self.frequent.pop(key)\n            self.frequent[key] = stored_size\n            return []\n\n        if key in self.recent:\n            stored_size = self.recent.pop(key)\n            self.recent_bytes -= stored_size\n            self.frequent[key] = stored_size\n            self.frequent_bytes += stored_size\n            return []\n\n        if size <= 0 or size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        from_frequent = key in self.frequent_ghost\n        from_recent = key in self.recent_ghost\n\n        if from_recent:\n            self._remove_ghost(self.recent_ghost, key, True)\n            self.target_recent = min(\n                self.capacity_bytes,\n                self.target_recent + size,\n            )\n        elif from_frequent:\n            self._remove_ghost(self.frequent_ghost, key, False)\n            self.target_recent = max(0, self.target_recent - size)\n\n        evicted = []\n        while self.recent_bytes + self.frequent_bytes + size > self.capacity_bytes:\n            victim = self._replace_one(from_frequent)\n            if victim is None:\n                break\n            evicted.append(victim)\n\n        if from_recent or from_frequent:\n            self.frequent[key] = size\n            self.frequent_bytes += size\n        else:\n            self.recent[key] = size\n            self.recent_bytes += size\n\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R4-pair03-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 90.061,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:08:12Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "3586a781b22afffbf5e21f1e5bbbaaf16f29633759e5cbf1c9f74a75ae8d4dbe",
+    "raw_events_path": "workspace\\model-calls\\R4-pair03-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "09f3ee67ad91d9a34878cd000402ea9d1a44b6d5767a04d3fa544fa9bbb67e01",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 0,
+    "response_sha256": "af79007888b8cb73cae76521f235ceec9da7350a5dd55882746c627ef63826db",
+    "returncode": 0,
+    "role": "R4 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:06:42Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13568,
+      "output_tokens": 4653,
+      "reasoning_output_tokens": 3624
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

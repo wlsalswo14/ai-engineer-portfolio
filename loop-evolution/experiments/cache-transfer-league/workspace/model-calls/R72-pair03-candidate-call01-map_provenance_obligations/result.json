@@ -1,0 +1,198 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Evidence is online-only and score-blind. Preserve interface legality, capacity safety, unique currently cached integer evictions, standard-library constraints, and provenance visibility. Treat the anchor as inherited evidence, the hypothesis as counter-generative evidence, and retain disagreements rather than silently resolving them.",
+      "exact_actions": [
+        {
+          "action": "Carry every settled obligation into the policy capsule with its source attribution."
+        },
+        {
+          "action": "Record the four unresolved obligations explicitly; do not silently treat them as settled."
+        },
+        {
+          "action": "For each unresolved obligation, compare anchor behavior with directly visible task, contract, constraint, hypothesis, and loop evidence."
+        },
+        {
+          "action": "Create no policy source or alternative artifact in this mapper stage."
+        },
+        {
+          "action": "Pass the analysis and provenance intact to bind_defeasible_commitment for one complete commitment."
+        }
+      ],
+      "obligations": [
+        {
+          "id": "interface_legality",
+          "provenance": [
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "statement": "Maintain the required Policy constructor and access signature and emit one policy-compatible result.",
+          "status": "settled"
+        },
+        {
+          "id": "capacity_safety",
+          "provenance": [
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "statement": "Never retain more bytes than capacity and handle nonpositive capacity and oversized objects without violating evaluator-state legality.",
+          "status": "settled"
+        },
+        {
+          "id": "eviction_legality",
+          "provenance": [
+            "task",
+            "task_constraints"
+          ],
+          "statement": "Return only unique integer keys that are currently cached and evicted by the current request.",
+          "status": "settled"
+        },
+        {
+          "id": "online_visibility",
+          "provenance": [
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "statement": "Base decisions only on the current request and policy-maintained history; do not use hidden traces, references, scores, oracle decisions, benchmark paths, networking, subprocesses, or non-stdlib packages.",
+          "status": "settled"
+        },
+        {
+          "id": "objective_tradeoffs",
+          "provenance": [
+            "task",
+            "candidate_hypothesis"
+          ],
+          "statement": "Seek object and byte hit rate, scan resistance, phase-shift adaptation, and low regret through defensible online state rather than unverifiable benchmark-specific assumptions.",
+          "status": "settled"
+        },
+        {
+          "id": "provenance_completeness",
+          "provenance": [
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "statement": "Preserve the source and rationale for each commitment, including disagreements between inherited behavior and the proposed causal change.",
+          "status": "settled"
+        },
+        {
+          "id": "single_commitment",
+          "provenance": [
+            "task_constraints",
+            "loop_structure"
+          ],
+          "statement": "Bind the evidence into exactly one complete executable policy capsule and ultimately one policy artifact.",
+          "status": "settled"
+        },
+        {
+          "id": "bounded_amendment",
+          "provenance": [
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "statement": "Permit downstream amendment only when an obligation is explicitly unresolved and the amendment is supported by directly visible source evidence.",
+          "status": "settled"
+        },
+        {
+          "id": "oversize_and_zero_size_semantics",
+          "provenance": [
+            "anchor_policy",
+            "task",
+            "task_constraints"
+          ],
+          "statement": "Resolve whether oversized and zero-sized requests should be represented, rejected, or immediately reported while preserving evaluator-state and eviction legality.",
+          "status": "unresolved"
+        },
+        {
+          "id": "resident_reclassification",
+          "provenance": [
+            "anchor_policy",
+            "candidate_hypothesis"
+          ],
+          "statement": "Resolve whether every resident hit should promote to frequent status and how replacement-size changes affect accounting and adaptation without violating settled contracts.",
+          "status": "unresolved"
+        },
+        {
+          "id": "ghost_replay_semantics",
+          "provenance": [
+            "anchor_policy",
+            "candidate_hypothesis"
+          ],
+          "statement": "Resolve how recent-versus-frequent ghost reappearance should adjust targets and replacement preference while retaining provenance and bounded memory.",
+          "status": "unresolved"
+        },
+        {
+          "id": "now_parameter_use",
+          "provenance": [
+            "task",
+            "anchor_policy"
+          ],
+          "statement": "Resolve whether the unused now parameter is intentionally irrelevant or whether temporal recency requires an online, contract-safe use.",
+          "status": "unresolved"
+        }
+      ],
+      "witnesses": [
+        {
+          "evidence": "The artifact must preserve interface legality, capacity safety, and online-only visibility.",
+          "source": "anchor_contract"
+        },
+        {
+          "evidence": "The policy must use only standard-library facilities, process one access at a time, return only currently cached unique integer keys, never exceed capacity, and avoid traces, oracle adaptation, benchmark paths, and scores.",
+          "source": "task_constraints"
+        },
+        {
+          "evidence": "The inherited design uses byte-aware recent/frequent residents, ghost histories, adaptive recent targeting, and explicit eviction tracking; its behavior is evidence but not an immutable behavioral mandate.",
+          "source": "anchor_policy"
+        },
+        {
+          "evidence": "The proposed causal change favors an early complete executable commitment followed by terminal amendment limited to explicitly unresolved obligations.",
+          "source": "candidate_hypothesis"
+        },
+        {
+          "evidence": "The mapper emits analysis only; the binder creates one complete policy capsule; the adjudicator preserves settled commitments and may amend only unresolved obligations supported by visible provenance.",
+          "source": "loop_structure"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R72-pair03-candidate-call01-map_provenance_obligations",
+    "duration_seconds": 32.287,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T23:36:30Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "5c80a6e1ead5b5cf0dde7a81dcdbaa075747d04ffbc21834333a19cf0b4a1242",
+    "raw_events_path": "workspace\\model-calls\\R72-pair03-candidate-call01-map_provenance_obligations\\raw-events.jsonl",
+    "raw_events_sha256": "d4f0e476601cace678676c288e0eb852a1705e5f7edcabe66c445bc13953b30c",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "f90d5d04f93dd2755c769ae534319f2703ac41aebc3d36e04db51fa7e664b2e4",
+    "returncode": 0,
+    "role": "R72 candidate topology role source-attributed obligation mapper",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T23:35:58Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 11008,
+      "input_tokens": 15562,
+      "output_tokens": 1417,
+      "reasoning_output_tokens": 455
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

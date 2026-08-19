@@ -1,0 +1,42 @@
+{
+  "final_call_id": "unify_without_raw_anchor",
+  "information_flow": "The first call receives every common input and emits a source-distinguished non-policy analysis. The final call consumes that analysis and directly receives task, anchor_contract, task_constraints, candidate_hypothesis, and loop_structure, but not anchor_policy; inherited-policy evidence therefore reaches the final call only through the immediate analysis edge.",
+  "name": "Selective Anchor Mediation",
+  "organization": "two-call sequential lineage with asymmetric terminal evidence visibility and one unitary policy authority",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "map_counter_assumptions",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Identify conflicts between inherited topology assumptions and the supplied evidence, preserve source distinctions and unresolved tensions, and emit a nonbinding analysis without creating or authorizing a policy artifact.",
+          "output_type": "analysis",
+          "role": "defeasible counter-assumption mapper"
+        },
+        {
+          "id": "unify_without_raw_anchor",
+          "inputs": [
+            "map_counter_assumptions",
+            "task",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Consume map_counter_assumptions, adjudicate its inherited-policy evidence against the directly visible task, contract, constraints, hypothesis, and loop structure, and emit one complete policy under undivided authority.",
+          "output_type": "policy",
+          "role": "anchor-mediated unitary policy authority"
+        }
+      ],
+      "id": "selective_anchor_mediation_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

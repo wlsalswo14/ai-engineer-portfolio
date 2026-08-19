@@ -1,0 +1,50 @@
+{
+  "attempted_call_ids": [
+    "R6-pair01-candidate-call01-originate_obligation_capsule",
+    "R6-pair01-candidate-call02-close_and_emit_artifact",
+    "R6-pair01-incumbent-call01-terminal_policy_producer",
+    "R6-pair02-candidate-call01-originate_obligation_capsule",
+    "R6-pair02-candidate-call02-close_and_emit_artifact",
+    "R6-pair02-incumbent-call01-terminal_policy_producer",
+    "R6-pair03-candidate-call01-originate_obligation_capsule",
+    "R6-pair03-incumbent-call01-terminal_policy_producer"
+  ],
+  "completed_default_tier_receipts": 7,
+  "discarded_completed_usage": {
+    "cached_input_tokens": 53760,
+    "effective_tokens": 68687,
+    "input_tokens": 98478,
+    "model_calls": 7,
+    "output_tokens": 23969,
+    "reasoning_output_tokens": 18687,
+    "total_tokens": 122447,
+    "uncached_input_tokens": 44718
+  },
+  "display_round": 6,
+  "executor_epoch": "discarded-default-tier-predecessor",
+  "generated_arm_artifacts": 5,
+  "interrupted_without_final_receipt": [
+    "R6-pair03-candidate-call01-originate_obligation_capsule"
+  ],
+  "not_best_of_n": true,
+  "payload_aggregate_sha256": "6ec2fb2884ae1d2b65b5acead1ac67dce80c2a12f2f27919313356f15b32711b",
+  "payload_file_count": 68,
+  "quarantined_at": "2026-08-09T14:04:27Z",
+  "reason": "user-mandated Luna Fast/priority executor epoch change",
+  "restart_contract": {
+    "model": "gpt-5.6-luna",
+    "official_luna_calls": 9,
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "restart_all_six_arms": true,
+    "reuse_single_sol_proposal": true,
+    "same_anchor_hypothesis_prompts_and_structures": true,
+    "service_tier": "fast",
+    "sol_retry_permitted": false
+  },
+  "schema_version": 1,
+  "score_eligibility": false,
+  "seal_eligibility": false,
+  "selection_eligibility": false,
+  "status": "aborted-pre-luna-fast-policy"
+}

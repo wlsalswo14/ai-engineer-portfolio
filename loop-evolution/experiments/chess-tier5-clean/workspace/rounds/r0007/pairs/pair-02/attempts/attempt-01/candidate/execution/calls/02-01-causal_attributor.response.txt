@@ -1,0 +1,28 @@
+{
+  "status": "failure_found",
+  "runtime_status": "Subprocess execution was blocked by the managed read-only shell; witness is source-deterministic.",
+  "failure": {
+    "id": "qsearch_stalemate_at_ply_12",
+    "fen": "k7/8/1QK5/8/8/8/8/8 b - - 0 1",
+    "condition": "black is not in check and has zero legal moves",
+    "provisional_result": -978,
+    "correct_result": 0
+  },
+  "certified_rollback": {
+    "delta": "D-QSEARCH-TERMINAL-CAP",
+    "before": "if ply>=12 and not checked:return self.evaluate(p)",
+    "after": "if ply>=12:\n    ms=legal(p,False)\n    if not ms:return -MATE+ply if checked else 0\n    return self.evaluate(p)",
+    "A_B_A": "A returns -978; B returns 0; restoring A returns -978.",
+    "scope": "Rollback only this exact qsearch terminal-handling delta."
+  },
+  "preservation_obligations": [
+    "Python standard-library compilation",
+    "UCI handshake and exactly one bestmove response",
+    "start-position perft counts 20, 400, 8902",
+    "legal castling, en-passant, promotion, and check handling",
+    "deterministic legal bestmove behavior"
+  ],
+  "other_deltas": "No additional provisional failure was statically demonstrated. King-capture exclusion and castling-safety changes appear corrective.",
+  "intervention_artifacts": "Diagnostic only; do not score or select.",
+  "memory_upload": "Not attempted: task forbids network access and supplied no memory API token."
+}

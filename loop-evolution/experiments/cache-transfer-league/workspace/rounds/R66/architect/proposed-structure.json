@@ -1,0 +1,40 @@
+{
+  "final_call_id": "transition_authority_and_emit",
+  "information_flow": "The first call receives every common input and emits only an analysis containing reconciled evidence and any concrete incompatibility with normative obligations. The final call consumes that analysis and directly receives task, anchor_contract, and task_constraints. It initially admits the analysis as decision-authoritative; qualifying contradiction evidence irreversibly changes that same edge to observation-only before one policy is emitted.",
+  "name": "Triggered Analysis-Authority Quarantine",
+  "organization": "two-call sequential lineage with an evidence-controlled authority transition on the sole analysis handoff",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "synthesize_causal_conflicts",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile inherited and candidate claims with normative obligations, preserve supporting distinctions, and expose concrete causal incompatibilities as analysis without creating a policy artifact.",
+          "output_type": "analysis",
+          "role": "generative-evidence conflict synthesizer"
+        },
+        {
+          "id": "transition_authority_and_emit",
+          "inputs": [
+            "synthesize_causal_conflicts",
+            "task",
+            "anchor_contract",
+            "task_constraints"
+          ],
+          "objective": "Consume synthesize_causal_conflicts, retain its visibility, irreversibly withdraw its decision authority when it evidences a concrete conflict with visible normative obligations, and emit one complete policy under the resulting authority state.",
+          "output_type": "policy",
+          "role": "evidence-responsive normative policy authority"
+        }
+      ],
+      "id": "authority_transition_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

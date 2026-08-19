@@ -1,0 +1,77 @@
+{
+  "architect_scope": "one-R60-structural-factor-only",
+  "candidate_structure": {
+    "final_call_id": "emit_bound_artifact",
+    "information_flow": "The first call receives every common input and resolves them into one binding policy_capsule carrying a complete executable policy artifact. The final call consumes only that capsule, has no common-input visibility or policy-revision authority, and emits the contained artifact as the single policy.",
+    "name": "Single-Contact Authority Inversion",
+    "organization": "two-call sequential lineage with intake-localized binding policy authority and artifact-only terminal emission",
+    "stages": [
+      {
+        "calls": [
+          {
+            "id": "bind_executable_authority",
+            "inputs": [
+              "task",
+              "anchor_policy",
+              "anchor_contract",
+              "task_constraints",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "objective": "Resolve the supplied hypothesis against all six visible sources and bind one complete executable policy artifact with settled evidence commitments into a single policy capsule.",
+            "output_type": "policy_capsule",
+            "role": "single-contact executable policy authority"
+          },
+          {
+            "id": "emit_bound_artifact",
+            "inputs": [
+              "bind_executable_authority"
+            ],
+            "objective": "Consume bind_executable_authority as the sole visible evidence, preserve its complete executable artifact and settled commitments without reinterpretation or alternate construction, and emit that artifact as the one policy.",
+            "output_type": "policy",
+            "role": "artifact-only non-revising emitter"
+          }
+        ],
+        "id": "authority_inversion_lineage",
+        "mode": "sequential"
+      }
+    ]
+  },
+  "compliance": {
+    "hardcoding_emitted": false,
+    "one_structural_factor_only": true,
+    "policy_code_emitted": false,
+    "score_or_trace_content_used": false,
+    "variants_sampling_or_best_of_n_emitted": false
+  },
+  "mode_certificate": {
+    "changed_behavioral_dimensions": [
+      "policy-commitment timing",
+      "persistence of conflict resolution",
+      "terminal susceptibility to inherited-anchor framing",
+      "executable-lineage continuity"
+    ],
+    "counter_until_promotion": true,
+    "forbidden_inherited_mechanism": "terminal lossless evidence reacquisition paired with undivided terminal policy authority",
+    "independent_replacement_principle": "single-contact executable commitment: the only call with raw-source visibility binds the complete policy artifact, and its descendant may only expose that artifact without reinterpretation",
+    "rejected_assumptions": [
+      "Policy-forming authority must be reserved for a terminal call that reacquires every source.",
+      "A nonbinding analysis handoff adequately preserves decisions required for executable materialization.",
+      "Reopening inherited anchor evidence at emission improves reconciliation rather than recapturing inherited framing."
+    ]
+  },
+  "proposal_mode": "counter_hypothesis",
+  "qualitative_hypothesis": {
+    "causal_change": "Invert authority across the sole handoff: the first fully informed call binds one complete executable policy capsule, while the terminal call receives only that capsule and has non-revising emission authority.",
+    "expected_effect": "Resolving evidence once at intake should preserve counter-hypothesis commitments, reduce terminal anchor recapture, and maintain executable continuity through emission.",
+    "falsifier": "all-valid matched majority and strict-median contract, with no score",
+    "observed_bottleneck": "The champion delays executable commitment until a terminal authority that reopens every source, allowing settled counter-evidence to be reinterpreted through inherited framing."
+  },
+  "structural_mutation": {
+    "after": "A binding complete executable policy capsule crosses the handoff, consuming the lineage's raw-evidence authority so the terminal call sees only the capsule and cannot reopen policy decisions.",
+    "before": "A nonbinding analysis crosses the handoff, after which a terminal call reacquires all common inputs and holds undivided policy-forming authority.",
+    "change_count": 1,
+    "factor": "binding executable authority inversion across the sole handoff",
+    "why_structural": "The mutation reverses where policy authority resides and consequently changes edge payload semantics, evidence timing, terminal visibility, and state-transition authority rather than renaming or splitting roles."
+  }
+}

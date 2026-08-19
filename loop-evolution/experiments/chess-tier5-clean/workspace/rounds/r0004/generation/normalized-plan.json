@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "proposal_mode": "general",
+  "hypothesis": {
+    "observed_bottleneck": "The champion's producer both defines the preserved obligations and judges its own edits against them. Round 1 showed that final-context singleton ablation is valuable, but rounds 2 and 3 showed that further self-referential compression logic produced valid yet weaker median engines. The remaining bottleneck is likely evidence-set quality and independence rather than rollback sophistication: a producer can preserve internally consistent obligations that omit important anchor weaknesses or favor the repair trajectory it created.",
+    "evidence_refs": [
+      "state_capsule.current_champion: solo one-call producer with preserved raw evidence, ordered transactional repair, reversible deltas, and terminal singleton compression",
+      "state_capsule.recent_outcomes round 1: 3W/0L, median delta +66.358, zero invalid candidate arms",
+      "state_capsule.recent_outcomes round 2: 2W/1L but median delta -17.109, zero invalid candidate arms",
+      "state_capsule.recent_outcomes round 3: 1W/2L, median delta -79.642, zero invalid candidate arms"
+    ],
+    "causal_change": {
+      "change_count": 1,
+      "factor": "Separation of evidence diagnosis from engine production",
+      "before": "One solo call diagnoses anchor weaknesses, chooses obligations, performs repairs, evaluates its own causal interventions, and emits the engine.",
+      "after": "A distinct non-producing forensic call first converts the anchor engine and metrics into a bounded, immutable diagnostic audit packet; a later engine-producing call consumes that packet and otherwise executes the champion's ordered repair, exact-delta rollback, and terminal singleton-compression process.",
+      "why_causal": "The change alters who establishes the evidence boundary and when it becomes fixed. The forensic call has no patches to defend and cannot emit a competing engine, so it can precommit failure mechanisms, executable probes, invariants, and ambiguity labels before the producer begins editing. The producer then receives information unavailable to the solo champion: an externalized audit boundary that cannot be silently rewritten to fit its repair trajectory."
+    },
+    "expected_effect": "The final producer should spend fewer interventions on symptoms selected by its own evolving implementation, retain repairs that protect independently identified behavior, and reject locally persuasive changes that fail the precommitted audit packet. This should improve paired consistency and candidate median strength while preserving the champion's legality safeguards and successful singleton final-context compression.",
+    "falsifier": "In the completed three-pair matched batch, falsify the hypothesis if the candidate has any invalid arm, does not achieve more paired wins than losses, or its candidate median Elo is not strictly greater than the incumbent median Elo.",
+    "behavioral_novelty": "Before any edit exists, the loop can freeze an implementation-independent causal account of the anchor's failures and preservation obligations; the engine producer can then discover and repair a mechanism it would not have selected itself, while being unable to weaken or reinterpret that account merely because a favored patch passes its own locally constructed tests.",
+    "strengths": [
+      "Moves search to an untested organization-level factor after two unsuccessful refinements of terminal compression.",
+      "Creates a pre-edit evidence boundary without generating multiple engines or selecting among samples.",
+      "Preserves the promoted champion's continuous engine trajectory, reversible deltas, transactional admission gate, and singleton final-context ablation.",
+      "Allows uncertainty to be recorded explicitly so the producer can seek discriminating executable probes instead of treating conjecture as a repair target."
+    ],
+    "risks": [
+      "The forensic packet may misdiagnose a weakness and constrain the producer around an irrelevant obligation.",
+      "Analysis produced without participating in implementation may specify probes that are expensive or infeasible in the available environment.",
+      "The extra context may reduce the final producer's effective attention or execution budget.",
+      "A fixed packet may preserve anchor behavior that a globally stronger redesign should replace."
+    ]
+  },
+  "structure": {
+    "name": "precommitted_forensic_handoff",
+    "organization": "collaboration",
+    "information_flow": "A forensic analyst transforms the unchanged anchor and its metrics into one bounded immutable audit packet containing ranked causal failure mechanisms, executable discriminators, preservation invariants, and explicit uncertainties. A single producer then starts from the same champion engine, uses that packet as precommitted evidence, performs the champion's transactional repair and terminal singleton compression, and emits the only candidate engine.",
+    "stages": [
+      {
+        "id": "forensic_stage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "forensic_audit",
+            "role": "non-producing causal forensic analyst",
+            "objective": "Inspect the task, champion engine, champion metrics, state capsule, hypothesis, and proposed structure. Produce one bounded immutable audit packet: identify a small ranked set of distinct causal weakness mechanisms; attach executable probes or observable discriminators where feasible; record raw observations separately from inference; define legality, protocol, and regression invariants; mark unresolved ambiguity; and do not propose or emit a candidate engine.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure"
+            ],
+            "output_type": "analysis"
+          }
+        ]
+      },
+      {
+        "id": "production_stage",
+        "mode": "sequential",
+        "calls": [
+          {
+            "id": "engine_producer",
+            "role": "transactional engine producer",
+            "objective": "Start from the champion engine and produce one complete legal UCI engine. Treat forensic_audit.output as immutable precommitted evidence, verify its executable claims where feasible, and use discriminating probes to choose bounded repairs. Preserve raw evidence, admit edits through the champion's ordered A-B-A-B intervention and regression replay, record exact reversible deltas, and apply the champion's terminal final-context singleton-patch ablation before emission. Do not create alternative engines, replicated candidates, or best-of-N selection; emit exactly one complete engine.",
+            "inputs": [
+              "task",
+              "champion_engine",
+              "champion_metrics",
+              "state_capsule",
+              "candidate_hypothesis",
+              "loop_structure",
+              "forensic_audit"
+            ],
+            "output_type": "engine"
+          }
+        ]
+      }
+    ],
+    "final_call_id": "engine_producer"
+  },
+  "compliance": {
+    "changes_model_or_effort": false,
+    "changes_benchmark_or_promotion": false,
+    "tunes_engine_hyperparameters_as_structure": false,
+    "hardcodes_benchmark": false
+  },
+  "structure_id": "loop_f82437ce3ceaa0b1"
+}

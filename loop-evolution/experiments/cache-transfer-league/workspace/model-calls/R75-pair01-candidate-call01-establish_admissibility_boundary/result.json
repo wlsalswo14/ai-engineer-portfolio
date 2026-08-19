@@ -1,0 +1,65 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Visible evidence supports only online, standard-library, interface-legal cache behavior with capacity safety and currently-cached unique integer evictions; no score, trace, oracle, benchmark path, external implementation, or causal performance claim is admissible.",
+      "exact_actions": [
+        "Bind downstream construction to interface legality, capacity safety, online-only visibility, and unique-current-key eviction requirements.",
+        "Exclude any implementation choice justified by unavailable scores, traces, oracle decisions, benchmark paths, or external references.",
+        "Preserve unresolved admissible tradeoffs as conflicts rather than asserting unsupported superiority.",
+        "Do not construct or prescribe a policy in this analysis."
+      ],
+      "obligations": [
+        "Preserve the required interface and return type.",
+        "Enforce nonnegative capacity and never admit objects beyond capacity.",
+        "Return only keys that are currently cached, without duplicates.",
+        "Use standard-library facilities only and remain online-only.",
+        "Exclude benchmark-source inspection, hidden-trace hardcoding, oracle adaptation, external cache libraries, networking, subprocesses, and non-stdlib packages.",
+        "Treat unsupported performance commitments and inherited affirmative framing as nonbinding."
+      ],
+      "witnesses": [
+        "The task requires Policy(capacity_bytes) and access(key, size, now) -> list[int].",
+        "The evaluator owns authoritative cache state; returned keys must be currently cached, unique integers, and capacity must not be exceeded.",
+        "All decisions must use only the current access and retained policy state.",
+        "The anchor and hypothesis provide no validated performance evidence."
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R75-pair01-candidate-call01-establish_admissibility_boundary",
+    "duration_seconds": 13.394,
+    "ephemeral": true,
+    "finished_at": "2026-08-10T00:04:45Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "381b698709075ed8267a5ea757f12f3e44dbaf07f6d3ee503d8298dededb5d07",
+    "raw_events_path": "workspace\\model-calls\\R75-pair01-candidate-call01-establish_admissibility_boundary\\raw-events.jsonl",
+    "raw_events_sha256": "12053ea7badc95025c5f8b0708c878317583d52daefe1e66a22c1a5018c0ca49",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "a7940abc3979c36461541e6f24567f51df6c8bb9aafbf96c2ccb386ae472a1a4",
+    "returncode": 0,
+    "role": "R75 candidate topology role negative-authority evidence adjudicator",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-10T00:04:32Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 15165,
+      "output_tokens": 567,
+      "reasoning_output_tokens": 268
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

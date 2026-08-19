@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "class Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self._items = {}\n        self._bytes = 0\n        self._tick = 0\n\n    def _decay(self):\n        if self._tick % 256:\n            return\n        cutoff = self._tick - 512\n        for entry in self._items.values():\n            if entry[1] > 1:\n                entry[1] = max(1, entry[1] // 2)\n            if entry[3] and entry[2] < cutoff:\n                entry[3] = False\n\n    def _victim(self):\n        victim_key = None\n        victim_entry = None\n        victim_score = 0\n        for candidate, entry in self._items.items():\n            if entry[0] <= 0:\n                continue\n            age = self._tick - entry[2]\n            score = entry[1] * 1024 + max(0, 256 - age)\n            if entry[3]:\n                score += 2048\n            if victim_entry is None:\n                victim_key = candidate\n                victim_entry = entry\n                victim_score = score\n                continue\n            left = score * victim_entry[0]\n            right = victim_score * entry[0]\n            older = entry[2] < victim_entry[2]\n            same_time = entry[2] == victim_entry[2]\n            if left < right or (left == right and (older or (same_time and candidate < victim_key))):\n                victim_key = candidate\n                victim_entry = entry\n                victim_score = score\n        return victim_key\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        self._tick += 1\n        self._decay()\n        requested = max(0, int(size))\n\n        if key in self._items:\n            entry = self._items[key]\n            entry[1] += 1\n            entry[2] = self._tick\n            entry[3] = True\n            return []\n\n        if self.capacity_bytes <= 0 or requested > self.capacity_bytes:\n            return []\n\n        evicted = []\n        needed = self._bytes + requested - self.capacity_bytes\n        while needed > 0:\n            victim_key = self._victim()\n            if victim_key is None:\n                break\n            victim_entry = self._items.pop(victim_key)\n            self._bytes -= victim_entry[0]\n            needed -= victim_entry[0]\n            evicted.append(victim_key)\n\n        self._items[key] = [requested, 1, self._tick, False]\n        self._bytes += requested\n        return evicted"
+  },
+  "receipt": {
+    "call_id": "R5-pair03-candidate-call02-independent_policy_producer",
+    "duration_seconds": 131.628,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T09:20:50Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "aad7d42bc4a5d75faaef599146627fdafa16955f46518a6bbc540df420ca8787",
+    "raw_events_path": "workspace\\model-calls\\R5-pair03-candidate-call02-independent_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "0117e4987935580d733114eab4f46e025d00c9055d5e966f0ab4ddee1b19759e",
+    "reasoning_effort": "high",
+    "request_tier": "default",
+    "requested_home_slot": 2,
+    "response_sha256": "dddfb6920273511b68fc95fe6f910cbe9f0029eaebdcda8025627f60e5dc4848",
+    "returncode": 0,
+    "role": "R5 candidate topology role contract-grounded policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "default",
+    "started_at": "2026-08-09T09:18:38Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13768,
+      "output_tokens": 6867,
+      "reasoning_output_tokens": 6214
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,139 @@
+Artifact: one standalone component, `bounded_tactical_guard.py`.
+
+Capability: gate the engine’s top-ranked quiet move with a bounded scan of opponent tactical replies. Captures/checks and inactive search plies pass unchanged.
+
+```python
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Candidate:
+    name: str
+    kind: str
+    score: int
+
+@dataclass(frozen=True)
+class Reply:
+    candidate: str
+    gain: int
+
+@dataclass(frozen=True)
+class GuardState:
+    ply: int
+    active_plies: tuple
+    reply_budget: int
+    threshold: int = 1
+
+@dataclass(frozen=True)
+class Trace:
+    selected: str
+    inspected: int
+    rejected: tuple
+    bounded: bool
+
+def guard(candidates, replies, state):
+    if not candidates:
+        raise ValueError("empty candidate set")
+    if state.reply_budget < 0:
+        raise ValueError("negative reply budget")
+    if state.active_plies[0] > state.active_plies[1]:
+        raise ValueError("invalid active interval")
+
+    top = candidates[0]
+    if top.kind not in ("quiet", "capture", "check"):
+        raise ValueError("invalid candidate kind")
+
+    active = state.active_plies[0] <= state.ply <= state.active_plies[1]
+    if top.kind != "quiet" or not active or state.reply_budget == 0:
+        return Trace(top.name, 0, (), True)
+
+    inspected = 0
+    for reply in replies:
+        if inspected >= state.reply_budget:
+            break
+        inspected += 1
+        if reply.candidate == top.name and reply.gain >= state.threshold:
+            replacement = candidates[1] if len(candidates) > 1 else top
+            return Trace(
+                replacement.name,
+                inspected,
+                (top.name,),
+                inspected <= state.reply_budget,
+            )
+
+    return Trace(top.name, inspected, (), inspected <= state.reply_budget)
+
+def fixtures():
+    return (
+        (
+            "predicted",
+            (Candidate("quiet-bait", "quiet", 6),
+             Candidate("safe-quiet", "quiet", 4)),
+            (Reply("quiet-bait", 7),),
+            GuardState(2, (0, 8), 4),
+        ),
+        (
+            "null",
+            (Candidate("quiet-good", "quiet", 6),
+             Candidate("quiet-other", "quiet", 4)),
+            (Reply("quiet-good", 0), Reply("other", 12)),
+            GuardState(2, (0, 8), 4),
+        ),
+        (
+            "inactive-boundary",
+            (Candidate("quiet-bait", "quiet", 6),
+             Candidate("safe-quiet", "quiet", 4)),
+            (Reply("quiet-bait", 7),),
+            GuardState(9, (0, 8), 4),
+        ),
+        (
+            "zero-budget-boundary",
+            (Candidate("quiet-bait", "quiet", 6),
+             Candidate("safe-quiet", "quiet", 4)),
+            (Reply("quiet-bait", 7),),
+            GuardState(2, (0, 8), 0),
+        ),
+        (
+            "work-safety",
+            (Candidate("quiet-bait", "quiet", 6),),
+            tuple(Reply("unrelated", 50) for _ in range(100)),
+            GuardState(2, (0, 8), 3),
+        ),
+    )
+
+def run():
+    return tuple((name, guard(moves, replies, state))
+                 for name, moves, replies, state in fixtures())
+
+if __name__ == "__main__":
+    first = run()
+    assert first == run()
+    assert first[0][1] == Trace("safe-quiet", 1, ("quiet-bait",), True)
+    assert first[1][1] == Trace("quiet-good", 2, (), True)
+    assert first[2][1] == Trace("quiet-bait", 0, (), True)
+    assert first[3][1] == Trace("quiet-bait", 0, (), True)
+    assert first[4][1] == Trace("quiet-bait", 3, (), True)
+    for item in first:
+        print(item)
+```
+
+Execution command:
+
+```text
+python bounded_tactical_guard.py
+```
+
+Deterministic traces:
+
+```text
+predicted -> safe-quiet, inspected=1, rejected=('quiet-bait',)
+null -> quiet-good, inspected=2, rejected=()
+inactive-boundary -> quiet-bait, inspected=0, rejected=()
+zero-budget-boundary -> quiet-bait, inspected=0, rejected=()
+work-safety -> quiet-bait, inspected=3, rejected=()
+```
+
+Falsifier: reject the capability if the predicted case does not switch, the null or inactive cases switch, repeated runs differ, or `inspected > reply_budget`.
+
+Integration invariants: pass only legal, preordered moves; call once at the existing move-order/search boundary; do not generate moves or mutate board state; preserve captures/checks and inactive plies; retain the reply budget as the hard work bound.
+
+Local execution/write access was blocked by the read-only sandbox, so the source and self-check are returned directly rather than saved.

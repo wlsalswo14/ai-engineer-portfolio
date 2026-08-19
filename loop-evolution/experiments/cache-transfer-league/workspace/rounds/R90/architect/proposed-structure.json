@@ -1,0 +1,62 @@
+{
+  "final_call_id": "task_hypothesis_contract_emit",
+  "information_flow": "The first call receives every common input and emits one complete executable policy capsule. The second consumes that capsule and reopens anchor_policy and anchor_contract. The third consumes the resulting complete executable state and reopens task_constraints and loop_structure. The final call consumes the resulting complete executable closure and reopens task, candidate_hypothesis, and the nonadjacently recurrent anchor_contract edge. All other lineage edges remain unchanged.",
+  "name": "Nonadjacent Contract Recurrence Relay",
+  "organization": "four-call sequential lineage carrying one complete executable artifact under a single recurrent contract-authority edge",
+  "stages": [
+    {
+      "calls": [
+        {
+          "id": "originate_executable_capsule",
+          "inputs": [
+            "task",
+            "anchor_policy",
+            "anchor_contract",
+            "task_constraints",
+            "candidate_hypothesis",
+            "loop_structure"
+          ],
+          "objective": "Reconcile the visible evidence and obligations into one complete executable policy artifact.",
+          "output_type": "policy_capsule",
+          "role": "integrated executable originator"
+        },
+        {
+          "id": "anchor_window_transition",
+          "inputs": [
+            "originate_executable_capsule",
+            "anchor_policy",
+            "anchor_contract"
+          ],
+          "objective": "Consume the preceding complete artifact, reconcile it against the reentered anchor evidence and contract obligations, and emit one complete executable policy state.",
+          "output_type": "executable_policy_state",
+          "role": "anchor-window executable custodian"
+        },
+        {
+          "id": "constraint_window_transition",
+          "inputs": [
+            "anchor_window_transition",
+            "task_constraints",
+            "loop_structure"
+          ],
+          "objective": "Consume the preceding complete artifact, reconcile it against the reentered constraints and structural evidence, and emit one complete executable policy closure.",
+          "output_type": "executable_policy_closure",
+          "role": "constraint-window executable custodian"
+        },
+        {
+          "id": "task_hypothesis_contract_emit",
+          "inputs": [
+            "constraint_window_transition",
+            "task",
+            "candidate_hypothesis",
+            "anchor_contract"
+          ],
+          "objective": "Consume the preceding complete artifact, reconcile terminal task and hypothesis evidence under the recurrent contract authority, and emit one complete policy.",
+          "output_type": "policy",
+          "role": "contract-recurrent terminal policy authority"
+        }
+      ],
+      "id": "nonadjacent_contract_lineage",
+      "mode": "sequential"
+    }
+  ]
+}

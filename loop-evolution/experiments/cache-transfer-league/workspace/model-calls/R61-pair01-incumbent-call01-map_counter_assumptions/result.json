@@ -1,0 +1,66 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Nonbinding, score-blind analysis: the immutable anchor supplies executable behavior, while the contract and constraints supply legality requirements. No trace, benchmark, evaluator result, score, or oracle evidence is available. The hypothesis supports examining commitment timing and correction locality, but does not authorize a policy change. The anchor appears capacity-safe under stated positive-size cases, yet its heuristic effectiveness, phase adaptation, scan resistance, and regret cannot be established from supplied evidence. Unresolved tensions remain between preserving inherited behavior and independently reassessing it under direct contract evidence.",
+      "exact_actions": [
+        "Record the anchor's observable invariants and edge-case behavior without modifying it.",
+        "Separate contract and constraint obligations from heuristic claims about cache quality.",
+        "Flag the absence of traces, scores, benchmark content, and oracle decisions as unresolved evidence gaps.",
+        "Pass this defeasible analysis to the terminal unit for direct comparison with the independently reacquired common inputs."
+      ],
+      "obligations": [
+        "Preserve the required Policy constructor and access interface.",
+        "Verify every returned key is an integer key currently cached immediately before eviction and is returned at most once.",
+        "Maintain capacity safety after every access, including zero, negative, and oversized requests.",
+        "Use only online information available through the current access and permitted state.",
+        "Treat the anchor and this analysis as evidence rather than binding authority, and make no score-based claim.",
+        "Do not create, authorize, or emit a policy artifact."
+      ],
+      "witnesses": [
+        "anchor_policy: segmented recency/frequency state with byte accounting, ghost history, adaptive target, and online eviction",
+        "anchor_contract: interface legality, capacity safety, online-only visibility, and immutable score-blind comparison",
+        "task_constraints: standard-library-only execution, unique currently cached integer-key evictions, no oracle or trace adaptation",
+        "candidate_hypothesis: earlier executable commitment may improve correction locality, but expected effect and falsifier are unverified without scores or traces",
+        "loop_structure: analysis handoff is defeasible; terminal authority must reacquire and compare all common evidence"
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R61-pair01-incumbent-call01-map_counter_assumptions",
+    "duration_seconds": 15.463,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T21:48:27Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "5478de970b210c22a7f6f172de769ce65cbe42d02e938e955a68afee1b7443c4",
+    "raw_events_path": "workspace\\model-calls\\R61-pair01-incumbent-call01-map_counter_assumptions\\raw-events.jsonl",
+    "raw_events_sha256": "0bd4f9c3b7c1aa9ddec4e3f5167fd0a6a2a62271139ea08d3e816123a5e1cf78",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "fad18fc0a4e0c7de0d01a421d5b96274831070514cf300453c04d2098399d51e",
+    "returncode": 0,
+    "role": "R61 incumbent topology role defeasible counter-assumption mapper",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T21:48:11Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14040,
+      "output_tokens": 926,
+      "reasoning_output_tokens": 516
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

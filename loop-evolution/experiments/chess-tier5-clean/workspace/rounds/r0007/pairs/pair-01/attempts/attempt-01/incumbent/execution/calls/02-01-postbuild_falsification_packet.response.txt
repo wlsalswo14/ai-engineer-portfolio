@@ -1,0 +1,18 @@
+{
+  "certificate": "NO_FAILURE_CERTIFICATE_FOR_REALIZED_DIFF",
+  "source_comparison": "draft_engine and champion_engine are identical",
+  "changed_regions": [],
+  "witnesses": [],
+  "required_preservation_checks": [
+    "UCI handshake and one bestmove per go",
+    "startpos perft depths 1-4: 20, 400, 8902, 197281",
+    "legal moves across castling, en-passant, and promotion FENs",
+    "determinism and movetime deadline compliance"
+  ],
+  "runtime_status": "Interpreter execution was blocked by the managed read-only command policy; no runtime failure is asserted.",
+  "reproduction_commands": [
+    "python .\\engine.py",
+    "python -c \"import engine; f=lambda p,d: 1 if d==0 else sum(f(engine.make(p,m),d-1) for m in engine.legal(p)); print([f(engine.Position.start(),d) for d in range(1,5)])\""
+  ],
+  "edits": "none"
+}

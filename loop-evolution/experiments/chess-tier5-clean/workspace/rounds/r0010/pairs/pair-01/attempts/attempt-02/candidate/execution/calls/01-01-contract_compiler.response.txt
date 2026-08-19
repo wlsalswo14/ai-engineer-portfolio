@@ -1,0 +1,124 @@
+{
+  "artifact_type": "frozen_executable_behavioral_contract",
+  "scope": "General-purpose standard-library UCI chess engine; no benchmark openings, evaluator details, or source-template reuse.",
+  "anchor_evidence": {
+    "execution": "not_available",
+    "reason": "The isolated workspace contains no engine.py; supplied anchor was inspected statically.",
+    "strengths": [
+      "Implements FEN/start position parsing, pseudo/legal moves, castling, en-passant, promotion, search, evaluation, and required UCI commands."
+    ],
+    "risks": [
+      "Deadline enforcement checks time only periodically and may overrun during move generation, especially at small movetime values.",
+      "Terminal positions emit 0000, which is not a legal move.",
+      "Malformed or unsupported position input can terminate the process.",
+      "No externally executable perft or state-integrity certification is provided."
+    ]
+  },
+  "prioritized_obligations": [
+    {
+      "priority": "P0",
+      "obligation": "Every accepted go movetime command emits exactly one flushed bestmove line before the requested deadline, with a legal UCI move for every nonterminal valid position."
+    },
+    {
+      "priority": "P0",
+      "obligation": "UCI handshake and sequencing support uci, isready, ucinewgame, position startpos, position fen with six fields, moves, go movetime, and quit without unsolicited output."
+    },
+    {
+      "priority": "P0",
+      "obligation": "Returned moves never leave the moving side's king in check and correctly enforce turn, occupancy, pins, check evasions, promotion, en-passant, and castling transit-square attacks."
+    },
+    {
+      "priority": "P0",
+      "obligation": "State transitions preserve board occupancy, side to move, castling rights, en-passant target, halfmove clock, and fullmove number."
+    },
+    {
+      "priority": "P1",
+      "obligation": "Legal move generation reproduces canonical start-position perft counts: depth 1 = 20, depth 2 = 400, depth 3 = 8902."
+    },
+    {
+      "priority": "P1",
+      "obligation": "Identical valid transcripts and fixed time controls are deterministic or differ only by legal move choice when the contract explicitly permits ties."
+    },
+    {
+      "priority": "P1",
+      "obligation": "Search/evaluation remain side-to-move consistent and do not reuse stale state across ucinewgame or position commands."
+    },
+    {
+      "priority": "P2",
+      "obligation": "Recognize checkmate, stalemate, fifty-move, and repetition state without producing illegal continuation moves."
+    }
+  ],
+  "executable_probes": [
+    {
+      "id": "uci_sequence",
+      "procedure": "Run a subprocess with uci, isready, ucinewgame, position startpos, go movetime 100, quit.",
+      "pass": "Contains exactly one uciok, one readyok, exactly one bestmove with four-character UCI coordinates plus optional promotion, no protocol noise, clean exit."
+    },
+    {
+      "id": "deadline",
+      "procedure": "Repeat valid go movetime commands at 1, 5, 20, and 100 ms under a monotonic external supervisor.",
+      "pass": "One bestmove per command; response arrives before the requested deadline with a documented safety margin; no hangs or traceback."
+    },
+    {
+      "id": "legal_bestmove",
+      "procedure": "Generate reachable positions from startpos using an independent minimal legal validator; issue position plus go at varied times.",
+      "pass": "Every bestmove belongs to the independently generated legal move set."
+    },
+    {
+      "id": "start_perft",
+      "procedure": "Enumerate legal moves from startpos recursively without search heuristics.",
+      "pass": "Counts are 20, 400, and 8902 at depths 1, 2, and 3."
+    },
+    {
+      "id": "special_moves",
+      "procedure": "Use generated reachable positions exercising castling, en-passant, quiet promotion, capture promotion, checks, pins, and rook captures.",
+      "pass": "Each legal move is generated exactly when permitted; every resulting position has correct board, turn, rights, ep square, and clocks."
+    },
+    {
+      "id": "fen_replay_equivalence",
+      "procedure": "Create equivalent states through startpos move replay and six-field FEN input, then compare legal move sets and bestmove legality.",
+      "pass": "Equivalent states produce identical legal move sets and no state-dependent crash."
+    },
+    {
+      "id": "reset_determinism",
+      "procedure": "Run the same ucinewgame, position, and go transcript twice, with an intervening unrelated position.",
+      "pass": "No stale transposition, history, killer, board, or timing state changes legality; deterministic output under equal controls."
+    },
+    {
+      "id": "terminal_behavior",
+      "procedure": "Probe valid checkmate and stalemate positions.",
+      "pass": "No illegal move is emitted; behavior is explicitly defined and remains protocol-safe."
+    }
+  ],
+  "preservation_invariants": [
+    "Exactly one bestmove response per go command.",
+    "All emitted moves parse as legal moves in the current position.",
+    "Both kings remain present and the moving side's king is never attacked after its move.",
+    "Castling rights are removed when the relevant king or rook moves or the rook is captured.",
+    "En-passant capture removes the pawn behind the destination square.",
+    "Promotion replaces the pawn with exactly the requested piece.",
+    "Halfmove clock resets on pawn moves/captures; fullmove increments after Black moves.",
+    "Position commands replace prior board state completely."
+  ],
+  "interacting_failure_cases": [
+    "Castling rights plus missing rook plus attacked transit square.",
+    "En-passant capture exposing a rook or queen check on the capturing king.",
+    "Promotion capture that gives check while competing with ordinary evasions.",
+    "Pinned piece, king capture, and discovered attack interaction.",
+    "FEN side-to-move, castling, en-passant, and clock fields combined with subsequent replay.",
+    "Very small movetime during a large legal-move or quiescence expansion.",
+    "ucinewgame followed by position replacement while transposition/history caches are populated."
+  ],
+  "construction_constraints": [
+    "Compile obligations before implementation and keep them frozen.",
+    "Use the anchor only as behavioral evidence; do not copy its source structure or perform source-delta attribution.",
+    "One engine artifact only; no candidate replication, comparison, selection, rollback, or post-hoc integrator.",
+    "Repair within the same construction trajectory when a probe fails, rerunning all previously passed obligations."
+  ],
+  "pass_criteria": {
+    "required": "All P0 probes pass with zero crashes, protocol violations, illegal moves, or deadline misses.",
+    "quality": "All P1 probes pass; P2 behavior is explicit and non-illegal.",
+    "regression": "Any repair must preserve every prior invariant and probe result.",
+    "artifact": "Only engine.py is emitted."
+  }
+}

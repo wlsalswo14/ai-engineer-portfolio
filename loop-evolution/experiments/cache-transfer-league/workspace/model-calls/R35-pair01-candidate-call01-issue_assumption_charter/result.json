@@ -1,0 +1,111 @@
+{
+  "parsed_response": {
+    "analysis_packet": {
+      "certificate": "Non-policy assumption-accountability charter: anchor-derived mechanisms are provisional evidence, while public contract obligations are binding. Candidate claims remain hypotheses until resolved by the downstream materializer. No score, hidden trace, oracle, benchmark path, or external evidence is used.",
+      "exact_actions": [
+        "Classify each inherited anchor behavior as provisional rather than authoritative.",
+        "Map every materialized decision to either a public obligation, an explicitly declared candidate hypothesis, or an unresolved tension.",
+        "Resolve unresolved tensions before release while preserving interface legality, online visibility, return-value legality, and capacity safety.",
+        "Carry this charter's origin and status metadata forward as visible evidence; do not introduce benchmark, score, oracle, or external information.",
+        "Release only one complete executable lineage after all binding obligations are satisfied."
+      ],
+      "obligations": [
+        {
+          "id": "O1",
+          "requirement": "Preserve the required Policy constructor and access interface.",
+          "source": "task_constraints",
+          "tension": "Accountability additions must not alter the public interface."
+        },
+        {
+          "id": "O2",
+          "requirement": "Return only currently cached unique integer keys evicted by the current request.",
+          "source": "task_and_task_constraints",
+          "tension": "Any inherited eviction semantics must be checked against evaluator-owned state."
+        },
+        {
+          "id": "O3",
+          "requirement": "Never exceed capacity_bytes, including variable object sizes and zero or insufficient capacity.",
+          "source": "task_and_task_constraints",
+          "tension": "Adaptive state must not compromise byte safety."
+        },
+        {
+          "id": "O4",
+          "requirement": "Remain online-only, standard-library-only, and free of traces, oracle adaptation, benchmark inspection, networking, subprocesses, and external packages.",
+          "source": "task_constraints",
+          "tension": "Provenance visibility must remain declarative and non-invasive."
+        },
+        {
+          "id": "O5",
+          "requirement": "Keep assumption origin visible through executable materialization and final release.",
+          "source": "candidate_hypothesis",
+          "tension": "Provenance must survive handoff without becoming executable policy content."
+        }
+      ],
+      "witnesses": [
+        {
+          "claim": "The anchor uses probation/protected recency state and ghost histories to adapt its protected allocation.",
+          "origin": "anchor-derived",
+          "status": "inherited assumption, not binding"
+        },
+        {
+          "claim": "The anchor treats positive-size objects fitting within capacity as admissible and returns evictions during online access processing.",
+          "origin": "anchor-derived",
+          "status": "inherited behavior requiring contract reconciliation"
+        },
+        {
+          "claim": "The evaluator owns authoritative cache state; returned keys must be currently cached, unique integers, and only keys evicted by the current request.",
+          "origin": "public-task-and-contract",
+          "status": "binding obligation"
+        },
+        {
+          "claim": "Capacity must never be exceeded, processing is online one access at a time, and implementation must use only the Python standard library.",
+          "origin": "public-task-and-contract",
+          "status": "binding obligation"
+        },
+        {
+          "claim": "Declared provenance may improve accountability by making inherited assumptions challengeable before executable materialization.",
+          "origin": "candidate-hypothesis",
+          "status": "testable hypothesis, not evidence"
+        }
+      ]
+    },
+    "artifact_kind": "analysis_only"
+  },
+  "receipt": {
+    "call_id": "R35-pair01-candidate-call01-issue_assumption_charter",
+    "duration_seconds": 17.03,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T18:38:14Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "618fa4b0c97e3a7f1c5ee5604683f53751fdf13260b0cae10724ec456bc30f7f",
+    "raw_events_path": "workspace\\model-calls\\R35-pair01-candidate-call01-issue_assumption_charter\\raw-events.jsonl",
+    "raw_events_sha256": "8c7d8be46d463fc7544ae241abac76dc41f23c317c6f6b4c49d52d9889ed3b79",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "fdce84df1f8bf946d0ad4863e9c65c7797c3d0945602932d97d683ce4024febe",
+    "returncode": 0,
+    "role": "R35 candidate topology role preconstruction assumption-accountability authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T18:37:57Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14501,
+      "output_tokens": 921,
+      "reasoning_output_tokens": 332
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

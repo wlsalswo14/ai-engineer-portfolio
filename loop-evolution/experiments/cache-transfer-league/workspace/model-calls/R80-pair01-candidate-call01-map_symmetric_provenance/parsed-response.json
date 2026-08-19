@@ -1,0 +1,68 @@
+{
+  "analysis_packet": {
+    "certificate": "Non-authoritative provenance map; claims remain rebuttable and unresolved conflicts are preserved.",
+    "exact_actions": [
+      "Attach each claim to its stated input provenance.",
+      "Record counterclaims symmetrically with supporting claims.",
+      "Mark the causal change, expected effect, and falsifier as unresolved hypotheses.",
+      "Forward validity obligations and uncertainty to the final policy authority without exclusions, mandates, rankings, or policy construction."
+    ],
+    "obligations": [
+      {
+        "requirement": "Expose supporting and opposing provenance without adjudicating commitments.",
+        "source": "role_objective"
+      },
+      {
+        "requirement": "Preserve unresolved conflicts and obligation-relevant uncertainty.",
+        "source": "role_objective"
+      },
+      {
+        "requirement": "Surface interface legality, capacity safety, and online-only visibility requirements.",
+        "source": "anchor_contract"
+      },
+      {
+        "requirement": "Record that no scores, traces, benchmark paths, or oracle information are available.",
+        "source": "task_constraints"
+      }
+    ],
+    "witnesses": [
+      {
+        "claim": "The incumbent provides a standard-library implementation with the required Policy interface and explicit capacity checks.",
+        "provenance": "anchor_contract",
+        "stance": "supporting",
+        "status": "observed"
+      },
+      {
+        "claim": "The incumbent tracks resident and ghost state and returns eviction keys from resident structures.",
+        "provenance": "anchor_contract",
+        "stance": "supporting",
+        "status": "observed"
+      },
+      {
+        "claim": "Premature negative authority could constrain final synthesis before conflicting evidence is resolved.",
+        "provenance": "candidate_hypothesis",
+        "stance": "supporting",
+        "status": "hypothesis"
+      },
+      {
+        "claim": "The proposed causal change and expected improvement have no available score evidence and remain falsifiable.",
+        "provenance": "candidate_hypothesis",
+        "stance": "opposing",
+        "status": "unresolved"
+      },
+      {
+        "claim": "Any final artifact must preserve interface legality, online-only visibility, capacity safety, and unique-current-resident eviction outputs.",
+        "provenance": "task_constraints",
+        "stance": "supporting",
+        "status": "obligation-relevant"
+      },
+      {
+        "claim": "The final policy role may independently reinterpret or reject every transmitted claim, limiting the map's authority.",
+        "provenance": "loop_structure",
+        "stance": "opposing",
+        "status": "unresolved"
+      }
+    ]
+  },
+  "artifact_kind": "analysis_only"
+}

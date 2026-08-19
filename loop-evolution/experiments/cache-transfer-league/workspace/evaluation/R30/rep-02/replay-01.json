@@ -1,0 +1,32 @@
+{
+  "artifact_path": "workspace\\bootstrap\\R30\\rep-02\\artifact\\policy.py",
+  "artifact_sha256": "c449075b84628200bf27688a5f6cd775ce8f7f1cf009a7470c60b5c444eb3be9",
+  "benchmark": {
+    "field": "cache_policy_scratch",
+    "fixture_sha256": "793cbd7e5c04e896650ebc713fc29654fc63cf5fe1aaba15f6f6149d11795d87",
+    "runner_sha256": "636304977bc178f9e675f59c39d9b24c32874c964b944a3c0275e13f6408efbc",
+    "scale": 3,
+    "seed": 20260605,
+    "trace_count": 9
+  },
+  "duration_seconds": 0.166752,
+  "finished_at": "2026-08-09T07:55:21Z",
+  "label": "R30-rep-02",
+  "normalized_result_sha256": "46fc107d401562f4830d7569e73a6c1a8a0944d63860e0bc44ae5fff2e6f1a1c",
+  "replay": 1,
+  "result": {
+    "candidate": "C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\bootstrap\\R30\\rep-02\\artifact\\policy.py",
+    "details": {
+      "runtime_error": "returncode:1",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 635, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 630, in main\n    return _run_candidate_worker(args.candidate)\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\loopsy_archive\\benchmarks\\runners\\cache_policy_loop.py\", line 485, in _run_candidate_worker\n    trace_evictions.append(policy.access(int(access[\"key\"]), int(access[\"size\"]), int(access[\"now\"])))\n                           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\bootstrap\\R30\\rep-02\\artifact\\policy.py\", line 118, in access\n    self._promote(key, hits)\n    ~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"C:\\Users\\jinminjae\\OneDrive\\Desktop\\Ouroboros\\loop-evolution\\experiments\\cache-transfer-league\\workspace\\bootstrap\\R30\\rep-02\\artifact\\policy.py\", line 79, in _promote\n    size = self.probationary.pop(key)\nKeyError: 1\n",
+      "stdout": ""
+    },
+    "invalid_operation_count": 0,
+    "score": 0.0,
+    "timeout_count": 0,
+    "trace_count": 9
+  },
+  "schema_version": 1,
+  "started_at": "2026-08-09T07:55:20Z",
+  "valid": false
+}

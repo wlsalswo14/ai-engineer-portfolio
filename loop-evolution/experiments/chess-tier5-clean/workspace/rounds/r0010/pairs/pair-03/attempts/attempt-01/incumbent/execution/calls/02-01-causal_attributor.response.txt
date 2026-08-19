@@ -1,0 +1,19 @@
+Analysis packet:
+
+- Status: runtime certification incomplete; no failure/no-failure certificate issued.
+- Workspace contains only response artifacts; no materialized `engine.py`. Process execution is blocked by the read-only policy.
+- Source comparison found exactly three provisional-only deltas, all in `evaluate()`:
+
+  1. King-square bonus: `±12` on c1/g1/c8/g8.
+  2. Castling-rights bonus: white `+3/+2`, black `-3/-2`.
+  3. Side-to-move bonus: `+6` after perspective conversion.
+
+Executable A–B–A semantic witnesses:
+
+- `7k/8/8/8/8/8/P7/2K5 w - - 0 1`: removing/restoring delta 1 changes evaluation by `12`.
+- `7k/8/8/8/8/8/P7/4K2R w K - 0 1`: removing/restoring delta 2 changes evaluation by `3`.
+- `7k/8/8/8/8/8/P7/4K3 w - - 0 1`: removing/restoring delta 3 changes evaluation by `6`.
+
+These demonstrate exact source effects, not reproduced runtime failures. Legal move generation, state transitions, UCI behavior, perft, determinism, deadlines, and bestmove regressions remain unexecuted.
+
+Certified rollback deltas: none. Because attribution is incomplete, the constrained integrator should emit the exact champion anchor.

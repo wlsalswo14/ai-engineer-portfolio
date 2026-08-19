@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, capacity_bytes)\n        self.probation = OrderedDict()\n        self.protected = OrderedDict()\n        self.ghost_probation = OrderedDict()\n        self.ghost_protected = OrderedDict()\n        self.probation_bytes = 0\n        self.protected_bytes = 0\n        self.used_bytes = 0\n        self.probation_target = self.capacity_bytes // 2\n        self.ghost_limit = 8192\n\n    def _trim_ghosts(self):\n        while len(self.ghost_probation) + len(self.ghost_protected) > self.ghost_limit:\n            if len(self.ghost_probation) >= len(self.ghost_protected):\n                self.ghost_probation.popitem(last=False)\n            else:\n                self.ghost_protected.popitem(last=False)\n\n    def _remember_ghost(self, key, size, protected):\n        self.ghost_probation.pop(key, None)\n        self.ghost_protected.pop(key, None)\n        target = self.ghost_protected if protected else self.ghost_probation\n        target[key] = size\n        self._trim_ghosts()\n\n    def _increase_target(self):\n        step = max(1, len(self.ghost_protected) // max(1, len(self.ghost_probation)))\n        self.probation_target = min(self.capacity_bytes, self.probation_target + step)\n\n    def _decrease_target(self):\n        step = max(1, len(self.ghost_probation) // max(1, len(self.ghost_protected)))\n        self.probation_target = max(0, self.probation_target - step)\n\n    def _evict_for(self, incoming_size, prefer_protected):\n        evicted = []\n        while self.used_bytes + incoming_size > self.capacity_bytes:\n            take_probation = bool(self.probation) and (\n                self.probation_bytes > self.probation_target\n                or (prefer_protected and self.probation_bytes == self.probation_target)\n            )\n            if take_probation:\n                old_key, old_size = self.probation.popitem(last=False)\n                self.probation_bytes -= old_size\n                self._remember_ghost(old_key, old_size, False)\n            elif self.protected:\n                old_key, old_size = self.protected.popitem(last=False)\n                self.protected_bytes -= old_size\n                self._remember_ghost(old_key, old_size, True)\n            elif self.probation:\n                old_key, old_size = self.probation.popitem(last=False)\n                self.probation_bytes -= old_size\n                self._remember_ghost(old_key, old_size, False)\n            else:\n                break\n            self.used_bytes -= old_size\n            evicted.append(old_key)\n        return evicted\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        if key in self.protected:\n            stored_size = self.protected.pop(key)\n            self.protected[key] = stored_size\n            return []\n\n        if key in self.probation:\n            stored_size = self.probation.pop(key)\n            self.probation_bytes -= stored_size\n            self.protected[key] = stored_size\n            self.protected_bytes += stored_size\n            return []\n\n        size = max(0, size)\n        if self.capacity_bytes == 0 or size > self.capacity_bytes:\n            return []\n\n        if key in self.ghost_probation:\n            self.ghost_probation.pop(key)\n            self._increase_target()\n            evicted = self._evict_for(size, False)\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used_bytes += size\n            return evicted\n\n        if key in self.ghost_protected:\n            self.ghost_protected.pop(key)\n            self._decrease_target()\n            evicted = self._evict_for(size, True)\n            self.protected[key] = size\n            self.protected_bytes += size\n            self.used_bytes += size\n            return evicted\n\n        evicted = self._evict_for(size, False)\n        self.probation[key] = size\n        self.probation_bytes += size\n        self.used_bytes += size\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R16-pair01-incumbent-call01-terminal_policy_producer",
+    "duration_seconds": 81.528,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T15:57:37Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "7d93333a2dddc4a3c0af40f7c98ae71a8239d67b73f22701ce5c64edaf7a3e3b",
+    "raw_events_path": "workspace\\model-calls\\R16-pair01-incumbent-call01-terminal_policy_producer\\raw-events.jsonl",
+    "raw_events_sha256": "f6918aa34c5d713686dbe869c07bc256469491cbe1e07d9df75740e95d28c96f",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "f9b5fe55fb0074d1b76a7c43f3cf53d79dc3e1dd5572e2076fcb2f4508c702db",
+    "returncode": 0,
+    "role": "R16 incumbent topology role evidence-preserving transactional policy producer",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T15:56:16Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13591,
+      "output_tokens": 6204,
+      "reasoning_output_tokens": 5178
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

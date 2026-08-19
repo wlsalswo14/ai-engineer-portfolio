@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\nimport math\n\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity_bytes = max(0, int(capacity_bytes))\n        self.residents = OrderedDict()\n        self.history = OrderedDict()\n        self.used_bytes = 0\n        self.clock = 0\n        self.last_now = None\n        self.requests = 0\n\n    def _advance(self, now):\n        observed = int(now)\n        if self.last_now is None:\n            self.clock = 1\n        elif observed > self.last_now:\n            self.clock += min(observed - self.last_now, 1024)\n        else:\n            self.clock += 1\n        if self.last_now is None or observed > self.last_now:\n            self.last_now = observed\n\n    def _age_statistics(self):\n        if self.requests % 64:\n            return\n        for entry in self.residents.values():\n            entry[2] = max(1, entry[2] // 2)\n        for key in list(self.history):\n            count = self.history[key] // 2\n            if count:\n                self.history[key] = count\n            else:\n                del self.history[key]\n\n    def _record(self, key):\n        count = self.history.get(key, 0) + 1\n        if key in self.history:\n            del self.history[key]\n        self.history[key] = count\n        while len(self.history) > 4096:\n            self.history.popitem(last=False)\n        return count\n\n    def _value(self, entry):\n        size, last_seen, frequency = entry\n        age = max(0, self.clock - last_seen)\n        freshness = 1.0 / (1.0 + age)\n        return (1.0 + math.log1p(frequency)) * (0.5 + 0.5 * freshness) / math.sqrt(size)\n\n    def _admit(self, key, size, frequency):\n        self.residents[key] = [size, self.clock, max(1, frequency)]\n        self.used_bytes += size\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        size = int(size)\n        if size <= 0:\n            return []\n\n        self._advance(now)\n        self.requests += 1\n        self._age_statistics()\n        frequency = self._record(key)\n\n        if key in self.residents:\n            entry = self.residents.pop(key)\n            self.used_bytes += size - entry[0]\n            entry[0] = size\n            entry[1] = self.clock\n            entry[2] = min(1000000, entry[2] + 1)\n            if size > self.capacity_bytes:\n                self.used_bytes -= size\n                return [key]\n            self.residents[key] = entry\n            evicted = []\n            while self.used_bytes > self.capacity_bytes:\n                victim = min(\n                    self.residents,\n                    key=lambda candidate: (\n                        self._value(self.residents[candidate]),\n                        self.residents[candidate][1],\n                        candidate,\n                    ),\n                )\n                victim_entry = self.residents.pop(victim)\n                self.used_bytes -= victim_entry[0]\n                evicted.append(victim)\n            return evicted\n\n        if size > self.capacity_bytes or self.capacity_bytes == 0:\n            return []\n\n        required = self.used_bytes + size - self.capacity_bytes\n        if required <= 0:\n            self._admit(key, size, frequency)\n            return []\n\n        if frequency < 2:\n            return []\n\n        candidate_value = (1.0 + math.log1p(frequency)) / math.sqrt(size)\n        victims = []\n        freed = 0\n        ordered = sorted(\n            self.residents.items(),\n            key=lambda pair: (self._value(pair[1]), pair[1][1], pair[0]),\n        )\n        for victim, entry in ordered:\n            if candidate_value <= self._value(entry):\n                return []\n            victims.append(victim)\n            freed += entry[0]\n            if freed >= required:\n                break\n\n        if freed < required:\n            return []\n\n        evicted = []\n        for victim in victims:\n            entry = self.residents.pop(victim)\n            self.used_bytes -= entry[0]\n            evicted.append(victim)\n        self._admit(key, size, frequency)\n        return evicted\n"
+  },
+  "receipt": {
+    "call_id": "R8-pair01-candidate-call02-independent_policy_constructor",
+    "duration_seconds": 82.619,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T14:26:59Z",
+    "home_identity_sha256": "3d9d1d939a631c33b12a0e578b64d55ab2bee44830652bec4a2f1ae2cdea11ec",
+    "home_slot": 2,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "a6a2037320777a72337869470fb5a20feae969647393a80c0e3669eb3173f603",
+    "raw_events_path": "workspace\\model-calls\\R8-pair01-candidate-call02-independent_policy_constructor\\raw-events.jsonl",
+    "raw_events_sha256": "cc578a288006479fd8faef32eb839270b3fb616a5eabff85fe420da31d111772",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 2,
+    "response_sha256": "85bf97564c41990c39192f5f8839f0f2eef296a413902aade6ee66d7d28164f4",
+    "returncode": 0,
+    "role": "R8 candidate topology role exclusive whole-policy constructor",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T14:25:36Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 14412,
+      "output_tokens": 6556,
+      "reasoning_output_tokens": 5494
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}

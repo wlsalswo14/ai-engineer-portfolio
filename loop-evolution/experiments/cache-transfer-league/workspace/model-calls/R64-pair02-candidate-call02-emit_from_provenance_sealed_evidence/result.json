@@ -1,0 +1,43 @@
+{
+  "parsed_response": {
+    "artifact_kind": "single_policy",
+    "policy_source": "from collections import OrderedDict\n\nclass Policy:\n    def __init__(self, capacity_bytes: int):\n        self.capacity = max(0, int(capacity_bytes))\n        self.p = self.capacity // 2\n        self.t1 = OrderedDict()\n        self.t2 = OrderedDict()\n        self.b1 = OrderedDict()\n        self.b2 = OrderedDict()\n        self.t1_bytes = 0\n        self.t2_bytes = 0\n        self._ghost_each = 2048\n\n    def _clean_size(self, size):\n        value = int(size)\n        return value if value >= 0 else 0\n\n    def _drop(self, group, key):\n        value = group.pop(key)\n        if group is self.t1:\n            self.t1_bytes -= value\n        else:\n            self.t2_bytes -= value\n        return value\n\n    def _remember_ghost(self, key, size, from_t1):\n        self.b1.pop(key, None)\n        self.b2.pop(key, None)\n        target = self.b1 if from_t1 else self.b2\n        target[key] = max(0, int(size))\n        while len(target) > self._ghost_each:\n            target.popitem(last=False)\n\n    def _evict_one(self, prefer_t1, exclude=None):\n        groups = (self.t1, self.t2) if prefer_t1 else (self.t2, self.t1)\n        for group in groups:\n            for candidate in group:\n                if exclude is not None and candidate == exclude:\n                    continue\n                value = self._drop(group, candidate)\n                return candidate, value, group is self.t1\n        return None, None, None\n\n    def _make_room(self, amount, prefer_t1, exclude=None):\n        evicted = []\n        while self.t1_bytes + self.t2_bytes + amount > self.capacity:\n            key, value, from_t1 = self._evict_one(prefer_t1, exclude)\n            if key is None:\n                break\n            self._remember_ghost(key, value, from_t1)\n            evicted.append(key)\n        return evicted\n\n    def _trim_t1(self, amount):\n        evicted = []\n        while self.t1 and self.t1_bytes + amount > self.p:\n            key, value, from_t1 = self._evict_one(True)\n            if key is None:\n                break\n            self._remember_ghost(key, value, from_t1)\n            evicted.append(key)\n        return evicted\n\n    def _trim_t2(self, amount):\n        target = self.capacity - self.p\n        evicted = []\n        while self.t2 and self.t2_bytes + amount > target:\n            key, value, from_t1 = self._evict_one(False)\n            if key is None:\n                break\n            self._remember_ghost(key, value, from_t1)\n            evicted.append(key)\n        return evicted\n\n    def _admit(self, key, amount, frequent):\n        if amount > self.capacity:\n            return []\n        evicted = self._trim_t2(amount) if frequent else self._trim_t1(amount)\n        prefer_t1 = self.t1_bytes >= self.p\n        evicted.extend(self._make_room(amount, prefer_t1))\n        if self.t1_bytes + self.t2_bytes + amount > self.capacity:\n            return evicted\n        group = self.t2 if frequent else self.t1\n        group[key] = amount\n        if frequent:\n            self.t2_bytes += amount\n        else:\n            self.t1_bytes += amount\n        return evicted\n\n    def _adapt(self, from_b1, old_size, new_size):\n        limit = self.capacity if self.capacity > 0 else 1\n        step = max(1, min(limit, max(int(old_size), int(new_size))))\n        if from_b1:\n            self.p = min(self.capacity, self.p + step)\n        else:\n            self.p = max(0, self.p - step)\n\n    def access(self, key: int, size: int, now: int) -> list[int]:\n        amount = self._clean_size(size)\n\n        if key in self.t1:\n            old_size = self._drop(self.t1, key)\n            if amount > self.capacity:\n                self._remember_ghost(key, old_size, True)\n                return [key]\n            self.t2[key] = amount\n            self.t2_bytes += amount\n            return self._make_room(0, self.t1_bytes >= self.p, key)\n\n        if key in self.t2:\n            old_size = self._drop(self.t2, key)\n            if amount > self.capacity:\n                self._remember_ghost(key, old_size, False)\n                return [key]\n            self.t2[key] = amount\n            self.t2_bytes += amount\n            return self._make_room(0, self.t1_bytes >= self.p, key)\n\n        if key in self.b1:\n            old_size = self.b1.pop(key)\n            self._adapt(True, old_size, amount)\n            if amount > self.capacity:\n                return []\n            return self._admit(key, amount, True)\n\n        if key in self.b2:\n            old_size = self.b2.pop(key)\n            self._adapt(False, old_size, amount)\n            if amount > self.capacity:\n                return []\n            return self._admit(key, amount, True)\n\n        if amount > self.capacity:\n            return []\n        return self._admit(key, amount, False)"
+  },
+  "receipt": {
+    "call_id": "R64-pair02-candidate-call02-emit_from_provenance_sealed_evidence",
+    "duration_seconds": 113.881,
+    "ephemeral": true,
+    "finished_at": "2026-08-09T22:22:04Z",
+    "home_identity_sha256": "a983bcb6de4197df3a575882096d9ee579252afcc6889a350ef0113f311b95fa",
+    "home_slot": 0,
+    "ignore_user_config": true,
+    "item_types": [
+      "agent_message"
+    ],
+    "model": "gpt-5.6-luna",
+    "prior_transport_failure_receipt": null,
+    "prompt_sha256": "eb578562dc5b8d99efc890ea89fd8dd97320cff87f5ab961bc5e6748aac6198c",
+    "raw_events_path": "workspace\\model-calls\\R64-pair02-candidate-call02-emit_from_provenance_sealed_evidence\\raw-events.jsonl",
+    "raw_events_sha256": "c861786d29d2152fe3d2825ccbaf3dfc411258a18d000a09c1696e511b0755b5",
+    "reasoning_effort": "high",
+    "request_tier": "priority",
+    "requested_home_slot": 0,
+    "response_sha256": "8bda26a6e4e2f944c22305a16a029d6e3e799f4dbb6bc9657cc440cee2063f54",
+    "returncode": 0,
+    "role": "R64 candidate topology role source-anonymous normative policy authority",
+    "sandbox": "read-only",
+    "schema_version": 1,
+    "service_tier": "fast",
+    "started_at": "2026-08-09T22:20:10Z",
+    "tools_used": [],
+    "transport_retry": false,
+    "usage": {
+      "cached_input_tokens": 8960,
+      "input_tokens": 13245,
+      "output_tokens": 9230,
+      "reasoning_output_tokens": 7925
+    },
+    "web_search": false
+  },
+  "schema_version": 1
+}
